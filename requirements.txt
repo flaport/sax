@@ -1,5 +1,2 @@
-ipykernel
-numpy
-scipy
 jaxlib
 jax
