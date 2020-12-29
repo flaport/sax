@@ -1,4 +1,5 @@
 import functools
+import collections
 
 import jax
 import jax.numpy as jnp
@@ -7,41 +8,70 @@ float = jnp.float32
 complex = jnp.complex64
 
 
-def model(num_ports, reciprocal=True):
+def model(ports, reciprocal=None, jit=False):
     """decorator for model functions
 
     Args:
-        num_ports: number of ports of the model
-        reciprocal: whether the model is reciprocal or not, i.e. whethere model(i, j) == model(j, i).
+        ports: the port names
+        reciprocal: whether the model is reciprocal or not, i.e. whether model(i, j) == model(j, i).
             If a model is reciprocal, the decorated model function only needs to be defined for i <= j.
+            Defaults to True for raw model functions. Defaults to the parent value if decorating a model function.
+        jit: jit-compile the model. Note: jit-compiling a model is only recommended for the top-level circuit!
 
     Returns:
         the wrapped model function
     """
+    ports = tuple(p for p in ports)
+    num_ports = len(ports)
 
     def model(func):
+        assert num_ports == len(set(ports)), f"Duplicate ports found for model {func.__name__}. Got: {ports}"
+        assert all(isinstance(p, str) for p in ports), f"Model ports should be string values. Got: {ports}"
+        _reciprocal = reciprocal
+        if hasattr(func, "modelfunc"):
+            func = func.modelfunc
+            if _reciprocal is None:
+                _reciprocal = func.reciprocal
+        if _reciprocal is None:
+            _reciprocal = True
         @functools.wraps(func)
         def wrapped(params, env, i, j):
+            if isinstance(i, str):
+                assert i in ports, f"Port name {i} not found in ports {ports} of model {func.__name__}"
+                i = ports.index(i)
+            if isinstance(j, str):
+                assert j in ports, f"Port name {j} not found in ports {ports} of model {func.__name__}"
+                j = ports.index(j)
+            assert i >= 0, f"First index of {func.__name__} should be bigger or equal to zero."
+            assert j >= 0, f"Second index of {func.__name__} should be bigger or equal to zero."
+            assert i < num_ports, f"First index of {func.__name__} should be smaller than {num_ports}."
+            assert j < num_ports, f"Second index of {func.__name__} should be smaller than {num_ports}."
             if reciprocal and i > j:
                 i, j = j, i
             return jnp.asarray(func(params, env, i, j), dtype=complex)
 
-        wrapped.func = func
-        wrapped.reciprocal = reciprocal
+        if jit:
+            wrapped = jax.jit(wrapped, static_argnums=(2,3))
+
+        wrapped.modelfunc = func
+        wrapped.reciprocal = _reciprocal
         wrapped.num_ports = num_ports
+        wrapped.ports = ports
         return wrapped
 
     return model
 
-
-def component(model, params, ports=None, jit=True):
+_model = model
+_component = collections.namedtuple("component", ("params", "env", "model"))
+def component(model, params, ports=None, env=None, jit=False):
     """create a component function from a model function
 
     Args:
         model: model function to create a component for
         params: The parameter dictionary for the model. All necessary model parameters should be present.
-        ports: port names for each of the model indices
-        jit: jit-compile the component function
+        ports: override port names of the model.
+        env: the dictionary containing the simulation environment.
+        jit: jit-compile the component function. Note: jit-compiling a component model is only recommended for the top-level circuit!
 
     Returns:
         The partially applied component model with the given model params and port names.
@@ -50,39 +80,19 @@ def component(model, params, ports=None, jit=True):
         a component is functionally very similar to a functools.partial of model
         with the addition of port names.
     """
-    partial_model = functools.partial(model, params)
-    if hasattr(model, "ports") and ports is None:
-        ports = tuple(model.ports)
-    elif ports is None:
-        ports = tuple(f"p{i}" for i in range(model.num_ports))
+    if ports is None:
+        ports = model.ports
     else:
-        if len(ports) != model.num_ports:
-            raise ValueError(
-                f"Number of ports given ({len(ports)}) is different from the expected "
-                f"number of ports in the model ({model.num_ports})."
-            )
-        ports = tuple(ports)
+        ports = tuple(p for p in ports)
 
-    @functools.wraps(partial_model)
-    def component(env, i, j):
-        if isinstance(i, str):
-            i = ports.index(i)
-        if isinstance(j, str):
-            j = ports.index(j)
-        return partial_model(env, i, j)
+    assert len(ports) == model.num_ports, f"len({ports}) != {model.num_ports}"
 
-    if jit:
-        component = jax.jit(component, static_argnums=(1,2))
-    component.__name__ = model.__name__.replace("model_", "")
-    component.__qualname__ = model.__qualname__.replace("model_", "")
-    component.model = model
-    component.params = params
-    component.ports = ports
-    component.num_ports = len(ports)
-    return component
+    model = _model(ports, reciprocal=model.reciprocal, jit=jit)(model.modelfunc)
+
+    return _component(params, env, model)
 
 
-def circuit(components, connections, ports, jit=True):
+def circuit(components, connections, ports, env=None, jit=False):
     """create a (sub)circuit from a collection of components and connections
 
     Args:
@@ -92,7 +102,7 @@ def circuit(components, connections, ports, jit=True):
             form "componentname:portname"
         ports: a dictionary mapping portnames of the form
             "componentname:portname" to new unique portnames
-        jit: jit-compile the circuit
+        jit: jit-compile the circuit. Note: jit-compiling a circuit model is only recommended for the top-level circuit!
 
     Returns:
         the circuit component model with the given port names.
@@ -100,9 +110,15 @@ def circuit(components, connections, ports, jit=True):
     Example:
         A simple add-drop filter can be created as follows::
 
-            waveguide = component(model_waveguide, ["in", "out"], length=25e-6)
+            waveguide = component(
+                model=model_waveguide,
+                params={"length": 25e-6, "wl0": 1.55e-6, "neff0": 2.86, "ng": 3.4, "loss": 0.0},
+                ports=["in", "out"]
+            )
             directional_coupler = component(
-                model_directional_coupler, ["p0", "p1", "p2", "p3"], coupling=0.3
+                model=model_directional_coupler,
+                params={"coupling": 0.3},
+                ports=["p0", "p1", "p2", "p3"],
             )
             add_drop = circuit(
                 components={
@@ -126,15 +142,13 @@ def circuit(components, connections, ports, jit=True):
             )
     """
     for name, comp in components.items():
-        components[name] = component(
-            comp.model, comp.params, ports=tuple(f"{name}:{port}" for port in comp.ports), jit=False
-        )
+        components[name] = component(comp.model, comp.params, env=None, ports=tuple(f"{name}:{port}" for port in comp.model.ports), jit=False)
     for port1, port2 in connections.items():
         name1, _ = port1.split(":")
         name2, _ = port2.split(":")
         comp1, comp2 = components[name1], components[name2]
         if comp1 != comp2:
-            comp = _block_diag_components(comp1, comp2, ports=comp1.ports + comp2.ports)
+            comp = _block_diag_components(comp1, comp2, ports=comp1.model.ports + comp2.model.ports)
         else:
             comp = comp1
         comp = _interconnect_component(comp, port1, port2)
@@ -142,7 +156,7 @@ def circuit(components, connections, ports, jit=True):
             name: (comp if (_comp == comp1 or _comp == comp2) else _comp)
             for name, _comp in components.items()
         }
-    return component(comp.model, comp.params, ports=tuple(ports[port] for port in comp.ports), jit=jit)
+    return component(comp.model, comp.params, env=env, ports=tuple(ports[port] for port in comp.model.ports), jit=jit)
 
 
 def _block_diag_components(comp1, comp2, ports=None):
@@ -158,26 +172,25 @@ def _block_diag_components(comp1, comp2, ports=None):
     Returns:
         the merged 'block-diagonal' component.
     """
-    num_ports = comp1.num_ports + comp2.num_ports
-
-    @model(num_ports=num_ports)
-    def model_stacked(params, env, i, j):
-        if i < comp1.num_ports and j < comp1.num_ports:
-            return comp1.model(params[0], env, i, j)
-        elif i >= comp1.num_ports and j >= comp1.num_ports:
-            return comp2.model(params[1], env,  i - comp1.num_ports, j - comp1.num_ports)
-        else:
-            return 0
+    num_ports = comp1.model.num_ports + comp2.model.num_ports
 
     if ports is None:
-        ports = comp1.ports + comp2.ports
+        ports = comp1.model.ports + comp2.model.ports
     else:
         ports = tuple(ports)
     if len(ports) < len(set(ports)):
         ports = tuple(f"p{i}" for i in range(comp1.num_ports + comp2.num_ports))
-        
-    return component(model_stacked, (comp1.params, comp2.params), ports=ports)
 
+    @model(ports=ports)
+    def model_stacked(params, env, i, j):
+        if i < comp1.model.num_ports and j < comp1.model.num_ports:
+            return comp1.model(params[0], env, i, j)
+        elif i >= comp1.model.num_ports and j >= comp1.model.num_ports:
+            return comp2.model(params[1], env,  i - comp1.model.num_ports, j - comp1.model.num_ports)
+        else:
+            return 0
+
+    return component(model_stacked, (comp1.params, comp2.params), ports=ports)
 
 def _interconnect_component(comp, k, l, ports=None):
     """interconnect two ports in a given component
@@ -199,13 +212,20 @@ def _interconnect_component(comp, k, l, ports=None):
             Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
             of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
     """
-    num_ports = comp.num_ports - 2
+    num_ports = comp.model.num_ports - 2
     if isinstance(k, str):
-        k = comp.ports.index(k)
+        k = comp.model.ports.index(k)
     if isinstance(l, str):
-        l = comp.ports.index(l)
+        l = comp.model.ports.index(l)
 
-    @model(num_ports=num_ports)
+    if ports is None:
+        ports = tuple(port for i, port in enumerate(comp.model.ports) if i not in (k, l))
+    else:
+        ports = tuple(ports)
+    if len(ports) < len(set(ports)):
+        ports = tuple(f"p{i}" for i in range(num_ports))
+
+    @model(ports=ports)
     def model_interconnected(params, env, i, j):
         if k < l:
             if i >= k:
@@ -233,10 +253,4 @@ def _interconnect_component(comp, k, l, ports=None):
             + m(l, j) * m(k, k) * m(i, l)
         ) / ((1 - m(k, l)) * (1 - m(l, k)) - m(k, k) * m(l, l))
 
-    if ports is None:
-        ports = tuple(port for i, port in enumerate(comp.ports) if i not in (k, l))
-    else:
-        ports = tuple(ports)
-    if len(ports) < len(set(ports)):
-        ports = tuple(f"p{i}" for i in range(num_ports))
     return component(model_interconnected, comp.params, ports=ports)

@@ -3,7 +3,7 @@ from .core import model
 from .constants import pi
 
 
-@model(num_ports=2, reciprocal=True)
+@model(ports=("in", "out"), reciprocal=True)
 def model_waveguide(params, env, i, j):
     if i == j:
         return 0.0
@@ -12,7 +12,7 @@ def model_waveguide(params, env, i, j):
     return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
 
 
-@model(num_ports=4, reciprocal=True)
+@model(ports=["p0", "p1", "p2", "p3"], reciprocal=True)
 def model_directional_coupler(params, env, i, j):
     if i == j or i == 1 and j == 2 or i == 0 and j == 3:
         return 0
