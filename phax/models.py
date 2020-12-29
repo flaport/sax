@@ -4,21 +4,19 @@ from .constants import pi
 
 
 @model(num_ports=2, reciprocal=True)
-def model_waveguide(
-    i, j, wl=1.55e-6, length=1e-5, loss=0.0, neff0=2.34, ng=3.4, wl0=1.55e-6
-):
+def model_waveguide(params, env, i, j):
     if i == j:
         return 0.0
-    neff = neff0 - (wl - wl0) * (ng - neff0) / wl0
-    phase = jnp.exp(jnp.log(2 * pi * neff * length) - jnp.log(wl))
-    return 10 ** (-loss * length / 20) * jnp.exp(1j * phase)
+    neff = params["neff0"] - (env["wl"] - params["wl0"]) * (params["ng"] - params["neff0"]) / params["wl0"]
+    phase = jnp.exp(jnp.log(2 * pi * neff * params["length"]) - jnp.log(env["wl"]))
+    return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
 
 
 @model(num_ports=4, reciprocal=True)
-def model_directional_coupler(i, j, wl=1.55e-6, coupling=0.5):
+def model_directional_coupler(params, env, i, j):
     if i == j or i == 1 and j == 2 or i == 0 and j == 3:
         return 0
     elif i == 0 and j == 1 or i == 2 and j == 3:
-        return (1 - coupling) ** 0.5
+        return (1 - params["coupling"]) ** 0.5
     elif i == 0 and j == 2 or i == 1 and j == 3:
-        return 1j * coupling ** 0.5
+        return 1j * params["coupling"] ** 0.5
