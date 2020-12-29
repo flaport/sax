@@ -27,13 +27,17 @@ def model(ports, reciprocal=None, jit=False):
     def model(func):
         assert num_ports == len(set(ports)), f"Duplicate ports found for model {func.__name__}. Got: {ports}"
         assert all(isinstance(p, str) for p in ports), f"Model ports should be string values. Got: {ports}"
+        
+        _circuit = False
         _reciprocal = reciprocal
         if hasattr(func, "modelfunc"):
-            func = func.modelfunc
+            _circuit = func.circuit
             if _reciprocal is None:
                 _reciprocal = func.reciprocal
+            func = func.modelfunc
         if _reciprocal is None:
             _reciprocal = True
+            
         @functools.wraps(func)
         def wrapped(params, env, i, j):
             if isinstance(i, str):
@@ -54,6 +58,7 @@ def model(ports, reciprocal=None, jit=False):
             wrapped = jax.jit(wrapped, static_argnums=(2,3))
 
         wrapped.modelfunc = func
+        wrapped.circuit = _circuit
         wrapped.reciprocal = _reciprocal
         wrapped.num_ports = num_ports
         wrapped.ports = ports
@@ -87,7 +92,7 @@ def component(model, params, ports=None, env=None, jit=False):
 
     assert len(ports) == model.num_ports, f"len({ports}) != {model.num_ports}"
 
-    model = _model(ports, reciprocal=model.reciprocal, jit=jit)(model.modelfunc)
+    model = _model(ports, reciprocal=model.reciprocal, jit=jit)(model)
 
     return _component(params, env, model)
 
@@ -148,7 +153,7 @@ def circuit(components, connections, ports, env=None, jit=False):
         name2, _ = port2.split(":")
         comp1, comp2 = components[name1], components[name2]
         if comp1 != comp2:
-            comp = _block_diag_components(comp1, comp2, ports=comp1.model.ports + comp2.model.ports)
+            comp = _block_diag_components(comp1, comp2, name1, name2, ports=comp1.model.ports + comp2.model.ports)
         else:
             comp = comp1
         comp = _interconnect_component(comp, port1, port2)
@@ -159,12 +164,14 @@ def circuit(components, connections, ports, env=None, jit=False):
     return component(comp.model, comp.params, env=env, ports=tuple(ports[port] for port in comp.model.ports), jit=jit)
 
 
-def _block_diag_components(comp1, comp2, ports=None):
+def _block_diag_components(comp1, comp2, name1, name2, ports=None):
     """combine two components as if their S-matrices were stacked block-diagonally
 
     Args:
         comp1: the first component to combine
         comp2: the second component to combine
+        name1: the name of the first component
+        name2: the name of the second component
         ports: new port names for the combined component.
             If no port names are given, the port names of the components will attempted to be used.
             If this results in duplicate port names, all port names will silently be relabeled as 'p{i}'.
@@ -181,16 +188,37 @@ def _block_diag_components(comp1, comp2, ports=None):
     if len(ports) < len(set(ports)):
         ports = tuple(f"p{i}" for i in range(comp1.num_ports + comp2.num_ports))
 
-    @model(ports=ports)
-    def model_stacked(params, env, i, j):
+    @model(ports=ports, reciprocal=False, jit=False)
+    def model_block_diag(params, env, i, j):
         if i < comp1.model.num_ports and j < comp1.model.num_ports:
-            return comp1.model(params[0], env, i, j)
+            if comp1.model.circuit:
+                return comp1.model(params, env, i, j)
+            else:
+                return comp1.model(params[name1], env, i, j)
         elif i >= comp1.model.num_ports and j >= comp1.model.num_ports:
-            return comp2.model(params[1], env,  i - comp1.model.num_ports, j - comp1.model.num_ports)
+            if comp2.model.circuit:
+                return comp2.model(params, env,  i - comp1.model.num_ports, j - comp1.model.num_ports)
+            else:
+                return comp2.model(params[name2], env,  i - comp1.model.num_ports, j - comp1.model.num_ports)
         else:
             return 0
+    model_block_diag.circuit = True
+    
+    if comp1.model.circuit and comp2.model.circuit:
+        params = {**comp1.params, **comp2.params}
+    elif comp1.model.circuit:
+        params = {**comp1.params}
+        params[name2] = comp2.params
+    elif comp2.model.circuit:
+        params = {**comp2.params}
+        params[name1] = comp1.params
+    else:
+        params = {
+            name1: comp1.params,
+            name2: comp2.params,
+        }
 
-    return component(model_stacked, (comp1.params, comp2.params), ports=ports)
+    return component(model_block_diag, params, ports=ports)
 
 def _interconnect_component(comp, k, l, ports=None):
     """interconnect two ports in a given component
@@ -225,7 +253,7 @@ def _interconnect_component(comp, k, l, ports=None):
     if len(ports) < len(set(ports)):
         ports = tuple(f"p{i}" for i in range(num_ports))
 
-    @model(ports=ports)
+    @model(ports=ports, reciprocal=False, jit=False)
     def model_interconnected(params, env, i, j):
         if k < l:
             if i >= k:
@@ -252,5 +280,6 @@ def _interconnect_component(comp, k, l, ports=None):
             + m(k, j) * m(l, l) * m(i, k)
             + m(l, j) * m(k, k) * m(i, l)
         ) / ((1 - m(k, l)) * (1 - m(l, k)) - m(k, k) * m(l, l))
+    model_interconnected.circuit = comp.model.circuit
 
     return component(model_interconnected, comp.params, ports=ports)
