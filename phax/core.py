@@ -8,12 +8,15 @@ float = jnp.float32
 complex = jnp.complex64
 
 
-def model(ports=None, default_params=None, reciprocal=None, jit=False):
+def model(
+    ports=None, default_params=None, default_env=None, reciprocal=None, jit=False
+):
     """decorator for model functions
 
     Args:
-        ports: the port names
-        default_params: the dictionary containing the default parameters of the model
+        ports: the port names.
+        default_params: the dictionary containing the default model parameters.
+        default_env: the dictionary containing the default simulation environment.
         reciprocal: whether the model is reciprocal or not, i.e. whether
             model(i, j) == model(j, i).  If a model is reciprocal, the decorated
             model function only needs to be defined for i <= j.  Defaults to True
@@ -27,8 +30,11 @@ def model(ports=None, default_params=None, reciprocal=None, jit=False):
     """
     if default_params is None:
         default_params = {}
+    if default_env is None:
+        default_env = {}
 
     def model(func):
+        _default_env = {}
         _default_params = {}
         _reciprocal = reciprocal
         _incomplete_circuit = False
@@ -37,8 +43,10 @@ def model(ports=None, default_params=None, reciprocal=None, jit=False):
             if _reciprocal is None:
                 _reciprocal = func.reciprocal
             _ports = func.ports if ports is None else ports
+            _default_env.update(func.default_env)
             _default_params.update(func.default_params)
             func = func.modelfunc
+        _default_env.update(default_env)
         _default_params.update(default_params)
         if _reciprocal is None:
             _reciprocal = True
@@ -80,6 +88,7 @@ def model(ports=None, default_params=None, reciprocal=None, jit=False):
         wrapped.ports = _ports
         wrapped.num_ports = num_ports
         wrapped.reciprocal = _reciprocal
+        wrapped.default_env = _default_env
         wrapped.default_params = _default_params
         wrapped._incomplete_circuit = _incomplete_circuit
         return wrapped
@@ -114,17 +123,22 @@ def component(model, params=None, default_params=None, ports=None, env=None, jit
         with the addition of port names.
     """
 
+    default_env = {} if not hasattr(model, "default_env") else model.default_env
+    reciprocal = None if not hasattr(model, "reciprocal") else model.reciprocal
+
     if params is None:
         params = {}
 
     if env is None:
         env = {}
+    env = {**default_env, **env}
 
     modeldecorator = _model(
         ports=ports,
         default_params=default_params,
-        reciprocal=model.reciprocal,
-        jit=jit
+        default_env=env,
+        reciprocal=reciprocal,
+        jit=jit,
     )
     model = modeldecorator(model)
 
@@ -367,7 +381,13 @@ def _block_diag_components(comp1, comp2, name1, name2, ports=None):
             name2: comp2.model.default_params,
         }
 
-    @model(ports=ports, default_params=default_params, reciprocal=False, jit=False)
+    @model(
+        ports=ports,
+        default_params=default_params,
+        default_env=env,
+        reciprocal=False,
+        jit=False,
+    )
     def model_block_diag(params, env, i, j):
         if i < comp1.model.num_ports and j < comp1.model.num_ports:
             if comp1.model._incomplete_circuit:
@@ -438,7 +458,13 @@ def _interconnect_component(comp, k, l, ports=None):
 
     default_params = comp.model.default_params
 
-    @model(ports=ports, default_params=default_params, reciprocal=False, jit=False)
+    @model(
+        ports=ports,
+        default_params=default_params,
+        default_env=comp.env,
+        reciprocal=False,
+        jit=False,
+    )
     def model_interconnected(params, env, i, j):
         if k < l:
             if i >= k:
