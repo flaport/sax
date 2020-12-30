@@ -4,9 +4,6 @@ import collections
 import jax
 import jax.numpy as jnp
 
-float = jnp.float32
-complex = jnp.complex64
-
 
 def model(
     ports=None, default_params=None, default_env=None, reciprocal=None, jit=False
@@ -28,10 +25,16 @@ def model(
     Returns:
         the wrapped model function
     """
-    if default_params is None:
-        default_params = {}
-    if default_env is None:
-        default_env = {}
+    default_params = (
+        _paramstuple({})
+        if default_params is None
+        else _paramstuple(default_params)
+    )
+    default_env = (
+        _paramstuple({})
+        if default_env is None
+        else _paramstuple(default_env)
+    )
 
     def model(func):
         _default_env = {}
@@ -43,11 +46,11 @@ def model(
             if _reciprocal is None:
                 _reciprocal = func.reciprocal
             _ports = func.ports if ports is None else ports
-            _default_env.update(func.default_env)
-            _default_params.update(func.default_params)
+            _default_env.update(**_paramsdict(func.default_env))
+            _default_params.update(**_paramsdict(func.default_params))
             func = func.modelfunc
-        _default_env.update(default_env)
-        _default_params.update(default_params)
+        _default_env.update(**_paramsdict(default_env))
+        _default_params.update(**_paramsdict(default_params))
         if _reciprocal is None:
             _reciprocal = True
         assert ports is not None, f"No ports specified for model {func.__name__}."
@@ -79,7 +82,7 @@ def model(
             assert j < num_ports, msg
             if reciprocal and i > j:
                 i, j = j, i
-            return jnp.asarray(func(params, env, i, j), dtype=complex)
+            return jnp.asarray(func(params, env, i, j), dtype=jnp.complex64)
 
         if jit:
             wrapped = jax.jit(wrapped, static_argnums=(2, 3))
@@ -88,8 +91,8 @@ def model(
         wrapped.ports = _ports
         wrapped.num_ports = num_ports
         wrapped.reciprocal = _reciprocal
-        wrapped.default_env = _default_env
-        wrapped.default_params = _default_params
+        wrapped.default_env = _paramstuple(_default_env)
+        wrapped.default_params = _paramstuple(_default_params)
         wrapped._incomplete_circuit = _incomplete_circuit
         return wrapped
 
@@ -131,7 +134,11 @@ def component(model, params=None, default_params=None, ports=None, env=None, jit
 
     if env is None:
         env = {}
-    env = {**default_env, **env}
+
+    env = _paramstuple({**_paramsdict(default_env), **_paramsdict(env)})
+    default_params = (
+        _paramstuple({}) if default_params is None else _paramstuple(default_params)
+    )
 
     modeldecorator = _model(
         ports=ports,
@@ -142,7 +149,7 @@ def component(model, params=None, default_params=None, ports=None, env=None, jit
     )
     model = modeldecorator(model)
 
-    comp = _component(params, env, model)
+    comp = _component(_paramsdict(params), _paramsdict(env), model)
     return comp
 
 
@@ -231,7 +238,7 @@ def circuit(components, connections, ports, env=None, jit=False):
     circuit = component(
         model=comp.model,
         params=comp.params,
-        env={**comp.env, **env},
+        env=_paramstuple({**_paramsdict(comp.env), **_paramsdict(env)}),
         ports=tuple(ports[port] for port in comp.model.ports),
         jit=jit,
     )
@@ -357,34 +364,34 @@ def _block_diag_components(comp1, comp2, name1, name2, ports=None):
     if len(ports) < len(set(ports)):
         ports = tuple(f"p{i}" for i in range(comp1.num_ports + comp2.num_ports))
 
-    env = {**comp1.env, **comp2.env}
+    env = {**_paramsdict(comp1.env), **_paramsdict(comp2.env)}
     if comp1.model._incomplete_circuit and comp2.model._incomplete_circuit:
-        params = {**comp1.params, **comp2.params}
-        default_params = {**comp1.model.default_params, **comp2.model.default_params}
+        params = {**_paramsdict(comp1.params), **_paramsdict(comp2.params)}
+        default_params = {**_paramsdict(comp1.model.default_params), **_paramsdict(comp2.model.default_params)}
     elif comp1.model._incomplete_circuit:
-        params = {**comp1.params}
-        params[name2] = comp2.params
-        default_params = {**comp1.model.default_params}
-        default_params[name2] = comp2.model.default_params
+        params = {**_paramsdict(comp1.params)}
+        params[name2] = _paramsdict(comp2.params)
+        default_params = {**_paramsdict(comp1.model.default_params)}
+        default_params[name2] = _paramsdict(comp2.model.default_params)
     elif comp2.model._incomplete_circuit:
-        params = {**comp2.params}
-        params[name1] = comp1.params
-        default_params = {**comp2.model.default_params}
-        default_params[name1] = comp1.model.default_params
+        params = {**_paramsdict(comp2.params)}
+        params[name1] = _paramsdict(comp1.params)
+        default_params = {**_paramsdict(comp2.model.default_params)}
+        default_params[name1] = _paramsdict(comp1.model.default_params)
     else:
         params = {
-            name1: comp1.params,
-            name2: comp2.params,
+            name1: _paramsdict(comp1.params),
+            name2: _paramsdict(comp2.params),
         }
         default_params = {
-            name1: comp1.model.default_params,
-            name2: comp2.model.default_params,
+            name1: _paramsdict(comp1.model.default_params),
+            name2: _paramsdict(comp2.model.default_params),
         }
 
     @model(
         ports=ports,
-        default_params=default_params,
-        default_env=env,
+        default_params=_paramstuple(default_params),
+        default_env=_paramstuple(env),
         reciprocal=False,
         jit=False,
     )
@@ -395,17 +402,11 @@ def _block_diag_components(comp1, comp2, name1, name2, ports=None):
             else:
                 return comp1.model(params[name1], env, i, j)
         elif i >= comp1.model.num_ports and j >= comp1.model.num_ports:
+            k, l = i - comp1.model.num_ports, j - comp1.model.num_ports
             if comp2.model._incomplete_circuit:
-                return comp2.model(
-                    params, env, i - comp1.model.num_ports, j - comp1.model.num_ports
-                )
+                return comp2.model(params, env, k, l)
             else:
-                return comp2.model(
-                    params[name2],
-                    env,
-                    i - comp1.model.num_ports,
-                    j - comp1.model.num_ports,
-                )
+                return comp2.model(params[name2], env, k, l)
         else:
             return 0
 
@@ -456,12 +457,12 @@ def _interconnect_component(comp, k, l, ports=None):
     if len(ports) < len(set(ports)):
         ports = tuple(f"p{i}" for i in range(comp.model.num_ports - 2))
 
-    default_params = comp.model.default_params
+    default_params = _paramstuple(comp.model.default_params)
 
     @model(
         ports=ports,
         default_params=default_params,
-        default_env=comp.env,
+        default_env=_paramstuple(comp.env),
         reciprocal=False,
         jit=False,
     )
@@ -498,8 +499,58 @@ def _interconnect_component(comp, k, l, ports=None):
 
     _comp = component(
         model=model_interconnected,
-        params=comp.params,
-        env=comp.env,
+        params=_paramsdict(comp.params),
+        env=_paramsdict(comp.env),
         ports=ports,
     )
     return _comp
+
+
+def _paramstuple(params):
+    """convert a params dictionary in a namedtuple to enforce immutability.
+
+    Args:
+        params: the params dictionary
+
+    Returns:
+        an immutable namedtuple of parameters
+    """
+    if hasattr(params, "_fields"):
+        return params
+    for k, v in params.items():
+        if isinstance(v, dict):
+            v = _paramstuple(v)
+        elif not hasattr(v, "_fields"):
+            v = jnp.asarray(v, dtype=jnp.float32)
+            if v.ndim == 0 or v.ndim == 1 and v.shape[0] == 1:
+                v = float(v)
+        params[k] = v
+    _params = collections.namedtuple("params", tuple(k for k in params))
+    _params.__getitem__ = _params.__getattribute__
+    _params.__setitem__ = _params.__setattr__
+    _params.__repr__ = lambda self: repr(_paramsdict(params))
+    return _params(**params)
+
+
+def _paramsdict(params):
+    """convert an immutable namedtuple into a mutable dictionary
+
+    Args:
+        params: the namedtuple to convert to a dictionary
+
+    Returns:
+        a mutable dictionary of parameters
+    """
+    if isinstance(params, dict):
+        return {**params}
+    _params = {}
+    for k in params._fields:
+        v = getattr(params, k)
+        if hasattr(v, "_fields"):
+            v = _paramsdict(v)
+        elif not isinstance(v, dict):
+            v = jnp.asarray(v, dtype=jnp.float32)
+            if v.ndim == 0 or v.ndim == 1 and v.shape[0] == 1:
+                v = float(v)
+        _params[k] = v
+    return _params
