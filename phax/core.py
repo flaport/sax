@@ -27,7 +27,7 @@ def model(ports, reciprocal=None, jit=False):
     def model(func):
         assert num_ports == len(set(ports)), f"Duplicate ports found for model {func.__name__}. Got: {ports}"
         assert all(isinstance(p, str) for p in ports), f"Model ports should be string values. Got: {ports}"
-        
+
         _circuit = False
         _reciprocal = reciprocal
         if hasattr(func, "modelfunc"):
@@ -37,7 +37,7 @@ def model(ports, reciprocal=None, jit=False):
             func = func.modelfunc
         if _reciprocal is None:
             _reciprocal = True
-            
+
         @functools.wraps(func)
         def wrapped(params, env, i, j):
             if isinstance(i, str):
@@ -146,8 +146,11 @@ def circuit(components, connections, ports, env=None, jit=False):
                 }
             )
     """
+    components, connections, ports = _validate_circuit_parameters(components, connections, ports)
+
     for name, comp in components.items():
         components[name] = component(comp.model, comp.params, env=None, ports=tuple(f"{name}:{port}" for port in comp.model.ports), jit=False)
+
     for port1, port2 in connections.items():
         name1, _ = port1.split(":")
         name2, _ = port2.split(":")
@@ -163,6 +166,65 @@ def circuit(components, connections, ports, env=None, jit=False):
         }
     return component(comp.model, comp.params, env=env, ports=tuple(ports[port] for port in comp.model.ports), jit=jit)
 
+def _validate_circuit_parameters(components, connections, ports):
+    """ validate the netlist parameters of a circuit
+
+    Args:
+        components: a dictionary with the keys the component names and values
+            the component functions
+        connections: a dictionary where both keys and values are strings of the
+            form "componentname:portname"
+        ports: a dictionary mapping portnames of the form
+            "componentname:portname" to new unique portnames
+    """
+    all_ports = set()
+    for name, comp in components.items():
+        assert isinstance(comp, tuple), f"Component '{comp}' should be a length-3 tuple: (params, env, model). Please use the component function to construct your component from a model function."
+        assert len(comp) == 3, f"Component '{comp}' should be a length-3 tuple: (params, env, model). Please use the component function to construct your component from a model function"
+        if not isinstance(comp, _component):
+            components[name] = component(comp[2], comp[0], env=None, ports=comp[2].ports, jit=False)
+        for port in components[name].model.ports:
+            all_ports.add(f"{name}:{port}")
+
+    if not isinstance(connections, dict):
+        assert all(len(conn) == 2 for conn in connections), f"Circuit connections should be a str:str dict or a list of length-2 tuples."
+        connections, _connections = {k: v for k, v in connections}, connections
+        assert len(connections) == len(_connections), f"Duplicate ports found in connection list of tuples"
+
+    connection_ports = set()
+    for connection in connections.items():
+        for port in connection:
+            if port in all_ports:
+                all_ports.remove(port)
+            assert isinstance(port, str), f"The ports in the connections dictionary should all be strings. Got: '{port}'"
+            assert len(port.split(":")) == 2, f"The ports in the connections dictionary should all be of the format 'comp:port'. Got: '{port}'"
+            name, _port = port.split(":")
+            assert name in components, f"Component '{name}' used in connection '{connection[0]}':'{connection[1]}', but '{name}' not found in components dictionary."
+            assert _port in components[name].model.ports, f"Port name '{_port}' not found in component '{name}'. Allowed ports for '{name}': {components[name].model.ports}"
+        assert connection[0] not in connection_ports, f"Duplicate port found in connections: '{port}'"
+        connection_ports.add(connection[0])
+        assert connection[1] not in connection_ports, f"Duplicate port found in connections: '{port}'"
+        connection_ports.add(connection[1])
+
+    output_ports = set()
+    for port, output_port in ports.items():
+        if port in all_ports:
+            all_ports.remove(port)
+        assert isinstance(port, str), f"The ports in the ports dictionary should all be strings. Got: '{port}'"
+        assert isinstance(output_port, str), f"The output ports in the ports dictionary should all be strings. Got: '{output_port}'"
+        assert len(port.split(":")) == 2, f"The ports in the ports dictionary should all be of the format 'comp:port'. Got: '{port}'"
+        assert ':' not in output_port, f"The output ports in the ports dictionary cannot contain a colon (':'). Got: '{output_port}'"
+        assert port not in connection_ports, f"Duplicate port found in ports or connections: '{port}'"
+        name, _port = port.split(":")
+        assert name in components, f"Component '{name}' used in output_port '{port}':'{output_port}', but '{name}' not found in components dictionary."
+        assert _port in components[name].model.ports, f"Port name '{_port}' not found in component '{name}'. Allowed ports for '{name}': {components[name].model.ports}"
+        connection_ports.add(port)
+        assert output_port not in output_ports, f"Duplicate port found in output ports: '{output_port}'"
+        output_ports.add(output_port)
+
+    assert not all_ports, f"Unused ports found: {all_ports}"
+
+    return components, connections, ports
 
 def _block_diag_components(comp1, comp2, name1, name2, ports=None):
     """combine two components as if their S-matrices were stacked block-diagonally
@@ -203,7 +265,7 @@ def _block_diag_components(comp1, comp2, name1, name2, ports=None):
         else:
             return 0
     model_block_diag.circuit = True
-    
+
     if comp1.model.circuit and comp2.model.circuit:
         params = {**comp1.params, **comp2.params}
     elif comp1.model.circuit:
