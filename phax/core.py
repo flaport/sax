@@ -8,11 +8,12 @@ float = jnp.float32
 complex = jnp.complex64
 
 
-def model(ports, reciprocal=None, jit=False):
+def model(ports=None, default_params=None, reciprocal=None, jit=False):
     """decorator for model functions
 
     Args:
         ports: the port names
+        default_params: the dictionary containing the default parameters of the model
         reciprocal: whether the model is reciprocal or not, i.e. whether
             model(i, j) == model(j, i).  If a model is reciprocal, the decorated
             model function only needs to be defined for i <= j.  Defaults to True
@@ -24,35 +25,42 @@ def model(ports, reciprocal=None, jit=False):
     Returns:
         the wrapped model function
     """
-    ports = tuple(p for p in ports)
-    num_ports = len(ports)
+    if default_params is None:
+        default_params = {}
 
     def model(func):
-        msg = f"Duplicate ports found for model {func.__name__}. Got: {ports}"
-        assert num_ports == len(set(ports)), msg
-        msg = f"Model ports should be string values. Got: {ports}"
-        assert all(isinstance(p, str) for p in ports), msg
-
-        _incomplete_circuit = False
+        _default_params = {}
         _reciprocal = reciprocal
+        _incomplete_circuit = False
         if hasattr(func, "modelfunc"):
             _incomplete_circuit = func._incomplete_circuit
             if _reciprocal is None:
                 _reciprocal = func.reciprocal
+            _ports = func.ports if ports is None else ports
+            _default_params.update(func.default_params)
             func = func.modelfunc
+        _default_params.update(default_params)
         if _reciprocal is None:
             _reciprocal = True
+        assert ports is not None, f"No ports specified for model {func.__name__}."
+        _ports = tuple(p for p in ports)
+        num_ports = len(_ports)
+        msg = f"Duplicate ports found for model {func.__name__}. Got: {_ports}"
+        assert num_ports == len(set(_ports)), msg
+        msg = f"Model ports should be string values. Got: {_ports}"
+        assert all(isinstance(p, str) for p in _ports), msg
 
         @functools.wraps(func)
         def wrapped(params, env, i, j):
+            params = {**_default_params, **params}
             if isinstance(i, str):
-                msg = f"Port name {i} not found in ports {ports} of {func.__name__}"
-                assert i in ports, msg
-                i = ports.index(i)
+                msg = f"Port name {i} not found in ports {_ports} of {func.__name__}"
+                assert i in _ports, msg
+                i = _ports.index(i)
             if isinstance(j, str):
-                msg = f"Port name {j} not found in ports {ports} of {func.__name__}"
-                assert j in ports, msg
-                j = ports.index(j)
+                msg = f"Port name {j} not found in ports {_ports} of {func.__name__}"
+                assert j in _ports, msg
+                j = _ports.index(j)
             msg = f"First index of {func.__name__} should be bigger or equal to zero."
             assert i >= 0, msg
             msg = f"Second index of {func.__name__} should be bigger or equal to zero."
@@ -68,10 +76,11 @@ def model(ports, reciprocal=None, jit=False):
         if jit:
             wrapped = jax.jit(wrapped, static_argnums=(2, 3))
 
-        wrapped.ports = ports
         wrapped.modelfunc = func
+        wrapped.ports = _ports
         wrapped.num_ports = num_ports
         wrapped.reciprocal = _reciprocal
+        wrapped.default_params = _default_params
         wrapped._incomplete_circuit = _incomplete_circuit
         return wrapped
 
@@ -82,12 +91,15 @@ _model = model
 _component = collections.namedtuple("component", ("params", "env", "model"))
 
 
-def component(model, params, ports=None, env=None, jit=False):
+def component(model, params=None, default_params=None, ports=None, env=None, jit=False):
     """create a component function from a model function
 
     Args:
         model: model function to create a component for
-        params: The parameter dictionary for the model.
+        params: The parameter dictionary for the model. These parameters will be tracked
+            during gradient calculations.
+        default_params: the dictionary to override the default parameters of the
+            model. These parameters will NOT be tracked during gradient calculations.
         ports: override port names of the model.
         env: the dictionary containing the simulation environment.
         jit: jit-compile the component function. Note: jit-compiling a
@@ -101,16 +113,23 @@ def component(model, params, ports=None, env=None, jit=False):
         a component is functionally very similar to a functools.partial of model
         with the addition of port names.
     """
-    if ports is None:
-        ports = model.ports
-    else:
-        ports = tuple(p for p in ports)
 
-    assert len(ports) == model.num_ports, f"len({ports}) != {model.num_ports}"
+    if params is None:
+        params = {}
 
-    model = _model(ports, reciprocal=model.reciprocal, jit=jit)(model)
+    if env is None:
+        env = {}
 
-    return _component(params, env, model)
+    modeldecorator = _model(
+        ports=ports,
+        default_params=default_params,
+        reciprocal=model.reciprocal,
+        jit=jit
+    )
+    model = modeldecorator(model)
+
+    comp = _component(params, env, model)
+    return comp
 
 
 def circuit(components, connections, ports, env=None, jit=False):
@@ -134,7 +153,7 @@ def circuit(components, connections, ports, env=None, jit=False):
 
             waveguide = component(
                 model=model_waveguide,
-                params={"length": 25e-6, "wl0": 1.55e-6, "neff0": 2.86, "ng": 3.4, "loss": 0.0},
+                params={"length": 25e-6, "wl0": 1.55e-6, "neff": 2.86, "ng": 3.4, "loss": 0.0},
                 ports=["in", "out"]
             )
             directional_coupler = component(
@@ -169,9 +188,9 @@ def circuit(components, connections, ports, env=None, jit=False):
 
     for name, comp in components.items():
         components[name] = component(
-            comp.model,
-            comp.params,
-            env=None,
+            model=comp.model,
+            params=comp.params,
+            env=comp.env,
             ports=tuple(f"{name}:{port}" for port in comp.model.ports),
             jit=False,
         )
@@ -192,11 +211,13 @@ def circuit(components, connections, ports, env=None, jit=False):
             for name, _comp in components.items()
         }
 
+    if env is None:
+        env = {}
     comp.model._incomplete_circuit = False
     circuit = component(
-        comp.model,
-        comp.params,
-        env=env,
+        model=comp.model,
+        params=comp.params,
+        env={**comp.env, **env},
         ports=tuple(ports[port] for port in comp.model.ports),
         jit=jit,
     )
@@ -224,7 +245,11 @@ def _validate_circuit_parameters(components, connections, ports):
         assert len(comp) == 3, msg
         if not isinstance(comp, _component):
             components[name] = component(
-                comp[2], comp[0], env=None, ports=comp[2].ports, jit=False
+                model=comp[2],
+                params=comp[0],
+                env=comp[1],
+                ports=comp[2].ports,
+                jit=False,
             )
         for port in components[name].model.ports:
             all_ports.add(f"{name}:{port}")
@@ -318,7 +343,31 @@ def _block_diag_components(comp1, comp2, name1, name2, ports=None):
     if len(ports) < len(set(ports)):
         ports = tuple(f"p{i}" for i in range(comp1.num_ports + comp2.num_ports))
 
-    @model(ports=ports, reciprocal=False, jit=False)
+    env = {**comp1.env, **comp2.env}
+    if comp1.model._incomplete_circuit and comp2.model._incomplete_circuit:
+        params = {**comp1.params, **comp2.params}
+        default_params = {**comp1.model.default_params, **comp2.model.default_params}
+    elif comp1.model._incomplete_circuit:
+        params = {**comp1.params}
+        params[name2] = comp2.params
+        default_params = {**comp1.model.default_params}
+        default_params[name2] = comp2.model.default_params
+    elif comp2.model._incomplete_circuit:
+        params = {**comp2.params}
+        params[name1] = comp1.params
+        default_params = {**comp2.model.default_params}
+        default_params[name1] = comp1.model.default_params
+    else:
+        params = {
+            name1: comp1.params,
+            name2: comp2.params,
+        }
+        default_params = {
+            name1: comp1.model.default_params,
+            name2: comp2.model.default_params,
+        }
+
+    @model(ports=ports, default_params=default_params, reciprocal=False, jit=False)
     def model_block_diag(params, env, i, j):
         if i < comp1.model.num_ports and j < comp1.model.num_ports:
             if comp1.model._incomplete_circuit:
@@ -342,21 +391,13 @@ def _block_diag_components(comp1, comp2, name1, name2, ports=None):
 
     model_block_diag._incomplete_circuit = True
 
-    if comp1.model._incomplete_circuit and comp2.model._incomplete_circuit:
-        params = {**comp1.params, **comp2.params}
-    elif comp1.model._incomplete_circuit:
-        params = {**comp1.params}
-        params[name2] = comp2.params
-    elif comp2.model._incomplete_circuit:
-        params = {**comp2.params}
-        params[name1] = comp1.params
-    else:
-        params = {
-            name1: comp1.params,
-            name2: comp2.params,
-        }
-
-    return component(model_block_diag, params, ports=ports)
+    _comp = component(
+        model=model_block_diag,
+        params=params,
+        env=env,
+        ports=ports,
+    )
+    return _comp
 
 
 def _interconnect_component(comp, k, l, ports=None):
@@ -395,7 +436,9 @@ def _interconnect_component(comp, k, l, ports=None):
     if len(ports) < len(set(ports)):
         ports = tuple(f"p{i}" for i in range(comp.model.num_ports - 2))
 
-    @model(ports=ports, reciprocal=False, jit=False)
+    default_params = comp.model.default_params
+
+    @model(ports=ports, default_params=default_params, reciprocal=False, jit=False)
     def model_interconnected(params, env, i, j):
         if k < l:
             if i >= k:
@@ -427,4 +470,10 @@ def _interconnect_component(comp, k, l, ports=None):
 
     model_interconnected._incomplete_circuit = comp.model._incomplete_circuit
 
-    return component(model_interconnected, comp.params, ports=ports)
+    _comp = component(
+        model=model_interconnected,
+        params=comp.params,
+        env=comp.env,
+        ports=ports,
+    )
+    return _comp
