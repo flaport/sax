@@ -26,6 +26,30 @@ def save(obj, name):
         pickle.dump(obj, file)
 
 
+def copy_params(params):
+    """copy a parameter dictionary
+
+    Args:
+        params: the parameter dictionary to copy
+
+    Returns:
+        the copied parameter dictionary
+
+    Note:
+        this copy function works recursively on all subdictionaries of the params
+        dictionary but does NOT copy any non-dictionary values.
+    """
+    is_dict_dict = all(isinstance(v, dict) for v in params.values())
+    is_float_dict = all(not isinstance(v, dict) for v in params.values())
+    msg = "Wrong parameter dictionary format. "
+    msg += "The parameter dictionary should be of dict->dict or dict->float format."
+    assert is_float_dict or is_dict_dict, msg
+    params = {**params}
+    if is_dict_dict:
+        return {k: copy_params(params[k]) for k in params}
+    return params
+
+
 def set_global_params(params, inplace=False, **kwargs):
     """add or update the given keyword arguments to each (sub)dictionary of the
        given params dictionary

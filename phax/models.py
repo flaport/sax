@@ -14,24 +14,6 @@ def model_waveguide_transmission(params):
     return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
 
 
-@modelgenerator(
-    ports=("in", "out"),
-    default_params={
-        "length": 25e-6,
-        "wl": 1.55e-6,
-        "wl0": 1.55e-6,
-        "neff": 2.34,
-        "ng": 3.4,
-        "loss": 0.0,
-    },
-    reciprocal=True,
-)
-def model_waveguide(i, j):
-    if i == j:
-        return
-    return model_waveguide_transmission
-
-
 def model_directional_coupler_coupling(params):
     return 1j * params["coupling"] ** 0.5
 
@@ -40,13 +22,27 @@ def model_directional_coupler_transmission(params):
     return (1 - params["coupling"]) ** 0.5
 
 
-@modelgenerator(
-    ports=("p0", "p1", "p2", "p3"),
-    default_params={"coupling": 0.5},
-    reciprocal=True,
-)
-def model_directional_coupler(i, j):
-    if i == 0 and j == 1 or i == 2 and j == 3:
-        return model_directional_coupler_transmission
-    elif i == 0 and j == 2 or i == 1 and j == 3:
-        return model_directional_coupler_coupling
+waveguide = {
+    ("in", "out"): model_waveguide_transmission,
+    ("out", "in"): model_waveguide_transmission,
+    "default_params": {
+        "length": 25e-6,
+        "wl": 1.55e-6,
+        "wl0": 1.55e-6,
+        "neff": 2.34,
+        "ng": 3.4,
+        "loss": 0.0,
+    },
+}
+
+directional_coupler = {
+    ("p0", "p1"): model_directional_coupler_transmission,
+    ("p1", "p0"): model_directional_coupler_transmission,
+    ("p2", "p3"): model_directional_coupler_transmission,
+    ("p3", "p2"): model_directional_coupler_transmission,
+    ("p0", "p2"): model_directional_coupler_coupling,
+    ("p2", "p0"): model_directional_coupler_coupling,
+    ("p1", "p3"): model_directional_coupler_coupling,
+    ("p3", "p1"): model_directional_coupler_coupling,
+    "default_params": {"coupling": 0.5},
+}
