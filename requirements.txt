@@ -1,2 +1,2 @@
-jaxlib
-jax
+jax==0.2.0
+jaxlib==0.1.55

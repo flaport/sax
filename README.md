@@ -109,8 +109,11 @@ Those are the basics. For more info, check out the
 
 ### Dependencies
 
-- [JAX](https://github.com/google/jax). Please read the JAX install instructions
-[here](https://github.com/google/jax/#installation).
+- [JAX & JAXLIB](https://github.com/google/jax). Please read the JAX install
+instructions [here](https://github.com/google/jax/#installation). Alternatively, you can
+try running [jaxinstall.sh](jaxinstall.sh) to automatically pip-install the correct
+`jax` and `jaxlib` package for your python and cuda version (if that exact combination
+exists).
 
 ### Installation
 
