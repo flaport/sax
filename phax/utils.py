@@ -26,6 +26,19 @@ def save(obj, name):
         pickle.dump(obj, file)
 
 
+def validate_params(params):
+    """ validate a parameter dictionary
+
+    params: the parameter dictionary. This dictionary should be a possibly
+        nested dictionary of floats.
+    """
+    is_dict_dict = all(isinstance(v, dict) for v in params.values())
+    is_float_dict = all(not isinstance(v, dict) for v in params.values())
+    msg = "Wrong parameter dictionary format. "
+    msg += "Should be a (possibly nested) dictionary of floats or float arrays."
+    assert is_float_dict or is_dict_dict, msg
+
+
 def copy_params(params):
     """copy a parameter dictionary
 
@@ -39,29 +52,27 @@ def copy_params(params):
         this copy function works recursively on all subdictionaries of the params
         dictionary but does NOT copy any non-dictionary values.
     """
-    is_dict_dict = all(isinstance(v, dict) for v in params.values())
-    is_float_dict = all(not isinstance(v, dict) for v in params.values())
-    msg = "Wrong parameter dictionary format. "
-    msg += "The parameter dictionary should be of dict->dict or dict->float format."
-    assert is_float_dict or is_dict_dict, msg
+    validate_params(params)
     params = {**params}
-    if is_dict_dict:
+    if all(isinstance(v, dict) for v in params.values()):
         return {k: copy_params(params[k]) for k in params}
     return params
 
 
-def set_global_params(params, inplace=False, **kwargs):
+def set_global_params(params, **kwargs):
     """add or update the given keyword arguments to each (sub)dictionary of the
        given params dictionary
 
     Args:
         params: the parameter dictionary to update with the given global parameters
-        inplace: update the parameter dictionary inplace.
         **kwargs: the global parameters to update the parameter dictionary with.
             These global parameters are often wavelength ('wl') or temperature ('T').
 
     Returns:
         The modified dictionary.
+
+    Note:
+        This operation NEVER updates the given params dictionary inplace.
 
     Example:
         This is how to change the wavelength to 1600nm for each component in
@@ -69,14 +80,8 @@ def set_global_params(params, inplace=False, **kwargs):
 
             params = set_global_params(params, wl=1.6e-6)
     """
-    is_dict_dict = all(isinstance(v, dict) for v in params.values())
-    is_float_dict = all(not isinstance(v, dict) for v in params.values())
-    msg = "Wrong parameter dictionary format. "
-    msg += "The parameter dictionary should be of dict->dict or dict->float format."
-    assert is_float_dict or is_dict_dict, msg
-    if not inplace:
-        params = {**params}
-    if is_dict_dict:
+    params = copy_params(params)
+    if all(isinstance(v, dict) for v in params.values()):
         return {k: set_global_params(params[k], **kwargs) for k in params}
     params.update(kwargs)
     return params
