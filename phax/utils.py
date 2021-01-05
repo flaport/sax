@@ -1,7 +1,11 @@
 import pickle
+import numpy as np
+import jax.numpy as jnp
+
+from .typing import Union, Tuple, Callable, Dict, ParamsDict, ModelDict
 
 
-def load(name):
+def load(name: str) -> object:
     """load an object using pickle
 
     Args:
@@ -15,7 +19,7 @@ def load(name):
     return obj
 
 
-def save(obj, name):
+def save(obj: object, name: str):
     """save an object using pickle
 
     Args:
@@ -26,20 +30,31 @@ def save(obj, name):
         pickle.dump(obj, file)
 
 
-def validate_params(params):
-    """ validate a parameter dictionary
+def validate_params(params: ParamsDict):
+    """validate a parameter dictionary
 
     params: the parameter dictionary. This dictionary should be a possibly
         nested dictionary of floats.
     """
+    if not params:
+        return
+
     is_dict_dict = all(isinstance(v, dict) for v in params.values())
-    is_float_dict = all(not isinstance(v, dict) for v in params.values())
-    msg = "Wrong parameter dictionary format. "
-    msg += "Should be a (possibly nested) dictionary of floats or float arrays."
-    assert is_float_dict or is_dict_dict, msg
+    if not is_dict_dict:
+        for k, v in params.items():
+            msg = f"Wrong parameter dictionary format. Should be a (possibly nested) "
+            msg += f"dictionary of floats or float arrays. Got: {k}: {v}{type(v)}"
+            assert (
+                isinstance(v, float)
+                or (isinstance(v, jnp.ndarray) and v.dtype == jnp.float32)
+                or (isinstance(v, np.ndarray) and v.dtype == np.float32)
+            ), msg
+    else:
+        for v in params.values():
+            validate_params(v)
 
 
-def copy_params(params):
+def copy_params(params: ParamsDict) -> ParamsDict:
     """copy a parameter dictionary
 
     Args:
@@ -59,7 +74,7 @@ def copy_params(params):
     return params
 
 
-def set_global_params(params, **kwargs):
+def set_global_params(params: ParamsDict, **kwargs) -> ParamsDict:
     """add or update the given keyword arguments to each (sub)dictionary of the
        given params dictionary
 
@@ -80,14 +95,16 @@ def set_global_params(params, **kwargs):
 
             params = set_global_params(params, wl=1.6e-6)
     """
+    validate_params(params)
     params = copy_params(params)
     if all(isinstance(v, dict) for v in params.values()):
         return {k: set_global_params(params[k], **kwargs) for k in params}
     params.update(kwargs)
+    validate_params(params)
     return params
 
 
-def get_ports(model):
+def get_ports(model: ModelDict) -> Tuple[str]:
     """get port names of the model
 
     Args:
@@ -104,7 +121,9 @@ def get_ports(model):
     return tuple(p for p in ports)
 
 
-def rename_ports(model, ports):
+def rename_ports(
+    model: ModelDict, ports: Union[Dict[str, str], Tuple[str]]
+) -> ModelDict:
     """rename the ports of a model
 
     Args:
@@ -130,7 +149,7 @@ def rename_ports(model, ports):
     return new_model
 
 
-def zero(params):
+def zero(params: ParamsDict) -> float:
     """the zero model function.
 
     Args:
@@ -140,3 +159,20 @@ def zero(params):
         This function always returns zero.
     """
     return 0.0
+
+
+def cartesian_product(*arrays) -> jnp.ndarray:
+    """calculate the n-dimensional cartesian product, i.e. create all
+       possible combinations of all elements in a given collection of arrays.
+
+    Args:
+        *arrays:  the arrays to calculate the cartesian product for
+
+    Returns:
+        the cartesian product.
+    """
+    ixarrays = jnp.ix_(*arrays)
+    barrays = jnp.broadcast_arrays(*ixarrays)
+    sarrays = jnp.stack(barrays, -1)
+    product = sarrays.reshape(-1, sarrays.shape[-1])
+    return product

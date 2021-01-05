@@ -1,9 +1,10 @@
 import jax.numpy as jnp
 from .utils import zero
 from .core import modelgenerator
+from .typing import ModelDict, ParamsDict
 
 
-def model_waveguide_transmission(params):
+def model_waveguide_transmission(params: ParamsDict) -> float:
     neff = params["neff"]
     dwl = params["wl"] - params["wl0"]
     dneff_dwl = (params["ng"] - params["neff"]) / params["wl0"]
@@ -14,15 +15,15 @@ def model_waveguide_transmission(params):
     return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
 
 
-def model_directional_coupler_coupling(params):
+def model_directional_coupler_coupling(params: ParamsDict) -> float:
     return 1j * params["coupling"] ** 0.5
 
 
-def model_directional_coupler_transmission(params):
+def model_directional_coupler_transmission(params: ParamsDict) -> float:
     return (1 - params["coupling"]) ** 0.5
 
 
-waveguide = {
+waveguide: ModelDict = {
     ("in", "out"): model_waveguide_transmission,
     ("out", "in"): model_waveguide_transmission,
     "default_params": {
@@ -35,7 +36,7 @@ waveguide = {
     },
 }
 
-directional_coupler = {
+directional_coupler: ModelDict = {
     ("p0", "p1"): model_directional_coupler_transmission,
     ("p1", "p0"): model_directional_coupler_transmission,
     ("p2", "p3"): model_directional_coupler_transmission,
