@@ -1,3 +1,5 @@
+""" PhAX core """
+
 import functools
 
 import jax

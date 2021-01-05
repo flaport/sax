@@ -1,3 +1,5 @@
+""" PhAX models """
+
 import jax.numpy as jnp
 from .utils import zero
 from .core import modelgenerator

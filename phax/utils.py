@@ -1,3 +1,5 @@
+""" Useful functions for working with PhAX. """
+
 import pickle
 import numpy as np
 import jax.numpy as jnp

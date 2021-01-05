@@ -4,7 +4,7 @@ Photonic Autograd and XLA - a [JAX](https://github.com/google/jax)-based photoni
 circuit simulator and optimizer for the frequency domain.
 
 The goal of PhAX is to be a light wrapper around JAX with some basic tools for photonic
-component and circuit simulations. Therefore, PhAX does not define any special
+component and circuit simulation and optimization. Therefore, PhAX does not define any special
 datastructures and tries to stay as close as possible to the functional nature of JAX.
 This makes it very easy to get started with PhAX as you only need functions and standard
 python dictionaries. Let's dive in...
