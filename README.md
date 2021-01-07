@@ -1,5 +1,7 @@
 # SAX
 
+![Docs](https://readthedocs.org/projects/sax/badge/?version=latest)
+
 Autograd and XLA for S-parameters - a scatter parameter circuit simulator and
 optimizer for the frequency domain based on [JAX](https://github.com/google/jax).
 
@@ -7,11 +9,15 @@ The simulator was developed for simulating Photonic Integrated Circuits but in f
 able to perform any S-parameter based circuit simulation. The goal of SAX is to be a
 thin wrapper around JAX with some basic tools for S-parameter based circuit simulation
 and optimization. Therefore, SAX does not define any special datastructures and tries to
-stay as close as possible to the functional nature of JAX.  This makes it very easy to
+stay as close as possible to the functional nature of JAX. This makes it very easy to
 get started with SAX as you only need functions and standard python dictionaries. Let's
 dive in...
 
 ## Quick Start
+
+[Full Quick Start page](https://sax.readthedocs.io/en/latest/examples/01_quick_start.html) -
+[Examples](https://sax.readthedocs.io/en/latest/examples.html) -
+[Full Docs](https://sax.readthedocs.io/en/latest/index.html).
 
 Let's first import the SAX library, along with JAX and the JAX-version of numpy:
 
@@ -100,22 +106,26 @@ params["top"]["length"] = 2.5e-5
 params["btm"]["length"] = 1.5e-5
 mzi["in1", "out1"](params)
 ```
+
 ```
 DeviceArray(-0.280701+0.10398856j, dtype=complex64)
 ```
 
-Those are the basics. For more info, check out the
-[examples](https://github.com/flaport/sax/tree/master/examples).
+Those are the basics. For more info, check out the **full**
+[SAX Quick Start page](https://sax.readthedocs.io/en/latest/examples/01_quick_start.html),
+the [Examples](https://sax.readthedocs.io/en/latest/examples.html)
+or the
+[Documentation](https://sax.readthedocs.io/en/latest/index.html).
 
 ## Installation
 
 ### Dependencies
 
 - [JAX & JAXLIB](https://github.com/google/jax). Please read the JAX install
-instructions [here](https://github.com/google/jax/#installation). Alternatively, you can
-try running [jaxinstall.sh](jaxinstall.sh) to automatically pip-install the correct
-`jax` and `jaxlib` package for your python and cuda version (if that exact combination
-exists).
+  instructions [here](https://github.com/google/jax/#installation). Alternatively, you can
+  try running [jaxinstall.sh](jaxinstall.sh) to automatically pip-install the correct
+  `jax` and `jaxlib` package for your python and cuda version (if that exact combination
+  exists).
 
 ### Installation
 
