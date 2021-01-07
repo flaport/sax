@@ -1,4 +1,4 @@
-""" Useful functions for working with PhAX. """
+""" Useful functions for working with SAX. """
 
 import pickle
 import numpy as np

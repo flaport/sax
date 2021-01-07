@@ -1,4 +1,4 @@
-""" PhAX core """
+""" SAX core """
 
 import functools
 

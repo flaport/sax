@@ -1,39 +1,39 @@
-PhAX module docs
+SAX module docs
 ================
 
-.. automodule:: phax
+.. automodule:: sax
    :members:
    :undoc-members:
    :show-inheritance:
 
-phax.models module
+sax.models module
 ------------------
 
-.. automodule:: phax.models
+.. automodule:: sax.models
    :members:
    :undoc-members:
    :show-inheritance:
 
-phax.core module
+sax.core module
 ----------------
 
-.. automodule:: phax.core
+.. automodule:: sax.core
    :members:
    :undoc-members:
    :show-inheritance:
 
-phax.utils module
+sax.utils module
 -----------------
 
-.. automodule:: phax.utils
+.. automodule:: sax.utils
    :members:
    :undoc-members:
    :show-inheritance:
 
-phax.constants module
+sax.constants module
 ---------------------
 
-.. automodule:: phax.constants
+.. automodule:: sax.constants
    :members:
    :undoc-members:
    :show-inheritance:

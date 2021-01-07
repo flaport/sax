@@ -1,4 +1,4 @@
-""" PhAX models """
+""" SAX models """
 
 import jax.numpy as jnp
 from .utils import zero

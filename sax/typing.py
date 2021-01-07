@@ -1,4 +1,4 @@
-""" Common datastructure types used in PhAX """
+""" Common datastructure types used in SAX """
 
 from typing import Optional, Dict, Union, Tuple, Callable
 

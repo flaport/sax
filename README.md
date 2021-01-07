@@ -1,20 +1,22 @@
-# PhAX
+# SAX
 
-Photonic Autograd and XLA - a [JAX](https://github.com/google/jax)-based photonic
-circuit simulator and optimizer for the frequency domain.
+Autograd and XLA for S-parameters - a scatter parameter circuit simulator and
+optimizer for the frequency domain based on [JAX](https://github.com/google/jax).
 
-The goal of PhAX is to be a light wrapper around JAX with some basic tools for photonic
-component and circuit simulation and optimization. Therefore, PhAX does not define any special
-datastructures and tries to stay as close as possible to the functional nature of JAX.
-This makes it very easy to get started with PhAX as you only need functions and standard
-python dictionaries. Let's dive in...
+The simulator was developed for simulating Photonic Integrated Circuits but in fact is
+able to perform any S-parameter based circuit simulation.  The goal of SAX is to be a
+light wrapper around JAX with some basic tools for photonic component and circuit
+simulation and optimization. Therefore, SAX does not define any special datastructures
+and tries to stay as close as possible to the functional nature of JAX.  This makes it
+very easy to get started with SAX as you only need functions and standard python
+dictionaries. Let's dive in...
 
 ## Quick Start
 
-Let's first import the PhAX library, along with JAX and the JAX-version of numpy:
+Let's first import the SAX library, along with JAX and the JAX-version of numpy:
 
 ```python
-import phax
+import sax
 import jax
 import jax.numpy as jnp
 ```
@@ -68,7 +70,7 @@ waveguide = {
 These component model dictionaries can be combined into a circuit model dictionary:
 
 ```python
-mzi = phax.circuit(
+mzi = sax.circuit(
     models = {
         "dc1": directional_coupler,
         "top": waveguide,
@@ -93,7 +95,7 @@ mzi = phax.circuit(
 Simulating this is as simple as modifying the default parameters:
 
 ```python
-params = phax.copy_params(mzi["default_params"])
+params = sax.copy_params(mzi["default_params"])
 params["top"]["length"] = 2.5e-5
 params["btm"]["length"] = 1.5e-5
 mzi["in1", "out1"](params)
@@ -103,7 +105,7 @@ DeviceArray(-0.280701+0.10398856j, dtype=complex64)
 ```
 
 Those are the basics. For more info, check out the
-[examples](https://github.com/flaport/phax/tree/master/examples).
+[examples](https://github.com/flaport/sax/tree/master/examples).
 
 ## Installation
 
@@ -118,7 +120,7 @@ exists).
 ### Installation
 
 ```
-pip install git+https://github.com/flaport/phax
+pip install sax
 ```
 
 ## License

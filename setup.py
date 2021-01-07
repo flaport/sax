@@ -1,17 +1,17 @@
 # imports
 import sys
-import phax
+import sax
 import warnings
 import setuptools
 import subprocess
 
-# install phax:
+# install sax:
 setuptools.setup(
-    name=phax.__name__,
-    version=phax.__version__,
-    description=phax.__doc__,
-    long_description=phax.__doc__,
-    author=phax.__author__,
+    name=sax.__name__,
+    version=sax.__version__,
+    description=sax.__doc__,
+    long_description=open("README.md").read(),
+    author=sax.__author__,
     author_email="floris.laporte@gmail.com",
     long_description_content_type="text/markdown",
     packages=setuptools.find_packages(),

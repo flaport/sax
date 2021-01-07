@@ -18,7 +18,7 @@ import shutil
 
 # -- Project information -----------------------------------------------------
 
-project = 'PhAX'
+project = 'SAX'
 copyright = '2021, Floris Laporte'
 author = 'Floris Laporte'
 
