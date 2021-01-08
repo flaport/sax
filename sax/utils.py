@@ -4,7 +4,7 @@ import pickle
 import numpy as np
 import jax.numpy as jnp
 
-from .typing import Union, Tuple, Callable, Dict, ParamsDict, ModelDict
+from .typing import Any, Union, Tuple, Callable, Dict, ParamsDict, ModelDict
 
 
 def load(name: str) -> object:
@@ -106,20 +106,19 @@ def set_global_params(params: ParamsDict, **kwargs) -> ParamsDict:
     return params
 
 
-def get_ports(model: ModelDict) -> Tuple[str]:
+def get_ports(model: ModelDict) -> Tuple[str, ...]:
     """get port names of the model
 
     Args:
         model: the model dictionary to get the port names from
     """
-    ports = {}
+    ports: Dict[str, Any] = {}
     for key in model:
-        try:
-            p1, p2 = key
-            ports[p1] = None
-            ports[p2] = None
-        except ValueError:
-            pass
+        if isinstance(key, str):
+            continue
+        p1, p2 = key
+        ports[p1] = None
+        ports[p2] = None
     return tuple(p for p in ports)
 
 
@@ -138,16 +137,16 @@ def rename_ports(
     if not isinstance(ports, dict):
         assert len(ports) == len(set(ports))
         ports = {original_ports[i]: port for i, port in enumerate(ports)}
-    new_model = {}
+    new_model: ModelDict = {}
     for key in model:
-        try:
-            p1, p2 = key
-            new_model[ports[p1], ports[p2]] = model[p1, p2]
-        except ValueError:
+        if isinstance(key, str):
             value = model[key]
             if isinstance(value, dict):
                 value = {**value}
             new_model[key] = value
+        else:
+            p1, p2 = key
+            new_model[ports[p1], ports[p2]] = model[p1, p2]
     return new_model
 
 

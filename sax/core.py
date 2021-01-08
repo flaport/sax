@@ -5,12 +5,12 @@ import functools
 import jax
 import jax.numpy as jnp
 
-from .utils import zero, rename_ports, get_ports, validate_params
-from .typing import Optional, Callable, Tuple, Dict, ParamsDict, ModelDict
+from .utils import zero, rename_ports, get_ports, validate_params, copy_params
+from .typing import Optional, Callable, Tuple, Dict, ParamsDict, ModelDict, ModelFunc, ComplexFloat
 
 
 def modelgenerator(
-    ports: Dict, default_params: Optional[ParamsDict] = None, reciprocal: bool = True
+    ports: Tuple[str, ...], default_params: Optional[ParamsDict] = None, reciprocal: bool = True
 ) -> Callable:
     """function decorator to easily generate a model dictionary
 
@@ -42,8 +42,8 @@ def modelgenerator(
             the model dictionary, for which each of the nonzero
             port-combinations is mapped to its corresponding model function.
         """
-        m = {}
-        m["default_params"] = {} if default_params is None else {**default_params}
+        m: ModelDict = {}
+        m["default_params"] = {} if default_params is None else copy_params(default_params)
         for j in range(num_ports):
             for i in range(j + 1):
                 func = modelgenerator(i, j)
@@ -119,7 +119,6 @@ def circuit(
                 None if len(names2) > 1 else names2[0],
             )
             names1.extend(names2)
-            conns = {}
             for port1, port2 in [(k, v) for k, v in connections.items()]:
                 n1, p1 = port1.split(":")
                 n2, p2 = port2.split(":")
@@ -163,9 +162,9 @@ def _validate_circuit_parameters(
         assert all(len(conn) == 2 for conn in connections), msg
         connections, _connections = {}, connections
         connection_ports = set()
-        for connection in _connections:
-            connections[connection[0]] = connection[1]
-            for port in connection:
+        for conn in _connections:
+            connections[conn[0]] = conn[1]
+            for port in conn:
                 msg = f"Duplicate port found in connections: '{port}'"
                 assert port not in connection_ports, msg
                 connection_ports.add(port)
@@ -235,7 +234,7 @@ def _validate_model_dict(name: str, model: ModelDict):
             assert callable(model.get((p1, p2), zero)), msg
 
 
-def _namedparamsfunc(func: Callable, name: str, params: ParamsDict) -> float:
+def _namedparamsfunc(func: Callable, name: str, params: ParamsDict) -> ComplexFloat:
     """make a model function look for its model name before acting on the parameters
 
     Args:
@@ -261,11 +260,14 @@ def _combine_models(
         name1: the name of the first model (can be None for unnamed models)
         name2: the name of the second model (can be None for unnamed models)
     """
-    model = {}
+    model: ModelDict = {}
     model["default_params"] = {}
     for _model, _name in [(model1, name1), (model2, name2)]:
         for key, value in _model.items():
-            try:
+            if isinstance(key, str):
+                if key != "default_params":
+                    model[key] = value
+            else:
                 p1, p2 = key
                 if value is zero or _name is None:
                     model[p1, p2] = value
@@ -274,10 +276,7 @@ def _combine_models(
                 if _name is None:
                     model["default_params"].update(_model["default_params"])
                 else:
-                    model["default_params"][_name] = {**_model["default_params"]}
-            except ValueError:
-                if key != "default_params":
-                    model[key] = value
+                    model["default_params"][_name] = copy_params(_model["default_params"])
     return model
 
 
@@ -299,8 +298,8 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
           Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
           of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
     """
-    new_model = {}
-    new_model["default_params"] = {**model["default_params"]}
+    new_model: ModelDict = {}
+    new_model["default_params"] = copy_params(model["default_params"])
     ports = get_ports(model)
     for i in ports:
         for j in ports:
@@ -325,27 +324,26 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
                 _model_ijkl, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll
             )
     for key in list(new_model.keys()):
-        try:
-            i, j = key
-            if i == k or i == l or j == k or j == l:
-                del new_model[i, j]
-        except ValueError:
-            pass
+        if isinstance(key, str):
+            continue
+        i, j = key
+        if i == k or i == l or j == k or j == l:
+            del new_model[i, j]
     return new_model
 
 
 def _model_ijkl(
-    mij: Callable,
-    mik: Callable,
-    mil: Callable,
-    mkj: Callable,
-    mkk: Callable,
-    mkl: Callable,
-    mlj: Callable,
-    mlk: Callable,
-    mll: Callable,
+    mij: ModelFunc,
+    mik: ModelFunc,
+    mil: ModelFunc,
+    mkj: ModelFunc,
+    mkk: ModelFunc,
+    mkl: ModelFunc,
+    mlj: ModelFunc,
+    mlk: ModelFunc,
+    mll: ModelFunc,
     params: ParamsDict,
-) -> float:
+) -> ComplexFloat:
     """combine the given model functions.
 
     Note:
@@ -354,21 +352,21 @@ def _model_ijkl(
           Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
           of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
     """
-    mij = mij(params)
-    mik = mik(params)
-    mil = mil(params)
-    mkj = mkj(params)
-    mkk = mkk(params)
-    mkl = mkl(params)
-    mlj = mlj(params)
-    mlk = mlk(params)
-    mll = mll(params)
-    return mij + (
-        mkj * mil * (1 - mlk)
-        + mlj * mik * (1 - mkl)
-        + mkj * mll * mik
-        + mlj * mkk * mil
-    ) / ((1 - mkl) * (1 - mlk) - mkk * mll)
+    vij = mij(params)
+    vik = mik(params)
+    vil = mil(params)
+    vkj = mkj(params)
+    vkk = mkk(params)
+    vkl = mkl(params)
+    vlj = mlj(params)
+    vlk = mlk(params)
+    vll = mll(params)
+    return vij + (
+        vkj * vil * (1 - vlk)
+        + vlj * vik * (1 - vkl)
+        + vkj * vll * vik
+        + vlj * vkk * vil
+    ) / ((1 - vkl) * (1 - vlk) - vkk * vll)
 
 
 class _partialmodelfunc(functools.partial):
