@@ -1,10 +1,14 @@
-""" SAX models """
+""" SAX Photonic Integrated Circuit models """
 
 import jax.numpy as jnp
-from .utils import zero
-from .core import modelgenerator
-from .typing import Dict, ModelDict, ComplexFloat
+from ..utils import zero
+from ..core import modelgenerator
+from ..typing import Dict, ModelDict, ComplexFloat
 
+
+#########################
+## Waveguides ##
+#########################
 
 def model_waveguide_transmission(params: Dict[str, float]) -> ComplexFloat:
     neff = params["neff"]
@@ -15,15 +19,6 @@ def model_waveguide_transmission(params: Dict[str, float]) -> ComplexFloat:
         jnp.log(2 * jnp.pi * neff * params["length"]) - jnp.log(params["wl"])
     )
     return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
-
-
-def model_directional_coupler_coupling(params: Dict[str, float]) -> ComplexFloat:
-    return 1j * params["coupling"] ** 0.5
-
-
-def model_directional_coupler_transmission(params: Dict[str, float]) -> ComplexFloat:
-    return (1 - params["coupling"]) ** 0.5
-
 
 waveguide: ModelDict = {
     ("in", "out"): model_waveguide_transmission,
@@ -37,6 +32,16 @@ waveguide: ModelDict = {
         "loss": 0.0,
     },
 }
+
+#########################
+## Directional coupler ##
+#########################
+
+def model_directional_coupler_coupling(params: Dict[str, float]) -> ComplexFloat:
+    return 1j * params["coupling"] ** 0.5
+
+def model_directional_coupler_transmission(params: Dict[str, float]) -> ComplexFloat:
+    return (1 - params["coupling"]) ** 0.5
 
 directional_coupler: ModelDict = {
     ("p0", "p1"): model_directional_coupler_transmission,
