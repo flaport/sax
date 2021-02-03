@@ -1,7 +1,7 @@
 """ SAX """
 
 __author__ = "Floris Laporte"
-__version__ = "0.0.0"
+__version__ = "0.0.1"
 
 
 from . import core
