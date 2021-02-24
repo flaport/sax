@@ -48,8 +48,14 @@ def validate_params(params: ParamsDict):
             msg += f"dictionary of floats or float arrays. Got: {k}: {v}{type(v)}"
             assert (
                 isinstance(v, float)
-                or (isinstance(v, jnp.ndarray) and v.dtype == jnp.float32)
-                or (isinstance(v, np.ndarray) and v.dtype == np.float32)
+                or (
+                    isinstance(v, jnp.ndarray)
+                    and (v.dtype == jnp.float32 or v.dtype == jnp.float64)
+                )
+                or (
+                    isinstance(v, np.ndarray)
+                    and (v.dtype == np.float32 or v.dtype == jnp.float64)
+                )
             ), msg
     else:
         for v in params.values():
