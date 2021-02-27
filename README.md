@@ -40,7 +40,7 @@ directional_coupler = {
     ("p2", "p0"): lambda params: 1j * params["coupling"] ** 0.5,
     ("p1", "p3"): lambda params: 1j * params["coupling"] ** 0.5,
     ("p3", "p1"): lambda params: 1j * params["coupling"] ** 0.5,
-    "default_params": {
+    "params": {
         "coupling": 0.5
     },
 }
@@ -62,7 +62,7 @@ def model_waveguide_transmission(params):
 waveguide = {
     ("in", "out"): model_waveguide_transmission,
     ("out", "in"): model_waveguide_transmission,
-    "default_params": {
+    "params": {
         "length": 25e-6,
         "wl": 1.55e-6,
         "wl0": 1.55e-6,
@@ -101,7 +101,7 @@ mzi = sax.circuit(
 Simulating this is as simple as modifying the default parameters:
 
 ```python
-params = sax.copy_params(mzi["default_params"])
+params = sax.copy_params(mzi["params"])
 params["top"]["length"] = 2.5e-5
 params["btm"]["length"] = 1.5e-5
 mzi["in1", "out1"](params)

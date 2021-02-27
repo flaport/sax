@@ -10,14 +10,14 @@ from .typing import Optional, Callable, Tuple, Dict, ParamsDict, ModelDict, Mode
 
 
 def modelgenerator(
-    ports: Tuple[str, ...], default_params: Optional[ParamsDict] = None, reciprocal: bool = True
+    ports: Tuple[str, ...], params: Optional[ParamsDict] = None, reciprocal: bool = True
 ) -> Callable:
     """function decorator to easily generate a model dictionary
 
     Args:
         ports: the port names of the model (port combination tuples will be the
             keys of the model dictionary)
-        default_params: the dictionary containing the default model parameters.
+        params: the dictionary containing the default model parameters.
         reciprocal: whether the model is reciprocal or not, i.e. whether
             model(i, j) == model(j, i).  If a model is reciprocal, the decorated
             model function only needs to be defined for i <= j.
@@ -43,7 +43,7 @@ def modelgenerator(
             port-combinations is mapped to its corresponding model function.
         """
         m: ModelDict = {}
-        m["default_params"] = {} if default_params is None else copy_params(default_params)
+        m["params"] = {} if params is None else copy_params(params)
         for j in range(num_ports):
             for i in range(j + 1):
                 func = modelgenerator(i, j)
@@ -105,7 +105,7 @@ def circuit(
 
     for name, model in models.items():
         models[name] = rename_ports(model, {p: f"{name}:{p}" for p in get_ports(model)})
-        validate_params(models[name].get("default_params", {}))
+        validate_params(models[name].get("params", {}))
     modelnames = [[name] for name in models]
 
     while len(modelnames) > 1:
@@ -261,11 +261,11 @@ def _combine_models(
         name2: the name of the second model (can be None for unnamed models)
     """
     model: ModelDict = {}
-    model["default_params"] = {}
+    model["params"] = {}
     for _model, _name in [(model1, name1), (model2, name2)]:
         for key, value in _model.items():
             if isinstance(key, str):
-                if key != "default_params":
+                if key != "params":
                     model[key] = value
             else:
                 p1, p2 = key
@@ -274,9 +274,9 @@ def _combine_models(
                 else:
                     model[p1, p2] = _partialmodelfunc(_namedparamsfunc, value, _name)
                 if _name is None:
-                    model["default_params"].update(_model["default_params"])
+                    model["params"].update(_model["params"])
                 else:
-                    model["default_params"][_name] = copy_params(_model["default_params"])
+                    model["params"][_name] = copy_params(_model["params"])
     return model
 
 
@@ -299,7 +299,7 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
           of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
     """
     new_model: ModelDict = {}
-    new_model["default_params"] = copy_params(model["default_params"])
+    new_model["params"] = copy_params(model["params"])
     ports = get_ports(model)
     for i in ports:
         for j in ports:

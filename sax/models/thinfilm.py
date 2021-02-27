@@ -31,7 +31,7 @@ fresnel_mirror_ij = {
     ("in", "out"): t_fresnel_ij,
     ("out", "in"): lambda params: (1 - r_fresnel_ij(params)**2)/t_fresnel_ij(params), # t_ji,
     ("out", "out"): lambda params: -1*r_fresnel_ij(params), # r_ji,
-    "default_params": {
+    "params": {
         "ni": 1.,
         "nj": 1.,
     }
@@ -53,7 +53,7 @@ def prop_i(params: Dict[str, float]) -> ComplexFloat:
 propagation_i = {
     ("in", "out"): prop_i,
     ("out", "in"): prop_i,
-    "default_params": {
+    "params": {
         "ni": 1.,
         "di": 500.,
         "wl": 532.,
@@ -85,7 +85,7 @@ mirror = {
     ("in", "out"): t_complex,
     ("out", "in"): t_complex,
     ("out", "out"): r_complex,
-    "default_params": {
+    "params": {
         "t_amp": jnp.sqrt(0.5),
         "t_ang": 0.0,
     }

@@ -23,7 +23,7 @@ def model_waveguide_transmission(params: Dict[str, float]) -> ComplexFloat:
 waveguide: ModelDict = {
     ("in", "out"): model_waveguide_transmission,
     ("out", "in"): model_waveguide_transmission,
-    "default_params": {
+    "params": {
         "length": 25e-6,
         "wl": 1.55e-6,
         "wl0": 1.55e-6,
@@ -52,5 +52,5 @@ directional_coupler: ModelDict = {
     ("p2", "p0"): model_directional_coupler_coupling,
     ("p1", "p3"): model_directional_coupler_coupling,
     ("p3", "p1"): model_directional_coupler_coupling,
-    "default_params": {"coupling": 0.5},
+    "params": {"coupling": 0.5},
 }
