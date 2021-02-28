@@ -1,14 +1,18 @@
 """ SAX core """
 
-import re
-import inspect
 import functools
 
-import jax
-import jax.numpy as jnp
-
 from .utils import zero, rename_ports, get_ports, validate_params, copy_params
-from .typing import Optional, Callable, Tuple, Dict, ParamsDict, ModelDict, ModelFunc, ComplexFloat
+from .typing import (
+    Optional,
+    Callable,
+    Tuple,
+    Dict,
+    ParamsDict,
+    ModelDict,
+    ModelFunc,
+    ComplexFloat,
+)
 
 
 def circuit(
@@ -59,9 +63,12 @@ def circuit(
 
     for name, model in models.items():
         models[name] = rename_ports(model, {p: f"{name}:{p}" for p in get_ports(model)})
-        validate_params(models[name].get("params", {}))
+        params = models[name].get("params", {})
+        assert isinstance(params, dict)
+        validate_params(params)
     modelnames = [[name] for name in models]
 
+    model = {}
     while len(modelnames) > 1:
         for names1, names2 in zip(modelnames[::2], modelnames[1::2]):
             model1 = models.pop(names1[0])
@@ -113,7 +120,6 @@ def _validate_circuit_parameters(
 
     if not isinstance(connections, dict):
         msg = f"Connections should be a str:str dict or a list of length-2 tuples."
-        assert all(len(conn) == 2 for conn in connections), msg
         connections, _connections = {}, connections
         connection_ports = set()
         for conn in _connections:
@@ -215,7 +221,7 @@ def _combine_models(
         name2: the name of the second model (can be None for unnamed models)
     """
     model: ModelDict = {}
-    model["params"] = {}
+    params = model["params"] = {}
     for _model, _name in [(model1, name1), (model2, name2)]:
         for key, value in _model.items():
             if isinstance(key, str):
@@ -223,14 +229,16 @@ def _combine_models(
                     model[key] = value
             else:
                 p1, p2 = key
+                _params = _model["params"]
+                assert isinstance(_params, dict)
                 if value is zero or _name is None:
                     model[p1, p2] = value
                 else:
                     model[p1, p2] = _partialmodelfunc(_namedparamsfunc, value, _name)
                 if _name is None:
-                    model["params"].update(_model["params"])
+                    params.update(copy_params(_params))
                 else:
-                    model["params"][_name] = copy_params(_model["params"])
+                    params[_name] = copy_params(_params)
     return model
 
 
@@ -253,7 +261,9 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
           of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
     """
     new_model: ModelDict = {}
-    new_model["params"] = copy_params(model["params"])
+    params = model["params"]
+    assert isinstance(params, dict)
+    new_model["params"] = copy_params(params)
     ports = get_ports(model)
     for i in ports:
         for j in ports:

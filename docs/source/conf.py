@@ -13,17 +13,18 @@
 import os
 import sys
 import shutil
+
 # sys.path.insert(0, os.path.abspath('.'))
 
 
 # -- Project information -----------------------------------------------------
 
-project = 'SAX'
-copyright = '2021, Floris Laporte'
-author = 'Floris Laporte'
+project = "SAX"
+copyright = "2021, Floris Laporte"
+author = "Floris Laporte"
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.0'
+release = "0.0.0"
 
 
 # -- General configuration ---------------------------------------------------
@@ -41,7 +42,7 @@ extensions = [
 ]
 
 # Add any paths that contain templates here, relative to this directory.
-templates_path = ['_templates']
+templates_path = ["_templates"]
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -53,12 +54,12 @@ templates_path = ['_templates']
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 #
-html_theme = 'sphinx_rtd_theme'
+html_theme = "sphinx_rtd_theme"
 
 # Add any paths that contain custom static files (such as style sheets) here,
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
-html_static_path = ['_static']
+html_static_path = ["_static"]
 
 # -- Examples Folder ---------------------------------------------------------
 
@@ -67,4 +68,3 @@ examples_src = os.path.abspath(os.path.join(sourcedir, "..", "..", "examples"))
 examples_dst = os.path.abspath(os.path.join(sourcedir, "examples"))
 shutil.rmtree(examples_dst, ignore_errors=True)
 shutil.copytree(examples_src, examples_dst)
-

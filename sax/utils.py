@@ -1,10 +1,9 @@
 """ Useful functions for working with SAX. """
 
 import pickle
-import numpy as np
 import jax.numpy as jnp
 
-from .typing import Any, Union, Tuple, Callable, Dict, ParamsDict, ModelDict
+from .typing import Any, Union, Tuple, Dict, ParamsDict, ModelDict, is_float
 
 
 def load(name: str) -> object:
@@ -46,19 +45,10 @@ def validate_params(params: ParamsDict):
         for k, v in params.items():
             msg = f"Wrong parameter dictionary format. Should be a (possibly nested) "
             msg += f"dictionary of floats or float arrays. Got: {k}: {v}{type(v)}"
-            assert (
-                isinstance(v, float)
-                or (
-                    isinstance(v, jnp.ndarray)
-                    and (v.dtype == jnp.float32 or v.dtype == jnp.float64)
-                )
-                or (
-                    isinstance(v, np.ndarray)
-                    and (v.dtype == np.float32 or v.dtype == jnp.float64)
-                )
-            ), msg
+            assert is_float(v), msg
     else:
         for v in params.values():
+            assert isinstance(v, dict)
             validate_params(v)
 
 
@@ -75,10 +65,9 @@ def copy_params(params: ParamsDict) -> ParamsDict:
         this copy function works recursively on all subdictionaries of the params
         dictionary but does NOT copy any non-dictionary values.
     """
-    validate_params(params)
-    params = {**params}
-    if all(isinstance(v, dict) for v in params.values()):
-        return {k: copy_params(params[k]) for k in params}
+    params = {
+        k: (copy_params(v) if isinstance(v, dict) else v) for k, v in params.items()
+    }
     return params
 
 
@@ -104,11 +93,14 @@ def set_global_params(params: ParamsDict, **kwargs) -> ParamsDict:
             params = set_global_params(params, wl=1.6e-6)
     """
     validate_params(params)
-    params = copy_params(params)
-    if all(isinstance(v, dict) for v in params.values()):
-        return {k: set_global_params(params[k], **kwargs) for k in params}
-    params.update(kwargs)
-    validate_params(params)
+    params = {
+        k: (
+            set_global_params(v, **kwargs)
+            if isinstance(v, dict)
+            else (kwargs[k] if k in kwargs else v)
+        )
+        for k, v in params.items()
+    }
     return params
 
 

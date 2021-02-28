@@ -1,5 +1,9 @@
 """ A collection of useful constants for SAX simulations. """
 
-from math import pi
+import math
 
-c = 299792458.0
+pi: float = math.pi
+""" pi """
+
+c: float = 299792458.0
+"""speed of light"""
