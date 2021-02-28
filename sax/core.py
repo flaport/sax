@@ -1,5 +1,7 @@
 """ SAX core """
 
+import re
+import inspect
 import functools
 
 import jax
@@ -7,55 +9,6 @@ import jax.numpy as jnp
 
 from .utils import zero, rename_ports, get_ports, validate_params, copy_params
 from .typing import Optional, Callable, Tuple, Dict, ParamsDict, ModelDict, ModelFunc, ComplexFloat
-
-
-def modelgenerator(
-    ports: Tuple[str, ...], params: Optional[ParamsDict] = None, reciprocal: bool = True
-) -> Callable:
-    """function decorator to easily generate a model dictionary
-
-    Args:
-        ports: the port names of the model (port combination tuples will be the
-            keys of the model dictionary)
-        params: the dictionary containing the default model parameters.
-        reciprocal: whether the model is reciprocal or not, i.e. whether
-            model(i, j) == model(j, i).  If a model is reciprocal, the decorated
-            model function only needs to be defined for i <= j.
-
-    Returns:
-        a decorator acting on a function-generating function.
-    """
-    ports = tuple(p for p in ports)
-    num_ports = len(ports)
-
-    def modeldecorator(modelgenerator: Callable) -> ModelDict:
-        """generator a model dictionary from a function-generating function.
-
-        Args:
-            modelgenerator: the function-generating function taking two integer
-                indices as arguments: (i, j).  modelgenerator(i, j) needs to return
-                a function taking a single dictionary argument: the parameters of the
-                function. modelgenerator(i, j) only needs to be defined for the nonzero
-                elements.
-
-        Returns:
-            the model dictionary, for which each of the nonzero
-            port-combinations is mapped to its corresponding model function.
-        """
-        m: ModelDict = {}
-        m["params"] = {} if params is None else copy_params(params)
-        for j in range(num_ports):
-            for i in range(j + 1):
-                func = modelgenerator(i, j)
-                if func is not None:
-                    m[ports[i], ports[j]] = func
-                if not reciprocal:
-                    func = modelgenerator(j, i)
-                if func is not None:
-                    m[ports[j], ports[i]] = func
-        return m
-
-    return modeldecorator
 
 
 def circuit(
@@ -77,12 +30,13 @@ def circuit(
     Example:
         A simple mzi can be created as follows::
 
-            mzi = circuit(
+            import sax
+            mzi = sax.circuit(
                 models = {
-                    "left": model_directional_coupler,
-                    "top": model_waveguide,
-                    "bottom": model_waveguide,
-                    "right": model_directional_coupler,
+                    "left": sax.models.pic.dc,
+                    "top": sax.models.pic.wg,
+                    "bottom": sax.models.pic.wg,
+                    "right": sax.models.pic.dc,
                 },
                 connections={
                     "left:p2": "top:in",

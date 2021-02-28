@@ -9,7 +9,7 @@ from . import utils
 from . import models
 from . import constants
 
-from .core import modelgenerator, circuit
+from .core import circuit
 from .utils import (
     load,
     save,
