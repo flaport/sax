@@ -2,7 +2,6 @@
 
 import jax.numpy as jnp
 from ..utils import zero
-from ..core import modelgenerator
 from ..typing import Dict, ModelDict, ComplexFloat
 
 
@@ -18,6 +17,16 @@ def r_fresnel_ij(params: Dict[str, float]) -> ComplexFloat:
     """
     return (params["ni"] - params["nj"]) / (params["ni"] + params["nj"])
 
+
+def r_fresnel_ji(params: Dict[str, float]) -> ComplexFloat:
+    """
+    Normal incidence amplitude reflection from Fresnel's equations
+    ni : refractive index of the initial medium
+    nj : refractive index of the final medium
+    """
+    return -1*r_fresnel_ij(params)
+
+
 def t_fresnel_ij(params: Dict[str, float]) -> ComplexFloat:
     """
     Normal incidence amplitude transmission from Fresnel's equations
@@ -26,16 +35,27 @@ def t_fresnel_ij(params: Dict[str, float]) -> ComplexFloat:
     """
     return 2 * params["ni"] / (params["ni"] + params["nj"])
 
+
+def t_fresnel_ji(params: Dict[str, float]) -> ComplexFloat:
+    """
+    Normal incidence amplitude transmission from Fresnel's equations
+    ni : refractive index of the initial medium
+    nj : refractive index of the final medium
+    """
+    return  (1 - r_fresnel_ij(params)**2)/t_fresnel_ij(params)
+
+
 fresnel_mirror_ij = {
     ("in", "in"): r_fresnel_ij,
     ("in", "out"): t_fresnel_ij,
-    ("out", "in"): lambda params: (1 - r_fresnel_ij(params)**2)/t_fresnel_ij(params), # t_ji,
-    ("out", "out"): lambda params: -1*r_fresnel_ij(params), # r_ji,
+    ("out", "in"): t_fresnel_ji,
+    ("out", "out"): r_fresnel_ji,
     "params": {
         "ni": 1.,
         "nj": 1.,
     }
 }
+""" fresnel interface """
 
 #################
 ## Propagation ##
@@ -59,6 +79,7 @@ propagation_i = {
         "wl": 532.,
     }
 }
+""" propagation phase """
 
 #################################
 ## Lossless reciprocal element ##
@@ -90,3 +111,4 @@ mirror = {
         "t_ang": 0.0,
     }
 }
+""" fresnel mirror """
