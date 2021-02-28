@@ -1,5 +1,7 @@
 """ SAX core """
 
+from __future__ import annotations
+
 import functools
 
 from .utils import zero, rename_ports, get_ports, validate_params, copy_params

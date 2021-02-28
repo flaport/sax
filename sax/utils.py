@@ -1,6 +1,9 @@
 """ Useful functions for working with SAX. """
 
+from __future__ import annotations
+
 import pickle
+
 import jax.numpy as jnp
 
 from .typing import Any, Union, Tuple, Dict, ParamsDict, ModelDict, is_float

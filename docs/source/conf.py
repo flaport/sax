@@ -14,7 +14,7 @@ import os
 import sys
 import shutil
 
-# sys.path.insert(0, os.path.abspath('.'))
+sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
 
 
 # -- Project information -----------------------------------------------------
@@ -60,6 +60,16 @@ html_theme = "sphinx_rtd_theme"
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ["_static"]
+
+# Change how type hints are displayed (requires sphinx.ext.autodoc.typehints)
+autodoc_typehints = "signature" # signature, description, none
+autodoc_type_aliases = {
+    "Float": "sax.typing.Float",
+    "ComplexFloat": "sax.typing.ComplexFloat",
+    "ParamsDict": "sax.typing.ParamsDict",
+    "ModelFunc": "sax.typing.ModelFunc",
+    "ModelDict": "sax.typing.ModelDict",
+}
 
 # -- Examples Folder ---------------------------------------------------------
 

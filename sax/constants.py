@@ -1,5 +1,7 @@
 """ A collection of useful constants for SAX simulations. """
 
+from __future__ import annotations
+
 import math
 
 pi: float = math.pi

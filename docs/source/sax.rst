@@ -6,32 +6,40 @@ SAX module docs
    :undoc-members:
    :show-inheritance:
 
-sax.core module
-----------------
+sax.core
+--------
 
 .. automodule:: sax.core
    :members:
    :undoc-members:
    :show-inheritance:
 
-sax.utils module
------------------
+sax.utils
+---------
 
 .. automodule:: sax.utils
    :members:
    :undoc-members:
    :show-inheritance:
 
-sax.constants module
----------------------
+sax.typing
+----------
+
+.. automodule:: sax.typing
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+sax.constants
+-------------
 
 .. automodule:: sax.constants
    :members:
    :undoc-members:
    :show-inheritance:
 
-sax.models module
-------------------
+sax.models
+----------
 
 .. automodule:: sax.models.pic
    :members:
