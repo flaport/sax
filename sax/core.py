@@ -18,14 +18,31 @@ from .typing import (
 )
 
 
-def model(funcs: ModelDict, params: ModelParams) -> Model:
+def model(funcs: ModelDict, params: ModelParams, reciprocal: bool = False) -> Model:
     """create a model dictionary
 
     Args:
         funcs: a dictionary mapping port name combinations onto functions
         params: a parameter dictionary
+        reciprocal: if the model is reciprocal, model functions only need to be
+            supplied in one port direction to automatically set the reversed
+            direction with the same function.
     """
-    return Model(funcs=funcs, params=params)
+    model = Model(funcs=funcs, params=params)
+    if reciprocal:
+        ports = get_ports(model)
+        for i, p1 in enumerate(ports):
+            for p2 in ports[i:]:
+                if not (p1, p2) in model.funcs and not (p2, p1) in model.funcs:
+                    continue
+                if not (p1, p2) in model.funcs:
+                    model.funcs[p1, p2] = model.funcs[p2, p1]
+                if not (p2, p1) in model.funcs:
+                    model.funcs[p2, p1] = model.funcs[p1, p2]
+                assert (
+                    model.funcs[p1, p2] is model.funcs[p2, p1]
+                ), "non-reciprocal model with reciprocal=True"
+    return model
 
 
 def circuit(
@@ -206,18 +223,6 @@ def _validate_model_dict(name: str, model: Model):
             assert callable(model.funcs.get((p1, p2), zero)), msg
 
 
-def _namedparamsfunc(func: Callable, name: str, params: ModelParams) -> ComplexFloat:
-    """make a model function look for its model name before acting on the parameters
-
-    Args:
-        func: the original model function acting on a dictionary of parameters
-        name: the name of the model
-        params: a dictionary for which the keys are the model names and the
-            values are the model parameter dictionaries.
-    """
-    return func(params[name])
-
-
 def _combine_models(
     model1: Model,
     model2: Model,
@@ -241,7 +246,7 @@ def _combine_models(
             if value is zero or _name is None:
                 funcs[p1, p2] = value
             else:
-                funcs[p1, p2] = _partialmodelfunc(_namedparamsfunc, value, _name)
+                funcs[p1, p2] = _NamedParamsFunc(value, _name)
             if _name is None:
                 params = {**params, **_params}
             else:
@@ -288,9 +293,7 @@ def _interconnect_model(model: Model, k: str, l: str) -> Model:
                 and ((mlj is zero) or (mkk is zero) or (mil is zero))
             ):
                 continue
-            funcs[i, j] = _partialmodelfunc(
-                _model_ijkl, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll
-            )
+            funcs[i, j] = _InterconnectModelFunc(i, j, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll)
     for key in list(funcs.keys()):
         i, j = key
         if i == k or i == l or j == k or j == l:
@@ -298,55 +301,72 @@ def _interconnect_model(model: Model, k: str, l: str) -> Model:
     return Model(funcs=funcs, params=copy_params(model.params))
 
 
-def _model_ijkl(
-    mij: ModelFunc,
-    mik: ModelFunc,
-    mil: ModelFunc,
-    mkj: ModelFunc,
-    mkk: ModelFunc,
-    mkl: ModelFunc,
-    mlj: ModelFunc,
-    mlk: ModelFunc,
-    mll: ModelFunc,
-    params: ModelParams,
-) -> ComplexFloat:
-    """combine the given model functions.
+class _InterconnectModelFunc:
+    def __init__(self,
+        p1: str,
+        p2: str,
+        mij: ModelFunc,
+        mik: ModelFunc,
+        mil: ModelFunc,
+        mkj: ModelFunc,
+        mkk: ModelFunc,
+        mkl: ModelFunc,
+        mlj: ModelFunc,
+        mlk: ModelFunc,
+        mll: ModelFunc,
+    ):
+        self.p1 = p1
+        self.p2 = p2
+        self.mij = mij
+        self.mik = mik
+        self.mil = mil
+        self.mkj = mkj
+        self.mkk = mkk
+        self.mkl = mkl
+        self.mlj = mlj
+        self.mlk = mlk
+        self.mll = mll
+    def __call__(self, params: ModelParams) -> ComplexFloat:
+        """combine the given model functions.
 
-    Note:
-        The interconnect algorithm is based on equation 6 in the paper below::
+        Note:
+            The interconnect algorithm is based on equation 6 in the paper below::
 
-          Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
-          of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
-    """
-    vij = mij(params)
-    vik = mik(params)
-    vil = mil(params)
-    vkj = mkj(params)
-    vkk = mkk(params)
-    vkl = mkl(params)
-    vlj = mlj(params)
-    vlk = mlk(params)
-    vll = mll(params)
-    return vij + (
-        vkj * vil * (1 - vlk)
-        + vlj * vik * (1 - vkl)
-        + vkj * vll * vik
-        + vlj * vkk * vil
-    ) / ((1 - vkl) * (1 - vlk) - vkk * vll)
-
-
-class _partialmodelfunc(functools.partial):
-    """fun(params)
-
-    Args:
-        params: parameter dictionary for the model.
-
-    Returns:
-        Model transmission.
-    """
-
+              Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
+              of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
+        """
+        vij = self.mij(params)
+        vik = self.mik(params)
+        vil = self.mil(params)
+        vkj = self.mkj(params)
+        vkk = self.mkk(params)
+        vkl = self.mkl(params)
+        vlj = self.mlj(params)
+        vlk = self.mlk(params)
+        vll = self.mll(params)
+        return vij + (
+            vkj * vil * (1 - vlk)
+            + vlj * vik * (1 - vkl)
+            + vkj * vll * vik
+            + vlj * vkk * vil
+        ) / ((1 - vkl) * (1 - vlk) - vkk * vll)
     def __repr__(self):
-        func = self.func
-        while hasattr(func, "func"):
-            func = func.func
-        return repr(func)
+        return f"{self.__class__.__name__}({self.p1}, {self.p2})"
+
+
+class _NamedParamsFunc:
+    def __init__(self, func: Callable, name: str):
+        self.func = func
+        self.name = name
+    def __call__(self, params: ModelParams) -> ComplexFloat:
+        """make a model function look for its model name before acting on the parameters
+
+        Args:
+            func: the original model function acting on a dictionary of parameters
+            name: the name of the model
+            params: a dictionary for which the keys are the model names and the
+                values are the model parameter dictionaries.
+        """
+        return self.func(params[self.name])
+    def __repr__(self):
+        return f"<{repr(self.func)[1:-1]}@{self.name}>"
