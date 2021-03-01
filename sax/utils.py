@@ -6,7 +6,16 @@ import pickle
 
 import jax.numpy as jnp
 
-from .typing import Any, Union, Tuple, Dict, ParamsDict, ModelDict, is_float
+from .typing import (
+    Any,
+    Union,
+    Tuple,
+    Dict,
+    ParamsDict,
+    PortFuncDict,
+    ModelDict,
+    is_float,
+)
 
 
 def load(name: str) -> object:
@@ -114,9 +123,7 @@ def get_ports(model: ModelDict) -> Tuple[str, ...]:
         model: the model dictionary to get the port names from
     """
     ports: Dict[str, Any] = {}
-    for key in model:
-        if isinstance(key, str):
-            continue
+    for key in model["funcs"]:
         p1, p2 = key
         ports[p1] = None
         ports[p2] = None
@@ -138,16 +145,10 @@ def rename_ports(
     if not isinstance(ports, dict):
         assert len(ports) == len(set(ports))
         ports = {original_ports[i]: port for i, port in enumerate(ports)}
-    new_model: ModelDict = {}
-    for key in model:
-        if isinstance(key, str):
-            value = model[key]
-            if isinstance(value, dict):
-                value = {**value}
-            new_model[key] = value
-        else:
-            p1, p2 = key
-            new_model[ports[p1], ports[p2]] = model[p1, p2]
+    funcs: PortFuncDict = {
+        (ports[p1], ports[p2]): model["funcs"][p1, p2] for p1, p2 in model["funcs"]
+    }
+    new_model: ModelDict = {"funcs": funcs, "params": model["params"]}
     return new_model
 
 

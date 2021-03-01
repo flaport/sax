@@ -11,10 +11,21 @@ from .typing import (
     Tuple,
     Dict,
     ParamsDict,
+    PortFuncDict,
     ModelDict,
     ModelFunc,
     ComplexFloat,
 )
+
+
+def model(funcs: PortFuncDict, params: ParamsDict) -> ModelDict:
+    """create a model dictionary
+
+    Args:
+        funcs: a dictionary mapping port name combinations onto functions
+        params: a parameter dictionary
+    """
+    return {"funcs": funcs, "params": params}
 
 
 def circuit(
@@ -70,7 +81,7 @@ def circuit(
         validate_params(params)
     modelnames = [[name] for name in models]
 
-    model = {}
+    model: ModelDict = {"funcs": {}, "params": {}}
     while len(modelnames) > 1:
         for names1, names2 in zip(modelnames[::2], modelnames[1::2]):
             model1 = models.pop(names1[0])
@@ -83,15 +94,16 @@ def circuit(
             )
             names1.extend(names2)
             for port1, port2 in [(k, v) for k, v in connections.items()]:
-                n1, p1 = port1.split(":")
-                n2, p2 = port2.split(":")
+                n1, _ = port1.split(":")
+                n2, _ = port2.split(":")
                 if n1 in names1 and n2 in names1:
                     del connections[port1]
                     model = _interconnect_model(model, port1, port2)
             models[names1[0]] = model
         modelnames = list(reversed(modelnames[::2]))
 
-    model = rename_ports(model, ports)
+    if model["funcs"]:
+        model = rename_ports(model, ports)
 
     return model
 
@@ -186,6 +198,8 @@ def _validate_circuit_parameters(
 
 def _validate_model_dict(name: str, model: ModelDict):
     assert isinstance(model, dict), f"Model '{model}' should be a dictionary"
+    assert "funcs" in model, "A model should have a 'funcs' key"
+    assert "params" in model, "A model should have a 'params' key"
     ports = get_ports(model)
     assert ports, f"No ports in model {name}"
     for p1 in ports:
@@ -193,7 +207,7 @@ def _validate_model_dict(name: str, model: ModelDict):
             msg = (
                 f"model {name} port combination {p1}->{p2} is no function or callable."
             )
-            assert callable(model.get((p1, p2), zero)), msg
+            assert callable(model["funcs"].get((p1, p2), zero)), msg
 
 
 def _namedparamsfunc(func: Callable, name: str, params: ParamsDict) -> ComplexFloat:
@@ -222,26 +236,21 @@ def _combine_models(
         name1: the name of the first model (can be None for unnamed models)
         name2: the name of the second model (can be None for unnamed models)
     """
-    model: ModelDict = {}
-    params = model["params"] = {}
+    funcs: PortFuncDict = {}
+    params: ParamsDict = {}
     for _model, _name in [(model1, name1), (model2, name2)]:
-        for key, value in _model.items():
-            if isinstance(key, str):
-                if key != "params":
-                    model[key] = value
+        for key, value in _model["funcs"].items():
+            p1, p2 = key
+            _params = copy_params(_model["params"])
+            if value is zero or _name is None:
+                funcs[p1, p2] = value
             else:
-                p1, p2 = key
-                _params = _model["params"]
-                assert isinstance(_params, dict)
-                if value is zero or _name is None:
-                    model[p1, p2] = value
-                else:
-                    model[p1, p2] = _partialmodelfunc(_namedparamsfunc, value, _name)
-                if _name is None:
-                    params.update(copy_params(_params))
-                else:
-                    params[_name] = copy_params(_params)
-    return model
+                funcs[p1, p2] = _partialmodelfunc(_namedparamsfunc, value, _name)
+            if _name is None:
+                params = {**params, **_params}
+            else:
+                params[_name] = _params
+    return {"funcs": funcs, "params": params}
 
 
 def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
@@ -262,22 +271,19 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
           Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
           of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
     """
-    new_model: ModelDict = {}
-    params = model["params"]
-    assert isinstance(params, dict)
-    new_model["params"] = copy_params(params)
+    funcs: PortFuncDict = {}
     ports = get_ports(model)
     for i in ports:
         for j in ports:
-            mij = model.get((i, j), zero)
-            mik = model.get((i, k), zero)
-            mil = model.get((i, l), zero)
-            mkj = model.get((k, j), zero)
-            mkk = model.get((k, k), zero)
-            mkl = model.get((k, l), zero)
-            mlj = model.get((l, j), zero)
-            mlk = model.get((l, k), zero)
-            mll = model.get((l, l), zero)
+            mij = model["funcs"].get((i, j), zero)
+            mik = model["funcs"].get((i, k), zero)
+            mil = model["funcs"].get((i, l), zero)
+            mkj = model["funcs"].get((k, j), zero)
+            mkk = model["funcs"].get((k, k), zero)
+            mkl = model["funcs"].get((k, l), zero)
+            mlj = model["funcs"].get((l, j), zero)
+            mlk = model["funcs"].get((l, k), zero)
+            mll = model["funcs"].get((l, l), zero)
             if (
                 (mij is zero)
                 and ((mkj is zero) or (mil is zero))
@@ -286,16 +292,14 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
                 and ((mlj is zero) or (mkk is zero) or (mil is zero))
             ):
                 continue
-            new_model[i, j] = _partialmodelfunc(
+            funcs[i, j] = _partialmodelfunc(
                 _model_ijkl, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll
             )
-    for key in list(new_model.keys()):
-        if isinstance(key, str):
-            continue
+    for key in list(funcs.keys()):
         i, j = key
         if i == k or i == l or j == k or j == l:
-            del new_model[i, j]
-    return new_model
+            del funcs[i, j]
+    return {"funcs": funcs, "params": copy_params(model["params"])}
 
 
 def _model_ijkl(
