@@ -11,8 +11,8 @@ from .typing import (
     Union,
     Tuple,
     Dict,
-    ParamsDict,
-    PortFuncDict,
+    ModelParams,
+    ModelDict,
     Model,
     is_float,
 )
@@ -43,7 +43,7 @@ def save(obj: object, name: str):
         pickle.dump(obj, file)
 
 
-def validate_params(params: ParamsDict):
+def validate_params(params: ModelParams):
     """validate a parameter dictionary
 
     params: the parameter dictionary. This dictionary should be a possibly
@@ -64,7 +64,7 @@ def validate_params(params: ParamsDict):
             validate_params(v)
 
 
-def copy_params(params: ParamsDict) -> ParamsDict:
+def copy_params(params: ModelParams) -> ModelParams:
     """copy a parameter dictionary
 
     Args:
@@ -83,7 +83,7 @@ def copy_params(params: ParamsDict) -> ParamsDict:
     return params
 
 
-def set_global_params(params: ParamsDict, **kwargs) -> ParamsDict:
+def set_global_params(params: ModelParams, **kwargs) -> ModelParams:
     """add or update the given keyword arguments to each (sub)dictionary of the
        given params dictionary
 
@@ -145,14 +145,14 @@ def rename_ports(
     if not isinstance(ports, dict):
         assert len(ports) == len(set(ports))
         ports = {original_ports[i]: port for i, port in enumerate(ports)}
-    funcs: PortFuncDict = {
+    funcs: ModelDict = {
         (ports[p1], ports[p2]): model.funcs[p1, p2] for p1, p2 in model.funcs
     }
     new_model = Model(funcs=funcs, params=model.params)
     return new_model
 
 
-def zero(params: ParamsDict) -> float:
+def zero(params: ModelParams) -> float:
     """the zero model function.
 
     Args:

@@ -10,15 +10,15 @@ from .typing import (
     Callable,
     Tuple,
     Dict,
-    ParamsDict,
-    PortFuncDict,
+    ModelParams,
+    ModelDict,
     Model,
     ModelFunc,
     ComplexFloat,
 )
 
 
-def model(funcs: PortFuncDict, params: ParamsDict) -> Model:
+def model(funcs: ModelDict, params: ModelParams) -> Model:
     """create a model dictionary
 
     Args:
@@ -206,7 +206,7 @@ def _validate_model_dict(name: str, model: Model):
             assert callable(model.funcs.get((p1, p2), zero)), msg
 
 
-def _namedparamsfunc(func: Callable, name: str, params: ParamsDict) -> ComplexFloat:
+def _namedparamsfunc(func: Callable, name: str, params: ModelParams) -> ComplexFloat:
     """make a model function look for its model name before acting on the parameters
 
     Args:
@@ -232,8 +232,8 @@ def _combine_models(
         name1: the name of the first model (can be None for unnamed models)
         name2: the name of the second model (can be None for unnamed models)
     """
-    funcs: PortFuncDict = {}
-    params: ParamsDict = {}
+    funcs: ModelDict = {}
+    params: ModelParams = {}
     for _model, _name in [(model1, name1), (model2, name2)]:
         for key, value in _model.funcs.items():
             p1, p2 = key
@@ -267,7 +267,7 @@ def _interconnect_model(model: Model, k: str, l: str) -> Model:
           Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
           of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
     """
-    funcs: PortFuncDict = {}
+    funcs: ModelDict = {}
     ports = get_ports(model)
     for i in ports:
         for j in ports:
@@ -308,7 +308,7 @@ def _model_ijkl(
     mlj: ModelFunc,
     mlk: ModelFunc,
     mll: ModelFunc,
-    params: ParamsDict,
+    params: ModelParams,
 ) -> ComplexFloat:
     """combine the given model functions.
 

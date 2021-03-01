@@ -1,4 +1,4 @@
-sax==0.0.4
+sax==0.0.5
 sphinx>=3.4
 sphinx-rtd-theme
 tqdm

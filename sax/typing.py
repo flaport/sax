@@ -16,17 +16,17 @@ Float = Union[float, jnp.ndarray, np.ndarray]
 ComplexFloat = Union[complex, float, jnp.ndarray, np.ndarray]
 """ a ComplexFloat type containing complex floats and complex float arrays """
 
-ParamsDict = Union[Dict[str, "ParamsDict"], Dict[str, Float]]
+ModelParams = Union[Dict[str, "ModelParams"], Dict[str, Float]]
 """ a Parameter Dictionary type """
 
 ModelFunc = Union[
     Callable[[Dict[str, Float]], ComplexFloat],
-    Callable[[Dict[str, ParamsDict]], ComplexFloat],
+    Callable[[Dict[str, ModelParams]], ComplexFloat],
 ]
 """ a Model Function type which takes a single Parameter Dictionary as
 arguments and returns a complex Float """
 
-PortFuncDict = Dict[Tuple[str, str], ModelFunc]
+ModelDict = Dict[Tuple[str, str], ModelFunc]
 """ a Port Function Dictionary is a mapping from port tuples to model functions """
 
 
@@ -37,8 +37,8 @@ class Model(NamedTuple):
         funcs: a dictionary with port combinations (tuples) pointing to Model Functions
         params: a parameter dictionary
     """
-    funcs: PortFuncDict
-    params: ParamsDict
+    funcs: ModelDict
+    params: ModelParams
 
     def __repr__(self):
         s = f"{self.__class__.__name__}(\n"
