@@ -31,25 +31,27 @@ Define a model -- which is just a port combination -> function dictionary -- for
 component. For example a directional coupler:
 
 ```python
-directional_coupler = {
-    ("p0", "p1"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p1", "p0"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p2", "p3"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p3", "p2"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p0", "p2"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p2", "p0"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p1", "p3"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p3", "p1"): lambda params: 1j * params["coupling"] ** 0.5,
-    "params": {
+dc = sax.model(
+    funcs={
+        ("p0", "p1"): lambda params: (1 - params["coupling"]) ** 0.5,
+        ("p1", "p0"): lambda params: (1 - params["coupling"]) ** 0.5,
+        ("p2", "p3"): lambda params: (1 - params["coupling"]) ** 0.5,
+        ("p3", "p2"): lambda params: (1 - params["coupling"]) ** 0.5,
+        ("p0", "p2"): lambda params: 1j * params["coupling"] ** 0.5,
+        ("p2", "p0"): lambda params: 1j * params["coupling"] ** 0.5,
+        ("p1", "p3"): lambda params: 1j * params["coupling"] ** 0.5,
+        ("p3", "p1"): lambda params: 1j * params["coupling"] ** 0.5,
+    },
+    params={
         "coupling": 0.5
     },
-}
+)
 ```
 
 Or a waveguide:
 
 ```python
-def model_waveguide_transmission(params):
+def wg_transmission(params):
     neff = params["neff"]
     dwl = params["wl"] - params["wl0"]
     dneff_dwl = (params["ng"] - params["neff"]) / params["wl0"]
@@ -59,10 +61,12 @@ def model_waveguide_transmission(params):
     )
     return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
 
-waveguide = {
-    ("in", "out"): model_waveguide_transmission,
-    ("out", "in"): model_waveguide_transmission,
-    "params": {
+wg = sax.model(
+    funcs={
+        ("in", "out"): wg_transmission,
+        ("out", "in"): wg_transmission,
+    },
+    params={
         "length": 25e-6,
         "wl": 1.55e-6,
         "wl0": 1.55e-6,
@@ -70,7 +74,7 @@ waveguide = {
         "ng": 3.4,
         "loss": 0.0,
     },
-}
+)
 ```
 
 These component model dictionaries can be combined into a circuit model dictionary:
@@ -78,10 +82,10 @@ These component model dictionaries can be combined into a circuit model dictiona
 ```python
 mzi = sax.circuit(
     models = {
-        "dc1": directional_coupler,
-        "top": waveguide,
-        "dc2": directional_coupler,
-        "btm": waveguide,
+        "dc1": dc,
+        "top": wg,
+        "dc2": dc,
+        "btm": wg,
     },
     connections={
         "dc1:p2": "top:in",
@@ -98,13 +102,14 @@ mzi = sax.circuit(
 )
 ```
 
-Simulating this is as simple as modifying the default parameters:
+Simulating this is as simple as modifying the model parameters and using those
+modified parameters as argument to one of the circuit functions:
 
 ```python
-params = sax.copy_params(mzi["params"])
+params = sax.copy_params(mzi.params)
 params["top"]["length"] = 2.5e-5
 params["btm"]["length"] = 1.5e-5
-mzi["in1", "out1"](params)
+mzi.funcs["in1", "out1"](params)
 ```
 
 ```
