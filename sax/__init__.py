@@ -1,7 +1,7 @@
 """ SAX """
 
 __author__ = "Floris Laporte"
-__version__ = "0.0.3"
+__version__ = "0.0.4"
 
 
 from . import core
@@ -9,7 +9,7 @@ from . import utils
 from . import models
 from . import constants
 
-from .core import circuit
+from .core import model, circuit
 from .utils import (
     load,
     save,

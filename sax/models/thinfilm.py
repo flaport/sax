@@ -1,7 +1,7 @@
 """ SAX thin-film models """
 
 import jax.numpy as jnp
-from ..typing import Dict, Float, ModelDict, ComplexFloat
+from ..typing import Dict, Float, Model, ComplexFloat
 from ..constants import pi
 
 
@@ -46,18 +46,18 @@ def t_fresnel_ji(params: Dict[str, Float]) -> ComplexFloat:
     return (1 - r_fresnel_ij(params) ** 2) / t_fresnel_ij(params)
 
 
-fresnel_mirror_ij: ModelDict = {
-    "funcs": {
+fresnel_mirror_ij: Model = Model(
+    funcs={
         ("in", "in"): r_fresnel_ij,
         ("in", "out"): t_fresnel_ij,
         ("out", "in"): t_fresnel_ji,
         ("out", "out"): r_fresnel_ji,
     },
-    "params": {
+    params={
         "ni": 1.0,
         "nj": 1.0,
     },
-}
+)
 """ fresnel interface """
 
 #################
@@ -75,17 +75,17 @@ def prop_i(params: Dict[str, Float]) -> ComplexFloat:
     return jnp.exp(1j * 2 * pi * params["ni"] / params["wl"] * params["di"])
 
 
-propagation_i: ModelDict = {
-    "funcs": {
+propagation_i: Model = Model(
+    funcs={
         ("in", "out"): prop_i,
         ("out", "in"): prop_i,
     },
-    "params": {
+    params={
         "ni": 1.0,
         "di": 500.0,
         "wl": 532.0,
     },
-}
+)
 """ propagation phase """
 
 #################################
@@ -111,16 +111,16 @@ def r_complex(params: Dict[str, Float]) -> ComplexFloat:
     return r_amp * jnp.exp(-1j * r_ang)
 
 
-mirror: ModelDict = {
-    "funcs": {
+mirror: Model = Model(
+    funcs={
         ("in", "in"): r_complex,
         ("in", "out"): t_complex,
         ("out", "in"): t_complex,
         ("out", "out"): r_complex,
     },
-    "params": {
+    params={
         "t_amp": jnp.sqrt(0.5),
         "t_ang": 0.0,
     },
-}
+)
 """ fresnel mirror """

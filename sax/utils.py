@@ -13,7 +13,7 @@ from .typing import (
     Dict,
     ParamsDict,
     PortFuncDict,
-    ModelDict,
+    Model,
     is_float,
 )
 
@@ -116,14 +116,14 @@ def set_global_params(params: ParamsDict, **kwargs) -> ParamsDict:
     return params
 
 
-def get_ports(model: ModelDict) -> Tuple[str, ...]:
+def get_ports(model: Model) -> Tuple[str, ...]:
     """get port names of the model
 
     Args:
         model: the model dictionary to get the port names from
     """
     ports: Dict[str, Any] = {}
-    for key in model["funcs"]:
+    for key in model.funcs:
         p1, p2 = key
         ports[p1] = None
         ports[p2] = None
@@ -131,8 +131,8 @@ def get_ports(model: ModelDict) -> Tuple[str, ...]:
 
 
 def rename_ports(
-    model: ModelDict, ports: Union[Dict[str, str], Tuple[str]]
-) -> ModelDict:
+    model: Model, ports: Union[Dict[str, str], Tuple[str]]
+) -> Model:
     """rename the ports of a model
 
     Args:
@@ -146,9 +146,9 @@ def rename_ports(
         assert len(ports) == len(set(ports))
         ports = {original_ports[i]: port for i, port in enumerate(ports)}
     funcs: PortFuncDict = {
-        (ports[p1], ports[p2]): model["funcs"][p1, p2] for p1, p2 in model["funcs"]
+        (ports[p1], ports[p2]): model.funcs[p1, p2] for p1, p2 in model.funcs
     }
-    new_model: ModelDict = {"funcs": funcs, "params": model["params"]}
+    new_model = Model(funcs=funcs, params=model.params)
     return new_model
 
 

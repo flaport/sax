@@ -2,7 +2,9 @@
 
 from __future__ import annotations
 
-from typing import Protocol, TypedDict, Optional, Dict, Union, Tuple, Callable, Any
+from textwrap import indent
+from functools import partial
+from typing import NamedTuple, Optional, Dict, Union, Tuple, Callable, Any
 
 import numpy as np
 import jax.numpy as jnp
@@ -28,12 +30,34 @@ PortFuncDict = Dict[Tuple[str, str], ModelFunc]
 """ a Port Function Dictionary is a mapping from port tuples to model functions """
 
 
-class ModelDict(TypedDict):
-    """a Model Dictionary type which consists of port combinations (tuples) pointing
-    to Model Functions and a subdirectorty 'params' which is a Parameter Dictionary."""
+class Model(NamedTuple):
+    """a Model tuple
 
+    Args:
+        funcs: a dictionary with port combinations (tuples) pointing to Model Functions
+        params: a parameter dictionary
+    """
     funcs: PortFuncDict
     params: ParamsDict
+
+    def __repr__(self):
+        s = f"{self.__class__.__name__}(\n"
+        s += indent(f"funcs={self._repr_dict(self.funcs)}", "    ")
+        s += ",\n"
+        s += indent(f"params={self._repr_dict(self.params)}", "    ")
+        s += ",\n)"
+        return s
+
+    @staticmethod
+    def _repr_dict(params) -> str:
+        s = "{\n"
+        for k, v in params.items():
+            if isinstance(v, dict):
+                s += indent(f"{repr(k)}: {Model._repr_dict(v)}", '    ')+ ",\n"
+            else:
+                s += f"    {repr(k)}: {v},\n"
+        s += "}"
+        return s
 
 
 def is_float(x: Any) -> bool:

@@ -12,25 +12,25 @@ from .typing import (
     Dict,
     ParamsDict,
     PortFuncDict,
-    ModelDict,
+    Model,
     ModelFunc,
     ComplexFloat,
 )
 
 
-def model(funcs: PortFuncDict, params: ParamsDict) -> ModelDict:
+def model(funcs: PortFuncDict, params: ParamsDict) -> Model:
     """create a model dictionary
 
     Args:
         funcs: a dictionary mapping port name combinations onto functions
         params: a parameter dictionary
     """
-    return {"funcs": funcs, "params": params}
+    return Model(funcs=funcs, params=params)
 
 
 def circuit(
-    models: Dict[str, ModelDict], connections: Dict[str, str], ports: Dict[str, str]
-) -> ModelDict:
+    models: Dict[str, Model], connections: Dict[str, str], ports: Dict[str, str]
+) -> Model:
     """create a (sub)circuit model from a collection of models and connections
 
     Args:
@@ -76,12 +76,10 @@ def circuit(
 
     for name, model in models.items():
         models[name] = rename_ports(model, {p: f"{name}:{p}" for p in get_ports(model)})
-        params = models[name].get("params", {})
-        assert isinstance(params, dict)
-        validate_params(params)
+        validate_params(models[name].params)
     modelnames = [[name] for name in models]
 
-    model: ModelDict = {"funcs": {}, "params": {}}
+    model: Model = Model(funcs={}, params={})
     while len(modelnames) > 1:
         for names1, names2 in zip(modelnames[::2], modelnames[1::2]):
             model1 = models.pop(names1[0])
@@ -102,15 +100,15 @@ def circuit(
             models[names1[0]] = model
         modelnames = list(reversed(modelnames[::2]))
 
-    if model["funcs"]:
+    if model.funcs:
         model = rename_ports(model, ports)
 
     return model
 
 
 def _validate_circuit_parameters(
-    models: Dict[str, ModelDict], connections: Dict[str, str], ports: Dict[str, str]
-) -> Tuple[Dict[str, ModelDict], Dict[str, str], Dict[str, str]]:
+    models: Dict[str, Model], connections: Dict[str, str], ports: Dict[str, str]
+) -> Tuple[Dict[str, Model], Dict[str, str], Dict[str, str]]:
     """validate the netlist parameters of a circuit
 
     Args:
@@ -196,10 +194,8 @@ def _validate_circuit_parameters(
     return models, connections, ports
 
 
-def _validate_model_dict(name: str, model: ModelDict):
-    assert isinstance(model, dict), f"Model '{model}' should be a dictionary"
-    assert "funcs" in model, "A model should have a 'funcs' key"
-    assert "params" in model, "A model should have a 'params' key"
+def _validate_model_dict(name: str, model: Model):
+    assert isinstance(model, Model), f"'{model}' should be a Model tuple"
     ports = get_ports(model)
     assert ports, f"No ports in model {name}"
     for p1 in ports:
@@ -207,7 +203,7 @@ def _validate_model_dict(name: str, model: ModelDict):
             msg = (
                 f"model {name} port combination {p1}->{p2} is no function or callable."
             )
-            assert callable(model["funcs"].get((p1, p2), zero)), msg
+            assert callable(model.funcs.get((p1, p2), zero)), msg
 
 
 def _namedparamsfunc(func: Callable, name: str, params: ParamsDict) -> ComplexFloat:
@@ -223,11 +219,11 @@ def _namedparamsfunc(func: Callable, name: str, params: ParamsDict) -> ComplexFl
 
 
 def _combine_models(
-    model1: ModelDict,
-    model2: ModelDict,
+    model1: Model,
+    model2: Model,
     name1: Optional[str] = None,
     name2: Optional[str] = None,
-) -> ModelDict:
+) -> Model:
     """Combine two models into a combined model (without connecting any ports)
 
     Args:
@@ -239,9 +235,9 @@ def _combine_models(
     funcs: PortFuncDict = {}
     params: ParamsDict = {}
     for _model, _name in [(model1, name1), (model2, name2)]:
-        for key, value in _model["funcs"].items():
+        for key, value in _model.funcs.items():
             p1, p2 = key
-            _params = copy_params(_model["params"])
+            _params = copy_params(_model.params)
             if value is zero or _name is None:
                 funcs[p1, p2] = value
             else:
@@ -250,10 +246,10 @@ def _combine_models(
                 params = {**params, **_params}
             else:
                 params[_name] = _params
-    return {"funcs": funcs, "params": params}
+    return Model(funcs=funcs, params=params)
 
 
-def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
+def _interconnect_model(model: Model, k: str, l: str) -> Model:
     """interconnect two ports in a given model
 
     Args:
@@ -275,15 +271,15 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
     ports = get_ports(model)
     for i in ports:
         for j in ports:
-            mij = model["funcs"].get((i, j), zero)
-            mik = model["funcs"].get((i, k), zero)
-            mil = model["funcs"].get((i, l), zero)
-            mkj = model["funcs"].get((k, j), zero)
-            mkk = model["funcs"].get((k, k), zero)
-            mkl = model["funcs"].get((k, l), zero)
-            mlj = model["funcs"].get((l, j), zero)
-            mlk = model["funcs"].get((l, k), zero)
-            mll = model["funcs"].get((l, l), zero)
+            mij = model.funcs.get((i, j), zero)
+            mik = model.funcs.get((i, k), zero)
+            mil = model.funcs.get((i, l), zero)
+            mkj = model.funcs.get((k, j), zero)
+            mkk = model.funcs.get((k, k), zero)
+            mkl = model.funcs.get((k, l), zero)
+            mlj = model.funcs.get((l, j), zero)
+            mlk = model.funcs.get((l, k), zero)
+            mll = model.funcs.get((l, l), zero)
             if (
                 (mij is zero)
                 and ((mkj is zero) or (mil is zero))
@@ -299,7 +295,7 @@ def _interconnect_model(model: ModelDict, k: str, l: str) -> ModelDict:
         i, j = key
         if i == k or i == l or j == k or j == l:
             del funcs[i, j]
-    return {"funcs": funcs, "params": copy_params(model["params"])}
+    return Model(funcs=funcs, params=copy_params(model.params))
 
 
 def _model_ijkl(
