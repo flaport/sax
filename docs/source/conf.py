@@ -14,7 +14,8 @@ import os
 import sys
 import shutil
 
-sys.path.insert(0, os.path.abspath(os.path.join('..', '..')))
+sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+import sax
 
 
 # -- Project information -----------------------------------------------------
@@ -24,7 +25,7 @@ copyright = "2021, Floris Laporte"
 author = "Floris Laporte"
 
 # The full version, including alpha/beta/rc tags
-release = "0.0.0"
+release = sax.__version__
 
 
 # -- General configuration ---------------------------------------------------
@@ -74,7 +75,9 @@ autodoc_type_aliases = {
 # -- Examples Folder ---------------------------------------------------------
 
 sourcedir = os.path.dirname(__file__)
+sax_src = os.path.abspath(os.path.join(sourcedir, "..", "..", "sax"))
 examples_src = os.path.abspath(os.path.join(sourcedir, "..", "..", "examples"))
 examples_dst = os.path.abspath(os.path.join(sourcedir, "examples"))
 shutil.rmtree(examples_dst, ignore_errors=True)
 shutil.copytree(examples_src, examples_dst)
+shutil.copytree(sax_src, os.path.join(examples_dst, "sax"))
