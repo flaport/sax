@@ -17,12 +17,17 @@ supported by SAX.
 
 The second line of the header can be extended with the following configurations:
 
-  - ``<wavelength_units>``: either ``'wavelength_meters'`` or ``'wavelength_microns'`` (Other units are not supported by SAX)
-  - ``polarization_mode=[0,1,2]``: ``0``: no polarization dependendence, ``1``: no cross-polarization, ``2``: also cross-polarization
-  - ``wavelength_grouping=[0,1,2]``: ``0``, ``1``: no wavelength grouping, ``2``: wavelength grouping for easier phase unwrapping
-  - ``unwrap_phase=[0,1,2]``: ``0``: no unwrapping (assume unwrapped), ``1``: unwrap during interpolation, ``2``: unwrap while reading the file (default). (Not supported
-        by SAX)
-  - ``frequency_interp=[0,1]``: ``0``: interpolate on wavelength grid, ``1``: interpolate on frequency grid (default). (Not supported by SAX)
+  - ``<wavelength_units>``: either ``'wavelength_meters'`` or
+    ``'wavelength_microns'`` (Other units are not supported by SAX)
+  - ``polarization_mode=[0,1,2]``: ``0``: no polarization dependendence, ``1``:
+    no cross-polarization, ``2``: also cross-polarization
+  - ``wavelength_grouping=[0,1,2]``: ``0``, ``1``: no wavelength grouping,
+    ``2``: wavelength grouping for easier phase unwrapping
+  - ``unwrap_phase=[0,1,2]``: ``0``: no unwrapping (assume unwrapped), ``1``:
+    unwrap during interpolation, ``2``: unwrap while reading the file
+    (default). (Not supported by SAX)
+  - ``frequency_interp=[0,1]``: ``0``: interpolate on wavelength grid, ``1``:
+    interpolate on frequency grid (default). (Not supported by SAX)
 """
 
 import os
@@ -375,22 +380,22 @@ def load_optsim_df(
 def phase_interpolation_with_grouping(
     wl: jnp.ndarray, wls: jnp.ndarray, phi: jnp.ndarray
 ) -> jnp.ndarray:
-    """Interpolate phase where the given wavelengths and phases have wavelength grouping
+    """ Interpolate phase where the given wavelengths and phases have wavelength grouping
 
     Args:
         wl: the wavelength points at which to evaluate the interpolation
-        wls: given wavelengths with known phase values. Every two wavelengths should be
-            paired close together (wavelength grouping format) as to enable accurate
-            phase interpolation.
+        wls: given wavelengths with known phase values. Every two wavelengths
+            should be paired close together (wavelength grouping format) as to
+            enable accurate phase interpolation.
         phis: given phases corresponding to the given wavelengths
+
+    Returns:
+        phase values for the wavelengths to interpolate for
 
     Note:
         this interpolation is only accurate in the
         range [wls[0], wls[-2]) (wls[-2] not included).
         Any extrapolation outside these bounds can yield unexpected results!
-
-    Returns:
-        phase values for the wavelengths to interpolate for
     """
     dphi_dwl = (phi[1::2] - phi[::2]) / (wls[1::2] - wls[::2])
     phi = phi[::2]
@@ -424,22 +429,22 @@ def phase_interpolation_with_grouping(
 def amplitude_interpolation_with_grouping(
     wl: jnp.ndarray, wls: jnp.ndarray, amp: jnp.ndarray
 ) -> jnp.ndarray:
-    """Interpolate amplitude where the given wavelengths and amplitudes have wavelength grouping
+    """ Interpolate amplitude where the given wavelengths and amplitudes have wavelength grouping
 
     Args:
         wl: the wavelength points at which to evaluate the interpolation
-        wls: given wavelengths with known amplitude values. Every two wavelengths should be
-            paired close together (wavelength grouping format) as to enable accurate
-            amplitude interpolation.
+        wls: given wavelengths with known amplitude values. Every two
+            wavelengths should be paired close together (wavelength grouping
+            format) as to enable accurate amplitude interpolation.
         amp: given amplitudes corresponding to the given wavelengths
+
+    Returns:
+        amplitude values for the wavelengths to interpolate for
 
     Note:
         this interpolation is only accurate in the
         range [wls[0], wls[-2]) (wls[-2] not included).
         Any extrapolation outside these bounds can yield unexpected results!
-
-    Returns:
-        amplitude values for the wavelengths to interpolate for
     """
     damp_dwl = (amp[1::2] - amp[::2]) / (wls[1::2] - wls[::2])
     amp = amp[::2]
@@ -522,8 +527,7 @@ def optsim_model_function(
         {input_port}[{input_mode}] -> {output_port}[{output_mode}]
 
     Args:
-        params: parameter dictionary containing at least the key 'wl' for
-        wavelength.
+        params: parameter dictionary containing at least the key 'wl' for wavelength.
 
     Note:
         this interpolation is only accurate in the wavelength

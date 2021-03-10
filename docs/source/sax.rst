@@ -41,12 +41,27 @@ sax.constants
 sax.models
 ----------
 
+sax.models.pic
+^^^^^^^^^^^^^^
+
 .. automodule:: sax.models.pic
    :members:
    :undoc-members:
    :show-inheritance:
 
+sax.models.optsim
+^^^^^^^^^^^^^^^^^
+
+.. automodule:: sax.models.optsim
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+sax.models.thinfilm
+^^^^^^^^^^^^^^^^^^^
+
 .. automodule:: sax.models.thinfilm
    :members:
    :undoc-members:
    :show-inheritance:
+
