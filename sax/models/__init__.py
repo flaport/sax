@@ -1,1 +1,1 @@
-""" Specialized SAX models and model functions """
+""" SAX model dictionaries """

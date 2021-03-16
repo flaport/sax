@@ -28,11 +28,13 @@ The second line of the header can be extended with the following configurations:
     (default). (Not supported by SAX)
   - ``frequency_interp=[0,1]``: ``0``: interpolate on wavelength grid, ``1``:
     interpolate on frequency grid (default). (Not supported by SAX)
+
 """
 
 import os
 import sys
 import warnings
+import functools
 
 import numpy as np
 import pandas as pd
@@ -376,11 +378,15 @@ def load_optsim_df(
     return df, meta
 
 
-@jax.partial(jax.vmap, in_axes=(0, None, None), out_axes=0)
+def _vmap_interpolation(func):
+    return functools.wraps(func)(jax.vmap(func, in_axes=(0, None, None), out_axes=0))
+
+
+@_vmap_interpolation
 def phase_interpolation_with_grouping(
     wl: jnp.ndarray, wls: jnp.ndarray, phi: jnp.ndarray
 ) -> jnp.ndarray:
-    """ Interpolate phase where the given wavelengths and phases have wavelength grouping
+    """Interpolate phase where the given wavelengths and phases have wavelength grouping
 
     Args:
         wl: the wavelength points at which to evaluate the interpolation
@@ -403,8 +409,11 @@ def phase_interpolation_with_grouping(
     dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
     t = (wl - wls + dwl * 1e-5) / dwl
     t = jnp.where(jnp.abs(t) < 1, t, 0)
+    assert isinstance(t, jnp.ndarray)
     m0 = jnp.where(t > 0, 1.0, 0.0)
+    assert isinstance(m0, jnp.ndarray)
     m1 = jnp.where(t < 0, 1.0, 0.0)
+    assert isinstance(m1, jnp.ndarray)
     t = (t * m0).sum(0)
     wl0 = (wls * m0).sum(0)
     wl1 = (wls * m1).sum(0)
@@ -425,11 +434,11 @@ def phase_interpolation_with_grouping(
     return phi
 
 
-@jax.partial(jax.vmap, in_axes=(0, None, None), out_axes=0)
+@_vmap_interpolation
 def amplitude_interpolation_with_grouping(
     wl: jnp.ndarray, wls: jnp.ndarray, amp: jnp.ndarray
 ) -> jnp.ndarray:
-    """ Interpolate amplitude where the given wavelengths and amplitudes have wavelength grouping
+    """Interpolate amplitude where the given wavelengths and amplitudes have wavelength grouping
 
     Args:
         wl: the wavelength points at which to evaluate the interpolation
@@ -452,8 +461,11 @@ def amplitude_interpolation_with_grouping(
     dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
     t = (jax.lax.nextafter(wl, wl + dwl) - wls) / dwl
     t = jnp.where(jnp.abs(t) < 1, t, 0)
+    assert isinstance(t, jnp.ndarray)
     m0 = jnp.where(t > 0, 1.0, 0.0)
+    assert isinstance(m0, jnp.ndarray)
     m1 = jnp.where(t < 0, 1.0, 0.0)
+    assert isinstance(m1, jnp.ndarray)
     t = (t * m0).sum(0)
     wl0 = (wls * m0).sum(0)
     wl1 = (wls * m1).sum(0)
@@ -516,8 +528,12 @@ def optsim_model_function(
     )
 
     def optsim_model_func(params):
+        assert isinstance(wls, jnp.ndarray)
+        assert isinstance(phi, jnp.ndarray)
         wl = jnp.atleast_1d(params["wl"])
+        assert isinstance(wl, jnp.ndarray)
         phase = phase_interpolation(wl, wls, phi)
+        assert isinstance(phase, jnp.ndarray)
         amplitude = jnp.interp(wl, wls, amp)
         return amplitude * jnp.exp(1j * phase)
 

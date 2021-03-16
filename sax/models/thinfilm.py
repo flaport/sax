@@ -1,49 +1,18 @@
 """ SAX thin-film models """
 
 import jax.numpy as jnp
-from ..typing import Dict, Float, Model, ComplexFloat
-from ..constants import pi
-
-
-#######################
-## Fresnel interface ##
-#######################
-
-
-def r_fresnel_ij(params: Dict[str, Float]) -> ComplexFloat:
-    """
-    Normal incidence amplitude reflection from Fresnel's equations
-    ni : refractive index of the initial medium
-    nj : refractive index of the final medium
-    """
-    return (params["ni"] - params["nj"]) / (params["ni"] + params["nj"])
-
-
-def r_fresnel_ji(params: Dict[str, Float]) -> ComplexFloat:
-    """
-    Normal incidence amplitude reflection from Fresnel's equations
-    ni : refractive index of the initial medium
-    nj : refractive index of the final medium
-    """
-    return -1 * r_fresnel_ij(params)
-
-
-def t_fresnel_ij(params: Dict[str, Float]) -> ComplexFloat:
-    """
-    Normal incidence amplitude transmission from Fresnel's equations
-    ni : refractive index of the initial medium
-    nj : refractive index of the final medium
-    """
-    return 2 * params["ni"] / (params["ni"] + params["nj"])
-
-
-def t_fresnel_ji(params: Dict[str, Float]) -> ComplexFloat:
-    """
-    Normal incidence amplitude transmission from Fresnel's equations
-    ni : refractive index of the initial medium
-    nj : refractive index of the final medium
-    """
-    return (1 - r_fresnel_ij(params) ** 2) / t_fresnel_ij(params)
+from ..typing import Model
+from ..funcs.thinfilm import (
+    r_fresnel_ij,
+    t_fresnel_ij,
+    t_fresnel_ji,
+    r_fresnel_ji,
+    prop_i,
+    r_complex,
+    t_complex,
+    t_complex,
+    r_complex,
+)
 
 
 fresnel_mirror_ij: Model = Model(
@@ -60,20 +29,6 @@ fresnel_mirror_ij: Model = Model(
 )
 """ fresnel interface """
 
-#################
-## Propagation ##
-#################
-
-
-def prop_i(params: Dict[str, Float]) -> ComplexFloat:
-    """
-    Phase shift acquired as a wave propagates through medium i
-    wl : wavelength (arb. units)
-    ni : refractive index of medium (at wavelength wl)
-    di : thickness of layer (same arb. unit as wl)
-    """
-    return jnp.exp(1j * 2 * pi * params["ni"] / params["wl"] * params["di"])
-
 
 propagation_i: Model = Model(
     funcs={
@@ -87,28 +42,6 @@ propagation_i: Model = Model(
     },
 )
 """ propagation phase """
-
-#################################
-## Lossless reciprocal element ##
-#################################
-
-
-def t_complex(params: Dict[str, Float]) -> ComplexFloat:
-    """
-    Transmission coefficient (design parameter)
-    """
-    return params["t_amp"] * jnp.exp(-1j * params["t_ang"])
-
-
-def r_complex(params: Dict[str, Float]) -> ComplexFloat:
-    """
-    Reflection coefficient, derived from transmission coefficient
-    Magnitude from |t|^2 + |r|^2 = 1
-    Phase from phase(t) - phase(r) = pi/2
-    """
-    r_amp = jnp.sqrt((1.0 - params["t_amp"] ** 2))
-    r_ang = params["t_ang"] - pi / 2
-    return r_amp * jnp.exp(-1j * r_ang)
 
 
 mirror: Model = Model(

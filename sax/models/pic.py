@@ -1,23 +1,7 @@
 """ SAX Photonic Integrated Circuit models """
 
-import jax.numpy as jnp
-from ..core import model
-from ..typing import Model, Dict, Float, ComplexFloat
-from ..constants import pi
-
-
-################
-## Waveguides ##
-################
-
-
-def wg_transmission(params: Dict[str, Float]) -> ComplexFloat:
-    neff = params["neff"]
-    dwl = params["wl"] - params["wl0"]
-    dneff_dwl = (params["ng"] - params["neff"]) / params["wl0"]
-    neff = neff - dwl * dneff_dwl
-    phase = jnp.exp(jnp.log(2.0 * pi * neff * params["length"]) - jnp.log(params["wl"]))
-    return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
+from ..typing import Model
+from ..models.pic import wg_transmission, dc_transmission, dc_coupling
 
 
 wg: Model = Model(
@@ -35,19 +19,6 @@ wg: Model = Model(
     },
 )
 """ waveguide model """
-
-#########################
-## Directional coupler ##
-#########################
-
-
-def dc_coupling(params: Dict[str, Float]) -> ComplexFloat:
-    return 1j * params["coupling"] ** 0.5
-
-
-def dc_transmission(params: Dict[str, Float]) -> ComplexFloat:
-    return (1 - params["coupling"]) ** 0.5
-
 
 dc: Model = Model(
     funcs={

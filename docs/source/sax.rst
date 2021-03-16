@@ -38,6 +38,33 @@ sax.constants
    :undoc-members:
    :show-inheritance:
 
+sax.funcs
+---------
+
+sax.funcs.pic
+^^^^^^^^^^^^^
+
+.. automodule:: sax.funcs.pic
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+sax.funcs.optsim
+^^^^^^^^^^^^^^^^
+
+.. automodule:: sax.funcs.optsim
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+sax.funcs.thinfilm
+^^^^^^^^^^^^^^^^^^
+
+.. automodule:: sax.funcs.thinfilm
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
 sax.models
 ----------
 
