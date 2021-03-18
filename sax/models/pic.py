@@ -1,7 +1,7 @@
 """ SAX Photonic Integrated Circuit models """
 
 from ..typing import Model
-from ..models.pic import wg_transmission, dc_transmission, dc_coupling
+from ..funcs.pic import wg_transmission, dc_transmission, dc_coupling
 
 
 wg: Model = Model(

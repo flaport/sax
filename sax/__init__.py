@@ -4,8 +4,10 @@ __author__ = "Floris Laporte"
 __version__ = "0.0.8"
 
 
+from . import nn
 from . import core
 from . import utils
+from . import funcs
 from . import models
 from . import constants
 
