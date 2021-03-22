@@ -5,3 +5,6 @@ ipykernel
 matplotlib
 nbsphinx
 tmm
+pre-commit
+black
+nbstripout
