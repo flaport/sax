@@ -6,15 +6,17 @@ import pickle
 
 import jax.numpy as jnp
 
-from .typing import (
+from typing import (
     Any,
     Union,
     Tuple,
     Dict,
+)
+from ._typing import (
     ModelParams,
     ModelDict,
     Model,
-    is_float,
+    is_complex_float,
 )
 
 
@@ -57,7 +59,7 @@ def validate_params(params: ModelParams):
         for k, v in params.items():
             msg = f"Wrong parameter dictionary format. Should be a (possibly nested) "
             msg += f"dictionary of floats or float arrays. Got: {k}: {v}{type(v)}"
-            assert is_float(v), msg
+            assert is_complex_float(v), msg
     else:
         for v in params.values():
             assert isinstance(v, dict)
@@ -77,10 +79,17 @@ def copy_params(params: ModelParams) -> ModelParams:
         this copy function works recursively on all subdictionaries of the params
         dictionary but does NOT copy any non-dictionary values.
     """
-    params = {
-        k: (copy_params(v) if isinstance(v, dict) else v) for k, v in params.items()
-    }
-    return params
+    _params = {}
+    for k, v in params.items():
+        if isinstance(v, dict):
+            _params[k] = copy_params(v)
+        elif is_complex_float(v):
+            _params[k] = v
+        else:
+            raise ValueError(
+                "params dictionary to copy does not have the right type format"
+            )
+    return _params
 
 
 def set_global_params(params: ModelParams, **kwargs) -> ModelParams:
@@ -96,7 +105,8 @@ def set_global_params(params: ModelParams, **kwargs) -> ModelParams:
         The modified dictionary.
 
     Note:
-        This operation NEVER updates the given params dictionary inplace.
+        - This operation never updates the given params dictionary inplace.
+        - Any non-float keyword arguments will be silently ignored.
 
     Example:
         This is how to change the wavelength to 1600nm for each component in
@@ -105,15 +115,21 @@ def set_global_params(params: ModelParams, **kwargs) -> ModelParams:
             params = set_global_params(params, wl=1.6e-6)
     """
     validate_params(params)
-    params = {
-        k: (
-            set_global_params(v, **kwargs)
-            if isinstance(v, dict)
-            else (kwargs[k] if k in kwargs else v)
-        )
-        for k, v in params.items()
-    }
-    return params
+    _params = {}
+    for k, v in params.items():
+        if isinstance(v, dict):
+            _params[k] = set_global_params(v, **kwargs)
+        elif is_complex_float(v):
+            if k in kwargs and is_complex_float(kwargs[k]):
+                _params[k] = kwargs[k]
+            else:
+                _params[k] = v
+        else:
+            raise ValueError(
+                "params dictionary to set global parameters for "
+                "does not have the right type format"
+            )
+    return _params
 
 
 def get_ports(model: Model) -> Tuple[str, ...]:
@@ -175,5 +191,7 @@ def cartesian_product(*arrays) -> jnp.ndarray:
     ixarrays = jnp.ix_(*arrays)
     barrays = jnp.broadcast_arrays(*ixarrays)
     sarrays = jnp.stack(barrays, -1)
+    assert isinstance(sarrays, jnp.ndarray)
     product = sarrays.reshape(-1, sarrays.shape[-1])
+    assert isinstance(product, jnp.ndarray)
     return product

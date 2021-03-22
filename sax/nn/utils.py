@@ -1,5 +1,7 @@
 """ Utilities for neural network models """
 
+from __future__ import annotations
+
 import os
 import json
 
@@ -7,14 +9,18 @@ import jax
 import jax.numpy as jnp
 
 from typing import Dict
+from .._typing import ComplexFloat
 
 
-def load_json_weights(path: str) -> Dict[str, jnp.ndarray]:
+def load_json_weights(path: str) -> Dict[str, ComplexFloat]:
     path = os.path.abspath(os.path.expanduser(path))
     weights = {}
     if os.path.exists(path):
         with open(path, "r") as file:
-            weights = {k: jnp.array(v) for k, v in json.load(file).items()}
+            for k, v in json.load(file).items():
+                _v = jnp.array(v, dtype=float)
+                assert isinstance(_v, jnp.ndarray)
+                weights[k] = _v
     return weights
 
 

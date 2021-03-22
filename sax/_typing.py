@@ -3,28 +3,39 @@
 from __future__ import annotations
 
 from textwrap import indent
-from functools import partial
-from typing import NamedTuple, Optional, Dict, Union, Tuple, Callable, Any
 
 import numpy as np
 import jax.numpy as jnp
 
+from typing import Any, NamedTuple, Dict, Union, Tuple, Callable
 
-Float = Union[float, jnp.ndarray, np.ndarray]
-""" a Float type containing floats and float arrays """
+__all__ = [
+    "Array",
+    "Float",
+    "ComplexFloat",
+    "ModelParams",
+    "ModelFunc",
+    "ModelDict",
+    "Model",
+]
 
-ComplexFloat = Union[complex, float, jnp.ndarray, np.ndarray]
+Array = Union[jnp.ndarray, np.ndarray]
+
+Float = Union[float, Array]
+""" a ComplexFloat type containing floats and float arrays """
+
+ComplexFloat = Union[complex, Float]
 """ a ComplexFloat type containing complex floats and complex float arrays """
 
-ModelParams = Union[Dict[str, "ModelParams"], Dict[str, Float]]
+ModelParams = Union[Dict[str, "ModelParams"], Dict[str, ComplexFloat]]
 """ a Parameter Dictionary type """
 
 ModelFunc = Union[
-    Callable[[Dict[str, Float]], ComplexFloat],
-    Callable[[Dict[str, ModelParams]], ComplexFloat],
+    Callable[[ModelParams], ComplexFloat],
+    Callable[[Dict[str, ComplexFloat]], ComplexFloat],
 ]
 """ a Model Function type which takes a single Parameter Dictionary as
-arguments and returns a complex Float """
+arguments and returns a complex ComplexFloat """
 
 ModelDict = Dict[Tuple[str, str], ModelFunc]
 """ a Port Function Dictionary is a mapping from port tuples to model functions """

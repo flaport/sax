@@ -2,18 +2,17 @@
 
 from __future__ import annotations
 
-import functools
-
 from .utils import zero, rename_ports, get_ports, validate_params, copy_params
-from .typing import (
+from typing import (
     Optional,
     Callable,
     Tuple,
     Dict,
+)
+from ._typing import (
     ModelParams,
     ModelDict,
     Model,
-    ModelFunc,
     ComplexFloat,
 )
 
@@ -91,10 +90,12 @@ def circuit(
         models, connections, ports
     )
 
-    for name, model in models.items():
-        models[name] = rename_ports(model, {p: f"{name}:{p}" for p in get_ports(model)})
-        validate_params(models[name].params)
-    modelnames = [[name] for name in models]
+    for _name, _model in models.items():
+        models[_name] = rename_ports(
+            _model, {p: f"{_name}:{p}" for p in get_ports(_model)}
+        )
+        validate_params(models[_name].params)
+    modelnames = [[_name] for _name in models]
 
     model: Model = Model(funcs={}, params={})
     while len(modelnames) > 1:
@@ -250,7 +251,7 @@ def _combine_models(
             if _name is None:
                 params = {**params, **_params}
             else:
-                params[_name] = _params
+                params = {**params, **{_name: _params}}
     return Model(funcs=funcs, params=params)
 
 
@@ -308,15 +309,15 @@ class _InterconnectModelFunc:
         self,
         p1: str,
         p2: str,
-        mij: ModelFunc,
-        mik: ModelFunc,
-        mil: ModelFunc,
-        mkj: ModelFunc,
-        mkk: ModelFunc,
-        mkl: ModelFunc,
-        mlj: ModelFunc,
-        mlk: ModelFunc,
-        mll: ModelFunc,
+        mij: Callable,
+        mik: Callable,
+        mil: Callable,
+        mkj: Callable,
+        mkk: Callable,
+        mkl: Callable,
+        mlj: Callable,
+        mlk: Callable,
+        mll: Callable,
     ):
         self.p1 = p1
         self.p2 = p2

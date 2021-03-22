@@ -1,5 +1,7 @@
 """ Neural network tools and architectures """
 
+from __future__ import annotations
+
 import jax
 import jax.numpy as jnp
 from .utils import normalize, denormalize
@@ -19,6 +21,7 @@ def preprocess(*params):
             these parameters should be broadcastable to the same shape!
     """
     x = jnp.stack(jnp.broadcast_arrays(*params), 0)
+    assert isinstance(x, jnp.ndarray)
     to_concatenate = [x]
     for i in range(1, x.shape[0]):
         _x = jnp.roll(x, shift=i, axis=0)

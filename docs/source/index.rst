@@ -1,7 +1,7 @@
 SAX
 ====
 
-:ref:`genindex` · :ref:`modindex` · :ref:`search`
+:ref:`genindex` · :ref:`modindex` · :ref:`search` · `GitHub <https://github.com/flaport/sax>`_
 
 Autograd and XLA for S-parameters - a scatter parameter circuit simulator and
 optimizer for the frequency domain based on `JAX <https://github.com/google/jax>`_

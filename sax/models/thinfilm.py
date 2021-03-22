@@ -1,7 +1,9 @@
 """ SAX thin-film models """
 
+from __future__ import annotations
+
 import jax.numpy as jnp
-from ..typing import Model
+from ..core import model
 from ..funcs.thinfilm import (
     r_fresnel_ij,
     t_fresnel_ij,
@@ -15,7 +17,7 @@ from ..funcs.thinfilm import (
 )
 
 
-fresnel_mirror_ij: Model = Model(
+fresnel_mirror_ij = model(
     funcs={
         ("in", "in"): r_fresnel_ij,
         ("in", "out"): t_fresnel_ij,
@@ -30,7 +32,7 @@ fresnel_mirror_ij: Model = Model(
 """ fresnel interface """
 
 
-propagation_i: Model = Model(
+propagation_i = model(
     funcs={
         ("in", "out"): prop_i,
         ("out", "in"): prop_i,
@@ -44,7 +46,7 @@ propagation_i: Model = Model(
 """ propagation phase """
 
 
-mirror: Model = Model(
+mirror = model(
     funcs={
         ("in", "in"): r_complex,
         ("in", "out"): t_complex,

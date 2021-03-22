@@ -1,11 +1,14 @@
 """ SAX Photonic Integrated Circuit model functions """
 
+from __future__ import annotations
+
 import jax.numpy as jnp
-from ..typing import Dict, Float, ComplexFloat
+from typing import Dict
+from .._typing import ComplexFloat, ComplexFloat
 from ..constants import pi
 
 
-def wg_transmission(params: Dict[str, Float]) -> ComplexFloat:
+def wg_transmission(params: Dict[str, ComplexFloat]) -> ComplexFloat:
     """Waveguide transmission
 
     Args:
@@ -24,7 +27,7 @@ def wg_transmission(params: Dict[str, Float]) -> ComplexFloat:
     return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
 
 
-def dc_coupling(params: Dict[str, Float]) -> ComplexFloat:
+def dc_coupling(params: Dict[str, ComplexFloat]) -> ComplexFloat:
     """Directional coupler coupling
 
     Args:
@@ -33,7 +36,7 @@ def dc_coupling(params: Dict[str, Float]) -> ComplexFloat:
     return 1j * params["coupling"] ** 0.5
 
 
-def dc_transmission(params: Dict[str, Float]) -> ComplexFloat:
+def dc_transmission(params: Dict[str, ComplexFloat]) -> ComplexFloat:
     """Directional coupler transmission
 
     Args:

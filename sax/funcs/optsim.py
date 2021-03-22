@@ -31,6 +31,8 @@ The second line of the header can be extended with the following configurations:
 
 """
 
+from __future__ import annotations
+
 import os
 import sys
 import warnings
@@ -41,7 +43,7 @@ import pandas as pd
 import jax
 import jax.numpy as jnp
 
-from typing import Tuple, NamedTuple, Callable
+from typing import Dict, List, Tuple, NamedTuple, Callable
 
 
 class _df_meta(NamedTuple):
@@ -84,8 +86,8 @@ def load_optsim_df(
 
     if s_params:
         _s_params = [str(param) for param in s_params]
-        for i, param in enumerate(_s_params):
-            param = [el.lower().strip() for el in param.split("_") if el]
+        for i, _param in enumerate(_s_params):
+            param = [el.lower().strip() for el in _param.split("_") if el]
             if (
                 len(param) not in (2, 4)
                 or param[2] not in ("te", "tm")
@@ -136,12 +138,12 @@ def load_optsim_df(
             f"Error parsing '{path}'. " f"FactorFormat '{factorformat}' not supported."
         )
 
-    num_inputs, num_outputs, num_wl, min_wl, max_wl, *args = header2
-    num_inputs = int(num_inputs)
-    num_outputs = int(num_outputs)
-    num_wl = int(num_wl)
-    min_wl = float(min_wl)
-    max_wl = float(max_wl)
+    _num_inputs, _num_outputs, _num_wl, _min_wl, _max_wl, *args_list = header2
+    num_inputs = int(_num_inputs)
+    num_outputs = int(_num_outputs)
+    num_wl = int(_num_wl)
+    min_wl = float(_min_wl)
+    max_wl = float(_max_wl)
 
     possible_wavelength_units = (
         "wavelength_meters",
@@ -149,14 +151,16 @@ def load_optsim_df(
         "frequency",
         "wavenumber",
     )
-    wavelength_units = [arg for arg in args if arg in possible_wavelength_units]
-    if len(wavelength_units) > 1:
+    wavelength_units_list = [
+        arg for arg in args_list if arg in possible_wavelength_units
+    ]
+    if len(wavelength_units_list) > 1:
         raise ValueError(
             f"Error parsing '{path}': too many 'wavelength_units' "
-            f"specified: {wavelength_units}"
+            f"specified: {wavelength_units_list}"
         )
     wavelength_units = (
-        "wavelength_meters" if not wavelength_units else wavelength_units[0]
+        "wavelength_meters" if not wavelength_units_list else wavelength_units_list[0]
     )
     if wavelength_units in ("frequency", "wavenumber"):
         raise ValueError(
@@ -185,7 +189,7 @@ def load_optsim_df(
     args = {
         k: int(v)
         for k, v in (
-            arg.split("=") for arg in args if arg not in possible_wavelength_units
+            arg.split("=") for arg in args_list if arg not in possible_wavelength_units
         )
     }
 
@@ -216,20 +220,23 @@ def load_optsim_df(
     # polarization_mode: 0: no polarization dependendence, 1: no cross-polarization, 2: also cross-polarization
     polarization_mode = args.get("polarization_mode", 0)
     num_polarizations = 1
+    dfs: Dict[str, List] = {}
     if polarization_mode in (0,):
         names = [f"{name}_te_te" for name in names]
         num_polarizations = 1
-        dfs = {"te": []}
+        dfs["te"] = []
     elif polarization_mode in (1,):
         names = [f"{name}_tem_tem" for name in names]
         num_polarizations = 2
-        dfs = {"te": [], "tm": []}
+        dfs["te"] = []
+        dfs["tm"] = []
     elif polarization_mode in (2,):
         names_te = [f"{name}_tem_te" for name in names]
         names_tm = [f"{name}_tem_tm" for name in names]
         names = names_te + names_tm
         num_polarizations = 2
-        dfs = {"te": [], "tm": []}
+        dfs["te"] = []
+        dfs["tm"] = []
     else:
         raise ValueError(
             f"Error parsing '{path}': "
@@ -326,14 +333,17 @@ def load_optsim_df(
             subformat = "REAL_IMAG"
 
         if subformat in ("REAL_IMAG",):
-            c_r = [name for name in df.columns if name.startswith("R_")]  # type: ignore
-            c_i = [name for name in df.columns if name.startswith("I_")]  # type: ignore
-            v_r = df[c_r].values
-            v_i = df[c_i].values
-            v_a = np.sqrt(v_r ** 2 + v_i ** 2)  # type: ignore
-            v_p = np.arctan2(v_i, v_r)  # type: ignore
+            c_r = [name for name in np.array(df.columns) if name.startswith("R_")]
+            c_i = [name for name in np.array(df.columns) if name.startswith("I_")]
+            v_r = np.array(df[c_r].values)
+            v_i = np.array(df[c_i].values)
+            v_a = np.sqrt(v_r ** 2 + v_i ** 2)
+            v_p = np.arctan2(v_i, v_r)
             v = np.stack([v_a, v_p], -1).reshape(v_a.shape[0], -1)
-            c = [name.replace("R_", "A_").replace("I_", "P_") for name in df.columns]  # type: ignore
+            c = [
+                name.replace("R_", "A_").replace("I_", "P_")
+                for name in np.array(df.columns)
+            ]
             wl = df.index
             df = pd.DataFrame(data=v, columns=c)
             df["wl"] = wl
@@ -518,8 +528,8 @@ def optsim_model_function(
         path, s_param, from_cache=from_cache, save_cache=save_cache
     )
     wls = jnp.array(df.index.values)
-    phi = jnp.array(df[f"P_{s_param}"].values.ravel())  # type: ignore
-    amp = jnp.array(df[f"A_{s_param}"].values.ravel())  # type: ignore
+    phi = jnp.array(df[f"P_{s_param}"].values.ravel())
+    amp = jnp.array(df[f"A_{s_param}"].values.ravel())
 
     phase_interpolation = (
         phase_interpolation_with_grouping
@@ -537,6 +547,7 @@ def optsim_model_function(
         amplitude = jnp.interp(wl, wls, amp)
         return amplitude * jnp.exp(1j * phase)
 
+    assert isinstance(wls, jnp.ndarray)
     optsim_model_func.__doc__ = f""" SAX model function for {meta.component}
 
     Connection:

@@ -1,5 +1,7 @@
 """ SAX model functions """
 
+from __future__ import annotations
+
 from . import pic
 from . import optsim
 from . import thinfilm

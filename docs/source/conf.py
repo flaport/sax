@@ -10,6 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
+
+from __future__ import annotations
+
 import os
 import sys
 import shutil
@@ -18,6 +21,12 @@ sys.path.insert(
     0, os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
 )
 import sax
+import sax._typing
+
+
+# -- Patch SAX objects -------------------------------------------------------
+
+sax._typing.Model.__repr__ = lambda self: "Model"
 
 
 # -- Project information -----------------------------------------------------
@@ -66,20 +75,16 @@ html_static_path = ["_static"]
 
 # Change how type hints are displayed (requires sphinx.ext.autodoc.typehints)
 autodoc_typehints = "signature"  # signature, description, none
-autodoc_type_aliases = {
-    "Float": "sax.typing.Float",
-    "ComplexFloat": "sax.typing.ComplexFloat",
-    "ParamsDict": "sax.typing.ParamsDict",
-    "ModelFunc": "sax.typing.ModelFunc",
-    "ModelDict": "sax.typing.ModelDict",
-}
+autodoc_type_aliases = {t: f"sax._typing.{t}" for t in sax._typing.__all__}
 
 # -- Examples Folder ---------------------------------------------------------
 
 sourcedir = os.path.dirname(__file__)
+staticdir = os.path.join(sourcedir, "_static")
 sax_src = os.path.abspath(os.path.join(sourcedir, "..", "..", "sax"))
 examples_src = os.path.abspath(os.path.join(sourcedir, "..", "..", "examples"))
 examples_dst = os.path.abspath(os.path.join(sourcedir, "examples"))
+os.makedirs(staticdir, exist_ok=True)
 shutil.rmtree(examples_dst, ignore_errors=True)
 shutil.copytree(examples_src, examples_dst)
 shutil.copytree(sax_src, os.path.join(examples_dst, "sax"))

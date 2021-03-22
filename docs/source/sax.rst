@@ -22,22 +22,6 @@ sax.utils
    :undoc-members:
    :show-inheritance:
 
-sax.typing
-----------
-
-.. automodule:: sax.typing
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.constants
--------------
-
-.. automodule:: sax.constants
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 sax.funcs
 ---------
 
@@ -76,13 +60,6 @@ sax.models.pic
    :undoc-members:
    :show-inheritance:
 
-sax.models.optsim
-^^^^^^^^^^^^^^^^^
-
-.. automodule:: sax.models.optsim
-   :members:
-   :undoc-members:
-   :show-inheritance:
 
 sax.models.thinfilm
 ^^^^^^^^^^^^^^^^^^^
@@ -92,3 +69,18 @@ sax.models.thinfilm
    :undoc-members:
    :show-inheritance:
 
+sax.constants
+-------------
+
+.. automodule:: sax.constants
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+sax._typing
+-----------
+
+.. automodule:: sax._typing
+   :members:
+   :undoc-members:
+   :show-inheritance:
