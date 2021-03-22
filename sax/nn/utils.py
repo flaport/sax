@@ -35,11 +35,14 @@ def generate_random_weights(key, *layer_shapes):
         weights[f"b{i}"] = rand(keys[2 * i + 1], (1, n))
     return weights
 
+
 def normalize(x, mean=0.0, std=1.0):
     return (x - mean) / std
 
+
 def denormalize(x, mean=0.0, std=1.0):
     return x * std + mean
+
 
 def get_normalization(x):
     return x.mean(0, keepdims=True), x.std(0, keepdims=True)

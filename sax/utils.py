@@ -130,9 +130,7 @@ def get_ports(model: Model) -> Tuple[str, ...]:
     return tuple(p for p in ports)
 
 
-def rename_ports(
-    model: Model, ports: Union[Dict[str, str], Tuple[str]]
-) -> Model:
+def rename_ports(model: Model, ports: Union[Dict[str, str], Tuple[str]]) -> Model:
     """rename the ports of a model
 
     Args:

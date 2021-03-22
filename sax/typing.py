@@ -37,6 +37,7 @@ class Model(NamedTuple):
         funcs: a dictionary with port combinations (tuples) pointing to Model Functions
         params: a parameter dictionary
     """
+
     funcs: ModelDict
     params: ModelParams
 
@@ -53,7 +54,7 @@ class Model(NamedTuple):
         s = "{\n"
         for k, v in params.items():
             if isinstance(v, dict):
-                s += indent(f"{repr(k)}: {Model._repr_dict(v)}", '    ')+ ",\n"
+                s += indent(f"{repr(k)}: {Model._repr_dict(v)}", "    ") + ",\n"
             else:
                 s += f"    {repr(k)}: {v},\n"
         s += "}"

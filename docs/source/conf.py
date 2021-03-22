@@ -14,7 +14,9 @@ import os
 import sys
 import shutil
 
-sys.path.insert(0, os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__)))))
+sys.path.insert(
+    0, os.path.abspath(os.path.dirname(os.path.dirname(os.path.dirname(__file__))))
+)
 import sax
 
 
@@ -63,7 +65,7 @@ html_theme = "sphinx_rtd_theme"
 html_static_path = ["_static"]
 
 # Change how type hints are displayed (requires sphinx.ext.autodoc.typehints)
-autodoc_typehints = "signature" # signature, description, none
+autodoc_typehints = "signature"  # signature, description, none
 autodoc_type_aliases = {
     "Float": "sax.typing.Float",
     "ComplexFloat": "sax.typing.ComplexFloat",

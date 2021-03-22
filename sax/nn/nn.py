@@ -29,7 +29,7 @@ def preprocess(*params):
 
 
 def dense(weights, *params, preprocess=preprocess, activation=jax.nn.leaky_relu):
-    """ simple dense neural network
+    """simple dense neural network
 
     Args:
         weights: the weights of the dense neural network in dictionary format.
@@ -45,8 +45,9 @@ def dense(weights, *params, preprocess=preprocess, activation=jax.nn.leaky_relu)
     yhat = denormalize(x, mean=weights["y_mean"], std=weights["y_std"])
     return yhat
 
+
 def neff(weights, *params, preprocess=preprocess, activation=jax.nn.leaky_relu):
-    """ predict the effective index of a waveguide
+    """predict the effective index of a waveguide
 
     Args:
         weights: the weights of the dense neural network in dictionary format.

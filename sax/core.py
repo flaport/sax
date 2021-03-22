@@ -293,7 +293,9 @@ def _interconnect_model(model: Model, k: str, l: str) -> Model:
                 and ((mlj is zero) or (mkk is zero) or (mil is zero))
             ):
                 continue
-            funcs[i, j] = _InterconnectModelFunc(i, j, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll)
+            funcs[i, j] = _InterconnectModelFunc(
+                i, j, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll
+            )
     for key in list(funcs.keys()):
         i, j = key
         if i == k or i == l or j == k or j == l:
@@ -302,7 +304,8 @@ def _interconnect_model(model: Model, k: str, l: str) -> Model:
 
 
 class _InterconnectModelFunc:
-    def __init__(self,
+    def __init__(
+        self,
         p1: str,
         p2: str,
         mij: ModelFunc,
@@ -326,6 +329,7 @@ class _InterconnectModelFunc:
         self.mlj = mlj
         self.mlk = mlk
         self.mll = mll
+
     def __call__(self, params: ModelParams) -> ComplexFloat:
         """combine the given model functions.
 
@@ -350,6 +354,7 @@ class _InterconnectModelFunc:
             + vkj * vll * vik
             + vlj * vkk * vil
         ) / ((1 - vkl) * (1 - vlk) - vkk * vll)
+
     def __repr__(self):
         return f"{self.__class__.__name__}({self.p1}, {self.p2})"
 
@@ -358,6 +363,7 @@ class _NamedParamsFunc:
     def __init__(self, func: Callable, name: str):
         self.func = func
         self.name = name
+
     def __call__(self, params: ModelParams) -> ComplexFloat:
         """make a model function look for its model name before acting on the parameters
 
@@ -368,5 +374,6 @@ class _NamedParamsFunc:
                 values are the model parameter dictionaries.
         """
         return self.func(params[self.name])
+
     def __repr__(self):
         return f"<{repr(self.func)[1:-1]}@{self.name}>"
