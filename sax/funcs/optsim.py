@@ -394,8 +394,8 @@ def _vmap_interpolation(func):
 
 @_vmap_interpolation
 def phase_interpolation_with_grouping(
-    wl: jnp.ndarray, wls: jnp.ndarray, phi: jnp.ndarray
-) -> jnp.ndarray:
+    wl: ComplexFloat, wls: ComplexFloat, phi: ComplexFloat
+) -> ComplexFloat:
     """Interpolate phase where the given wavelengths and phases have wavelength grouping
 
     Args:
@@ -446,8 +446,8 @@ def phase_interpolation_with_grouping(
 
 @_vmap_interpolation
 def amplitude_interpolation_with_grouping(
-    wl: jnp.ndarray, wls: jnp.ndarray, amp: jnp.ndarray
-) -> jnp.ndarray:
+    wl: ComplexFloat, wls: ComplexFloat, amp: ComplexFloat
+) -> ComplexFloat:
     """Interpolate amplitude where the given wavelengths and amplitudes have wavelength grouping
 
     Args:

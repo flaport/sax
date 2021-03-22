@@ -24,7 +24,7 @@ def load_json_weights(path: str) -> Dict[str, ComplexFloat]:
     return weights
 
 
-def save_json_weights(weights: Dict[str, jnp.ndarray], path: str):
+def save_json_weights(weights: Dict[str, ComplexFloat], path: str):
     path = os.path.abspath(os.path.expanduser(path))
     with open(path, "w") as file:
         json.dump({k: v.tolist() for k, v in weights.items()}, file)

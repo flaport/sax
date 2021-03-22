@@ -17,7 +17,7 @@ from .core import model, circuit
 from .utils import (
     load,
     save,
-    set_global_params,
+    set_params,
     rename_ports,
     get_ports,
     copy_params,

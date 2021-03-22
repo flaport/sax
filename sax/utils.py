@@ -13,6 +13,7 @@ from typing import (
     Dict,
 )
 from ._typing import (
+    ComplexFloat,
     ModelParams,
     ModelDict,
     Model,
@@ -92,19 +93,26 @@ def copy_params(params: ModelParams) -> ModelParams:
     return _params
 
 
-def set_global_params(params: ModelParams, **kwargs) -> ModelParams:
+def set_params(
+    params: ModelParams, *compnames: str, **kwargs: ComplexFloat
+) -> ModelParams:
     """add or update the given keyword arguments to each (sub)dictionary of the
        given params dictionary
 
     Args:
-        params: the parameter dictionary to update with the given global parameters
-        **kwargs: the global parameters to update the parameter dictionary with.
-            These global parameters are often wavelength ('wl') or temperature ('T').
+        params: the parameter dictionary to update with the given parameters
+        *compnames: the nested component names for which to set the parameters.
+            If left out, the given parameters will be applied globally to all
+            (sub)components in the dictionary.
+        **kwargs: the parameters to update the parameter dictionary with.
 
     Returns:
         The modified dictionary.
 
     Note:
+        - Even though it's possible to update parameter dictionaries in place,
+          this function is convenient to apply certain parameters (e.g.
+          wavelength 'wl' or temperature 'T') globally.
         - This operation never updates the given params dictionary inplace.
         - Any non-float keyword arguments will be silently ignored.
 
@@ -112,23 +120,42 @@ def set_global_params(params: ModelParams, **kwargs) -> ModelParams:
         This is how to change the wavelength to 1600nm for each component in
         the nested parameter dictionary::
 
-            params = set_global_params(params, wl=1.6e-6)
+            params = set_params(params, wl=1.6e-6)
+
+        Or to set the temperature for only the direcional coupler named 'dc'
+        belongin to the MZI named 'mzi' in the circuit::
+
+            params = set_params(params, "mzi", "dc", T=30.0)
     """
-    validate_params(params)
     _params = {}
-    for k, v in params.items():
-        if isinstance(v, dict):
-            _params[k] = set_global_params(v, **kwargs)
-        elif is_complex_float(v):
-            if k in kwargs and is_complex_float(kwargs[k]):
-                _params[k] = kwargs[k]
+    if not compnames:
+        for k, v in params.items():
+            if isinstance(v, dict):
+                _params[k] = set_params(v, **kwargs)
+            elif is_complex_float(v):
+                if k in kwargs and is_complex_float(kwargs[k]):
+                    _params[k] = kwargs[k]
+                else:
+                    _params[k] = v
             else:
+                raise ValueError(
+                    "params dictionary to set global parameters for "
+                    "does not have the right type format"
+                )
+    else:
+        for k, v in params.items():
+            if isinstance(v, dict):
+                if k == compnames[0]:
+                    _params[k] = set_params(v, *compnames[1:], **kwargs)
+                else:
+                    _params[k] = set_params(v)
+            elif is_complex_float(v):
                 _params[k] = v
-        else:
-            raise ValueError(
-                "params dictionary to set global parameters for "
-                "does not have the right type format"
-            )
+            else:
+                raise ValueError(
+                    "params dictionary to set global parameters for "
+                    "does not have the right type format"
+                )
     return _params
 
 
@@ -178,7 +205,7 @@ def zero(params: ModelParams) -> float:
     return 0.0
 
 
-def cartesian_product(*arrays) -> jnp.ndarray:
+def cartesian_product(*arrays) -> ComplexFloat:
     """calculate the n-dimensional cartesian product, i.e. create all
        possible combinations of all elements in a given collection of arrays.
 
