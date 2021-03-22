@@ -1,10 +1,11 @@
 """ Load data files in OptSim format as SAX model functions
 
-Note: This module is inteded to load elementary model *functions* from data
+Note:
+    This module is intended to load elementary model *functions* from data
     files in OptSim format. Loading full OptSim entities (for example from
     .moml files) is not supported (yet).
 
-The optsim data format has the following two-line header::
+The OptSim data format has the following two-line header::
 
     TransferMatrixFormat5 <SubFormat>
     <num_inputs> <num_outputs> <num_wl> <min_wl> <max_wl>
@@ -19,7 +20,7 @@ The second line of the header can be extended with the following configurations:
 
   - ``<wavelength_units>``: either ``'wavelength_meters'`` or
     ``'wavelength_microns'`` (Other units are not supported by SAX)
-  - ``polarization_mode=[0,1,2]``: ``0``: no polarization dependendence, ``1``:
+  - ``polarization_mode=[0,1,2]``: ``0``: no polarization dependence, ``1``:
     no cross-polarization, ``2``: also cross-polarization
   - ``wavelength_grouping=[0,1,2]``: ``0``, ``1``: no wavelength grouping,
     ``2``: wavelength grouping for easier phase unwrapping
@@ -44,19 +45,14 @@ import jax
 import jax.numpy as jnp
 
 from typing import Dict, List, Tuple, NamedTuple, Callable
+from .._typing import Array
 
-
-class _df_meta(NamedTuple):
-    component: str
-    num_inputs: int
-    num_outputs: int
-    num_wl: int
-    min_wl: float
-    max_wl: float
-    wavelength_grouping: int
-    unwrap_phase: int
-    frequency_interp: int
-    polarization_mode: int
+__all__ = [
+    "load_optsim_df",
+    "optsim_model_function",
+    "amplitude_interpolation_with_grouping",
+    "phase_interpolation_with_grouping",
+]
 
 
 def load_optsim_df(
@@ -388,111 +384,6 @@ def load_optsim_df(
     return df, meta
 
 
-def _vmap_interpolation(func):
-    return functools.wraps(func)(jax.vmap(func, in_axes=(0, None, None), out_axes=0))
-
-
-@_vmap_interpolation
-def phase_interpolation_with_grouping(
-    wl: ComplexFloat, wls: ComplexFloat, phi: ComplexFloat
-) -> ComplexFloat:
-    """Interpolate phase where the given wavelengths and phases have wavelength grouping
-
-    Args:
-        wl: the wavelength points at which to evaluate the interpolation
-        wls: given wavelengths with known phase values. Every two wavelengths
-            should be paired close together (wavelength grouping format) as to
-            enable accurate phase interpolation.
-        phis: given phases corresponding to the given wavelengths
-
-    Returns:
-        phase values for the wavelengths to interpolate for
-
-    Note:
-        this interpolation is only accurate in the
-        range [wls[0], wls[-2]) (wls[-2] not included).
-        Any extrapolation outside these bounds can yield unexpected results!
-    """
-    dphi_dwl = (phi[1::2] - phi[::2]) / (wls[1::2] - wls[::2])
-    phi = phi[::2]
-    wls = wls[::2]
-    dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
-    t = (wl - wls + dwl * 1e-5) / dwl
-    t = jnp.where(jnp.abs(t) < 1, t, 0)
-    assert isinstance(t, jnp.ndarray)
-    m0 = jnp.where(t > 0, 1.0, 0.0)
-    assert isinstance(m0, jnp.ndarray)
-    m1 = jnp.where(t < 0, 1.0, 0.0)
-    assert isinstance(m1, jnp.ndarray)
-    t = (t * m0).sum(0)
-    wl0 = (wls * m0).sum(0)
-    wl1 = (wls * m1).sum(0)
-    phi0 = (phi * m0).sum(0)
-    phi1 = (phi * m1).sum(0)
-    dphi_dwl0 = (dphi_dwl * m0).sum(0)
-    dphi_dwl1 = (dphi_dwl * m1).sum(0)
-    _phi0 = phi0 - 0.5 * (wl1 - wl0) * (
-        dphi_dwl0 * (t ** 2 - 2 * t) - dphi_dwl1 * t ** 2
-    )
-    _phi1 = phi1 - 0.5 * (wl1 - wl0) * (
-        dphi_dwl0 * (t - 1) ** 2 - dphi_dwl1 * (t ** 2 - 1)
-    )
-    phi = jnp.arctan2(
-        (1 - t) * jnp.sin(_phi0) + t * jnp.sin(_phi1),
-        (1 - t) * jnp.cos(_phi0) + t * jnp.cos(_phi1),
-    )
-    return phi
-
-
-@_vmap_interpolation
-def amplitude_interpolation_with_grouping(
-    wl: ComplexFloat, wls: ComplexFloat, amp: ComplexFloat
-) -> ComplexFloat:
-    """Interpolate amplitude where the given wavelengths and amplitudes have wavelength grouping
-
-    Args:
-        wl: the wavelength points at which to evaluate the interpolation
-        wls: given wavelengths with known amplitude values. Every two
-            wavelengths should be paired close together (wavelength grouping
-            format) as to enable accurate amplitude interpolation.
-        amp: given amplitudes corresponding to the given wavelengths
-
-    Returns:
-        amplitude values for the wavelengths to interpolate for
-
-    Note:
-        this interpolation is only accurate in the
-        range [wls[0], wls[-2]) (wls[-2] not included).
-        Any extrapolation outside these bounds can yield unexpected results!
-    """
-    damp_dwl = (amp[1::2] - amp[::2]) / (wls[1::2] - wls[::2])
-    amp = amp[::2]
-    wls = wls[::2]
-    dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
-    t = (jax.lax.nextafter(wl, wl + dwl) - wls) / dwl
-    t = jnp.where(jnp.abs(t) < 1, t, 0)
-    assert isinstance(t, jnp.ndarray)
-    m0 = jnp.where(t > 0, 1.0, 0.0)
-    assert isinstance(m0, jnp.ndarray)
-    m1 = jnp.where(t < 0, 1.0, 0.0)
-    assert isinstance(m1, jnp.ndarray)
-    t = (t * m0).sum(0)
-    wl0 = (wls * m0).sum(0)
-    wl1 = (wls * m1).sum(0)
-    amp0 = (amp * m0).sum(0)
-    amp1 = (amp * m1).sum(0)
-    damp_dwl0 = (damp_dwl * m0).sum(0)
-    damp_dwl1 = (damp_dwl * m1).sum(0)
-    _amp0 = amp0 - 0.5 * (wl1 - wl0) * (
-        damp_dwl0 * (t ** 2 - 2 * t) - damp_dwl1 * t ** 2
-    )
-    _amp1 = amp1 - 0.5 * (wl1 - wl0) * (
-        damp_dwl0 * (t - 1) ** 2 - damp_dwl1 * (t ** 2 - 1)
-    )
-    _amp = (1 - t) * _amp0 + t * _amp1
-    return _amp
-
-
 def optsim_model_function(
     path: str,
     input_port: int = 0,
@@ -567,3 +458,119 @@ def optsim_model_function(
     """
 
     return optsim_model_func
+
+
+def _vmap_interpolation(func):
+    return functools.wraps(func)(jax.vmap(func, in_axes=(0, None, None), out_axes=0))
+
+
+@_vmap_interpolation
+def amplitude_interpolation_with_grouping(wl: Array, wls: Array, amp: Array) -> Array:
+    """Interpolate amplitude where the given wavelengths and amplitudes have wavelength grouping
+
+    Args:
+        wl: the wavelength points at which to evaluate the interpolation
+        wls: given wavelengths with known amplitude values. Every two
+            wavelengths should be paired close together (wavelength grouping
+            format) as to enable accurate amplitude interpolation.
+        amp: given amplitudes corresponding to the given wavelengths
+
+    Returns:
+        amplitude values for the wavelengths to interpolate for
+
+    Note:
+        this interpolation is only accurate in the
+        range [wls[0], wls[-2]) (wls[-2] not included).
+        Any extrapolation outside these bounds can yield unexpected results!
+    """
+    damp_dwl = (amp[1::2] - amp[::2]) / (wls[1::2] - wls[::2])
+    amp = amp[::2]
+    wls = wls[::2]
+    dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
+    t = (jax.lax.nextafter(wl, wl + dwl) - wls) / dwl
+    t = jnp.where(jnp.abs(t) < 1, t, 0)
+    assert isinstance(t, jnp.ndarray)
+    m0 = jnp.where(t > 0, 1.0, 0.0)
+    assert isinstance(m0, jnp.ndarray)
+    m1 = jnp.where(t < 0, 1.0, 0.0)
+    assert isinstance(m1, jnp.ndarray)
+    t = (t * m0).sum(0)
+    wl0 = (wls * m0).sum(0)
+    wl1 = (wls * m1).sum(0)
+    amp0 = (amp * m0).sum(0)
+    amp1 = (amp * m1).sum(0)
+    damp_dwl0 = (damp_dwl * m0).sum(0)
+    damp_dwl1 = (damp_dwl * m1).sum(0)
+    _amp0 = amp0 - 0.5 * (wl1 - wl0) * (
+        damp_dwl0 * (t ** 2 - 2 * t) - damp_dwl1 * t ** 2
+    )
+    _amp1 = amp1 - 0.5 * (wl1 - wl0) * (
+        damp_dwl0 * (t - 1) ** 2 - damp_dwl1 * (t ** 2 - 1)
+    )
+    _amp = (1 - t) * _amp0 + t * _amp1
+    return _amp
+
+
+@_vmap_interpolation
+def phase_interpolation_with_grouping(wl: Array, wls: Array, phi: Array) -> Array:
+    """Interpolate phase where the given wavelengths and phases have wavelength grouping
+
+    Args:
+        wl: the wavelength points at which to evaluate the interpolation
+        wls: given wavelengths with known phase values. Every two wavelengths
+            should be paired close together (wavelength grouping format) as to
+            enable accurate phase interpolation.
+        phis: given phases corresponding to the given wavelengths
+
+    Returns:
+        phase values for the wavelengths to interpolate for
+
+    Note:
+        this interpolation is only accurate in the
+        range [wls[0], wls[-2]) (wls[-2] not included).
+        Any extrapolation outside these bounds can yield unexpected results!
+    """
+    dphi_dwl = (phi[1::2] - phi[::2]) / (wls[1::2] - wls[::2])
+    phi = phi[::2]
+    wls = wls[::2]
+    dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
+    t = (wl - wls + dwl * 1e-5) / dwl
+    t = jnp.where(jnp.abs(t) < 1, t, 0)
+    assert isinstance(t, jnp.ndarray)
+    m0 = jnp.where(t > 0, 1.0, 0.0)
+    assert isinstance(m0, jnp.ndarray)
+    m1 = jnp.where(t < 0, 1.0, 0.0)
+    assert isinstance(m1, jnp.ndarray)
+    t = (t * m0).sum(0)
+    wl0 = (wls * m0).sum(0)
+    wl1 = (wls * m1).sum(0)
+    phi0 = (phi * m0).sum(0)
+    phi1 = (phi * m1).sum(0)
+    dphi_dwl0 = (dphi_dwl * m0).sum(0)
+    dphi_dwl1 = (dphi_dwl * m1).sum(0)
+    _phi0 = phi0 - 0.5 * (wl1 - wl0) * (
+        dphi_dwl0 * (t ** 2 - 2 * t) - dphi_dwl1 * t ** 2
+    )
+    _phi1 = phi1 - 0.5 * (wl1 - wl0) * (
+        dphi_dwl0 * (t - 1) ** 2 - dphi_dwl1 * (t ** 2 - 1)
+    )
+    phi = jnp.arctan2(
+        (1 - t) * jnp.sin(_phi0) + t * jnp.sin(_phi1),
+        (1 - t) * jnp.cos(_phi0) + t * jnp.cos(_phi1),
+    )
+    return phi
+
+
+class _df_meta(NamedTuple):
+    """ OptSim Dataframe metadata """
+
+    component: str
+    num_inputs: int
+    num_outputs: int
+    num_wl: int
+    min_wl: float
+    max_wl: float
+    wavelength_grouping: int
+    unwrap_phase: int
+    frequency_interp: int
+    polarization_mode: int

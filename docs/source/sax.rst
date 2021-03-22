@@ -69,6 +69,28 @@ sax.models.thinfilm
    :undoc-members:
    :show-inheritance:
 
+
+sax.nn
+------
+
+sax.nn.nn
+^^^^^^^^^
+
+.. automodule:: sax.nn.nn
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
+sax.nn.utils
+^^^^^^^^^^^^
+
+.. automodule:: sax.nn.utils
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 sax.constants
 -------------
 

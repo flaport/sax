@@ -16,38 +16,15 @@ from ._typing import (
     ComplexFloat,
 )
 
-
-def model(funcs: ModelDict, params: ModelParams, reciprocal: bool = False) -> Model:
-    """create a model dictionary
-
-    Args:
-        funcs: a dictionary mapping port name combinations onto functions
-        params: a parameter dictionary
-        reciprocal: if the model is reciprocal, model functions only need to be
-            supplied in one port direction to automatically set the reversed
-            direction with the same function.
-    """
-    model = Model(funcs=funcs, params=params)
-    if reciprocal:
-        ports = get_ports(model)
-        for i, p1 in enumerate(ports):
-            for p2 in ports[i:]:
-                if not (p1, p2) in model.funcs and not (p2, p1) in model.funcs:
-                    continue
-                if not (p1, p2) in model.funcs:
-                    model.funcs[p1, p2] = model.funcs[p2, p1]
-                if not (p2, p1) in model.funcs:
-                    model.funcs[p2, p1] = model.funcs[p1, p2]
-                assert (
-                    model.funcs[p1, p2] is model.funcs[p2, p1]
-                ), "non-reciprocal model with reciprocal=True"
-    return model
+__all__ = ["model", "circuit"]
 
 
 def circuit(
     models: Dict[str, Model], connections: Dict[str, str], ports: Dict[str, str]
 ) -> Model:
-    """create a (sub)circuit model from a collection of models and connections
+    """circuit factory
+
+    create a (sub)circuit model from a collection of models and connections
 
     Args:
         models: a dictionary with as keys the model names and values
@@ -122,6 +99,115 @@ def circuit(
         model = rename_ports(model, ports)
 
     return model
+
+
+def model(funcs: ModelDict, params: ModelParams, reciprocal: bool = False) -> Model:
+    """model factory
+
+    create a model from model functions and a parameter dictionary.
+
+    Args:
+        funcs: a dictionary mapping port name combinations onto functions
+        params: a parameter dictionary
+        reciprocal: if the model is reciprocal, model functions only need to be
+            supplied in one port direction to automatically set the reversed
+            direction with the same function.
+    """
+    model = Model(funcs=funcs, params=params)
+    if reciprocal:
+        ports = get_ports(model)
+        for i, p1 in enumerate(ports):
+            for p2 in ports[i:]:
+                if not (p1, p2) in model.funcs and not (p2, p1) in model.funcs:
+                    continue
+                if not (p1, p2) in model.funcs:
+                    model.funcs[p1, p2] = model.funcs[p2, p1]
+                if not (p2, p1) in model.funcs:
+                    model.funcs[p2, p1] = model.funcs[p1, p2]
+                assert (
+                    model.funcs[p1, p2] is model.funcs[p2, p1]
+                ), "non-reciprocal model with reciprocal=True"
+    return model
+
+
+def _combine_models(
+    model1: Model,
+    model2: Model,
+    name1: Optional[str] = None,
+    name2: Optional[str] = None,
+) -> Model:
+    """Combine two models into a combined model (without connecting any ports)
+
+    Args:
+        model1: the first model dictionary to combine
+        model2: the second model dictionary to combine
+        name1: the name of the first model (can be None for unnamed models)
+        name2: the name of the second model (can be None for unnamed models)
+    """
+    funcs: ModelDict = {}
+    params: ModelParams = {}
+    for _model, _name in [(model1, name1), (model2, name2)]:
+        for key, value in _model.funcs.items():
+            p1, p2 = key
+            _params = copy_params(_model.params)
+            if value is zero or _name is None:
+                funcs[p1, p2] = value
+            else:
+                funcs[p1, p2] = _NamedParamsFunc(value, _name)
+            if _name is None:
+                params = {**params, **_params}
+            else:
+                params = {**params, **{_name: _params}}
+    return Model(funcs=funcs, params=params)
+
+
+def _interconnect_model(model: Model, k: str, l: str) -> Model:
+    """interconnect two ports in a given model
+
+    Args:
+        model: the component for which to interconnect the given ports
+        k: the first port name to connect
+        l: the second port name to connect
+
+    Returns:
+        the resulting interconnected component, i.e. a component with two ports
+        less than the original component.
+
+    Note:
+        The interconnect algorithm is based on equation 6 in the paper below::
+
+          Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
+          of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
+    """
+    funcs: ModelDict = {}
+    ports = get_ports(model)
+    for i in ports:
+        for j in ports:
+            mij = model.funcs.get((i, j), zero)
+            mik = model.funcs.get((i, k), zero)
+            mil = model.funcs.get((i, l), zero)
+            mkj = model.funcs.get((k, j), zero)
+            mkk = model.funcs.get((k, k), zero)
+            mkl = model.funcs.get((k, l), zero)
+            mlj = model.funcs.get((l, j), zero)
+            mlk = model.funcs.get((l, k), zero)
+            mll = model.funcs.get((l, l), zero)
+            if (
+                (mij is zero)
+                and ((mkj is zero) or (mil is zero))
+                and ((mlj is zero) or (mik is zero))
+                and ((mkj is zero) or (mll is zero) or (mik is zero))
+                and ((mlj is zero) or (mkk is zero) or (mil is zero))
+            ):
+                continue
+            funcs[i, j] = _InterconnectedModelFunc(
+                i, j, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll
+            )
+    for key in list(funcs.keys()):
+        i, j = key
+        if i == k or i == l or j == k or j == l:
+            del funcs[i, j]
+    return Model(funcs=funcs, params=copy_params(model.params))
 
 
 def _validate_circuit_parameters(
@@ -224,87 +310,7 @@ def _validate_model_dict(name: str, model: Model):
             assert callable(model.funcs.get((p1, p2), zero)), msg
 
 
-def _combine_models(
-    model1: Model,
-    model2: Model,
-    name1: Optional[str] = None,
-    name2: Optional[str] = None,
-) -> Model:
-    """Combine two models into a combined model (without connecting any ports)
-
-    Args:
-        model1: the first model dictionary to combine
-        model2: the second model dictionary to combine
-        name1: the name of the first model (can be None for unnamed models)
-        name2: the name of the second model (can be None for unnamed models)
-    """
-    funcs: ModelDict = {}
-    params: ModelParams = {}
-    for _model, _name in [(model1, name1), (model2, name2)]:
-        for key, value in _model.funcs.items():
-            p1, p2 = key
-            _params = copy_params(_model.params)
-            if value is zero or _name is None:
-                funcs[p1, p2] = value
-            else:
-                funcs[p1, p2] = _NamedParamsFunc(value, _name)
-            if _name is None:
-                params = {**params, **_params}
-            else:
-                params = {**params, **{_name: _params}}
-    return Model(funcs=funcs, params=params)
-
-
-def _interconnect_model(model: Model, k: str, l: str) -> Model:
-    """interconnect two ports in a given model
-
-    Args:
-        model: the component for which to interconnect the given ports
-        k: the first port name to connect
-        l: the second port name to connect
-
-    Returns:
-        the resulting interconnected component, i.e. a component with two ports
-        less than the original component.
-
-    Note:
-        The interconnect algorithm is based on equation 6 in the paper below::
-
-          Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
-          of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
-    """
-    funcs: ModelDict = {}
-    ports = get_ports(model)
-    for i in ports:
-        for j in ports:
-            mij = model.funcs.get((i, j), zero)
-            mik = model.funcs.get((i, k), zero)
-            mil = model.funcs.get((i, l), zero)
-            mkj = model.funcs.get((k, j), zero)
-            mkk = model.funcs.get((k, k), zero)
-            mkl = model.funcs.get((k, l), zero)
-            mlj = model.funcs.get((l, j), zero)
-            mlk = model.funcs.get((l, k), zero)
-            mll = model.funcs.get((l, l), zero)
-            if (
-                (mij is zero)
-                and ((mkj is zero) or (mil is zero))
-                and ((mlj is zero) or (mik is zero))
-                and ((mkj is zero) or (mll is zero) or (mik is zero))
-                and ((mlj is zero) or (mkk is zero) or (mil is zero))
-            ):
-                continue
-            funcs[i, j] = _InterconnectModelFunc(
-                i, j, mij, mik, mil, mkj, mkk, mkl, mlj, mlk, mll
-            )
-    for key in list(funcs.keys()):
-        i, j = key
-        if i == k or i == l or j == k or j == l:
-            del funcs[i, j]
-    return Model(funcs=funcs, params=copy_params(model.params))
-
-
-class _InterconnectModelFunc:
+class _InterconnectedModelFunc:
     def __init__(
         self,
         p1: str,
@@ -366,7 +372,7 @@ class _NamedParamsFunc:
         self.name = name
 
     def __call__(self, params: ModelParams) -> ComplexFloat:
-        """make a model function look for its model name before acting on the parameters
+        """make a model function look for its model name in the given parameters
 
         Args:
             func: the original model function acting on a dictionary of parameters

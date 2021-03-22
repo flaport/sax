@@ -4,8 +4,6 @@ from __future__ import annotations
 
 import pickle
 
-import jax.numpy as jnp
-
 from typing import (
     Any,
     Union,
@@ -20,51 +18,16 @@ from ._typing import (
     is_complex_float,
 )
 
-
-def load(name: str) -> object:
-    """load an object using pickle
-
-    Args:
-        name: the name to load
-
-    Returns:
-        the unpickled object.
-    """
-    with open(name, "rb") as file:
-        obj = pickle.load(file)
-    return obj
-
-
-def save(obj: object, name: str):
-    """save an object using pickle
-
-    Args:
-        obj: the object to save
-        name: the name to save the object under
-    """
-    with open(name, "wb") as file:
-        pickle.dump(obj, file)
-
-
-def validate_params(params: ModelParams):
-    """validate a parameter dictionary
-
-    params: the parameter dictionary. This dictionary should be a possibly
-        nested dictionary of floats.
-    """
-    if not params:
-        return
-
-    is_dict_dict = all(isinstance(v, dict) for v in params.values())
-    if not is_dict_dict:
-        for k, v in params.items():
-            msg = f"Wrong parameter dictionary format. Should be a (possibly nested) "
-            msg += f"dictionary of floats or float arrays. Got: {k}: {v}{type(v)}"
-            assert is_complex_float(v), msg
-    else:
-        for v in params.values():
-            assert isinstance(v, dict)
-            validate_params(v)
+__all__ = [
+    "copy_params",
+    "get_ports",
+    "load",
+    "rename_ports",
+    "save",
+    "set_params",
+    "validate_params",
+    "zero",
+]
 
 
 def copy_params(params: ModelParams) -> ModelParams:
@@ -93,11 +56,72 @@ def copy_params(params: ModelParams) -> ModelParams:
     return _params
 
 
+def get_ports(model: Model) -> Tuple[str, ...]:
+    """get port names of the model
+
+    Args:
+        model: the model dictionary to get the port names from
+    """
+    ports: Dict[str, Any] = {}
+    for key in model.funcs:
+        p1, p2 = key
+        ports[p1] = None
+        ports[p2] = None
+    return tuple(p for p in ports)
+
+
+def load(name: str) -> object:
+    """load an object using pickle
+
+    Args:
+        name: the name to load
+
+    Returns:
+        the unpickled object.
+    """
+    with open(name, "rb") as file:
+        obj = pickle.load(file)
+    return obj
+
+
+def rename_ports(model: Model, ports: Union[Dict[str, str], Tuple[str]]) -> Model:
+    """rename the ports of a model
+
+    Args:
+        model: the model dictionary to rename the ports for
+        ports: a port mapping (dictionary) with keys the old names and values
+            the new names.
+    """
+    original_ports = get_ports(model)
+    assert len(ports) == len(original_ports)
+    if not isinstance(ports, dict):
+        assert len(ports) == len(set(ports))
+        ports = {original_ports[i]: port for i, port in enumerate(ports)}
+    funcs: ModelDict = {
+        (ports[p1], ports[p2]): model.funcs[p1, p2] for p1, p2 in model.funcs
+    }
+    new_model = Model(funcs=funcs, params=model.params)
+    return new_model
+
+
+def save(obj: object, name: str):
+    """save an object using pickle
+
+    Args:
+        obj: the object to save
+        name: the name to save the object under
+    """
+    with open(name, "wb") as file:
+        pickle.dump(obj, file)
+
+
 def set_params(
     params: ModelParams, *compnames: str, **kwargs: ComplexFloat
 ) -> ModelParams:
-    """add or update the given keyword arguments to each (sub)dictionary of the
-       given params dictionary
+    """update a parameter dictionary
+
+    add or update the given keyword arguments to each (sub)dictionary of the
+    given params dictionary
 
     Args:
         params: the parameter dictionary to update with the given parameters
@@ -123,7 +147,7 @@ def set_params(
             params = set_params(params, wl=1.6e-6)
 
         Or to set the temperature for only the direcional coupler named 'dc'
-        belongin to the MZI named 'mzi' in the circuit::
+        belonging to the MZI named 'mzi' in the circuit::
 
             params = set_params(params, "mzi", "dc", T=30.0)
     """
@@ -159,38 +183,26 @@ def set_params(
     return _params
 
 
-def get_ports(model: Model) -> Tuple[str, ...]:
-    """get port names of the model
+def validate_params(params: ModelParams):
+    """validate a parameter dictionary
 
     Args:
-        model: the model dictionary to get the port names from
+        params: the parameter dictionary. This dictionary should be a possibly
+            nested dictionary of floats.
     """
-    ports: Dict[str, Any] = {}
-    for key in model.funcs:
-        p1, p2 = key
-        ports[p1] = None
-        ports[p2] = None
-    return tuple(p for p in ports)
+    if not params:
+        return
 
-
-def rename_ports(model: Model, ports: Union[Dict[str, str], Tuple[str]]) -> Model:
-    """rename the ports of a model
-
-    Args:
-        model: the model dictionary to rename the ports for
-        ports: a port mapping (dictionary) with keys the old names and values
-            the new names.
-    """
-    original_ports = get_ports(model)
-    assert len(ports) == len(original_ports)
-    if not isinstance(ports, dict):
-        assert len(ports) == len(set(ports))
-        ports = {original_ports[i]: port for i, port in enumerate(ports)}
-    funcs: ModelDict = {
-        (ports[p1], ports[p2]): model.funcs[p1, p2] for p1, p2 in model.funcs
-    }
-    new_model = Model(funcs=funcs, params=model.params)
-    return new_model
+    is_dict_dict = all(isinstance(v, dict) for v in params.values())
+    if not is_dict_dict:
+        for k, v in params.items():
+            msg = f"Wrong parameter dictionary format. Should be a (possibly nested) "
+            msg += f"dictionary of floats or float arrays. Got: {k}: {v}{type(v)}"
+            assert is_complex_float(v), msg
+    else:
+        for v in params.values():
+            assert isinstance(v, dict)
+            validate_params(v)
 
 
 def zero(params: ModelParams) -> float:
@@ -203,22 +215,3 @@ def zero(params: ModelParams) -> float:
         This function always returns zero.
     """
     return 0.0
-
-
-def cartesian_product(*arrays) -> ComplexFloat:
-    """calculate the n-dimensional cartesian product, i.e. create all
-       possible combinations of all elements in a given collection of arrays.
-
-    Args:
-        *arrays:  the arrays to calculate the cartesian product for
-
-    Returns:
-        the cartesian product.
-    """
-    ixarrays = jnp.ix_(*arrays)
-    barrays = jnp.broadcast_arrays(*ixarrays)
-    sarrays = jnp.stack(barrays, -1)
-    assert isinstance(sarrays, jnp.ndarray)
-    product = sarrays.reshape(-1, sarrays.shape[-1])
-    assert isinstance(product, jnp.ndarray)
-    return product

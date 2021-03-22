@@ -5,16 +5,17 @@ from __future__ import annotations
 import jax
 import jax.numpy as jnp
 from .utils import normalize, denormalize
+from .._typing import ComplexFloat
+
+__all__ = ["dense", "neff", "preprocess"]
 
 
-def preprocess(*params):
+def preprocess(*params: ComplexFloat) -> ComplexFloat:
     """preprocess parameters
 
-    This function does the following steps
-        - all arguments are first casted into the same shape
-        - then pairs of arguments are divided into each other to create
-              relative arguments.
-        - all arguments are then stacked into one big tensor
+    - all arguments are first casted into the same shape
+    - then pairs of arguments are divided into each other to create relative arguments.
+    - all arguments are then stacked into one big tensor
 
     Args:
         *params: the parameters to combine into a stacked tensor. Note that all
@@ -28,6 +29,7 @@ def preprocess(*params):
         to_concatenate.append(x / _x)
         to_concatenate.append(_x / x)
     x = jnp.concatenate(to_concatenate, 0)
+    assert isinstance(x, jnp.ndarray)
     return x
 
 
