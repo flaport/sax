@@ -91,6 +91,15 @@ sax.nn.utils
    :show-inheritance:
 
 
+sax.nn.loss
+^^^^^^^^^^^
+
+.. automodule:: sax.nn.loss
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+
 sax.constants
 -------------
 
