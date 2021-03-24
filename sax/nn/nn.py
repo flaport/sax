@@ -2,24 +2,14 @@
 
 from __future__ import annotations
 
-import os
-import re
-import functools
-
 import jax
 import jax.numpy as jnp
 from .utils import (
     normalize,
     denormalize,
-    get_dense_weights_path,
-    get_norm_path,
-    load_json,
-    norm,
 )
-from typing import Callable, Dict, Tuple, Optional
+from typing import Optional, Callable, Dict, Tuple, Union
 from .._typing import ComplexFloat, ComplexFloat, Array
-
-__all__ = ["dense", "preprocess", "load_dense_model"]
 
 
 def preprocess(*params: ComplexFloat) -> ComplexFloat:
@@ -74,56 +64,51 @@ def dense(
     return y
 
 
-def load_dense(
-    *layer_sizes: int,
+def generate_dense_weights(
+    key: Union[int, Array],
+    sizes: Tuple[int, ...],
     input_names: Optional[Tuple[str, ...]] = None,
     output_names: Optional[Tuple[str, ...]] = None,
-) -> Callable:
-    """Load a pre-trained dense model
+    preprocess=preprocess,
+) -> Dict[str, ComplexFloat]:
+    """Generate the weights for a dense neural network
 
     Args:
-        *layer_sizes: the sizes of the dense layers to load
-        input_names: the names of the parameters the neural network uses for prediction.
-        output_names: the names of the parameters the neural network predicts
+        key: the random jax.random.PRNGKey or seed to generate the weights with
+        sizes: the sizes of the dense neural network weights
+        input_names: the names of the input parameters of the neural network.
+            If given, the input dimension of the neural network will be derived
+            from the number of features after preprocessing these names, i.e. this
+            input dimension will then be prepended to `sizes`.
+        output_names: the names of the output parameters the neural network
+            should predict. If given, the output dimension of the neural
+            network will be set to the number of output names, i.e. th number
+            of output names will be appended to `sizes`.
+        preprocess: the preprocessing function which will be used in the neural
+            network. This preprocessing function determines the input dimension
+            (if `input_names` is given.)
+
+    Returns:
+        the dictionary of random weights and biases.
     """
-    weights_path = get_dense_weights_path(
-        *layer_sizes,
-        prefix="dense",
-        folderpath="weights",
-        input_names=input_names,
-        output_names=output_names,
-    )
-    if not os.path.exists(weights_path):
-        raise ValueError("Cannot find weights path for given parameters")
-    x_norm_path = get_norm_path(
-        (layer_sizes[0],), folderpath="norms", names=input_names
-    )
-    if not os.path.exists(x_norm_path):
-        raise ValueError("Cannot find normalization for input parameters")
-    y_norm_path = get_norm_path(
-        (layer_sizes[-1],), folderpath="norms", names=output_names
-    )
-    if not os.path.exists(x_norm_path):
-        raise ValueError("Cannot find normalization for output parameters")
-    weights = load_json(weights_path)
-    x_norm_dict = load_json(x_norm_path)
-    y_norm_dict = load_json(y_norm_path)
-    x_norm = norm(x_norm_dict["mean"], x_norm_dict["std"])
-    y_norm = norm(y_norm_dict["mean"], y_norm_dict["std"])
-    partial_dense = _PartialDense(weights, x_norm, y_norm, input_names, output_names)
-    return partial_dense
 
+    if isinstance(key, int):
+        key = jax.random.PRNGKey(key)
+    assert isinstance(key, jnp.ndarray)
 
-class _PartialDense:
-    def __init__(self, weights, x_norm, y_norm, input_names, output_names):
-        self.weights = weights
-        self.x_norm = x_norm
-        self.y_norm = y_norm
-        self.input_names = input_names
-        self.output_names = output_names
+    sizes = tuple(s for s in sizes)
+    if input_names:
+        arr = preprocess(*jnp.ones(len(input_names)))
+        assert isinstance(arr, jnp.ndarray)
+        sizes = (arr.shape[-1],) + sizes
+    if output_names:
+        sizes = sizes + (len(output_names),)
 
-    def __call__(self, *params: ComplexFloat) -> ComplexFloat:
-        return dense(self.weights, *params, x_norm=self.x_norm, y_norm=self.y_norm)
+    keys = jax.random.split(key, 2 * len(sizes))
+    rand = jax.nn.initializers.lecun_normal()
+    weights = {}
+    for i, (m, n) in enumerate(zip(sizes[:-1], sizes[1:])):
+        weights[f"w{i}"] = rand(keys[2 * i], (m, n))
+        weights[f"b{i}"] = rand(keys[2 * i + 1], (1, n))
 
-    def __repr__(self):
-        return f"{self.__class__.__name__}{repr(self.input_names)}->{repr(self.output_names)}"
+    return weights

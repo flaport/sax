@@ -5,18 +5,21 @@ from __future__ import annotations
 from .utils import (
     cartesian_product,
     denormalize,
-    generate_random_weights,
-    get_available_hidden_sizes,
-    get_normalization,
-    get_dense_weights_path,
-    get_norm_path,
     get_df_columns,
-    load_json,
+    get_normalization,
     norm,
     normalize,
-    save_json,
 )
 
-from .nn import preprocess, dense, load_dense
+from .nn import dense, preprocess, generate_dense_weights
 
-from .loss import mse, huber_loss, l2_reg
+from .loss import huber_loss, l2_reg, mse
+
+from ._io import (
+    get_available_sizes,
+    get_dense_weights_path,
+    get_norm_path,
+    load_dense,
+    load_json,
+    save_json,
+)

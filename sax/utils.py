@@ -21,9 +21,7 @@ from ._typing import (
 __all__ = [
     "copy_params",
     "get_ports",
-    "load",
     "rename_ports",
-    "save",
     "set_params",
     "validate_params",
     "zero",
@@ -70,20 +68,6 @@ def get_ports(model: Model) -> Tuple[str, ...]:
     return tuple(p for p in ports)
 
 
-def load(name: str) -> object:
-    """load an object using pickle
-
-    Args:
-        name: the name to load
-
-    Returns:
-        the unpickled object.
-    """
-    with open(name, "rb") as file:
-        obj = pickle.load(file)
-    return obj
-
-
 def rename_ports(model: Model, ports: Union[Dict[str, str], Tuple[str]]) -> Model:
     """rename the ports of a model
 
@@ -102,17 +86,6 @@ def rename_ports(model: Model, ports: Union[Dict[str, str], Tuple[str]]) -> Mode
     }
     new_model = Model(funcs=funcs, params=model.params)
     return new_model
-
-
-def save(obj: object, name: str):
-    """save an object using pickle
-
-    Args:
-        obj: the object to save
-        name: the name to save the object under
-    """
-    with open(name, "wb") as file:
-        pickle.dump(obj, file)
 
 
 def set_params(
