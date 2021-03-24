@@ -14,7 +14,7 @@ from . import models
 from . import constants
 from . import _typing as typing
 
-from .core import model, circuit
+from .core import model, circuit, set_model_params
 from .utils import (
     set_params,
     rename_ports,

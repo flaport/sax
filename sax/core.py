@@ -16,11 +16,12 @@ from ._typing import (
     ComplexFloat,
 )
 
-__all__ = ["model", "circuit"]
-
 
 def circuit(
-    models: Dict[str, Model], connections: Dict[str, str], ports: Dict[str, str]
+    models: Dict[str, Model],
+    connections: Dict[str, str],
+    ports: Dict[str, str],
+    params: Optional[ModelParams] = None,
 ) -> Model:
     """circuit factory
 
@@ -33,6 +34,9 @@ def circuit(
             form "modelname:portname"
         ports: a dictionary mapping portnames of the form
             "modelname:portname" to new unique portnames
+        params: override default parameters of the components in the circuit.
+            Note that only parameters that are different from the params specified
+            in the component models need to be specified.
 
     Returns:
         the circuit model dictionary with the given port names.
@@ -98,6 +102,9 @@ def circuit(
     if model.funcs:
         model = rename_ports(model, ports)
 
+    if params:
+        model = set_model_params(model, params)
+
     return model
 
 
@@ -128,6 +135,47 @@ def model(funcs: ModelDict, params: ModelParams, reciprocal: bool = False) -> Mo
                     model.funcs[p1, p2] is model.funcs[p2, p1]
                 ), "non-reciprocal model with reciprocal=True"
     return model
+
+
+def set_model_params(model: Model, params: ModelParams) -> Model:
+    """update the model parameters with a given parameter dictionary
+
+    Args:
+        model: the model to update the parameters for
+        params: the parameter dictionary with updated parameters. Note that
+        only parameters that are different from the originals need to be
+        specified.
+
+    Returns:
+        the model with updated parameters
+    """
+    return Model(funcs=model.funcs, params=_set_model_params(model.params, params))
+
+
+def _set_model_params(modelparams: ModelParams, params: ModelParams) -> ModelParams:
+    """update the model parameters with a given parameter dictionary
+
+    Args:
+        modelparams: the original model parameters to update the parameters for
+        params: the parameter dictionary with updated parameters. Note that
+        only parameters that are different from the originals need to be
+        specified.
+
+    Returns:
+        the updated model parameter dictionary
+    """
+    new_modelparams = {}
+    for k, v in modelparams.items():
+        if not k in params:
+            new_modelparams[k] = v
+        elif isinstance(v, dict):
+            _v = params[k]
+            assert isinstance(_v, dict)
+            new_modelparams[k] = _set_model_params(v, _v)
+        else:
+            new_modelparams[k] = params[k]
+
+    return new_modelparams
 
 
 def _combine_models(
