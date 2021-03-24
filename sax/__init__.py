@@ -12,6 +12,7 @@ from . import utils
 from . import funcs
 from . import models
 from . import constants
+from . import _typing as typing
 
 from .core import model, circuit
 from .utils import (

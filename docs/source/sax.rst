@@ -100,8 +100,8 @@ sax.nn.loss
    :show-inheritance:
 
 
-sax.nn._io
-^^^^^^^^^^
+sax.nn.io
+^^^^^^^^^
 
 .. automodule:: sax.nn._io
    :members:
@@ -117,8 +117,8 @@ sax.constants
    :undoc-members:
    :show-inheritance:
 
-sax._typing
------------
+sax.typing
+----------
 
 .. automodule:: sax._typing
    :members:
