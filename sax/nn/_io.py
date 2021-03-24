@@ -236,7 +236,6 @@ def load_dense(
     if not os.path.exists(weights_path):
         raise ValueError("Cannot find weights path for given parameters")
     x_norm_path = get_norm_path(
-        sizes[0],
         input_names=input_names,
         prefix=normprefix,
         dirpath=normdirpath,
@@ -245,7 +244,6 @@ def load_dense(
     if not os.path.exists(x_norm_path):
         raise ValueError("Cannot find normalization for input parameters")
     y_norm_path = get_norm_path(
-        sizes[-1],
         output_names=output_names,
         prefix=normprefix,
         dirpath=normdirpath,

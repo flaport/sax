@@ -109,6 +109,12 @@ def generate_dense_weights(
     weights = {}
     for i, (m, n) in enumerate(zip(sizes[:-1], sizes[1:])):
         weights[f"w{i}"] = rand(keys[2 * i], (m, n))
-        weights[f"b{i}"] = rand(keys[2 * i + 1], (1, n))
+        weights[f"b{i}"] = rand(
+            keys[2 * i + 1],
+            (
+                1,
+                n,
+            ),
+        ).ravel()
 
     return weights
