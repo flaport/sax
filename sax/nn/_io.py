@@ -164,8 +164,8 @@ def get_norm_path(
             should predict. If given, the shape of the norm will be appended
             with the number of output names. (mutually exclusive with
             `input_names`)
-        dirpath: the folder to save the weights to
-        prefix: the prefix to give the weights filename
+        dirpath: the folder to save the norms to
+        prefix: the prefix to give the norm filename
         preprocess: the preprocessing function which will be used in the neural
             network. This preprocessing function determines the input dimension
             (if `input_names` is given.)
@@ -193,6 +193,10 @@ def load_dense(
     *sizes: int,
     input_names: Optional[Tuple[str, ...]] = None,
     output_names: Optional[Tuple[str, ...]] = None,
+    weightprefix="dense",
+    weightdirpath="weights",
+    normdirpath="norms",
+    normprefix="norm",
     preprocess=preprocess,
 ) -> Callable:
     """Load a pre-trained dense model
@@ -209,6 +213,10 @@ def load_dense(
             should predict. If given, the output dimension of the neural
             network will be set to the number of output names, i.e. th number
             of output names will be appended to `sizes`.
+        weightdirpath: the folder to save the weights to
+        weightprefix: the prefix to give the weights filename
+        normdirpath: the folder to save the norms to
+        normprefix: the prefix to give the norm filename
         preprocess: the preprocessing function which will be used in the neural
             network. This preprocessing function determines the input dimension
             (if `input_names` is given.)
@@ -217,17 +225,27 @@ def load_dense(
         *sizes,
         input_names=input_names,
         output_names=output_names,
+        prefix=weightprefix,
+        dirpath=weightdirpath,
         preprocess=preprocess,
     )
     if not os.path.exists(weights_path):
         raise ValueError("Cannot find weights path for given parameters")
     x_norm_path = get_norm_path(
-        sizes[0], input_names=input_names, preprocess=preprocess
+        sizes[0],
+        input_names=input_names,
+        prefix=normprefix,
+        dirpath=normdirpath,
+        preprocess=preprocess,
     )
     if not os.path.exists(x_norm_path):
         raise ValueError("Cannot find normalization for input parameters")
     y_norm_path = get_norm_path(
-        sizes[-1], output_names=output_names, preprocess=preprocess
+        sizes[-1],
+        output_names=output_names,
+        prefix=normprefix,
+        dirpath=normdirpath,
+        preprocess=preprocess,
     )
     if not os.path.exists(x_norm_path):
         raise ValueError("Cannot find normalization for output parameters")
