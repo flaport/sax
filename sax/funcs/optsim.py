@@ -46,6 +46,7 @@ import jax.numpy as jnp
 
 from typing import Dict, List, Tuple, NamedTuple, Callable
 from .._typing import Array
+from ..utils import zero
 
 __all__ = [
     "load_optsim_df",
@@ -67,7 +68,10 @@ def load_optsim_df(
     Args:
         path: the path to the data file
         *s_params: the s parameters to load from the data file in OptSim
-            format. Each s-parameter should have the following
+            format. Each s-parameter should be a string of the following format:
+            "{input_port_idx}_{output_port_idx}_{input_mode_str}_{output_mode_str}"
+            usually output_port_idx > input_port_idx and input_mode_str in ("te", "tm").
+            If not given, all S-matrix elements will be loaded.
         from_cache: if possible, load the requested DataFrame from cache
         save_cache: pickle the resulting DataFrame for easier loading later.
         verbose: print info while loading the data
@@ -255,7 +259,7 @@ def load_optsim_df(
         os.path.dirname(path),
         "__pycache__",
         "-".join(str(x) for x in meta)
-        + "-"
+        + ("-ALL" if not s_params else "-")
         + "-".join(str(x) for x in s_params)
         + ".pkl",
     )
@@ -282,7 +286,7 @@ def load_optsim_df(
             name.replace("_n_", f"_{idx}_").replace("_tem", f"_{input_mode}")
             for name in df.columns
         ]
-        if s_params is not None:
+        if s_params:
             df = df[
                 [
                     name
@@ -416,8 +420,13 @@ def optsim_model_function(
     assert output_mode in ("te", "tm"), "mode1 should be 'TE' or 'TM'"
     s_param = f"{input_port}_{output_port}_{input_mode}_{output_mode}"
     df, meta = load_optsim_df(
-        path, s_param, from_cache=from_cache, save_cache=save_cache
+        path,
+        from_cache=from_cache,
+        save_cache=save_cache
+        # path, s_param, from_cache=from_cache, save_cache=save_cache
     )
+    if df.values.size == 0:
+        return zero
     wls = jnp.array(df.index.values)
     phi = jnp.array(df[f"P_{s_param}"].values.ravel())
     amp = jnp.array(df[f"A_{s_param}"].values.ravel())
