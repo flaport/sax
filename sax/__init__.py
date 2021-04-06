@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 __author__ = "Floris Laporte"
-__version__ = "0.0.9"
+__version__ = "0.0.10"
 
 
 from . import nn
