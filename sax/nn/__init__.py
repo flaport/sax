@@ -24,7 +24,7 @@ from ._io import (
     get_available_sizes,
     get_dense_weights_path,
     get_norm_path,
-    load_dense,
-    load_json,
-    save_json,
+    loadnn_dense,
+    loadnn_weights_json,
+    savenn_weigths_json,
 )

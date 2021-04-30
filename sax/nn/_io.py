@@ -16,7 +16,7 @@ from typing import Tuple, List, Optional, Dict, Callable
 from .._typing import ComplexFloat
 
 
-def load_json(path: str) -> Dict[str, ComplexFloat]:
+def loadnn_weights_json(path: str) -> Dict[str, ComplexFloat]:
     """Load json weights from given path
 
     Args:
@@ -36,7 +36,7 @@ def load_json(path: str) -> Dict[str, ComplexFloat]:
     return weights
 
 
-def save_json(weights: Dict[str, ComplexFloat], path: str):
+def savenn_weigths_json(weights: Dict[str, ComplexFloat], path: str):
     """Save json weights to given path
 
     Args:
@@ -193,7 +193,7 @@ def get_norm_path(
     return f"{path}.json"
 
 
-def load_dense(
+def loadnn_dense(
     *sizes: int,
     input_names: Optional[Tuple[str, ...]] = None,
     output_names: Optional[Tuple[str, ...]] = None,
@@ -251,9 +251,9 @@ def load_dense(
     )
     if not os.path.exists(x_norm_path):
         raise ValueError("Cannot find normalization for output parameters")
-    weights = load_json(weights_path)
-    x_norm_dict = load_json(x_norm_path)
-    y_norm_dict = load_json(y_norm_path)
+    weights = loadnn_weights_json(weights_path)
+    x_norm_dict = loadnn_weights_json(x_norm_path)
+    y_norm_dict = loadnn_weights_json(y_norm_path)
     x_norm = norm(x_norm_dict["mean"], x_norm_dict["std"])
     y_norm = norm(y_norm_dict["mean"], y_norm_dict["std"])
     partial_dense = _PartialDense(weights, x_norm, y_norm, input_names, output_names)

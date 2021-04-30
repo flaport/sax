@@ -49,14 +49,14 @@ from .._typing import Array
 from ..utils import zero
 
 __all__ = [
-    "load_optsim_df",
+    "loaddf_optsim",
     "optsim_model_function",
     "amplitude_interpolation_with_grouping",
     "phase_interpolation_with_grouping",
 ]
 
 
-def load_optsim_df(
+def loaddf_optsim(
     path: str,
     *s_params: str,
     from_cache: bool = True,
@@ -419,7 +419,7 @@ def optsim_model_function(
     assert input_mode in ("te", "tm"), "mode0 should be 'TE' or 'TM'"
     assert output_mode in ("te", "tm"), "mode1 should be 'TE' or 'TM'"
     s_param = f"{input_port}_{output_port}_{input_mode}_{output_mode}"
-    df, meta = load_optsim_df(
+    df, meta = loaddf_optsim(
         path,
         from_cache=from_cache,
         save_cache=save_cache
