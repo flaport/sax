@@ -33,14 +33,6 @@ sax.funcs.pic
    :undoc-members:
    :show-inheritance:
 
-sax.funcs.optsim
-^^^^^^^^^^^^^^^^
-
-.. automodule:: sax.funcs.optsim
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
 sax.funcs.thinfilm
 ^^^^^^^^^^^^^^^^^^
 
