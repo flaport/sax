@@ -27,84 +27,67 @@ import jax
 import jax.numpy as jnp
 ```
 
-Define a model -- which is just a port combination -> function dictionary -- for your
-component. For example a directional coupler:
+Define a model function for your component. A SAX model is just a function that returns
+an 'S-dictionary'. For example a directional coupler:
 
 ```python
-directional_coupler = {
-    ("p0", "p1"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p1", "p0"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p2", "p3"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p3", "p2"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p0", "p2"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p2", "p0"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p1", "p3"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p3", "p1"): lambda params: 1j * params["coupling"] ** 0.5,
-    "default_params": {
-        "coupling": 0.5
-    },
-}
+def coupler(coupling=0.5):
+    kappa = coupling**0.5
+    tau = (1-coupling)**0.5
+    sdict = sax.reciprocal({
+        ("in0", "out0"): tau,
+        ("in0", "out1"): 1j*kappa,
+        ("in1", "out0"): 1j*kappa,
+        ("in1", "out1"): tau,
+    })
+    return sdict
 ```
 
 Or a waveguide:
 
 ```python
-def model_waveguide_transmission(params):
-    neff = params["neff"]
-    dwl = params["wl"] - params["wl0"]
-    dneff_dwl = (params["ng"] - params["neff"]) / params["wl0"]
+def waveguide(wl=1.55, wl0=1.55, neff=2.34, ng=3.4, length=10.0, loss=0.0):
+    dwl = wl - wl0
+    dneff_dwl = (ng - neff) / wl0
     neff = neff - dwl * dneff_dwl
-    phase = jnp.exp(
-        jnp.log(2 * jnp.pi * neff * params["length"]) - jnp.log(params["wl"])
-    )
-    return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
-
-waveguide = {
-    ("in", "out"): model_waveguide_transmission,
-    ("out", "in"): model_waveguide_transmission,
-    "default_params": {
-        "length": 25e-6,
-        "wl": 1.55e-6,
-        "wl0": 1.55e-6,
-        "neff": 2.34,
-        "ng": 3.4,
-        "loss": 0.0,
-    },
-}
+    phase = 2 * jnp.pi * neff * length / wl
+    transmission = 10 ** (-loss * length / 20) * jnp.exp(1j * phase)
+    sdict = reciprocal({("in0", "out0"): transmission})
+    return sdict
 ```
 
-These component model dictionaries can be combined into a circuit model dictionary:
+These component models can then be combined into a circuit:
 
 ```python
 mzi = sax.circuit(
-    models = {
-        "dc1": directional_coupler,
+    instances = {
+        "lft": coupler,
         "top": waveguide,
-        "dc2": directional_coupler,
-        "btm": waveguide,
+        "rgt": coupler,
     },
     connections={
-        "dc1:p2": "top:in",
-        "dc1:p1": "btm:in",
-        "top:out": "dc2:p3",
-        "btm:out": "dc2:p0",
+        "lft:out0": "rgt:in0",
+        "lft:out1": "top:in0",
+        "top:out0": "rgt:in1",
     },
     ports={
-        "dc1:p3": "in2",
-        "dc1:p0": "in1",
-        "dc2:p2": "out2",
-        "dc2:p1": "out1",
+        "lft:in0": "in0",
+        "lft:in1": "in1",
+        "rgt:out0": "out0",
+        "rgt:out1": "out1",
     },
 )
 ```
 
-Simulating this is as simple as modifying the default parameters:
+This mzi circuit is a model function in its own right. To simulate it, first obtain the
+(possibly nested) dictionary of parameters, then modify the parameters and call the
+function:
 
 ```python
-params = sax.copy_params(mzi["default_params"])
-params["top"]["length"] = 2.5e-5
-params["btm"]["length"] = 1.5e-5
-mzi["in1", "out1"](params)
+params = sax.get_params(mzi)
+params["top"]["length"] = 10e-5
+S = mzi(**params)
+S["in0", "out0"]
 ```
 
 ```

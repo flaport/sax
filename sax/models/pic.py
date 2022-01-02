@@ -1,56 +1,70 @@
 """ SAX Photonic Integrated Circuit models """
 
+from __future__ import annotations
+
 import jax.numpy as jnp
-from ..utils import zero
-from ..core import modelgenerator
-from ..typing import Dict, ModelDict, ComplexFloat
+
+from sax.utils import reciprocal
+from sax._typing import SDict, Float
 
 
-#########################
-## Waveguides ##
-#########################
+def straight(
+    *,
+    wl: Float = 1.55,
+    wl0: Float = 1.55,
+    neff: Float = 2.34,
+    ng: Float = 3.4,
+    length: Float = 10.0,
+    loss: Float = 0.0
+) -> SDict:
+    """a simple straight waveguide model
 
-def model_waveguide_transmission(params: Dict[str, float]) -> ComplexFloat:
-    neff = params["neff"]
-    dwl = params["wl"] - params["wl0"]
-    dneff_dwl = (params["ng"] - params["neff"]) / params["wl0"]
+    Args:
+        wl: wavelength
+        neff: waveguide effective index
+        ng: waveguide group index (used for linear neff dispersion)
+        wl0: center wavelength at which neff is defined
+        length: [m] wavelength length
+        loss: [dB/m] waveguide loss
+    """
+    dwl = wl - wl0
+    dneff_dwl = (ng - neff) / wl0
     neff = neff - dwl * dneff_dwl
-    phase = jnp.exp(
-        jnp.log(2 * jnp.pi * neff * params["length"]) - jnp.log(params["wl"])
+    phase = 2 * jnp.pi * neff * length / wl
+    transmission = 10 ** (-loss * length / 20) * jnp.exp(1j * phase)
+    sdict = reciprocal(
+        {
+            ("in0", "out0"): transmission,
+        }
     )
-    return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
+    return sdict
 
-waveguide: ModelDict = {
-    ("in", "out"): model_waveguide_transmission,
-    ("out", "in"): model_waveguide_transmission,
-    "default_params": {
-        "length": 25e-6,
-        "wl": 1.55e-6,
-        "wl0": 1.55e-6,
-        "neff": 2.34,
-        "ng": 3.4,
-        "loss": 0.0,
-    },
-}
 
-#########################
-## Directional coupler ##
-#########################
+def coupler(*, coupling: Float = 0.5) -> SDict:
+    kappa = coupling ** 0.5
+    tau = (1 - coupling) ** 0.5
+    sdict = reciprocal(
+        {
+            ("in0", "out0"): tau,
+            ("in0", "out1"): 1j * kappa,
+            ("in1", "out0"): 1j * kappa,
+            ("in1", "out1"): tau,
+        }
+    )
+    return sdict
 
-def model_directional_coupler_coupling(params: Dict[str, float]) -> ComplexFloat:
-    return 1j * params["coupling"] ** 0.5
 
-def model_directional_coupler_transmission(params: Dict[str, float]) -> ComplexFloat:
-    return (1 - params["coupling"]) ** 0.5
+def dc_transmission(**kwargs):
+    pass
 
-directional_coupler: ModelDict = {
-    ("p0", "p1"): model_directional_coupler_transmission,
-    ("p1", "p0"): model_directional_coupler_transmission,
-    ("p2", "p3"): model_directional_coupler_transmission,
-    ("p3", "p2"): model_directional_coupler_transmission,
-    ("p0", "p2"): model_directional_coupler_coupling,
-    ("p2", "p0"): model_directional_coupler_coupling,
-    ("p1", "p3"): model_directional_coupler_coupling,
-    ("p3", "p1"): model_directional_coupler_coupling,
-    "default_params": {"coupling": 0.5},
-}
+
+def dc_coupling(**kwargs):
+    pass
+
+
+def wg_transmission(**kwargs):
+    pass
+
+
+if __name__ == "__main__":
+    c = coupler(coupling=0.5)

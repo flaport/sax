@@ -1,4 +1,7 @@
 # imports
+
+from __future__ import annotations
+
 import sys
 import sax
 import warnings
@@ -25,6 +28,6 @@ setuptools.setup(
         "Topic :: Scientific/Engineering",
         "Topic :: Scientific/Engineering :: Physics",
         "Topic :: Scientific/Engineering :: Artificial Intelligence",
-        "License :: OSI Approved :: Apache Software License"
+        "License :: OSI Approved :: Apache Software License",
     ],
 )

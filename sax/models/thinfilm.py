@@ -1,92 +1,64 @@
 """ SAX thin-film models """
 
+from __future__ import annotations
+
 import jax.numpy as jnp
-from ..utils import zero
-from ..core import modelgenerator
-from ..typing import Dict, ModelDict, ComplexFloat
+from sax._typing import Float, SDict
 
 
-#######################
-## Fresnel interface ##
-#######################
+def fresnel_mirror_ij(ni: Float = 1.0, nj: Float = 1.0) -> SDict:
+    """Model a (fresnel) interface between twoo refractive indices
 
-def r_fresnel_ij(params: Dict[str, float]) -> ComplexFloat:
+    Args:
+        ni: refractive index of the initial medium
+        nf: refractive index of the final
     """
-    Normal incidence amplitude reflection from Fresnel's equations
-    ni : refractive index of the initial medium
-    nj : refractive index of the final medium
-    """
-    return (params["ni"] - params["nj"]) / (params["ni"] + params["nj"])
-
-def t_fresnel_ij(params: Dict[str, float]) -> ComplexFloat:
-    """
-    Normal incidence amplitude transmission from Fresnel's equations
-    ni : refractive index of the initial medium
-    nj : refractive index of the final medium
-    """
-    return 2 * params["ni"] / (params["ni"] + params["nj"])
-
-fresnel_mirror_ij = {
-    ("in", "in"): r_fresnel_ij,
-    ("in", "out"): t_fresnel_ij,
-    ("out", "in"): lambda params: (1 - r_fresnel_ij(params)**2)/t_fresnel_ij(params), # t_ji,
-    ("out", "out"): lambda params: -1*r_fresnel_ij(params), # r_ji,
-    "default_params": {
-        "ni": 1.,
-        "nj": 1.,
+    r_fresnel_ij: Float = (ni - nj) / (ni + nj)  # i->j reflection
+    t_fresnel_ij: Float = 2.0 * ni / (ni + nj)  # i->j transmission
+    r_fresnel_ji = -r_fresnel_ij  # j -> i reflection
+    t_fresnel_ji = (1.0 - r_fresnel_ij ** 2) / t_fresnel_ij  # j -> i transmission
+    sdict = {
+        ("in", "in"): r_fresnel_ij,
+        ("in", "out"): t_fresnel_ij,
+        ("out", "in"): t_fresnel_ji,
+        ("out", "out"): r_fresnel_ji,
     }
-}
+    return sdict
 
-#################
-## Propagation ##
-#################
 
-def prop_i(params: Dict[str, float]) -> ComplexFloat:
+def propagation_i(wl: Float = 0.532, ni: Float = 1.0, di: Float = 0.5) -> SDict:
+    """Model the phase shift acquired as a wave propagates through medium A
+
+    Args:
+        ni: refractive index of medium (at wavelength wl)
+        di: [μm] thickness of layer
+        wl: [μm] wavelength
     """
-    Phase shift acquired as a wave propagates through medium i
-    wl : wavelength (arb. units)
-    ni : refractive index of medium (at wavelength wl)
-    di : thickness of layer (same arb. unit as wl)
-    """
-    return jnp.exp(1j * 2*jnp.pi * params["ni"] / params["wl"] * params["di"])
-
-propagation_i = {
-    ("in", "out"): prop_i,
-    ("out", "in"): prop_i,
-    "default_params": {
-        "ni": 1.,
-        "di": 500.,
-        "wl": 532.,
+    prop_i = jnp.exp(1j * 2 * jnp.pi * ni * di / wl)
+    sdict = {
+        ("in", "out"): prop_i,
+        ("out", "in"): prop_i,
     }
-}
+    return sdict
 
-#################################
-## Lossless reciprocal element ##
-#################################
 
-def t_complex(params: Dict[str, float]) -> ComplexFloat:
-    """
-    Transmission coefficient (design parameter)
-    """
-    return params['t_amp']*jnp.exp(-1j*params['t_ang'])
-
-def r_complex(params: Dict[str, float]) -> ComplexFloat:
-    """
-    Reflection coefficient, derived from transmission coefficient
-    Magnitude from |t|^2 + |r|^2 = 1
-    Phase from phase(t) - phase(r) = pi/2
-    """
-    r_amp = jnp.sqrt( ( 1. - params['t_amp']**2 ) )
-    r_ang = params['t_ang'] - jnp.pi/2
-    return r_amp*jnp.exp(-1j*r_ang)
-
-mirror = {
-    ("in", "in"): r_complex,
-    ("in", "out"): t_complex,
-    ("out", "in"): t_complex,
-    ("out", "out"): r_complex,
-    "default_params": {
-        "t_amp": jnp.sqrt(0.5),
-        "t_ang": 0.0,
+def mirror(t_amp: Float = 0.5 ** 0.5, t_ang: Float = 0.0) -> SDict:
+    r_complex_val = _r_complex(t_amp, t_ang)
+    t_complex_val = _t_complex(t_amp, t_ang)
+    sdict = {
+        ("in", "in"): r_complex_val,
+        ("in", "out"): t_complex_val,
+        ("out", "in"): t_complex_val,  # (1 - r_complex_val**2)/t_complex_val, # t_ji
+        ("out", "out"): r_complex_val,  # -r_complex_val, # r_ji
     }
-}
+    return sdict
+
+
+def _t_complex(t_amp, t_ang):
+    return t_amp * jnp.exp(-1j * t_ang)
+
+
+def _r_complex(t_amp, t_ang):
+    r_amp = jnp.sqrt((1.0 - t_amp ** 2))
+    r_ang = t_ang - jnp.pi / 2
+    return r_amp * jnp.exp(-1j * r_ang)
