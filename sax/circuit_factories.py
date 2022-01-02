@@ -88,7 +88,8 @@ def circuit_from_netlist(
             model = getattr(m, model_name)
         else:
             raise ValueError(
-                f"Could not find a model factory for '{model_name}' (instance '{instance_name}')"
+                f"Could not find a model factory for {model_name!r}"
+                "(instance {instance_name!r})"
             )
         instance = partial(model, **settings)
         instance_name = re.sub("[^0-9a-zA-Z]", "_", instance_name)

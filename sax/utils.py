@@ -272,7 +272,8 @@ def validate_model(model):
     if positional_arguments:
         raise ValueError(
             f"model '{model}' takes positional arguments {', '.join(positional_arguments)} "
-            "and hence is not a valid SAX Model! A SAX model should ONLY take keyword arguments (or no arguments at all)."
+            "and hence is not a valid SAX Model! "
+            "A SAX model should ONLY take keyword arguments (or no arguments at all)."
         )
 
 

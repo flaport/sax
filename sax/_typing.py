@@ -7,7 +7,6 @@ import jax.numpy as jnp
 
 from typing import Any, Dict, Union, Tuple, Callable
 
-__all__ = ["Array", "Float", "ComplexFloat", "PDict", "Sdict", "Model"]
 
 Array = Union[jnp.ndarray, np.ndarray]
 
@@ -56,3 +55,6 @@ def is_complex(x: Any) -> bool:
 def is_complex_float(x: Any) -> bool:
     """check if an object is a complex float or a complex float array"""
     return is_float(x) or is_complex(x)
+
+
+__all__ = ["Array", "Float", "ComplexFloat", "PDict", "SDict", "Model"]

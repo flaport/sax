@@ -230,8 +230,8 @@ def singlemode(
         sdict = sdict_or_model
         new_sdict = {}
         norm = 1.0
-        modes = {("" if not "@" in p else p.split("@")[1]) for p, _ in sdict}
-        modes |= {("" if not "@" in p else p.split("@")[1]) for _, p in sdict}
+        modes = {("" if "@" not in p else p.split("@")[1]) for p, _ in sdict}
+        modes |= {("" if "@" not in p else p.split("@")[1]) for _, p in sdict}
         if not (modes - {""}):
             return sdict  # sdict is already single mode
         if mode is None:
@@ -361,13 +361,13 @@ def _connections_sort_key(connection):
     return (min(name1, name2), max(name1, name2))
 
 
-def _interconnect_ports(block_diag, current_ports, k, l):
+def _interconnect_ports(block_diag, current_ports, p1, p2):
     """interconnect two ports in a given model
 
     Args:
         model: the component for which to interconnect the given ports
-        k: the first port name to connect
-        l: the second port name to connect
+        p1: the first port name to connect
+        p2: the second port name to connect
 
     Returns:
         the resulting interconnected component, i.e. a component with two ports
@@ -384,14 +384,14 @@ def _interconnect_ports(block_diag, current_ports, k, l):
         for j in current_ports:
             vij = _calculate_interconnected_value(
                 vij=block_diag.get((i, j), 0.0),
-                vik=block_diag.get((i, k), 0.0),
-                vil=block_diag.get((i, l), 0.0),
-                vkj=block_diag.get((k, j), 0.0),
-                vkk=block_diag.get((k, k), 0.0),
-                vkl=block_diag.get((k, l), 0.0),
-                vlj=block_diag.get((l, j), 0.0),
-                vlk=block_diag.get((l, k), 0.0),
-                vll=block_diag.get((l, l), 0.0),
+                vik=block_diag.get((i, p1), 0.0),
+                vil=block_diag.get((i, p2), 0.0),
+                vkj=block_diag.get((p1, j), 0.0),
+                vkk=block_diag.get((p1, p1), 0.0),
+                vkl=block_diag.get((p1, p2), 0.0),
+                vlj=block_diag.get((p2, j), 0.0),
+                vlk=block_diag.get((p2, p1), 0.0),
+                vll=block_diag.get((p2, p2), 0.0),
             )
             current_block_diag[i, j] = vij
     return current_block_diag
@@ -434,11 +434,15 @@ def validate_circuit_args(
         ports dictionaries.
     """
 
-    for name, model in instances.items():
+    for model in instances.values():
         validate_model(model)
 
     if not isinstance(connections, dict):
-        msg = f"Connections should be a str:str dict or a list of length-2 tuples."
+        msg = (
+            "Connections should be a str:str dict "
+            "or a list of length-2 tuples. "
+            f"Got {connections!r} type {type(connections)}"
+        )
         connections, _connections = {}, connections
         connection_ports = set()
         for conn in _connections:
