@@ -76,8 +76,11 @@ def circuit_from_netlist(
         for k, v in settings.items():
             try:
                 settings[k] = float(v)
-            except ValueError:
+            except (ValueError, TypeError):
                 pass
+                # raise ValueError(
+                #     f"{settings[k]} = {v} needs to be float, got {type(v)}"
+                # ) from error
         model_name = kwargs["component"]
         if model_name in merged_models:
             model = merged_models[model_name]
