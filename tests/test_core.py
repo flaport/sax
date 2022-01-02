@@ -1,9 +1,9 @@
 """ Tests for sax.core """
 
+from pytest import approx
 import sax
 import jax
 import jax.numpy as jnp
-from pytest import approx
 
 
 def test_model(dc):

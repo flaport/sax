@@ -4,7 +4,7 @@ import sax
 
 
 def test_get_ports(dc):
-    ports = sax.get_ports(dc)
+    ports = sax.utils.get_ports(dc)
     assert ports == ("p0", "p1", "p2", "p3")
 
 
@@ -16,7 +16,7 @@ def test_rename_ports(dc):
         "p3": "in1",
     }
     _dc = sax.rename_ports(dc, portmap)
-    ports = sax.get_ports(_dc)
+    ports = sax.utils.get_ports(_dc)
     assert ports == ("in0", "out0", "out1", "in1")
 
 

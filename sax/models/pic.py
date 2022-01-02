@@ -54,17 +54,5 @@ def coupler(*, coupling: Float = 0.5) -> SDict:
     return sdict
 
 
-def dc_transmission(**kwargs):
-    pass
-
-
-def dc_coupling(**kwargs):
-    pass
-
-
-def wg_transmission(**kwargs):
-    pass
-
-
 if __name__ == "__main__":
     c = coupler(coupling=0.5)
