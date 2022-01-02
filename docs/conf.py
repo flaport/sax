@@ -31,6 +31,7 @@ extensions = [
 
 autodoc_member_order = "bysource"
 
+
 def setup(app):
     """Set configuration."""
     app.add_config_value(
@@ -39,5 +40,3 @@ def setup(app):
         True,
     )
     app.add_transform(AutoStructify)
-
-

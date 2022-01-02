@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import inspect
-from functools import wraps, lru_cache, partial
+from functools import wraps, lru_cache
 
 import jax
 import jax.numpy as jnp

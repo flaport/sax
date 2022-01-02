@@ -2,8 +2,6 @@
 
 import sax
 
-from .fixtures import dc, wg, mzi
-
 
 def test_get_ports(dc):
     ports = sax.get_ports(dc)

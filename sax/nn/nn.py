@@ -9,7 +9,7 @@ from .utils import (
     denormalize,
 )
 from typing import Optional, Callable, Dict, Tuple, Union
-from .._typing import ComplexFloat, ComplexFloat, Array
+from .._typing import ComplexFloat, Array
 
 
 def preprocess(*params: ComplexFloat) -> ComplexFloat:

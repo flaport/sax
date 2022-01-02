@@ -1,12 +1,8 @@
 # imports
 
 from __future__ import annotations
-
-import sys
 import sax
-import warnings
 import setuptools
-import subprocess
 
 # install sax:
 setuptools.setup(

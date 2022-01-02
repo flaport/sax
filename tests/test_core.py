@@ -5,8 +5,6 @@ import jax
 import jax.numpy as jnp
 from pytest import approx
 
-from .fixtures import dc, rdc, mzi, wg
-
 
 def test_model(dc):
     assert dc.funcs["p0", "p1"] == dc.funcs["p1", "p0"]
