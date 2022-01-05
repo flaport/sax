@@ -1,4 +1,4 @@
-# SAX
+# SAX 0.3.1
 
 ![Docs](https://readthedocs.org/projects/sax/badge/?version=latest)
 

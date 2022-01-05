@@ -35,6 +35,8 @@ from sax.utils import (
     validate_pdict,
     validate_sdict,
 )
+from sax._typing import SDict, PDict
+
 
 __all__ = [
     "Models",
@@ -65,6 +67,8 @@ __all__ = [
     "validate_pdict",
     "validate_sdict",
     "partial",
+    "PDict",
+    "SDict",
 ]
 __author__ = "Floris Laporte"
 __version__ = "0.3.1"

@@ -1,80 +1,44 @@
 """ Tests for sax.core """
 
-from pytest import approx
 import sax
-import jax
 import jax.numpy as jnp
 
-
-def test_model(dc):
-    assert dc.funcs["p0", "p1"] == dc.funcs["p1", "p0"]
-    assert dc.funcs["p2", "p3"] == dc.funcs["p3", "p2"]
-    assert dc.funcs["p0", "p2"] == dc.funcs["p2", "p0"]
-    assert dc.funcs["p1", "p3"] == dc.funcs["p3", "p1"]
-    assert tuple(dc.params.keys()) == ("coupling",)
+from sax.models import pic
 
 
-def test_reciprocal_model(dc, rdc):
-    assert rdc.funcs["p0", "p1"] == rdc.funcs["p1", "p0"]
-    assert rdc.funcs["p2", "p3"] == rdc.funcs["p3", "p2"]
-    assert rdc.funcs["p0", "p2"] == rdc.funcs["p2", "p0"]
-    assert rdc.funcs["p1", "p3"] == rdc.funcs["p3", "p1"]
-    assert dc.funcs["p0", "p1"] == rdc.funcs["p1", "p0"]
-    assert dc.funcs["p2", "p3"] == rdc.funcs["p3", "p2"]
-    assert dc.funcs["p0", "p2"] == rdc.funcs["p2", "p0"]
-    assert dc.funcs["p1", "p3"] == rdc.funcs["p3", "p1"]
-    assert tuple(rdc.params.keys()) == ("coupling",)
+def test_model_dc():
+    dc = sax.models.pic.coupler()
+    assert dc["in0", "out1"] == dc["in1", "out0"]
 
 
-def test_circuit_mzi(mzi):
-    assert tuple(sorted(mzi.params.keys())) == ("btm", "lft", "rgt", "top")
-    mzi.params["lft"]["coupling"] = 0.5
-    mzi.params["rgt"]["coupling"] = 0.5
-    mzi.params["top"]["length"] = 50e-6
-    mzi.params["btm"]["length"] = 50e-6
-    assert abs(mzi.funcs["in0", "out0"](mzi.params)) == approx(0.0)
-    mzi.params["btm"]["length"] = 25e-6
-    assert abs(mzi.funcs["in0", "out0"](mzi.params)) == approx(0.7248724)
-    f = jax.jit(mzi.funcs["in0", "out0"])
-    assert abs(f(mzi.params)) == approx(0.7248724)
-    assert abs(f(mzi.params)) == approx(0.7248724)
-    g = jax.grad(lambda params: jnp.abs(mzi.funcs["in0", "out0"](params)) ** 2)
-    assert g(mzi.params)["btm"]["length"] == approx(4736649.0)
-
-
-def test_circuit_mzi_mzi(wg, mzi):
-    mzi.params["lft"]["coupling"] = 0.5
-    mzi.params["rgt"]["coupling"] = 0.5
-    mzi.params["top"]["length"] = 50e-6
-    mzi.params["btm"]["length"] = 50e-6
-    mzi_mzi = sax.circuit(
-        models={
-            "lft": mzi,
-            "top": wg,
-            "rgt": mzi,
-            "btm": wg,
+def test_circuit_mzi():
+    mzi = sax.circuit(
+        instances={
+            "lft": pic.coupler,
+            "top": pic.straight,
+            "btm": pic.straight,
+            "rgt": pic.coupler,
         },
         connections={
-            "lft:out1": "top:in",
-            "lft:out0": "btm:in",
-            "top:out": "rgt:in1",
-            "btm:out": "rgt:in0",
+            "lft:out0": "btm:in0",
+            "btm:out0": "rgt:in0",
+            "lft:out1": "top:in0",
+            "top:out0": "rgt:in1",
         },
         ports={
-            "lft:in1": "in1",
-            "lft:in0": "in0",
-            "rgt:out1": "out1",
-            "rgt:out0": "out0",
+            "in0": "lft:in0",
+            "in1": "lft:in1",
+            "out0": "rgt:out0",
+            "out1": "rgt:out1",
         },
     )
-    assert tuple(sorted(mzi_mzi.params.keys())) == ("btm", "lft", "rgt", "top")
-    assert abs(mzi_mzi.funcs["in0", "out0"](mzi_mzi.params)) == approx(1.0)
-    mzi_mzi.params["lft"]["btm"]["length"] = 25e-6
-    mzi_mzi.params["rgt"]["btm"]["length"] = 25e-6
-    mzi_mzi.params["btm"]["length"] = 25e-6
-    assert abs(mzi_mzi.funcs["in0", "out0"](mzi_mzi.params)) == approx(1.0)
-    f = jax.jit(mzi_mzi.funcs["in0", "out0"])
-    assert abs(f(mzi_mzi.params)) == approx(1.0)
-    assert abs(f(mzi_mzi.params)) == approx(1.0)
-    g = jax.grad(lambda params: jnp.abs(mzi_mzi.funcs["in0", "out0"](params)) ** 2)
-    assert g(mzi_mzi.params)["btm"]["length"] == approx(-0.4917065)
+    params = sax.set_params(sax.get_params(mzi), wl=jnp.linspace(1.5, 1.6, 1))
+    delta_length = 10
+    params["top"]["length"] = 15.0 + delta_length
+    params["btm"]["length"] = 15.0
+    S = mzi(**params)
+    return S
+
+
+if __name__ == "__main__":
+    s = test_circuit_mzi()
