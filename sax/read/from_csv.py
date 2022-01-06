@@ -1,13 +1,16 @@
 import numpy as np
 import pandas as pd
+
+# from scipy.interpolate import interp1d
+
 from sax._typing import PathType, SDict, Float
 from sax.constants import PATH
 
 
-def from_csv(filepath: PathType, wl: Float = 1.55, prefix: str = "S") -> SDict:
+def from_csv(
+    filepath: PathType, wl: Float = 1.55, xkey: str = "wavelength_nm", prefix: str = "S"
+) -> SDict:
     """loads Sparameters from a CSV file
-
-    FIXME: check if wavelength range in the dataframe
 
     Args:
         filepath:
@@ -17,6 +20,11 @@ def from_csv(filepath: PathType, wl: Float = 1.55, prefix: str = "S") -> SDict:
     df = pd.read_csv(filepath)
     nsparameters = (len(df.keys()) - 1) // 2
     nports = int(nsparameters ** 0.5)
+
+    # x = df[xkey]
+    # wl_min = min(wl)
+    # wl_max = max(wl)
+    # df = df[df[xkey] >= wl_min][df[xkey] <= wl_max]
 
     return {
         (f"o{i}", f"o{j}"): df[f"{prefix}{i}{j}m"] * np.exp(1j * df[f"{prefix}{i}{j}a"])

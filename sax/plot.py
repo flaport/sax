@@ -1,4 +1,4 @@
-""" Useful functions for working plotting. """
+""" Useful functions for plotting. """
 
 from typing import Tuple
 import matplotlib.pyplot as plt
@@ -10,12 +10,12 @@ def plot_model(
     sdict: Model,
     port1: str = "o1",
     ports2: Tuple[str, ...] = None,
-    logscale=True,
+    logscale: bool = True,
     fig=None,
     wl_min: float = 1.5,
     wl_max: float = 1.6,
     wl_steps: int = 2000,
-    phase=False,
+    phase: bool = False,
 ) -> None:
     """Plot Sparameters for a model
 
@@ -28,6 +28,7 @@ def plot_model(
         wl_steps: number of steps
         logscale:
         fig: figure
+        phase: plots phase instead of magnitude
 
     .. plot::
         :include-source:
