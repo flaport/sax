@@ -59,7 +59,7 @@ def plot_model(
                 ylabel = "angle (rad)"
             else:
                 y = np.abs(sdict[(port1, port2)])
-                y = 10 * np.log10(y) if logscale else y
+                y = 20 * np.log10(y) if logscale else y
                 ylabel = "|S (dB)|" if logscale else "|S|"
             ax.plot(wavelengths * 1e9, y, label=f"{port1}->{port2}")
     ax.set_xlabel("wavelength (nm)")

@@ -22,6 +22,7 @@ class Path:
     data = repo_path / "data"
     mmi_csv = data / "mmi1x2_si220n.csv"
     mmi_dat = data / "mmi1x2_si220n.dat"
+    coupler_ring_csv = data / "coupler_ring.csv"
 
 
 PATH = Path()
