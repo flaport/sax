@@ -7,6 +7,7 @@ from sax import core
 from sax import models
 from sax import nn
 from sax import utils
+from sax import plot
 
 from sax.circuit_factories import (
     Models,
@@ -69,6 +70,7 @@ __all__ = [
     "partial",
     "PDict",
     "SDict",
+    "plot",
 ]
 __author__ = "Floris Laporte"
 __version__ = "0.3.1"

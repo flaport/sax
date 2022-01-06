@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import numpy as np
 import jax.numpy as jnp
+import pathlib
 
 from typing import Any, Dict, Union, Tuple, Callable
 
@@ -28,6 +29,9 @@ arguments and returns an S parameter dictionary """
 
 ModelFactory = Callable[..., Model]
 """ A SAX Model Factory is any keyword-only function that returns a sax Model """
+
+PathType = Union[str, pathlib.Path]
+Strs = Tuple[str, ...]
 
 
 def is_float(x: Any) -> bool:
