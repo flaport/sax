@@ -1,0 +1,20 @@
+224c224
+<     return s.replace('_', r'\_')
+---
+>     return s.replace('_', '\_')
+232,235c232
+<         return_anno = f"->{type_repr(sig.return_annotation).replace('_empty', 'None')}"
+<     except:
+<         fmt_params = []
+<         return_anno = ''
+---
+>     except: fmt_params = []
+239c236
+<     return f'{f_name}',f'{name}{arg_str}{return_anno}'
+---
+>     return f'{f_name}',f'{name}{arg_str}'
+305c302
+<         except: display(Markdown(md))
+---
+>         except: display(Markdown(md))
+\ No newline at end of file

@@ -1,0 +1,27 @@
+repos:
+  - repo: local
+    hooks:
+      - id: nbdev_clean_nbs
+        name: nbdev_clean_nbs
+        entry: nbdev_clean_nbs
+        language: python
+        pass_filenames: false
+        additional_dependencies:
+          - nbdev
+  - repo: local
+    hooks:
+      - id: nbstripout
+        name: nbstripout
+        entry: nbstripout
+        language: python
+        pass_filenames: true
+        types: [jupyter]
+  - repo: local
+    hooks:
+      - id: nbdev_diff_nbs
+        name: nbdev_diff_nbs
+        entry: bash -c 'if [ ! -z "$(nbdev_diff_nbs)" ]; then nbdev_build_lib; fi'
+        language: python
+        pass_filenames: false
+        additional_dependencies:
+          - nbdev

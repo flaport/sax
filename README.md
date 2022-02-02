@@ -1,6 +1,8 @@
 # SAX
+> S + Autograd + XLA
 
-![Docs](https://readthedocs.org/projects/sax/badge/?version=latest)
+
+![](docs/images/sax.svg)
 
 Autograd and XLA for S-parameters - a scatter parameter circuit simulator and
 optimizer for the frequency domain based on [JAX](https://github.com/google/jax).
@@ -15,9 +17,8 @@ dive in...
 
 ## Quick Start
 
-[Full Quick Start page](https://sax.readthedocs.io/en/latest/examples/01_quick_start.html) -
-[Examples](https://sax.readthedocs.io/en/latest/examples.html) -
-[Full Docs](https://sax.readthedocs.io/en/latest/index.html).
+[Full Quick Start page](https://flaport.github.io/sax/quick_start) -
+[Documentation](https://flaport.github.io/sax).
 
 Let's first import the SAX library, along with JAX and the JAX-version of numpy:
 
@@ -27,105 +28,120 @@ import jax
 import jax.numpy as jnp
 ```
 
-Define a model -- which is just a port combination -> function dictionary -- for your
-component. For example a directional coupler:
+Define a model function for your component. A SAX model is just a function that returns
+an 'S-dictionary'. For example a directional coupler:
 
 ```python
-directional_coupler = {
-    ("p0", "p1"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p1", "p0"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p2", "p3"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p3", "p2"): lambda params: (1 - params["coupling"]) ** 0.5,
-    ("p0", "p2"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p2", "p0"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p1", "p3"): lambda params: 1j * params["coupling"] ** 0.5,
-    ("p3", "p1"): lambda params: 1j * params["coupling"] ** 0.5,
-    "default_params": {
-        "coupling": 0.5
-    },
-}
+def coupler(coupling=0.5):
+    kappa = coupling**0.5
+    tau = (1-coupling)**0.5
+    sdict = sax.reciprocal({
+        ("in0", "out0"): tau,
+        ("in0", "out1"): 1j*kappa,
+        ("in1", "out0"): 1j*kappa,
+        ("in1", "out1"): tau,
+    })
+    return sdict
+
+coupler(coupling=0.3)
 ```
+
+
+
+
+    {('in0', 'out0'): 0.8366600265340756,
+     ('in0', 'out1'): 0.5477225575051661j,
+     ('in1', 'out0'): 0.5477225575051661j,
+     ('in1', 'out1'): 0.8366600265340756,
+     ('out0', 'in0'): 0.8366600265340756,
+     ('out1', 'in0'): 0.5477225575051661j,
+     ('out0', 'in1'): 0.5477225575051661j,
+     ('out1', 'in1'): 0.8366600265340756}
+
+
 
 Or a waveguide:
 
 ```python
-def model_waveguide_transmission(params):
-    neff = params["neff"]
-    dwl = params["wl"] - params["wl0"]
-    dneff_dwl = (params["ng"] - params["neff"]) / params["wl0"]
+def waveguide(wl=1.55, wl0=1.55, neff=2.34, ng=3.4, length=10.0, loss=0.0):
+    dwl = wl - wl0
+    dneff_dwl = (ng - neff) / wl0
     neff = neff - dwl * dneff_dwl
-    phase = jnp.exp(
-        jnp.log(2 * jnp.pi * neff * params["length"]) - jnp.log(params["wl"])
-    )
-    return 10 ** (-params["loss"] * params["length"] / 20) * jnp.exp(1j * phase)
+    phase = 2 * jnp.pi * neff * length / wl
+    amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
+    transmission =  amplitude * jnp.exp(1j * phase)
+    sdict = sax.reciprocal({("in0", "out0"): transmission})
+    return sdict
 
-waveguide = {
-    ("in", "out"): model_waveguide_transmission,
-    ("out", "in"): model_waveguide_transmission,
-    "default_params": {
-        "length": 25e-6,
-        "wl": 1.55e-6,
-        "wl0": 1.55e-6,
-        "neff": 2.34,
-        "ng": 3.4,
-        "loss": 0.0,
-    },
-}
+waveguide(length=100.0)
 ```
 
-These component model dictionaries can be combined into a circuit model dictionary:
+
+
+
+    {('in0', 'out0'): 0.97953-0.2013j, ('out0', 'in0'): 0.97953-0.2013j}
+
+
+
+These component models can then be combined into a circuit:
 
 ```python
 mzi = sax.circuit(
-    models = {
-        "dc1": directional_coupler,
+    instances = {
+        "lft": coupler,
         "top": waveguide,
-        "dc2": directional_coupler,
-        "btm": waveguide,
+        "rgt": coupler,
     },
     connections={
-        "dc1:p2": "top:in",
-        "dc1:p1": "btm:in",
-        "top:out": "dc2:p3",
-        "btm:out": "dc2:p0",
+        "lft,out0": "rgt,in0",
+        "lft,out1": "top,in0",
+        "top,out0": "rgt,in1",
     },
     ports={
-        "dc1:p3": "in2",
-        "dc1:p0": "in1",
-        "dc2:p2": "out2",
-        "dc2:p1": "out1",
+        "in0": "lft,in0",
+        "in1": "lft,in1",
+        "out0": "rgt,out0",
+        "out1": "rgt,out1",
     },
 )
+
+type(mzi)
 ```
 
-Simulating this is as simple as modifying the default parameters:
+
+
+
+    function
+
+
+
+As you can see, the mzi we just created is just another component model function! To simulate it, call the mzi function with the (possibly nested) settings of its subcomponents. Global settings can be added to the 'root' of the circuit call and will be distributed over all subcomponents which have a parameter with the same name (e.g. 'wl'):
 
 ```python
-params = sax.copy_params(mzi["default_params"])
-params["top"]["length"] = 2.5e-5
-params["btm"]["length"] = 1.5e-5
-mzi["in1", "out1"](params)
+wl = jnp.linspace(1.53, 1.57, 1000)
+result = mzi(wl=wl, lft={'coupling': 0.3}, top={'length': 200.0}, rgt={'coupling': 0.8})
+
+plt.plot(1e3*wl, jnp.abs(result['in0', 'out0'])**2, label="in0->out0")
+plt.plot(1e3*wl, jnp.abs(result['in0', 'out1'])**2, label="in0->out1", ls="--")
+plt.xlabel("λ [nm]")
+plt.ylabel("T")
+plt.grid(True)
+plt.figlegend(ncol=2, loc="upper center")
+plt.show()
 ```
 
-```
-DeviceArray(-0.280701+0.10398856j, dtype=complex64)
-```
+
+![png](docs/images/output_10_0.png)
+
 
 Those are the basics. For more info, check out the **full**
-[SAX Quick Start page](https://sax.readthedocs.io/en/latest/examples/01_quick_start.html),
-the [Examples](https://sax.readthedocs.io/en/latest/examples.html)
-or the
-[Documentation](https://sax.readthedocs.io/en/latest/index.html).
+[SAX Quick Start page](https://flaport.github.io/sax/quick_start) or the rest of the [Documentation](https://flaport.github.io/sax).
 
 ## Installation
 
 ### Dependencies
 
-- [JAX & JAXLIB](https://github.com/google/jax). Please read the JAX install
-  instructions [here](https://github.com/google/jax/#installation). Alternatively, you can
-  try running [jaxinstall.sh](jaxinstall.sh) to automatically pip-install the correct
-  `jax` and `jaxlib` package for your python and cuda version (if that exact combination
-  exists).
+- [JAX & JAXLIB](https://github.com/google/jax). Please read the JAX install instructions [here](https://github.com/google/jax/#installation).
 
 ### Installation
 

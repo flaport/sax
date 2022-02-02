@@ -1,3 +1,23 @@
+# IDE settings
+.vscode/
+.idea/
+
+# nbdev
+docs/
+.jekyll-cache/
+Gemfile.lock
+*.bak
+.gitattributes
+.last_checked
+.gitconfig
+*.bak
+*.log
+*~
+~*
+_tmp*
+tmp*
+tags
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
@@ -128,3 +148,7 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# Pyright
+node_modules
+package-lock.json
