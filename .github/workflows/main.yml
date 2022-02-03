@@ -128,11 +128,11 @@ jobs:
         with:
           name: examples
           path: ./examples
-      - name: Download 'index.ipynb' artifact
-        uses: actions/download-artifact@master
-        with:
-          name: index.ipynb
-          path: ./index.ipynb
+#     - name: Download 'index.ipynb' artifact
+#       uses: actions/download-artifact@master
+#       with:
+#         name: index.ipynb
+#         path: ./index.ipynb
       - name: Build docs
         run: nbdev_build_docs
       - name: Store artifacts
