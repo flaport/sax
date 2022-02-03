@@ -14,6 +14,7 @@ from typing import Dict
 import jax
 import jax.numpy as jnp
 from ..typing_ import SDense, SDict, SType, scoo
+from . import evaluate_circuit
 
 try:
     import klujax
