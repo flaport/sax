@@ -1,0 +1,35 @@
+{
+  "welcome": {
+    "welcome": "/"
+  },
+  "examples": {
+    "1. quick start": "quick_start",
+    "2. all pass filter": "all_pass_filter",
+    "3. circuit from yaml": "circuit_from_yaml",
+    "4. multimode simulations": "multimode_simulations",
+    "5. thin film optimizatioon": "thinfilm",
+    "6. pathlengths and group delays": "additive_backend"
+  },
+  "core api": {
+    "1. sax types": "typing",
+    "2. utilities": "utils",
+    "3. multimode": "multimode",
+    "4. models": "models",
+    "5. netlist": "netlist",
+    "6. circuit": "circuit",
+    "7. caching": "caching"
+  },
+  "backends": {
+    "1. overview": "backends",
+    "2. default backend": "backends_default",
+    "3. klu backend": "backends_klu",
+    "4. additive backend": "backends_additive"
+  },
+  "neural networks": {
+    "1. overview": "nn",
+    "2. loss functions": "nn_loss",
+    "3. utilities": "nn_utils",
+    "4. neural networks": "nn_core",
+    "5. i/o": "nn_io"
+  }
+}
