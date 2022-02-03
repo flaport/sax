@@ -1,37 +1,64 @@
+.ONESHELL:
+SHELL := /bin/bash
+SRC = $(wildcard nbs/*.ipynb)
 
-install:
-	bash jaxinstall.sh
-	pip install -r requirements.txt --upgrade
-	pip install -r requirements_dev.txt --upgrade
-	pip install -e .
-	pre-commit install
+all: sax docs
+
+.SILENT: docker
+docker:
+	docker build . -t sax
+	git checkout -- environment.yml
+
+sax: $(SRC)
+	nbdev_build_lib
+
+lib:
+	nbdev_build_lib
+
+sync:
+	nbdev_update_lib
+
+serve:
+	cd docs && bundle exec jekyll serve
+
+.PHONY: docs
+docs:
+	jupyter nbconvert --execute --inplace index.ipynb
+	nbdev_build_docs
+
+run:
+	find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill {} {}
 
 test:
-	pytest
+	nbdev_test_nbs
 
-cov:
-	pytest --cov= sax
+release: pypi conda_release
+	nbdev_bump_version
 
-mypy:
-	mypy . --ignore-missing-imports
+conda_release:
+	fastrelease_conda_package
 
-lint:
-	flake8
+pypi: dist
+	twine upload --repository pypi dist/*
 
-pylint:
-	pylint sax
+dist: clean
+	python -m build --sdist --wheel
 
-lintd2:
-	flake8 --select RST
+clean:
+	nbdev_clean_nbs
+	find . -name "*.ipynb" | xargs nbstripout
+	find . -name "dist" | xargs rm -rf
+	find . -name "build" | xargs rm -rf
+	find . -name "builds" | xargs rm -rf
+	find . -name "__pycache__" | xargs rm -rf
+	find . -name "*.so" | xargs rm -rf
+	find . -name "*.egg-info" | xargs rm -rf
+	find . -name ".ipynb_checkpoints" | xargs rm -rf
+	find . -name ".pytest_cache" | xargs rm -rf
 
-lintd:
-	pydocstyle sax
-
-doc8:
-	doc8 docs/
-
-update:
-	pur
-
-update2:
-	pre-commit autoupdate --bleeding-edge
+reset:
+	rm -rf sax
+	rm -rf docs
+	git checkout -- docs
+	nbdev_build_lib
+	make clean
