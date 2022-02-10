@@ -132,6 +132,6 @@ modules = ["typing_.py",
 
 doc_url = "https://flaport.github.io/sax/"
 
-git_url = "https://github.com/flaport/sax/"
+git_url = "https://github.com/flaport/sax/tree/master/"
 
 def custom_doc_links(name): return None
