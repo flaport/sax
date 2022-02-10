@@ -62,7 +62,7 @@ nb_path: "nbs/07a_backends_default.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="evaluate_circuit" class="doc_header"><code>evaluate_circuit</code><a href="https://github.com/flaport/sax/sax/backends/default.py#L19" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>evaluate_circuit</code>(<strong><code>instances</code></strong>:<code>Dict[str, SType]</code>, <strong><code>connections</code></strong>:<code>Dict[str, str]</code>, <strong><code>ports</code></strong>:<code>Dict[str, str]</code>)-&gt;<a href="/sax/typing.html#SDict"><code>SDict</code></a></p>
+<h4 id="evaluate_circuit" class="doc_header"><code>evaluate_circuit</code><a href="https://github.com/flaport/sax/tree/master/sax/backends/default.py#L19" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>evaluate_circuit</code>(<strong><code>instances</code></strong>:<code>Dict[str, SType]</code>, <strong><code>connections</code></strong>:<code>Dict[str, str]</code>, <strong><code>ports</code></strong>:<code>Dict[str, str]</code>)-&gt;<a href="/sax/typing.html#SDict"><code>SDict</code></a></p>
 </blockquote>
 <p>evaluate a circuit for the given sdicts.</p>
 
@@ -152,14 +152,14 @@ nb_path: "nbs/07a_backends_default.ipynb"
  (&#39;out0&#39;, &#39;out1&#39;): 0j,
  (&#39;out1&#39;, &#39;out0&#39;): 0j,
  (&#39;out1&#39;, &#39;out1&#39;): 0j,
- (&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j,
- (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j,
- (&#39;in0&#39;, &#39;out0&#39;): -0.25+0.43301j,
- (&#39;in0&#39;, &#39;out1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
+ (&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j,
  (&#39;out1&#39;, &#39;in1&#39;): 0.25-0.43301j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j}</pre>
+ (&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
+ (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
+ (&#39;in0&#39;, &#39;out1&#39;): -0.43301+0.75j,
+ (&#39;in0&#39;, &#39;out0&#39;): -0.25+0.43301j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j,
+ (&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j}</pre>
 </div>
 
 </div>
@@ -611,14 +611,14 @@ nb_path: "nbs/07a_backends_default.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>(&#39;dc1,in1&#39;,
+<pre>(&#39;dc2,out1&#39;,
+ &#39;dc2,in1&#39;,
+ &#39;dc2,in0&#39;,
+ &#39;dc2,out0&#39;,
  &#39;dc1,out1&#39;,
  &#39;dc1,out0&#39;,
  &#39;dc1,in0&#39;,
- &#39;dc2,out0&#39;,
- &#39;dc2,in1&#39;,
- &#39;dc2,out1&#39;,
- &#39;dc2,in0&#39;)</pre>
+ &#39;dc1,in1&#39;)</pre>
 </div>
 
 </div>
@@ -739,14 +739,14 @@ nb_path: "nbs/07a_backends_default.ipynb"
  (&#39;dc2,out0&#39;, &#39;dc2,in1&#39;): 0.70711j,
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): 0.70711j,
  (&#39;dc2,out1&#39;, &#39;dc2,in1&#39;): 0.70711+0j,
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j,
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j,
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.5+0j,
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j,
  (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.5+0j,
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j}</pre>
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): 0.5j,
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.5+0j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j}</pre>
 </div>
 
 </div>
@@ -811,14 +811,14 @@ nb_path: "nbs/07a_backends_default.ipynb"
  (&#39;dc2,in0&#39;, &#39;dc2,out1&#39;): 0.70711j,
  (&#39;dc2,out0&#39;, &#39;dc2,in0&#39;): 0.70711+0j,
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): 0.70711j,
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j,
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j,
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.5+0j,
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j,
  (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.5+0j,
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j}</pre>
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): 0.5j,
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.5+0j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j}</pre>
 </div>
 
 </div>
@@ -906,22 +906,22 @@ nb_path: "nbs/07a_backends_default.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{(&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): -0.43301+0.75j,
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.25-0.43301j,
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.25+0.43301j,
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): -0.43301+0.75j,
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): -0.43301+0.75j,
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.25+0.43301j,
+<pre>{(&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): -0.43301+0.75j,
  (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.25-0.43301j,
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): -0.43301+0.75j,
- (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): 0j,
- (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): 0j,
- (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): 0j,
- (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): 0j,
- (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): 0j,
- (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): 0j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.25+0.43301j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): -0.43301+0.75j,
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): -0.43301+0.75j,
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.25+0.43301j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.25-0.43301j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): -0.43301+0.75j,
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): 0j,
  (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): 0j,
- (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): 0j}</pre>
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): 0j,
+ (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): 0j,
+ (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): 0j,
+ (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): 0j,
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): 0j,
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): 0j}</pre>
 </div>
 
 </div>
@@ -966,22 +966,22 @@ nb_path: "nbs/07a_backends_default.ipynb"
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{(&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j,
- (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j,
- (&#39;in0&#39;, &#39;out0&#39;): -0.25+0.43301j,
- (&#39;in0&#39;, &#39;out1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
+<pre>{(&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j,
  (&#39;out1&#39;, &#39;in1&#39;): 0.25-0.43301j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j,
- (&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
- (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;out1&#39;): 0j,
+ (&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
+ (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
+ (&#39;in0&#39;, &#39;out1&#39;): -0.43301+0.75j,
+ (&#39;in0&#39;, &#39;out0&#39;): -0.25+0.43301j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j,
+ (&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j,
+ (&#39;out1&#39;, &#39;out1&#39;): 0j,
  (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out1&#39;, &#39;out1&#39;): 0j}</pre>
+ (&#39;out0&#39;, &#39;out1&#39;): 0j,
+ (&#39;out0&#39;, &#39;out0&#39;): 0j,
+ (&#39;in0&#39;, &#39;in0&#39;): 0j,
+ (&#39;in0&#39;, &#39;in1&#39;): 0j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;in1&#39;): 0j}</pre>
 </div>
 
 </div>
