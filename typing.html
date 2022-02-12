@@ -329,7 +329,7 @@ nb_path: "nbs/00_typing.ipynb"
 <span class="n">Sj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
 <span class="n">Sx</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
 <span class="n">port_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
-<span class="n">_scoo</span><span class="p">:</span> <span class="n">SCoo</span> <span class="o">=</span> <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">port_map</span>
+<span class="n">_scoo</span><span class="p">:</span> <span class="n">SCoo</span> <span class="o">=</span> <span class="p">(</span><span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">port_map</span><span class="p">)</span>
 </pre></div>
 
     </div>
@@ -939,7 +939,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_float" class="doc_header"><code>is_float</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L102" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_float</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_float" class="doc_header"><code>is_float</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L106" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_float</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>Check if an object is a <a href="/sax/typing.html#Float"><code>Float</code></a></p>
 
@@ -992,7 +992,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_complex" class="doc_header"><code>is_complex</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L113" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_complex</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_complex" class="doc_header"><code>is_complex</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L117" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_complex</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an object is a <a href="/sax/typing.html#ComplexFloat"><code>ComplexFloat</code></a></p>
 
@@ -1045,7 +1045,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_complex_float" class="doc_header"><code>is_complex_float</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L124" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_complex_float</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_complex_float" class="doc_header"><code>is_complex_float</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L128" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_complex_float</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an object is either a <a href="/sax/typing.html#ComplexFloat"><code>ComplexFloat</code></a> or a <a href="/sax/typing.html#Float"><code>Float</code></a></p>
 
@@ -1098,7 +1098,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_sdict" class="doc_header"><code>is_sdict</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L129" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_sdict</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_sdict" class="doc_header"><code>is_sdict</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L133" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_sdict</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an object is an <a href="/sax/typing.html#SDict"><code>SDict</code></a> (a SAX S-dictionary)</p>
 
@@ -1150,7 +1150,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_scoo" class="doc_header"><code>is_scoo</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L134" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_scoo</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_scoo" class="doc_header"><code>is_scoo</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L138" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_scoo</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an object is an <a href="/sax/typing.html#SCoo"><code>SCoo</code></a> (a SAX sparse S-matrix representation in COO-format)</p>
 
@@ -1202,7 +1202,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_sdense" class="doc_header"><code>is_sdense</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L139" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_sdense</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_sdense" class="doc_header"><code>is_sdense</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L143" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_sdense</code>(<strong><code>x</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an object is an <a href="/sax/typing.html#SDense"><code>SDense</code></a> (a SAX dense S-matrix representation)</p>
 
@@ -1254,7 +1254,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_model" class="doc_header"><code>is_model</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L144" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_model</code>(<strong><code>model</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_model" class="doc_header"><code>is_model</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L148" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_model</code>(<strong><code>model</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if a callable is a <a href="/sax/typing.html#Model"><code>Model</code></a> (a callable returning an <a href="/sax/typing.html#SType"><code>SType</code></a>)</p>
 
@@ -1309,7 +1309,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_model_factory" class="doc_header"><code>is_model_factory</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L173" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_model_factory</code>(<strong><code>model</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_model_factory" class="doc_header"><code>is_model_factory</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L177" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_model_factory</code>(<strong><code>model</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if a callable is a model function.</p>
 
@@ -1373,7 +1373,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="validate_model" class="doc_header"><code>validate_model</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L183" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>validate_model</code>(<strong><code>model</code></strong>:<code>Callable</code>)-&gt;<code>None</code></p>
+<h4 id="validate_model" class="doc_header"><code>validate_model</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L187" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>validate_model</code>(<strong><code>model</code></strong>:<code>Callable</code>)-&gt;<code>None</code></p>
 </blockquote>
 <p>Validate the parameters of a model</p>
 
@@ -1448,7 +1448,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_instance" class="doc_header"><code>is_instance</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L196" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_instance</code>(<strong><code>instance</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_instance" class="doc_header"><code>is_instance</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L200" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_instance</code>(<strong><code>instance</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if a dictionary is an instance</p>
 
@@ -1480,7 +1480,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_netlist" class="doc_header"><code>is_netlist</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L203" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_netlist</code>(<strong><code>netlist</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_netlist" class="doc_header"><code>is_netlist</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L207" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_netlist</code>(<strong><code>netlist</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if a dictionary is a netlist</p>
 
@@ -1512,7 +1512,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_stype" class="doc_header"><code>is_stype</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L216" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_stype</code>(<strong><code>stype</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_stype" class="doc_header"><code>is_stype</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L220" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_stype</code>(<strong><code>stype</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an object is an SDict, SCoo or SDense</p>
 
@@ -1544,7 +1544,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_singlemode" class="doc_header"><code>is_singlemode</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L221" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_singlemode</code>(<strong><code>S</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_singlemode" class="doc_header"><code>is_singlemode</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L225" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_singlemode</code>(<strong><code>S</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an stype is single mode</p>
 
@@ -1576,7 +1576,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_multimode" class="doc_header"><code>is_multimode</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L239" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_multimode</code>(<strong><code>S</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_multimode" class="doc_header"><code>is_multimode</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L243" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_multimode</code>(<strong><code>S</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an stype is single mode</p>
 
@@ -1608,7 +1608,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="is_mixedmode" class="doc_header"><code>is_mixedmode</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L248" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_mixedmode</code>(<strong><code>S</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
+<h4 id="is_mixedmode" class="doc_header"><code>is_mixedmode</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L252" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>is_mixedmode</code>(<strong><code>S</code></strong>:<code>Any</code>)-&gt;<code>bool</code></p>
 </blockquote>
 <p>check if an stype is neither single mode nor multimode (hence invalid)</p>
 
@@ -1655,7 +1655,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="sdict" class="doc_header"><code>sdict</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L264" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sdict</code>(<strong><code>S</code></strong>:<code>Union[Model, SType]</code>)-&gt;<code>Union[Model, SType]</code></p>
+<h4 id="sdict" class="doc_header"><code>sdict</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L268" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sdict</code>(<strong><code>S</code></strong>:<code>Union[Model, SType]</code>)-&gt;<code>Union[Model, SType]</code></p>
 </blockquote>
 <p>Convert an <a href="/sax/typing.html#SCoo"><code>SCoo</code></a> or <a href="/sax/typing.html#SDense"><code>SDense</code></a> to <a href="/sax/typing.html#SDict"><code>SDict</code></a></p>
 
@@ -1727,7 +1727,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="scoo" class="doc_header"><code>scoo</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L319" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>scoo</code>(<strong><code>S</code></strong>:<code>Union[Callable, SType]</code>)-&gt;<code>Union[Callable, SCoo]</code></p>
+<h4 id="scoo" class="doc_header"><code>scoo</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L323" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>scoo</code>(<strong><code>S</code></strong>:<code>Union[Callable, SType]</code>)-&gt;<code>Union[Callable, SCoo]</code></p>
 </blockquote>
 <p>Convert an <a href="/sax/typing.html#SDict"><code>SDict</code></a> or <a href="/sax/typing.html#SDense"><code>SDense</code></a> to <a href="/sax/typing.html#SCoo"><code>SCoo</code></a></p>
 
@@ -1789,7 +1789,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="sdense" class="doc_header"><code>sdense</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L373" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sdense</code>(<strong><code>S</code></strong>:<code>Union[Callable, SType]</code>)-&gt;<code>Union[Callable, SDense]</code></p>
+<h4 id="sdense" class="doc_header"><code>sdense</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L377" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>sdense</code>(<strong><code>S</code></strong>:<code>Union[Callable, SType]</code>)-&gt;<code>Union[Callable, SDense]</code></p>
 </blockquote>
 <p>Convert an <a href="/sax/typing.html#SDict"><code>SDict</code></a> or <a href="/sax/typing.html#SCoo"><code>SCoo</code></a> to <a href="/sax/typing.html#SDense"><code>SDense</code></a></p>
 
@@ -1845,7 +1845,7 @@ nb_path: "nbs/00_typing.ipynb"
 
 
 <div class="output_markdown rendered_html output_subarea ">
-<h4 id="modelfactory" class="doc_header"><code>modelfactory</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L412" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>modelfactory</code>(<strong><code>func</code></strong>)-&gt;<code>None</code></p>
+<h4 id="modelfactory" class="doc_header"><code>modelfactory</code><a href="https://github.com/flaport/sax/tree/master/sax/typing_.py#L416" class="source_link" style="float:right">[source]</a></h4><blockquote><p><code>modelfactory</code>(<strong><code>func</code></strong>)-&gt;<code>None</code></p>
 </blockquote>
 <p>Decorator that marks a function as <a href="/sax/typing.html#ModelFactory"><code>ModelFactory</code></a></p>
 

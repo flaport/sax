@@ -6,8 +6,8 @@ title: Simulating an All-Pass Filter
 keywords: fastai
 sidebar: home_sidebar
 
-
-
+summary: "A simple comparison between an analytical evaluation of an all pass filter and using SAX."
+description: "A simple comparison between an analytical evaluation of an all pass filter and using SAX."
 nb_path: "examples/02_all_pass_filter.ipynb"
 ---
 <!--
@@ -29,19 +29,6 @@ nb_path: "examples/02_all_pass_filter.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>A simple comparison between an analytical evaluation of an all pass filter and using SAX.</p>
-
-</div>
-</div>
-</div>
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<h2 id="Imports">Imports<a class="anchor-link" href="#Imports"> </a></h2>
-</div>
-</div>
-</div>
     {% raw %}
     
 <div class="cell border-box-sizing code_cell rendered">
@@ -190,12 +177,12 @@ o = \frac{t-10^{-\alpha L/20}\exp(2\pi j n_{\rm eff}(\lambda) L / \lambda)}{1-t1
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 277 ms, sys: 0 ns, total: 277 ms
-Wall time: 276 ms
-CPU times: user 55.4 ms, sys: 0 ns, total: 55.4 ms
-Wall time: 54.7 ms
-CPU times: user 471 µs, sys: 45 µs, total: 516 µs
-Wall time: 369 µs
+<pre>CPU times: user 330 ms, sys: 420 µs, total: 331 ms
+Wall time: 330 ms
+CPU times: user 66.5 ms, sys: 0 ns, total: 66.5 ms
+Wall time: 65.9 ms
+CPU times: user 770 µs, sys: 0 ns, total: 770 µs
+Wall time: 579 µs
 </pre>
 </div>
 </div>
@@ -292,12 +279,12 @@ Wall time: 369 µs
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 1.93 s, sys: 7.81 ms, total: 1.94 s
-Wall time: 1.93 s
-CPU times: user 703 µs, sys: 0 ns, total: 703 µs
-Wall time: 527 µs
-CPU times: user 189 µs, sys: 0 ns, total: 189 µs
-Wall time: 121 µs
+<pre>CPU times: user 2.21 s, sys: 16.2 ms, total: 2.23 s
+Wall time: 2.22 s
+CPU times: user 763 µs, sys: 61 µs, total: 824 µs
+Wall time: 580 µs
+CPU times: user 137 µs, sys: 11 µs, total: 148 µs
+Wall time: 97.5 µs
 </pre>
 </div>
 </div>

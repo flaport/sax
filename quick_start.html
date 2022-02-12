@@ -6,8 +6,8 @@ title: SAX Quick Start
 keywords: fastai
 sidebar: home_sidebar
 
-
-
+summary: "Let's go over the core functionality of SAX."
+description: "Let's go over the core functionality of SAX."
 nb_path: "examples/01_quick_start.ipynb"
 ---
 <!--
@@ -29,13 +29,6 @@ nb_path: "examples/01_quick_start.ipynb"
 </div>
     {% endraw %}
 
-<div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
-<div class="text_cell_render border-box-sizing rendered_html">
-<p>Let's go over the core functionality of SAX.</p>
-
-</div>
-</div>
-</div>
 <div class="cell border-box-sizing text_cell rendered"><div class="inner_cell">
 <div class="text_cell_render border-box-sizing rendered_html">
 <h2 id="Environment-variables">Environment variables<a class="anchor-link" href="#Environment-variables"> </a></h2>
@@ -460,8 +453,8 @@ in0          out0</code></pre>
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 2.34 s, sys: 8.4 ms, total: 2.35 s
-Wall time: 2.34 s
+<pre>CPU times: user 2.62 s, sys: 12.2 ms, total: 2.64 s
+Wall time: 2.64 s
 </pre>
 </div>
 </div>
@@ -471,22 +464,22 @@ Wall time: 2.34 s
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{(&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
+<pre>{(&#39;in0&#39;, &#39;in0&#39;): 0j,
  (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;in1&#39;, &#39;out1&#39;): 0j,
- (&#39;in1&#39;, &#39;out0&#39;): -0.57127+0.82076j,
- (&#39;in0&#39;, &#39;out1&#39;): -0.57127+0.82076j,
- (&#39;in0&#39;, &#39;out0&#39;): 0j,
- (&#39;out1&#39;, &#39;in1&#39;): 0j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.57127+0.82076j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;in1&#39;): 0j,
  (&#39;out1&#39;, &#39;out1&#39;): 0j,
  (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.57127+0.82076j,
- (&#39;out0&#39;, &#39;in0&#39;): 0j,
+ (&#39;out1&#39;, &#39;in0&#39;): -0.57127+0.82076j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0j,
  (&#39;out0&#39;, &#39;out1&#39;): 0j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j}</pre>
+ (&#39;out0&#39;, &#39;out0&#39;): 0j,
+ (&#39;out0&#39;, &#39;in0&#39;): 0j,
+ (&#39;out0&#39;, &#39;in1&#39;): -0.57127+0.82076j,
+ (&#39;in0&#39;, &#39;out1&#39;): -0.57127+0.82076j,
+ (&#39;in0&#39;, &#39;out0&#39;): 0j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0j,
+ (&#39;in1&#39;, &#39;out0&#39;): -0.57127+0.82076j}</pre>
 </div>
 
 </div>
@@ -534,8 +527,8 @@ Wall time: 2.34 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 4.25 s, sys: 44.3 ms, total: 4.3 s
-Wall time: 4.27 s
+<pre>CPU times: user 4.74 s, sys: 63.6 ms, total: 4.8 s
+Wall time: 4.77 s
 </pre>
 </div>
 </div>
@@ -600,22 +593,22 @@ Wall time: 4.27 s
 
 
 <div class="output_text output_subarea output_execute_result">
-<pre>{(&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
+<pre>{(&#39;in0&#39;, &#39;in0&#39;): 0j,
  (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;in1&#39;, &#39;out1&#39;): 0.28073-0.10397j,
- (&#39;in1&#39;, &#39;out0&#39;): 0.89475-0.33137j,
- (&#39;in0&#39;, &#39;out1&#39;): 0.89475-0.33137j,
- (&#39;in0&#39;, &#39;out0&#39;): -0.28073+0.10397j,
- (&#39;out1&#39;, &#39;in1&#39;): 0.28073-0.10397j,
- (&#39;out1&#39;, &#39;in0&#39;): 0.89475-0.33137j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;in1&#39;): 0j,
  (&#39;out1&#39;, &#39;out1&#39;): 0j,
  (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;in1&#39;): 0.89475-0.33137j,
- (&#39;out0&#39;, &#39;in0&#39;): -0.28073+0.10397j,
+ (&#39;out1&#39;, &#39;in0&#39;): 0.89475-0.33137j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.28073-0.10397j,
  (&#39;out0&#39;, &#39;out1&#39;): 0j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j}</pre>
+ (&#39;out0&#39;, &#39;out0&#39;): 0j,
+ (&#39;out0&#39;, &#39;in0&#39;): -0.28073+0.10397j,
+ (&#39;out0&#39;, &#39;in1&#39;): 0.89475-0.33137j,
+ (&#39;in0&#39;, &#39;out1&#39;): 0.89475-0.33137j,
+ (&#39;in0&#39;, &#39;out0&#39;): -0.28073+0.10397j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.28073-0.10397j,
+ (&#39;in1&#39;, &#39;out0&#39;): 0.89475-0.33137j}</pre>
 </div>
 
 </div>
@@ -660,8 +653,8 @@ Wall time: 4.27 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 2.02 s, sys: 4.1 ms, total: 2.02 s
-Wall time: 2.02 s
+<pre>CPU times: user 2.31 s, sys: 90 µs, total: 2.31 s
+Wall time: 2.31 s
 </pre>
 </div>
 </div>
@@ -772,8 +765,8 @@ Wall time: 2.02 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 4.44 s, sys: 15.7 ms, total: 4.45 s
-Wall time: 4.43 s
+<pre>CPU times: user 4.92 s, sys: 20 ms, total: 4.94 s
+Wall time: 4.91 s
 </pre>
 </div>
 </div>
@@ -908,7 +901,7 @@ Wall time: 4.43 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stderr output_text">
-<pre>100%|██████████| 300/300 [00:20&lt;00:00, 14.33it/s, loss=0.000000]
+<pre>100%|██████████| 300/300 [00:23&lt;00:00, 12.56it/s, loss=0.000000]
 </pre>
 </div>
 </div>
@@ -1165,12 +1158,12 @@ Wall time: 4.43 s
 <div class="output_area">
 
 <div class="output_subarea output_stream output_stdout output_text">
-<pre>CPU times: user 1.58 s, sys: 0 ns, total: 1.58 s
-Wall time: 1.58 s
-CPU times: user 4min 6s, sys: 807 ms, total: 4min 7s
-Wall time: 4min 7s
-CPU times: user 48.9 ms, sys: 0 ns, total: 48.9 ms
-Wall time: 36 ms
+<pre>CPU times: user 1.8 s, sys: 21 µs, total: 1.8 s
+Wall time: 1.8 s
+CPU times: user 4min 37s, sys: 910 ms, total: 4min 38s
+Wall time: 4min 38s
+CPU times: user 51.1 ms, sys: 3.98 ms, total: 55.1 ms
+Wall time: 40.2 ms
 </pre>
 </div>
 </div>
