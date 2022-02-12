@@ -41,4 +41,4 @@ dependencies:
     - jax==0.2.28
     - jaxlib==0.1.76
     - tmm==0.1.8
-    - sax==0.6.1
+    - sax==0.6.2
