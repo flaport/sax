@@ -35,6 +35,7 @@ dependencies:
   - shapely==1.8.0
   - tqdm==4.62.3
   - twine==3.7.1
+  - typing-extensions==4.0.1
   - pip:
     - flax==0.4.0
     - jax==0.2.28

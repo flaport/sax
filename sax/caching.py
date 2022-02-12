@@ -19,7 +19,7 @@ _cached_functions = []
 
 # Cell
 
-def cache(func: Optional[Callable] = None, /, *, maxsize: Optional[int] = None) -> Callable:
+def cache(func: Optional[Callable] = None, *, maxsize: Optional[int] = None) -> Callable:
     """cache a function"""
     if func is None:
         return partial(cache, maxsize=maxsize)

@@ -16,7 +16,11 @@ __all__ = ['Array', 'Int', 'Float', 'ComplexFloat', 'Settings', 'SDict', 'SCoo',
 import functools
 import inspect
 from collections.abc import Callable as CallableABC
-from typing import Any, Callable, Dict, Tuple, TypedDict, Union, cast, overload
+from typing import Any, Callable, Dict, Tuple, Union, cast, overload
+try:
+    from typing import TypedDict
+except ImportError: # python<3.8
+    from typing_extensions import TypedDict
 
 import jax.numpy as jnp
 import numpy as np
