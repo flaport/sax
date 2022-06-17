@@ -12,7 +12,6 @@ __all__ = ['multimode', 'singlemode']
 from functools import wraps
 from typing import Dict, Tuple, Union, cast, overload
 
-import jax.numpy as jnp
 from .typing_ import (
     Model,
     SCoo,
@@ -32,6 +31,13 @@ from .utils import (
     validate_multimode,
     validate_not_mixedmode,
 )
+
+try:
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+    JAX_AVAILABLE = False
 
 # Internal Cell
 

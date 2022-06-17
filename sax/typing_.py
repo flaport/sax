@@ -22,9 +22,15 @@ try:
 except ImportError: # python<3.8
     from typing_extensions import TypedDict
 
-import jax.numpy as jnp
 import numpy as np
 from natsort import natsorted
+
+try:
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+    JAX_AVAILABLE = False
 
 # Cell
 Array = Union[jnp.ndarray, np.ndarray]
@@ -154,7 +160,7 @@ def is_model(model: Any) -> bool:
     except ValueError:
         return False
     for param in sig.parameters.values():
-        if param.default == inspect.Parameter.empty:
+        if param.default is inspect.Parameter.empty:
             return False  # a proper SAX model does not have any positional arguments.
     if _is_callable_annotation(sig.return_annotation):  # model factory
         return False
@@ -403,9 +409,11 @@ def _scoo_to_sdense(
 ) -> SDense:
     n_col = len(ports_map)
     S = jnp.zeros((*Sx.shape[:-1], n_col, n_col), dtype=complex)
-    S = S.at[..., Si, Sj].add(Sx)
+    if JAX_AVAILABLE:
+        S = S.at[..., Si, Sj].add(Sx)
+    else:
+        S[..., Si, Sj] = Sx
     return S, ports_map
-
 
 def _sdict_to_sdense(sdict: SDict) -> SDense:
     Si, Sj, Sx, ports_map = _sdict_to_scoo(sdict)

@@ -1,6 +1,6 @@
 # SAX
-> S + Autograd + XLA
 
+> S + Autograd + XLA
 
 ![](docs/images/sax.svg)
 
@@ -46,9 +46,6 @@ def coupler(coupling=0.5):
 coupler(coupling=0.3)
 ```
 
-
-
-
     {('in0', 'out0'): 0.8366600265340756,
      ('in0', 'out1'): 0.5477225575051661j,
      ('in1', 'out0'): 0.5477225575051661j,
@@ -57,8 +54,6 @@ coupler(coupling=0.3)
      ('out1', 'in0'): 0.5477225575051661j,
      ('out0', 'in1'): 0.5477225575051661j,
      ('out1', 'in1'): 0.8366600265340756}
-
-
 
 Or a waveguide:
 
@@ -76,12 +71,7 @@ def waveguide(wl=1.55, wl0=1.55, neff=2.34, ng=3.4, length=10.0, loss=0.0):
 waveguide(length=100.0)
 ```
 
-
-
-
     {('in0', 'out0'): 0.97953-0.2013j, ('out0', 'in0'): 0.97953-0.2013j}
-
-
 
 These component models can then be combined into a circuit:
 
@@ -108,12 +98,7 @@ mzi = sax.circuit(
 type(mzi)
 ```
 
-
-
-
     function
-
-
 
 As you can see, the mzi we just created is just another component model function! To simulate it, call the mzi function with the (possibly nested) settings of its subcomponents. Global settings can be added to the 'root' of the circuit call and will be distributed over all subcomponents which have a parameter with the same name (e.g. 'wl'):
 
@@ -130,24 +115,39 @@ plt.figlegend(ncol=2, loc="upper center")
 plt.show()
 ```
 
-
 ![png](docs/images/output_10_0.png)
-
 
 Those are the basics. For more info, check out the **full**
 [SAX Quick Start page](https://flaport.github.io/sax/quick_start) or the rest of the [Documentation](https://flaport.github.io/sax).
 
 ## Installation
 
-### Dependencies
+On Linux, the recommended way to install SAX is as follows:
 
-- [JAX & JAXLIB](https://github.com/google/jax). Please read the JAX install instructions [here](https://github.com/google/jax/#installation).
-
-### Installation
-
+```sh
+pip install sax[jax]
 ```
-pip install sax
+
+On Windows, the recommended way to install SAX is by first setting the `PIP_FIND_LINKS`
+environment variable such that the JAX dependency can be installed from a 3rd party
+repository:
+
+```cmd
+set PIP_FIND_LINKS="https://whls.blob.core.windows.net/unstable/index.html"
+pip install sax[jax]
 ```
+
+If for whatever reason you don't want the JAX dependency, a JAX-less SAX can also be
+installed (Note that this is a _minimal_ version of SAX... things might not work as
+expected. Use on your own risk!):
+
+```sh
+pip install sax[nojax]
+```
+
+If you want a specific version of JAX, for example if you want a GPU-enabled version of
+JAX, please read the offical JAX install instructions
+[here](https://github.com/google/jax/#installation).
 
 ## License
 

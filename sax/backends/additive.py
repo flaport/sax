@@ -12,10 +12,15 @@ __all__ = ['split_port', 'graph_edges', 'prune_internal_output_nodes', 'get_poss
 
 from typing import Dict, Tuple
 
-import jax.numpy as jnp
 import networkx as nx
-from ..typing_ import SDict, SType, SDense, sdict
-from ..netlist import netlist
+from ..typing_ import SDict, SType, sdict
+
+try:
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+    JAX_AVAILABLE = False
 
 # Cell
 def split_port(port: str) -> Tuple[str, str]:
