@@ -19,6 +19,13 @@ from .netlist import LogicalNetlist, Netlist, logical_netlist, netlist_from_yaml
 from .typing_ import Instances, Model, Models, Netlist, Settings, SType, is_netlist
 from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
 
+try:
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+    JAX_AVAILABLE = False
+
 # Cell
 
 def circuit(

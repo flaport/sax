@@ -11,8 +11,7 @@ __all__ = ['solve_klu', 'mul_coo', 'evaluate_circuit_klu']
 
 from typing import Dict
 
-import jax
-import jax.numpy as jnp
+
 from ..typing_ import SDense, SDict, SType, scoo
 from . import evaluate_circuit
 
@@ -20,6 +19,14 @@ try:
     import klujax
 except ImportError:
     klujax = None
+
+try:
+    import jax
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+    JAX_AVAILABLE = False
 
 # Cell
 solve_klu = None

@@ -14,12 +14,10 @@ __all__ = ['block_diag', 'clean_string', 'copy_settings', 'validate_settings', '
 
 import inspect
 import re
+import warnings
 from functools import lru_cache, partial, wraps
 from typing import Any, Callable, Dict, Iterable, Iterator, Tuple, Union, cast, overload
 
-import jax
-import jax.numpy as jnp
-import jax.scipy as jsp
 from natsort import natsorted
 from .typing_ import (
     Array,
@@ -40,10 +38,25 @@ from .typing_ import (
     is_sdict,
 )
 
+try:
+    import jax
+    import jax.numpy as jnp
+    import jax.scipy as jsp
+    import jax.scipy.linalg
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+    import scipy as jsp
+    import scipy.linalg
+    JAX_AVAILABLE = False
+
 # Cell
 def block_diag(*arrs: Array) -> Array:
     """create block diagonal matrix with arbitrary batch dimensions """
     batch_shape = arrs[0].shape[:-2]
+
+    B = jnp.asarray(jnp.prod(batch_shape) + 0.5, int)
+
     N = 0
     for arr in arrs:
         if batch_shape != arr.shape[:-2]:
@@ -53,11 +66,16 @@ def block_diag(*arrs: Array) -> Array:
             raise ValueError("given arrays are not square.")
         N += n
 
-    block_diag = jax.vmap(jsp.linalg.block_diag, in_axes=0, out_axes=0)(
-        *(arr.reshape(-1, arr.shape[-2], arr.shape[-1]) for arr in arrs)
-    ).reshape(*batch_shape, N, N)
+    arrs = [arr.reshape(-1, arr.shape[-2], arr.shape[-1]) for arr in arrs]
 
-    return block_diag
+    if JAX_AVAILABLE:
+        batch_block_diag = jax.vmap(jsp.linalg.block_diag, in_axes=0, out_axes=0)
+        block_diag = batch_block_diag(*arrs)
+    else:
+        arrs = [jsp.linalg.block_diag(*[arr[i] for arr in arrs]) for i in range(B)]
+        block_diag = jnp.stack(arrs, 0)
+
+    return block_diag.reshape(*batch_shape, N, N)
 
 # Cell
 
@@ -154,7 +172,11 @@ def get_ports(S: Union[Model, SType]) -> Tuple[str, ...]:
 
 @lru_cache(maxsize=4096)  # cache to prevent future tracing
 def _get_ports_from_model(model: Model) -> Tuple[str, ...]:
-    S: SType = jax.eval_shape(model)
+    if JAX_AVAILABLE:
+        S: SType = jax.eval_shape(model)
+    else:
+        warnings.warn("[NO JAX] requesting the ports of a model requires evaluating the model!")
+        S = model()
     return get_ports(S)
 
 # Cell
@@ -180,7 +202,11 @@ def get_port_combinations(S: Union[Model, SType]) -> Tuple[Tuple[str, str], ...]
 
 @lru_cache(maxsize=4096)  # cache to prevent future tracing
 def _get_port_combinations_from_model(model: Model) -> Tuple[Tuple[str, str], ...]:
-    S: SType = jax.eval_shape(model)
+    if JAX_AVAILABLE:
+        S: SType = jax.eval_shape(model)
+    else:
+        warnings.warn("[NO JAX] requesting the ports of a model requires evaluating the model!")
+        S = model()
     return get_port_combinations(S)
 
 # Cell
@@ -202,6 +228,44 @@ def get_settings(model: Union[Model, ModelFactory]) -> Settings:
 # Cell
 def grouped_interp(wl: Float, wls: Float, phis: Float) -> Float:
     """Grouped phase interpolation"""
+    if not JAX_AVAILABLE:
+        raise NotImplementedError("[NO JAX] grouped_interp function not implemented when JAX not available. Please install JAX.")
+
+    @partial(jax.vmap, in_axes=(0, None, None), out_axes=0)
+    @jax.jit
+    def _grouped_interp(
+        wl: Array,  # 0D array (not-vmapped) ; 1D array (vmapped)
+        wls: Array,  # 1D array
+        phis: Array,  # 1D array
+    ) -> Array:
+        dphi_dwl = (phis[1::2] - phis[::2]) / (wls[1::2] - wls[::2])
+        phis = phis[::2]
+        wls = wls[::2]
+        dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
+
+        t = (wl - wls + 1e-5 * dwl) / dwl  # small offset to ensure no values are zero
+        t = jnp.where(jnp.abs(t) < 1, t, 0)
+        m0 = jnp.where(t > 0, size=1)[0]
+        m1 = jnp.where(t < 0, size=1)[0]
+        t = t[m0]
+        wl0 = wls[m0]
+        wl1 = wls[m1]
+        phi0 = phis[m0]
+        phi1 = phis[m1]
+        dphi_dwl0 = dphi_dwl[m0]
+        dphi_dwl1 = dphi_dwl[m1]
+        _phi0 = phi0 - 0.5 * (wl1 - wl0) * (
+            dphi_dwl0 * (t ** 2 - 2 * t) - dphi_dwl1 * t ** 2
+        )
+        _phi1 = phi1 - 0.5 * (wl1 - wl0) * (
+            dphi_dwl0 * (t - 1) ** 2 - dphi_dwl1 * (t ** 2 - 1)
+        )
+        phis = jnp.arctan2(
+            (1 - t) * jnp.sin(_phi0) + t * jnp.sin(_phi1),
+            (1 - t) * jnp.cos(_phi0) + t * jnp.cos(_phi1),
+        )
+        return phis
+
     wl = cast(Array, jnp.asarray(wl))
     wls = cast(Array, jnp.asarray(wls))
     # make sure values between -pi and pi
@@ -214,42 +278,6 @@ def grouped_interp(wl: Float, wls: Float, phis: Float) -> Float:
     if not wls.shape == phis.shape:
         raise ValueError("grouped_interp: wls and phis shape does not match")
     return _grouped_interp(wl.reshape(-1), wls, phis).reshape(*wl.shape)
-
-
-@partial(jax.vmap, in_axes=(0, None, None), out_axes=0)
-@jax.jit
-def _grouped_interp(
-    wl: Array,  # 0D array (not-vmapped) ; 1D array (vmapped)
-    wls: Array,  # 1D array
-    phis: Array,  # 1D array
-) -> Array:
-    dphi_dwl = (phis[1::2] - phis[::2]) / (wls[1::2] - wls[::2])
-    phis = phis[::2]
-    wls = wls[::2]
-    dwl = (wls[1:] - wls[:-1]).mean(0, keepdims=True)
-
-    t = (wl - wls + 1e-5 * dwl) / dwl  # small offset to ensure no values are zero
-    t = jnp.where(jnp.abs(t) < 1, t, 0)
-    m0 = jnp.where(t > 0, size=1)[0]
-    m1 = jnp.where(t < 0, size=1)[0]
-    t = t[m0]
-    wl0 = wls[m0]
-    wl1 = wls[m1]
-    phi0 = phis[m0]
-    phi1 = phis[m1]
-    dphi_dwl0 = dphi_dwl[m0]
-    dphi_dwl1 = dphi_dwl[m1]
-    _phi0 = phi0 - 0.5 * (wl1 - wl0) * (
-        dphi_dwl0 * (t ** 2 - 2 * t) - dphi_dwl1 * t ** 2
-    )
-    _phi1 = phi1 - 0.5 * (wl1 - wl0) * (
-        dphi_dwl0 * (t - 1) ** 2 - dphi_dwl1 * (t ** 2 - 1)
-    )
-    phis = jnp.arctan2(
-        (1 - t) * jnp.sin(_phi0) + t * jnp.sin(_phi1),
-        (1 - t) * jnp.cos(_phi0) + t * jnp.cos(_phi1),
-    )
-    return phis
 
 # Cell
 def merge_dicts(*dicts: Dict) -> Dict:

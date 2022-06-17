@@ -9,13 +9,29 @@ __all__ = ['straight', 'coupler', 'unitary', 'passthru', 'copier', 'passthru', '
 # Cell
 #nbdev_comment from __future__ import annotations
 
+import warnings
+from types import SimpleNamespace
 from typing import Optional, Tuple
 
-import jax
-import jax.numpy as jnp
 import sax
+from .caching import cache
 from .typing_ import Model, SCoo, SDict
 from .utils import get_inputs_outputs, reciprocal
+
+try:
+    import jax
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+
+    def jit(func, *args, **kwargs):
+        warnings.warn("[NO JAX] skipping jit! Please install JAX!")
+        return func
+
+    jax = SimpleNamespace(jit=jit)
+
+    JAX_AVAILABLE = False
 
 # Cell
 
@@ -99,7 +115,7 @@ def _validate_ports(ports, num_inputs, num_outputs, diagonal) -> Tuple[Tuple[str
 
 # Cell
 
-@sax.cache
+@cache
 def unitary(
     num_inputs: Optional[int] = None,
     num_outputs: Optional[int] = None,
@@ -117,17 +133,29 @@ def unitary(
     S = jnp.zeros((2*N, 2*N), dtype=float)
 
     if not diagonal:
-        S = S.at[:N, N:].set(1)
+        if JAX_AVAILABLE:
+            S = S.at[:N, N:].set(1)
+        else:
+            S[:N, N:] = 1
     else:
         r = jnp.arange(N, dtype=int) # reciprocal only works if num_inputs == num_outputs!
-        S = S.at[r, N+r].set(1)
+        if JAX_AVAILABLE:
+            S = S.at[r, N+r].set(1)
+        else:
+            S[r, N+r] = 1
 
     if reciprocal:
         if not diagonal:
-            S = S.at[N:, :N].set(1)
+            if JAX_AVAILABLE:
+                S = S.at[N:, :N].set(1)
+            else:
+                S[N:, :N] = 1
         else:
             r = jnp.arange(N, dtype=int) # reciprocal only works if num_inputs == num_outputs!
-            S = S.at[N+r, r].set(1)
+            if JAX_AVAILABLE:
+                S = S.at[N+r, r].set(1)
+            else:
+                S[N+r, r] = 1
 
     # Now we need to normalize the squared S-matrix
     U, s, V = jnp.linalg.svd(S, full_matrices=False)
@@ -159,7 +187,7 @@ def unitary(
     return func
 
 # Cell
-@sax.cache
+@cache
 def passthru(
     num_links: Optional[int] = None,
     ports: Optional[Tuple[str, ...]] = None,
@@ -176,7 +204,7 @@ def passthru(
 
 # Cell
 
-@sax.cache
+@cache
 def copier(
     num_inputs: Optional[int] = None,
     num_outputs: Optional[int] = None,
@@ -186,6 +214,7 @@ def copier(
     reciprocal=True,
     diagonal=False,
 ) -> Model:
+
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(ports, num_inputs, num_outputs, diagonal)
     assert num_inputs is not None and num_outputs is not None
 
@@ -193,17 +222,29 @@ def copier(
     S = jnp.zeros((num_inputs+num_outputs, num_inputs+num_outputs), dtype=float)
 
     if not diagonal:
-        S = S.at[:num_inputs, num_inputs:].set(1)
+        if JAX_AVAILABLE:
+            S = S.at[:num_inputs, num_inputs:].set(1)
+        else:
+            S[:num_inputs, num_inputs:] = 1
     else:
         r = jnp.arange(num_inputs, dtype=int) # == range(num_outputs) # reciprocal only works if num_inputs == num_outputs!
-        S = S.at[r, num_inputs+r].set(1)
+        if JAX_AVAILABLE:
+            S = S.at[r, num_inputs+r].set(1)
+        else:
+            S[r, num_inputs+r] = 1
 
     if reciprocal:
         if not diagonal:
-            S = S.at[num_inputs:, :num_inputs].set(1)
+            if JAX_AVAILABLE:
+                S = S.at[num_inputs:, :num_inputs].set(1)
+            else:
+                S[num_inputs:, :num_inputs] = 1
         else:
             r = jnp.arange(num_inputs, dtype=int) # == range(num_outputs) # reciprocal only works if num_inputs == num_outputs!
-            S = S.at[num_inputs+r, r].set(1)
+            if JAX_AVAILABLE:
+                S = S.at[num_inputs+r, r].set(1)
+            else:
+                S[num_inputs+r, r] = 1
 
     # let's convert it in SCOO format:
     Si, Sj = jnp.where(S > 1e-6)
@@ -227,7 +268,7 @@ def copier(
     return func
 
 # Cell
-@sax.cache
+@cache
 def passthru(
     num_links: Optional[int] = None,
     ports: Optional[Tuple[str, ...]] = None,

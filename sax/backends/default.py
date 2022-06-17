@@ -9,10 +9,24 @@ __all__ = ['evaluate_circuit']
 # Cell
 #nbdev_comment from __future__ import annotations
 
+import warnings
+from types import SimpleNamespace
 from typing import Dict
 
-import jax
-from ..typing_ import SType, SDict, sdense, sdict
+try:
+    import jax
+    import jax.numpy as jnp
+    JAX_AVAILABLE = True
+except ImportError:
+    import numpy as jnp
+    def jit(func, *args, **kwargs):
+        warnings.warn("[NO JAX] skipping jit! Please install JAX!")
+        return func
+
+    jax = SimpleNamespace(jit=jit)
+    JAX_AVAILABLE = False
+
+from ..typing_ import SDict, SType, sdict
 
 # Cell
 

@@ -14,12 +14,15 @@ __version__ = "0.6.2"
 #nbdev_comment from __future__ import annotations
 
 # Cell
-
 from functools import partial as partial
 from math import pi as pi
 
-from flax.core.frozen_dict import FrozenDict as FrozenDict
 from scipy.constants import c as c
+
+try:
+    from flax.core.frozen_dict import FrozenDict as FrozenDict
+except ImportError:
+    FrozenDict = dict
 
 # Cell
 
@@ -130,10 +133,6 @@ from .circuit import (
 # Cell
 
 from sax import backends as backends
-
-# Cell
-
-from sax import nn as nn
 
 # Cell
 

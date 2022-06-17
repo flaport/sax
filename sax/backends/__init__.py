@@ -4,6 +4,18 @@ __all__ = ['circuit_backends']
 
 # Internal Cell
 
+try:
+    import jax
+    JAX_AVAILABLE = True
+except ImportError:
+    JAX_AVAILABLE = False
+
+try:
+    import klujax
+    KLUJAX_AVAILABLE = True
+except ImportError:
+    KLUJAX_AVAILABLE = False
+
 from .default import evaluate_circuit
 from .klu import evaluate_circuit_klu
 from .additive import evaluate_circuit_additive
@@ -15,3 +27,6 @@ circuit_backends = {
     "klu": evaluate_circuit_klu,
     "additive": evaluate_circuit_additive,
 }
+
+if (not JAX_AVAILABLE) or (not KLUJAX_AVAILABLE):
+    del circuit_backends["klu"]

@@ -14,7 +14,7 @@ import re
 from functools import partial
 from typing import Callable, Dict, Iterable, Optional, Tuple, Union, cast
 
-from flax.core import FrozenDict
+from sax import FrozenDict
 from natsort import natsorted
 from .models import models as default_sax_models
 from .typing_ import (
