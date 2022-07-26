@@ -191,7 +191,7 @@ def circuit_from_gdsfactory(
 ) -> Model:
     """Load a sax circuit from a GDSFactory component"""
     circuit = circuit_from_netlist(
-        component.get_netlist(),
+        component.get_netlist_dict(),
         models=models,
         modes=modes,
         settings=settings,
