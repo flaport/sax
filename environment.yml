@@ -20,7 +20,7 @@ dependencies:
   - jupyterlab
   - matplotlib
   - natsort
-  - nbdev
+  - nbdev<2
   - nbstripout
   - networkx
   - numpy
@@ -36,6 +36,7 @@ dependencies:
   - tqdm
   - twine
   - typing-extensions
+  - jupyter-book
   - pip:
     - flax
     - jax

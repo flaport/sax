@@ -23,7 +23,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Install dependencies
-        run: mamba install -c fastai -c conda-forge nbdev nbstripout
+        run: mamba install -c fastai -c conda-forge nbdev<2 nbstripout
       - name: Clean notebooks
         run: nbdev_clean_nbs
       - name: Strip notebook outputs
@@ -47,7 +47,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Install dependencies
-        run: mamba install -c fastai -c conda-forge nbdev
+        run: mamba install -c fastai -c conda-forge nbdev<2
       - name: Check for no diff between notebooks and library
         run: |
           if [ ! -z "$(nbdev_diff_nbs)" ]; then
