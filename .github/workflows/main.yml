@@ -89,6 +89,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
+      - name: Install dependencies
+        run: pip install gdsfactory
       - name: Run notebooks
         run: find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill -k python3 {} {}
       - name: Expose 'nbs' as artifact
