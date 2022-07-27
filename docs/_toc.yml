@@ -1,0 +1,34 @@
+format: jb-book
+parts:
+- caption: Examples
+  chapters:
+    - file: examples/01_quick_start
+    - file: examples/02_all_pass_filter
+    - file: examples/03_circuit_from_yaml
+    - file: examples/04_multimode_simulations
+    - file: examples/05_thinfilm
+    - file: examples/06_additive_backend
+    - file: examples/07_layout_aware
+- caption: Core Lib
+  chapters:
+  - file: nbs/00_typing.ipynb
+  - file: nbs/02_utils.ipynb
+  - file: nbs/04_multimode.ipynb
+  - file: nbs/05_models.ipynb
+  - file: nbs/06_netlist.ipynb
+  - file: nbs/08_circuit.ipynb
+  - file: nbs/03_caching.ipynb
+- caption: Backends
+  chapters:
+  - file: nbs/07_backends.ipynb
+  - file: nbs/07a_backends_default.ipynb
+  - file: nbs/07b_backends_klu.ipynb
+  - file: nbs/07c_backends_additive.ipynb
+- caption: Neural Networks
+  chapters:
+  - file: nbs/09_nn.ipynb
+  - file: nbs/09a_nn_loss.ipynb
+  - file: nbs/09b_nn_utils.ipynb
+  - file: nbs/09c_nn_core.ipynb
+  - file: nbs/09d_nn_io.ipynb
+root: index

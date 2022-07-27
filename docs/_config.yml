@@ -1,66 +1,46 @@
-repository: flaport/sax
-output: web
-topnav_title: sax
-site_title: sax
-company_name: Floris Laporte (Apache 2.0)
-description: S + Autograd + XLA
-# Set to false to disable KaTeX math
-use_math: true
-# Add Google analytics id if you have one and want to use it here
-google_analytics:
-# See http://nbdev.fast.ai/search for help with adding Search
-google_search:
+# Book settings
+# Learn more at https://jupyterbook.org/customize/config.html
 
-host: 127.0.0.1
-# the preview server used. Leave as is.
-port: 4000
-# the port where the preview is rendered.
+title: 'sax'
+author: Floris Laporte
+logo: logo.png
 
-exclude:
-  - .idea/
-  - .gitignore
-  - vendor
- 
-exclude: [vendor]
+# Force re-execution of notebooks on each build.
+# See https://jupyterbook.org/content/execute.html
+execute:
+  execute_notebooks: off
 
-highlighter: rouge
-markdown: kramdown
-kramdown:
- input: GFM
- auto_ids: true
- hard_wrap: false
- syntax_highlighter: rouge
+# Define the name of the latex output file for PDF builds
+latex:
+  latex_documents:
+    targetname: sax.tex
 
-collections:
-  tooltips:
-    output: false
+# Add a bibtex file so that we can create citations
+bibtex_bibfiles:
+  - references.bib
 
-defaults:
-  -
-    scope:
-      path: ""
-      type: "pages"
-    values:
-      layout: "page"
-      comments: true
-      search: true
-      sidebar: home_sidebar
-      topnav: topnav
-  -
-    scope:
-      path: ""
-      type: "tooltips"
-    values:
-      layout: "page"
-      comments: true
-      search: true
-      tooltip: true
+html:
+  favicon: favicon.ico
+  home_page_in_navbar: true
+  use_edit_page_button: false
+  use_repository_button: true
+  use_issues_button: false
+  baseurl: https://flaport.github.io/sax/
 
-sidebars:
-- home_sidebar
+# Information about where the book exists on the web
+repository:
+  url: https://github.com/flaport/sax  # Online location of your book
+  path_to_book: docs  # Optional path to your book, relative to the repository root
+  branch: master  # Which branch of the repository should be used when creating links (optional)
 
-plugins:
-    - jekyll-remote-theme
-    
-remote_theme: fastai/nbdev-jekyll-theme
+sphinx:
+  extra_extensions:
+    - 'sphinx.ext.autodoc'
+    - 'sphinx.ext.napoleon'
+  config:
+    autodoc_type_aliases:
+      'Structure': 'sax.structures.Structure'
+#   autodoc_typehints: description
+
+
 baseurl: /sax/

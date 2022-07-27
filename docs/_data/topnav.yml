@@ -1,8 +1,8 @@
 topnav:
 - title: Topnav
   items:
-    - title: GitHub
-      external_url: https://github.com/flaport/sax/
+    - title: github
+      external_url: https://github.com/flaport/sax/tree/master/
 
 #Topnav dropdowns
 topnav_dropdowns:
