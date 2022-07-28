@@ -256,3 +256,7 @@ def make_docs():
     docs_copy_dir("examples")
     os.chdir(docs_path())
     subprocess.check_call([sys.executable.replace("python", "jupyter-book"), "build", "."])
+
+# Cell
+if __name__ == '__main__':
+    make_docs()

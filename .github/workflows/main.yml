@@ -90,7 +90,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Install dependencies
-        run: pip install gdsfactory
+        run: conda install -y gdspy && pip install gdsfactory
       - name: Run notebooks
         run: find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill -k python3 {} {}
       - name: Expose 'nbs' as artifact
@@ -136,7 +136,7 @@ jobs:
 #         name: index.ipynb
 #         path: ./index.ipynb
       - name: Build docs
-        run: nbdev_build_docs
+        run: python -m sax.build_docs
       - name: Store artifacts
         uses: actions/upload-artifact@master
         with:

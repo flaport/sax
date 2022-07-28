@@ -39,7 +39,7 @@ sphinx:
     - 'sphinx.ext.napoleon'
   config:
     autodoc_type_aliases:
-      'Structure': 'sax.structures.Structure'
+      'SType': 'sax.typing_.SType'
 #   autodoc_typehints: description
 
 

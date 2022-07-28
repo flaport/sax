@@ -16,6 +16,8 @@ sax: $(SRC)
 	nbdev_build_lib
 
 lib:
+	rm -rf docs/nbs docs/examples docs/index.ipynb
+	find docs -type d -name "_*" | xargs rm -rf
 	nbdev_build_lib
 
 sync:
@@ -25,9 +27,8 @@ serve:
 	cd docs && bundle exec jekyll serve
 
 .PHONY: docs
-docs:
-	jupyter nbconvert --execute --inplace index.ipynb
-	nbdev_build_docs
+docs: lib
+	python -m sax.make_docs
 
 run:
 	find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill {} {}
