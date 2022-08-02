@@ -198,7 +198,7 @@ def _model_operations(
 
         if "model" not in model:
             raise ValueError(
-                "Invalid model dict for '{component}'. Key 'model' not found."
+                f"Invalid model dict for '{component}'. Key 'model' not found."
             )
 
         if isinstance(model["model"], str):
