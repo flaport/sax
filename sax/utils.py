@@ -55,7 +55,7 @@ def block_diag(*arrs: Array) -> Array:
     """create block diagonal matrix with arbitrary batch dimensions """
     batch_shape = arrs[0].shape[:-2]
 
-    B = jnp.asarray(jnp.prod(batch_shape) + 0.5, int)
+    B = jnp.prod(jnp.asarray(batch_shape, dtype=int))
 
     N = 0
     for arr in arrs:
