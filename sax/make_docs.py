@@ -14,9 +14,7 @@ import subprocess
 import sys
 from typing import Dict, Union
 
-import click
-import sax
-import yaml
+from fastcore.imports import IN_IPYTHON
 
 # Cell
 MAGIC_COMMENTS = {
@@ -32,11 +30,10 @@ MAGIC_COMMENTS = {
 }
 
 # Cell
-try:
-    __file__
-    ROOT = os.path.abspath('.')
-except NameError:
+if IN_IPYTHON:
     ROOT = os.path.abspath('..')
+else:
+    ROOT = os.path.abspath('.')
 
 # Cell
 def load_nb(path: str) -> Dict:
@@ -258,5 +255,5 @@ def make_docs():
     subprocess.check_call([sys.executable.replace("python", "jupyter-book"), "build", "."])
 
 # Cell
-if __name__ == '__main__':
+if __name__ == '__main__' and not IN_IPYTHON:
     make_docs()
