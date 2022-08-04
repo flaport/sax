@@ -155,7 +155,7 @@ const thebe_selector_output = ".output, .cell_output"
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="../examples/07_layout_aware.html">
-   SAX + GDSFactory tutorial
+   Layout Aware Monte Carlo with GDSFactory
   </a>
  </li>
 </ul>
@@ -554,7 +554,7 @@ title="Print to PDF"
 <h2>Circuit Evaluation<a class="headerlink" href="#circuit-evaluation" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.backends.default.evaluate_circuit">
-<span class="sig-prename descclassname"><span class="pre">sax.backends.default.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">instances:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">&lt;sphinx.util.inspect.TypeAliasForwardRef</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f90523f7a60&gt;],</span> <span class="pre">connections:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">str],</span> <span class="pre">ports:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">str]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">jax._src.numpy.lax_numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.backends.default.evaluate_circuit" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.backends.default.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">instances:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">&lt;sphinx.util.inspect.TypeAliasForwardRef</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7f5c7f397370&gt;],</span> <span class="pre">connections:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">str],</span> <span class="pre">ports:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">str]</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">jax._src.numpy.lax_numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.backends.default.evaluate_circuit" title="Permalink to this definition">#</a></dt>
 <dd><p>evaluate a circuit for the given sdicts.</p>
 </dd></dl>
 
@@ -717,14 +717,14 @@ title="Print to PDF"
  (&#39;out0&#39;, &#39;out1&#39;): 0j,
  (&#39;out1&#39;, &#39;out0&#39;): 0j,
  (&#39;out1&#39;, &#39;out1&#39;): 0j,
- (&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j,
- (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j,
+ (&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
+ (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
+ (&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.25-0.43301j,
  (&#39;in0&#39;, &#39;out0&#39;): -0.25+0.43301j,
  (&#39;in0&#39;, &#39;out1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
- (&#39;out1&#39;, &#39;in1&#39;): 0.25-0.43301j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j}
+ (&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j}
 </pre></div>
 </div>
 </div>
@@ -912,14 +912,14 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,in1&#39;,
- &#39;dc1,out1&#39;,
- &#39;dc1,in0&#39;,
- &#39;dc1,out0&#39;,
- &#39;dc2,out0&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc2,out0&#39;,
+ &#39;dc2,in0&#39;,
  &#39;dc2,out1&#39;,
  &#39;dc2,in1&#39;,
- &#39;dc2,in0&#39;)
+ &#39;dc1,out1&#39;,
+ &#39;dc1,in0&#39;,
+ &#39;dc1,in1&#39;,
+ &#39;dc1,out0&#39;)
 </pre></div>
 </div>
 </div>
@@ -994,14 +994,14 @@ title="Print to PDF"
  (&#39;dc2,out0&#39;, &#39;dc2,in1&#39;): 0.70711j,
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): 0.70711j,
  (&#39;dc2,out1&#39;, &#39;dc2,in1&#39;): 0.70711+0j,
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j,
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.5+0j,
  (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.5+0j,
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.5+0j,
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j}
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j}
 </pre></div>
 </div>
 </div>
@@ -1034,14 +1034,14 @@ title="Print to PDF"
  (&#39;dc2,in0&#39;, &#39;dc2,out1&#39;): 0.70711j,
  (&#39;dc2,out0&#39;, &#39;dc2,in0&#39;): 0.70711+0j,
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): 0.70711j,
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j,
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.5+0j,
  (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.5+0j,
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): 0.5j,
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.5+0j,
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.5+0j,
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): 0.5j}
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): 0.5j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.5+0j}
 </pre></div>
 </div>
 </div>
@@ -1081,22 +1081,22 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): -0.43301+0.75j,
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.25-0.43301j,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.25+0.43301j,
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): -0.43301+0.75j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): -0.43301+0.75j,
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.25-0.43301j,
  (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): -0.25+0.43301j,
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): -0.43301+0.75j,
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): -0.43301+0.75j,
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): -0.25+0.43301j,
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): 0.25-0.43301j,
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): -0.43301+0.75j,
- (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): 0j,
- (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): 0j,
- (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): 0j,
- (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): 0j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): -0.43301+0.75j,
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): 0.25-0.43301j,
  (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): 0j,
  (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): 0j,
  (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): 0j,
- (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): 0j}
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): 0j,
+ (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): 0j,
+ (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): 0j,
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): 0j,
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): 0j}
 </pre></div>
 </div>
 </div>
@@ -1114,22 +1114,22 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j,
- (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
+ (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
+ (&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.25-0.43301j,
  (&#39;in0&#39;, &#39;out0&#39;): -0.25+0.43301j,
  (&#39;in0&#39;, &#39;out1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.43301+0.75j,
- (&#39;out0&#39;, &#39;in0&#39;): -0.25+0.43301j,
- (&#39;out1&#39;, &#39;in1&#39;): 0.25-0.43301j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.43301+0.75j,
- (&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
- (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;out0&#39;): -0.43301+0.75j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.25-0.43301j,
  (&#39;out0&#39;, &#39;out0&#39;): 0j,
  (&#39;out0&#39;, &#39;out1&#39;): 0j,
  (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out1&#39;, &#39;out1&#39;): 0j}
+ (&#39;out1&#39;, &#39;out1&#39;): 0j,
+ (&#39;in0&#39;, &#39;in0&#39;): 0j,
+ (&#39;in0&#39;, &#39;in1&#39;): 0j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;in1&#39;): 0j}
 </pre></div>
 </div>
 </div>
