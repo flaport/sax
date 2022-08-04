@@ -136,12 +136,12 @@ jobs:
 #         name: index.ipynb
 #         path: ./index.ipynb
       - name: Build docs
-        run: python -m sax.build_docs
+        run: python -m sax.make_docs && touch /github/workspace/docs/_build/html/.nojekyll
       - name: Store artifacts
         uses: actions/upload-artifact@master
         with:
           name: docs
-          path: /github/workspace/docs
+          path: /github/workspace/docs/_build/html
 
   pages:
     runs-on: ubuntu-latest
@@ -154,9 +154,9 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: docs
-          path: docs
+          path: docs/_build/_html
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
           branch: pages
-          folder: docs
+          folder: docs/_build/_html
