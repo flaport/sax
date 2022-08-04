@@ -368,7 +368,6 @@ def _sdict_to_scoo(sdict: SDict) -> SCoo:
 
 # Internal Cell
 
-
 @overload
 def sdense(S: Callable) -> Callable:
     ...

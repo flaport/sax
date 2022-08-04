@@ -151,4 +151,4 @@ JAX, please read the offical JAX install instructions
 
 ## License
 
-Copyright © 2021, Floris Laporte, [Apache-2.0 License](LICENSE)
+Copyright © 2021, Floris Laporte, [Apache-2.0 License](https://github.com/flaport/sax/blob/master/LICENSE)
