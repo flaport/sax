@@ -135,6 +135,8 @@ jobs:
 #       with:
 #         name: index.ipynb
 #         path: ./index.ipynb
+      - name: SAX dev-install
+        run: pip install -e .[dev]
       - name: Build docs
         run: python -m sax.make_docs && touch /github/workspace/docs/_build/html/.nojekyll
       - name: Store artifacts
