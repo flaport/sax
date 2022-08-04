@@ -1,0 +1,725 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>Simulating an All-Pass Filter &#8212; sax</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="canonical" href="https://flaport.github.io/sax/examples/02_all_pass_filter.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Circuit from YAML" href="03_circuit_from_yaml.html" />
+    <link rel="prev" title="SAX Quick Start" href="01_quick_start.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">sax</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    SAX
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Examples
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_quick_start.html">
+   SAX Quick Start
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   Simulating an All-Pass Filter
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_circuit_from_yaml.html">
+   Circuit from YAML
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_multimode_simulations.html">
+   Multimode simulations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_thinfilm.html">
+   Thin film optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_additive_backend.html">
+   Additive Backend
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_layout_aware.html">
+   SAX + GDSFactory tutorial
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core Lib
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/00_typing.html">
+   Typing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/02_utils.html">
+   Utils
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/04_multimode.html">
+   Multimode
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/05_models.html">
+   Models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/06_netlist.html">
+   Netlist
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/08_circuit.html">
+   Circuit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/03_caching.html">
+   Caching
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Backends
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07_backends.html">
+   Backend
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07a_backends_default.html">
+   Backend - default
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07b_backends_klu.html">
+   Backend - KLU
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07c_backends_additive.html">
+   Backend - additive
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Neural Networks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09_nn.html">
+   NN - Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09a_nn_loss.html">
+   NN - Loss
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09b_nn_utils.html">
+   NN - Utils
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09c_nn_core.html">
+   NN - Core
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09d_nn_io.html">
+   NN - IO
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/flaport/sax/master?urlpath=tree/docs/examples/02_all_pass_filter.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+<a href="https://github.com/flaport/sax"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="bottom"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/examples/02_all_pass_filter.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#schematic">
+   Schematic
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulation-design-parameters">
+   Simulation &amp; Design Parameters
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#frequency-domain-analytically">
+   Frequency Domain Analytically
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scatter-dictionaries">
+   Scatter Dictionaries
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>Simulating an All-Pass Filter</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#schematic">
+   Schematic
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulation-design-parameters">
+   Simulation &amp; Design Parameters
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#frequency-domain-analytically">
+   Frequency Domain Analytically
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scatter-dictionaries">
+   Scatter Dictionaries
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="simulating-an-all-pass-filter">
+<h1>Simulating an All-Pass Filter<a class="headerlink" href="#simulating-an-all-pass-filter" title="Permalink to this headline">#</a></h1>
+<blockquote>
+<div><p>A simple comparison between an analytical evaluation of an all pass filter and using SAX.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.example_libraries.optimizers</span> <span class="k">as</span> <span class="nn">opt</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">sax</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="schematic">
+<h2>Schematic<a class="headerlink" href="#schematic" title="Permalink to this headline">#</a></h2>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>
+           <span class="n">in0</span><span class="o">---</span><span class="n">out0</span>
+        <span class="n">in1</span>          <span class="n">out1</span>
+           \        <span class="o">/</span>
+            <span class="o">========</span>
+           <span class="o">/</span>        \
+ <span class="n">in0</span> <span class="o">&lt;-</span> <span class="n">in0</span>          <span class="n">out0</span> <span class="o">-&gt;</span> <span class="n">out0</span>
+</pre></div>
+</div>
+</section>
+<section id="simulation-design-parameters">
+<h2>Simulation &amp; Design Parameters<a class="headerlink" href="#simulation-design-parameters" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">loss</span> <span class="o">=</span> <span class="mf">0.1</span>  <span class="c1"># [dB/μm] (alpha) waveguide loss</span>
+<span class="n">neff</span> <span class="o">=</span> <span class="mf">2.34</span>  <span class="c1"># Effective index of the waveguides</span>
+<span class="n">ng</span> <span class="o">=</span> <span class="mf">3.4</span>  <span class="c1"># Group index of the waveguides</span>
+<span class="n">wl0</span> <span class="o">=</span> <span class="mf">1.55</span>  <span class="c1"># [μm] the wavelength at which neff and ng are defined</span>
+<span class="n">ring_length</span> <span class="o">=</span> <span class="mf">10.0</span>  <span class="c1"># [μm] Length of the ring</span>
+<span class="n">coupling</span> <span class="o">=</span> <span class="mf">0.5</span>  <span class="c1"># [] coupling of the coupler</span>
+<span class="n">wl</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>  <span class="c1"># [μm] Wavelengths to sweep over</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="frequency-domain-analytically">
+<h2>Frequency Domain Analytically<a class="headerlink" href="#frequency-domain-analytically" title="Permalink to this headline">#</a></h2>
+<p>As a comparison, we first calculate the frequency domain response for the all-pass filter analytically:
+\begin{align*}
+o = \frac{t-10^{-\alpha L/20}\exp(2\pi j n_{\rm eff}(\lambda) L / \lambda)}{1-t10^{-\alpha L/20}\exp(2\pi j n_{\rm eff}(\lambda) L / \lambda)}s
+\end{align*}</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">all_pass_analytical</span><span class="p">():</span>
+    <span class="sd">&quot;&quot;&quot; Analytic Frequency Domain Response of an all pass filter &quot;&quot;&quot;</span>
+    <span class="n">detected</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span>
+    <span class="n">transmission</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">coupling</span>
+    <span class="n">neff_wl</span> <span class="o">=</span> <span class="n">neff</span> <span class="o">+</span> <span class="p">(</span><span class="n">wl0</span> <span class="o">-</span> <span class="n">wl</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>  <span class="c1"># we expect a linear behavior with respect to wavelength</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">transmission</span><span class="p">)</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff_wl</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="n">wl</span><span class="p">)</span>
+    <span class="n">out</span> <span class="o">/=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">transmission</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff_wl</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="n">wl</span><span class="p">)</span>
+    <span class="n">detected</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
+    <span class="k">return</span> <span class="n">detected</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> detected = all_pass_analytical() # non-jitted evaluation time
+<span class="n">all_pass_analytical_jitted</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">all_pass_analytical</span><span class="p">)</span>
+<span class="o">%</span><span class="k">time</span> detected = all_pass_analytical_jitted() # time to jit
+<span class="o">%</span><span class="k">time</span> detected = all_pass_analytical_jitted() # evaluation time after jitting
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="n">detected</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 309 ms, sys: 294 µs, total: 310 ms
+Wall time: 308 ms
+CPU times: user 58.1 ms, sys: 220 µs, total: 58.3 ms
+Wall time: 57.6 ms
+CPU times: user 618 µs, sys: 0 ns, total: 618 µs
+Wall time: 458 µs
+</pre></div>
+</div>
+<img alt="../_images/02_all_pass_filter_8_1.png" src="../_images/02_all_pass_filter_8_1.png" />
+</div>
+</div>
+</section>
+<section id="scatter-dictionaries">
+<h2>Scatter Dictionaries<a class="headerlink" href="#scatter-dictionaries" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_pass_sax</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;dc&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">coupler</span><span class="p">,</span> <span class="n">coupling</span><span class="o">=</span><span class="n">coupling</span><span class="p">),</span>
+        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">straight</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="n">ring_length</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="n">loss</span><span class="p">,</span> <span class="n">neff</span><span class="o">=</span><span class="n">neff</span><span class="p">,</span> <span class="n">ng</span><span class="o">=</span><span class="n">ng</span><span class="p">,</span> <span class="n">wl0</span><span class="o">=</span><span class="n">wl0</span><span class="p">,</span> <span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">),</span>
+    <span class="p">},</span>
+    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;dc,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc,in1&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc,out0&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> detected_sax = all_pass_sax() # non-jitted evaluation time
+<span class="n">all_pass_sax_jitted</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">all_pass_analytical</span><span class="p">)</span>
+<span class="o">%</span><span class="k">time</span> detected_sax = all_pass_sax_jitted() # time to jit
+<span class="o">%</span><span class="k">time</span> detected_sax = all_pass_sax_jitted() # time after jitting
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="n">detected</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;analytical&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="n">detected_sax</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;sax&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">3</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.9/site-packages/jax/_src/numpy/lax_numpy.py:3658: UserWarning: Explicitly requested dtype &lt;class &#39;complex&#39;&gt; requested in asarray is not available, and will be truncated to dtype complex64. To enable more dtypes, set the jax_enable_x64 configuration option or the JAX_ENABLE_X64 shell environment variable. See https://github.com/google/jax#current-gotchas for more.
+  lax._check_user_dtype_supported(dtype, &quot;asarray&quot;)
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.87 s, sys: 16.3 ms, total: 1.88 s
+Wall time: 1.88 s
+CPU times: user 703 µs, sys: 0 ns, total: 703 µs
+Wall time: 531 µs
+CPU times: user 309 µs, sys: 0 ns, total: 309 µs
+Wall time: 191 µs
+</pre></div>
+</div>
+<img alt="../_images/02_all_pass_filter_11_2.png" src="../_images/02_all_pass_filter_11_2.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "sax"
+        },
+        kernelOptions: {
+            kernelName: "sax",
+            path: "./examples"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'sax'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="01_quick_start.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">SAX Quick Start</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="03_circuit_from_yaml.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Circuit from YAML</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Floris Laporte<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

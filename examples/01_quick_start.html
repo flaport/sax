@@ -1,0 +1,2256 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>SAX Quick Start &#8212; sax</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="canonical" href="https://flaport.github.io/sax/examples/01_quick_start.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Simulating an All-Pass Filter" href="02_all_pass_filter.html" />
+    <link rel="prev" title="SAX" href="../index.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">sax</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    SAX
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Examples
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   SAX Quick Start
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_all_pass_filter.html">
+   Simulating an All-Pass Filter
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_circuit_from_yaml.html">
+   Circuit from YAML
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_multimode_simulations.html">
+   Multimode simulations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_thinfilm.html">
+   Thin film optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_additive_backend.html">
+   Additive Backend
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="07_layout_aware.html">
+   SAX + GDSFactory tutorial
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core Lib
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/00_typing.html">
+   Typing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/02_utils.html">
+   Utils
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/04_multimode.html">
+   Multimode
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/05_models.html">
+   Models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/06_netlist.html">
+   Netlist
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/08_circuit.html">
+   Circuit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/03_caching.html">
+   Caching
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Backends
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07_backends.html">
+   Backend
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07a_backends_default.html">
+   Backend - default
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07b_backends_klu.html">
+   Backend - KLU
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07c_backends_additive.html">
+   Backend - additive
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Neural Networks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09_nn.html">
+   NN - Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09a_nn_loss.html">
+   NN - Loss
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09b_nn_utils.html">
+   NN - Utils
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09c_nn_core.html">
+   NN - Core
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09d_nn_io.html">
+   NN - IO
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/flaport/sax/master?urlpath=tree/docs/examples/01_quick_start.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+<a href="https://github.com/flaport/sax"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="bottom"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/examples/01_quick_start.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#environment-variables">
+   Environment variables
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#imports">
+   Imports
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scatter-dictionaries">
+   Scatter
+   <em>
+    dictionaries
+   </em>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#parametrized-models">
+   Parametrized Models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#circuit-models">
+   Circuit Models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulating-the-parametrized-mzi">
+   Simulating the parametrized MZI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimization">
+   Optimization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mzi-chain">
+   MZI Chain
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>SAX Quick Start</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#environment-variables">
+   Environment variables
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#imports">
+   Imports
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#scatter-dictionaries">
+   Scatter
+   <em>
+    dictionaries
+   </em>
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#parametrized-models">
+   Parametrized Models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#circuit-models">
+   Circuit Models
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulating-the-parametrized-mzi">
+   Simulating the parametrized MZI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimization">
+   Optimization
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#mzi-chain">
+   MZI Chain
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="sax-quick-start">
+<h1>SAX Quick Start<a class="headerlink" href="#sax-quick-start" title="Permalink to this headline">#</a></h1>
+<blockquote>
+<div><p>Let’s go over the core functionality of SAX.</p>
+</div></blockquote>
+<section id="environment-variables">
+<h2>Environment variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">#</a></h2>
+<p>SAX is based on JAX… here are some useful environment variables for working with JAX:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># select float32 or float64 as default dtype</span>
+<span class="o">%</span><span class="k">env</span> JAX_ENABLE_X64=0
+
+<span class="c1"># select cpu or gpu</span>
+<span class="o">%</span><span class="k">env</span> JAX_PLATFORM_NAME=cpu
+
+<span class="c1"># set custom CUDA location for gpu:</span>
+<span class="o">%</span><span class="k">env</span> XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
+
+<span class="c1"># Using GPU?</span>
+<span class="kn">from</span> <span class="nn">jax.lib</span> <span class="kn">import</span> <span class="n">xla_bridge</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">xla_bridge</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>env: JAX_ENABLE_X64=0
+env: JAX_PLATFORM_NAME=cpu
+env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>cpu
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="imports">
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.example_libraries.optimizers</span> <span class="k">as</span> <span class="nn">opt</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># plotting</span>
+<span class="kn">import</span> <span class="nn">sax</span>
+<span class="kn">import</span> <span class="nn">tqdm</span>  <span class="c1"># progress bars</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="scatter-dictionaries">
+<h2>Scatter <em>dictionaries</em><a class="headerlink" href="#scatter-dictionaries" title="Permalink to this headline">#</a></h2>
+<p>The core datastructure for specifying scatter parameters in SAX is a dictionary… more specifically a dictionary which maps a port combination (2-tuple) to a scatter parameter (or an array of scatter parameters when considering multiple wavelengths for example). Such a specific dictionary mapping is called ann <code class="docutils literal notranslate"><span class="pre">SDict</span></code> in SAX (<code class="docutils literal notranslate"><span class="pre">SDict</span> <span class="pre">≈</span> <span class="pre">Dict[Tuple[str,str],</span> <span class="pre">float]</span></code>).</p>
+<p>Dictionaries are in fact much better suited for characterizing S-parameters than, say, (jax-)numpy arrays due to the inherent sparse nature of scatter parameters. Moreover, dictonaries allow for string indexing, which makes them much more pleasant to use in this context. Let’s for example create an <code class="docutils literal notranslate"><span class="pre">SDict</span></code> for a 50/50 coupler:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">in1</span>          <span class="n">out1</span>
+   \        <span class="o">/</span>
+    <span class="o">========</span>
+   <span class="o">/</span>        \
+<span class="n">in0</span>          <span class="n">out0</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coupling</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">kappa</span> <span class="o">=</span> <span class="n">coupling</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">coupling</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="n">coupler_dict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;out1&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;out1&quot;</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">coupler_dict</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): 0.7071067811865476,
+ (&#39;out0&#39;, &#39;in0&#39;): 0.7071067811865476,
+ (&#39;in0&#39;, &#39;out1&#39;): 0.7071067811865476j,
+ (&#39;out1&#39;, &#39;in0&#39;): 0.7071067811865476j,
+ (&#39;in1&#39;, &#39;out0&#39;): 0.7071067811865476j,
+ (&#39;out0&#39;, &#39;in1&#39;): 0.7071067811865476j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.7071067811865476,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.7071067811865476}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Only the non-zero port combinations need to be specified. Any non-existent port-combination (for example <code class="docutils literal notranslate"><span class="pre">(&quot;in0&quot;,</span> <span class="pre">&quot;in1&quot;)</span></code>) is considered to be zero by SAX.</p>
+<p>Obviously, it can still be tedious to specify every port in the circuit manually. SAX therefore offers the <code class="docutils literal notranslate"><span class="pre">reciprocal</span></code> function, which auto-fills the reverse connection if the forward connection exist. For example:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">coupler_dict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span>
+    <span class="p">{</span>
+        <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+    <span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">coupler_dict</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): 0.7071067811865476,
+ (&#39;in0&#39;, &#39;out1&#39;): 0.7071067811865476j,
+ (&#39;in1&#39;, &#39;out0&#39;): 0.7071067811865476j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.7071067811865476,
+ (&#39;out0&#39;, &#39;in0&#39;): 0.7071067811865476,
+ (&#39;out1&#39;, &#39;in0&#39;): 0.7071067811865476j,
+ (&#39;out0&#39;, &#39;in1&#39;): 0.7071067811865476j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.7071067811865476}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="parametrized-models">
+<h2>Parametrized Models<a class="headerlink" href="#parametrized-models" title="Permalink to this headline">#</a></h2>
+<p>Constructing such an <code class="docutils literal notranslate"><span class="pre">SDict</span></code> is easy, however, usually we’re more interested in having parametrized models for our components. To parametrize the coupler <code class="docutils literal notranslate"><span class="pre">SDict</span></code>, just wrap it in a function to obtain a SAX <code class="docutils literal notranslate"><span class="pre">Model</span></code>, which is a keyword-only function mapping to an <code class="docutils literal notranslate"><span class="pre">SDict</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">coupler</span><span class="p">(</span><span class="n">coupling</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="n">coupling</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">coupling</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="n">coupler_dict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">coupler_dict</span>
+
+
+<span class="n">coupler</span><span class="p">(</span><span class="n">coupling</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): 0.8366600265340756,
+ (&#39;in0&#39;, &#39;out1&#39;): 0.5477225575051661j,
+ (&#39;in1&#39;, &#39;out0&#39;): 0.5477225575051661j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.8366600265340756,
+ (&#39;out0&#39;, &#39;in0&#39;): 0.8366600265340756,
+ (&#39;out1&#39;, &#39;in0&#39;): 0.5477225575051661j,
+ (&#39;out0&#39;, &#39;in1&#39;): 0.5477225575051661j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.8366600265340756}
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can define a waveguide in the same way:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">waveguide</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">wl0</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">neff</span><span class="o">=</span><span class="mf">2.34</span><span class="p">,</span> <span class="n">ng</span><span class="o">=</span><span class="mf">3.4</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
+    <span class="n">dwl</span> <span class="o">=</span> <span class="n">wl</span> <span class="o">-</span> <span class="n">wl0</span>
+    <span class="n">dneff_dwl</span> <span class="o">=</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>
+    <span class="n">neff</span> <span class="o">=</span> <span class="n">neff</span> <span class="o">-</span> <span class="n">dwl</span> <span class="o">*</span> <span class="n">dneff_dwl</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="n">wl</span>
+    <span class="n">transmission</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">)</span>
+    <span class="n">sdict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">transmission</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sdict</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>That’s pretty straightforward. Let’s now move on to parametrized circuits:</p>
+</section>
+<section id="circuit-models">
+<h2>Circuit Models<a class="headerlink" href="#circuit-models" title="Permalink to this headline">#</a></h2>
+<p>Existing models can now be combined into a circuit using <code class="docutils literal notranslate"><span class="pre">sax.circuit</span></code>, which basically creates a new <code class="docutils literal notranslate"><span class="pre">Model</span></code> function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
+        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="n">waveguide</span><span class="p">,</span>
+        <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="n">waveguide</span><span class="p">,</span>
+        <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;btm,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in1&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>mzi<span class="o">?</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">circuit</span></code> function just creates a similar function as we created for the waveguide and the coupler, but in stead of taking parameters directly it takes parameter <em>dictionaries</em> for each of the instances in the circuit. The keys in these parameter dictionaries should correspond to the keyword arguments of each individual subcomponent.</p>
+<p>Let’s now do a simulation for the MZI we just constructed:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> mzi()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.34 s, sys: 19.3 ms, total: 2.36 s
+Wall time: 2.36 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): 0j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in0&#39;, &#39;in1&#39;): 0j,
+ (&#39;in0&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0j,
+ (&#39;in1&#39;, &#39;out0&#39;): -0.57127+0.82076j,
+ (&#39;in0&#39;, &#39;out1&#39;): -0.57127+0.82076j,
+ (&#39;in0&#39;, &#39;out0&#39;): 0j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0j,
+ (&#39;out1&#39;, &#39;in0&#39;): -0.57127+0.82076j,
+ (&#39;out1&#39;, &#39;out1&#39;): 0j,
+ (&#39;out1&#39;, &#39;out0&#39;): 0j,
+ (&#39;out0&#39;, &#39;in1&#39;): -0.57127+0.82076j,
+ (&#39;out0&#39;, &#39;in0&#39;): 0j,
+ (&#39;out0&#39;, &#39;out1&#39;): 0j,
+ (&#39;out0&#39;, &#39;out0&#39;): 0j}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi2</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">mzi</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> mzi2()
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 4.27 s, sys: 35.3 ms, total: 4.31 s
+Wall time: 4.28 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): 0j,
+ (&#39;in0&#39;, &#39;in1&#39;): 0j,
+ (&#39;in0&#39;, &#39;out0&#39;): 0j,
+ (&#39;in0&#39;, &#39;out1&#39;): -0.57127+0.82076j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;in1&#39;): 0j,
+ (&#39;in1&#39;, &#39;out0&#39;): -0.57127+0.82076j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0j,
+ (&#39;out0&#39;, &#39;in0&#39;): 0j,
+ (&#39;out0&#39;, &#39;in1&#39;): -0.57127+0.82076j,
+ (&#39;out0&#39;, &#39;out0&#39;): 0j,
+ (&#39;out0&#39;, &#39;out1&#39;): 0j,
+ (&#39;out1&#39;, &#39;in0&#39;): -0.57127+0.82076j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0j,
+ (&#39;out1&#39;, &#39;out0&#39;): 0j,
+ (&#39;out1&#39;, &#39;out1&#39;): 0j}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Or in the case we want an MZI with different arm lengths:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">25.0</span><span class="p">},</span> <span class="n">btm</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">})</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): 0j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in0&#39;, &#39;in1&#39;): 0j,
+ (&#39;in0&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.28073-0.10397j,
+ (&#39;in1&#39;, &#39;out0&#39;): 0.89475-0.33137j,
+ (&#39;in0&#39;, &#39;out1&#39;): 0.89475-0.33137j,
+ (&#39;in0&#39;, &#39;out0&#39;): -0.28073+0.10397j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.28073-0.10397j,
+ (&#39;out1&#39;, &#39;in0&#39;): 0.89475-0.33137j,
+ (&#39;out1&#39;, &#39;out1&#39;): 0j,
+ (&#39;out1&#39;, &#39;out0&#39;): 0j,
+ (&#39;out0&#39;, &#39;in1&#39;): 0.89475-0.33137j,
+ (&#39;out0&#39;, &#39;in0&#39;): -0.28073+0.10397j,
+ (&#39;out0&#39;, &#39;out1&#39;): 0j,
+ (&#39;out0&#39;, &#39;out0&#39;): 0j}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="simulating-the-parametrized-mzi">
+<h2>Simulating the parametrized MZI<a class="headerlink" href="#simulating-the-parametrized-mzi" title="Permalink to this headline">#</a></h2>
+<p>We can simulate the above mzi for multiple wavelengths as well by specifying the wavelength at the top level of the circuit call. Each setting specified at the top level of the circuit call will be propagated to all subcomponents of the circuit which have that setting:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wl</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.51</span><span class="p">,</span> <span class="mf">1.59</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="o">%</span><span class="k">time</span> S = mzi(wl=wl, top={&quot;length&quot;: 25.0}, btm={&quot;length&quot;: 15.0})
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.09 s, sys: 4.05 ms, total: 2.1 s
+Wall time: 2.09 s
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see what this gives:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/01_quick_start_32_0.png" src="../_images/01_quick_start_32_0.png" />
+</div>
+</div>
+</section>
+<section id="optimization">
+<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">#</a></h2>
+<p>We’d like to optimize an MZI such that one of the minima is at 1550nm. To do this, we need to define a loss function for the circuit at 1550nm. This function should take the parameters that you want to optimize as positional arguments:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">loss</span><span class="p">(</span><span class="n">delta_length</span><span class="p">):</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span> <span class="o">+</span> <span class="n">delta_length</span><span class="p">},</span> <span class="n">btm</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">})</span>
+    <span class="k">return</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> loss(10.0)
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 4.42 s, sys: 28 ms, total: 4.45 s
+Wall time: 4.42 s
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.08962
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can use this loss function to define a grad function which works on the parameters of the loss function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span>
+    <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+        <span class="n">loss</span><span class="p">,</span>
+        <span class="n">argnums</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># JAX gradient function for the first positional argument, jitted</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we need to define a JAX optimizer, which on its own is nothing more than three more functions:  an initialization function with which to initialize the optimizer state, an update function which will update the optimizer state (and with it the model parameters). The third function that’s being returned will give the model parameters given the optimizer state.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">initial_delta_length</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">optim_init</span><span class="p">,</span> <span class="n">optim_update</span><span class="p">,</span> <span class="n">optim_params</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">adam</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">optim_state</span> <span class="o">=</span> <span class="n">optim_init</span><span class="p">(</span><span class="n">initial_delta_length</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Given all this, a single training step can be defined:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">train_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">optim_state</span><span class="p">):</span>
+    <span class="n">settings</span> <span class="o">=</span> <span class="n">optim_params</span><span class="p">(</span><span class="n">optim_state</span><span class="p">)</span>
+    <span class="n">lossvalue</span> <span class="o">=</span> <span class="n">loss</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">gradvalue</span> <span class="o">=</span> <span class="n">grad</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
+    <span class="n">optim_state</span> <span class="o">=</span> <span class="n">optim_update</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">gradvalue</span><span class="p">,</span> <span class="n">optim_state</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">lossvalue</span><span class="p">,</span> <span class="n">optim_state</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And we can use this step function to start the training of the MZI:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">range_</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">trange</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">range_</span><span class="p">:</span>
+    <span class="n">lossvalue</span><span class="p">,</span> <span class="n">optim_state</span> <span class="o">=</span> <span class="n">train_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">optim_state</span><span class="p">)</span>
+    <span class="n">range_</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lossvalue</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/300 [00:00&lt;?, ?it/s]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/300 [00:05&lt;?, ?it/s, loss=0.089620]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 1/300 [00:05&lt;28:41,  5.76s/it, loss=0.089620]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 1/300 [00:15&lt;28:41,  5.76s/it, loss=0.028705]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:15&lt;41:36,  8.38s/it, loss=0.028705]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:15&lt;41:36,  8.38s/it, loss=0.069302]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:16&lt;41:36,  8.38s/it, loss=0.019680]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:16&lt;41:36,  8.38s/it, loss=0.001940]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:16&lt;41:36,  8.38s/it, loss=0.029862]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:16&lt;41:36,  8.38s/it, loss=0.035199]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:16&lt;41:36,  8.38s/it, loss=0.012873]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:16&lt;41:36,  8.38s/it, loss=0.000004]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.000004]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.010713]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.021764]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.015683]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.003059]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.000902]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.008971]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:16&lt;05:58,  1.23s/it, loss=0.013113]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.013113]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.007586]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.000788]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.001352]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.006516]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.007730]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.003501]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:16&lt;02:40,  1.77it/s, loss=0.000083]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.000083]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.001618]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.004673]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.004280]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.001253]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.000048]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.001810]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:16&lt;01:29,  3.10it/s, loss=0.003187]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.003187]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.001977]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.000195]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.000403]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.001763]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.001828]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.000566]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:16&lt;00:55,  4.90it/s, loss=0.000021]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.000021]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.000796]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.001318]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.000687]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.000019]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.000315]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.000841]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 37/300 [00:16&lt;00:36,  7.28it/s, loss=0.000610]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000610]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000069]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000119]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000515]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000465]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000085]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000048]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 15%|█▍        | 44/300 [00:16&lt;00:24, 10.36it/s, loss=0.000320]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000320]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000328]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000071]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000025]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000209]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000221]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000047]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 17%|█▋        | 51/300 [00:16&lt;00:17, 14.17it/s, loss=0.000019]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000019]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000145]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000143]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000024]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000019]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000105]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000088]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 19%|█▉        | 58/300 [00:16&lt;00:12, 18.71it/s, loss=0.000008]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:16&lt;00:09, 23.73it/s, loss=0.000008]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:17&lt;00:09, 23.73it/s, loss=0.000022]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:17&lt;00:09, 23.73it/s, loss=0.000077]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:17&lt;00:09, 23.73it/s, loss=0.000048]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:17&lt;00:09, 23.73it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:17&lt;00:09, 23.73it/s, loss=0.000025]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:17&lt;00:09, 23.73it/s, loss=0.000054]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 65/300 [00:17&lt;00:09, 23.73it/s, loss=0.000022]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|██▍       | 72/300 [00:17&lt;00:07, 29.23it/s, loss=0.000022]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|██▍       | 72/300 [00:17&lt;00:07, 29.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|██▍       | 72/300 [00:17&lt;00:07, 29.23it/s, loss=0.000026]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|██▍       | 72/300 [00:17&lt;00:07, 29.23it/s, loss=0.000034]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|██▍       | 72/300 [00:17&lt;00:07, 29.23it/s, loss=0.000007]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|██▍       | 72/300 [00:17&lt;00:07, 29.23it/s, loss=0.000004]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 24%|██▍       | 72/300 [00:17&lt;00:07, 29.23it/s, loss=0.000024]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██▌       | 78/300 [00:17&lt;00:06, 33.91it/s, loss=0.000024]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██▌       | 78/300 [00:17&lt;00:06, 33.91it/s, loss=0.000017]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██▌       | 78/300 [00:17&lt;00:06, 33.91it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██▌       | 78/300 [00:17&lt;00:06, 33.91it/s, loss=0.000008]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██▌       | 78/300 [00:17&lt;00:06, 33.91it/s, loss=0.000018]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██▌       | 78/300 [00:17&lt;00:06, 33.91it/s, loss=0.000006]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 26%|██▌       | 78/300 [00:17&lt;00:06, 33.91it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██▊       | 84/300 [00:17&lt;00:05, 38.55it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██▊       | 84/300 [00:17&lt;00:05, 38.55it/s, loss=0.000010]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██▊       | 84/300 [00:17&lt;00:05, 38.55it/s, loss=0.000010]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██▊       | 84/300 [00:17&lt;00:05, 38.55it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██▊       | 84/300 [00:17&lt;00:05, 38.55it/s, loss=0.000003]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██▊       | 84/300 [00:17&lt;00:05, 38.55it/s, loss=0.000009]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 28%|██▊       | 84/300 [00:17&lt;00:05, 38.55it/s, loss=0.000003]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███       | 90/300 [00:17&lt;00:04, 42.78it/s, loss=0.000003]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███       | 90/300 [00:17&lt;00:04, 42.78it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███       | 90/300 [00:17&lt;00:04, 42.78it/s, loss=0.000005]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███       | 90/300 [00:17&lt;00:04, 42.78it/s, loss=0.000005]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███       | 90/300 [00:17&lt;00:04, 42.78it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███       | 90/300 [00:17&lt;00:04, 42.78it/s, loss=0.000002]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 30%|███       | 90/300 [00:17&lt;00:04, 42.78it/s, loss=0.000004]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███▏      | 96/300 [00:17&lt;00:04, 46.10it/s, loss=0.000004]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███▏      | 96/300 [00:17&lt;00:04, 46.10it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███▏      | 96/300 [00:17&lt;00:04, 46.10it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███▏      | 96/300 [00:17&lt;00:04, 46.10it/s, loss=0.000003]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███▏      | 96/300 [00:17&lt;00:04, 46.10it/s, loss=0.000002]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███▏      | 96/300 [00:17&lt;00:04, 46.10it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 32%|███▏      | 96/300 [00:17&lt;00:04, 46.10it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|███▍      | 102/300 [00:17&lt;00:04, 48.99it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|███▍      | 102/300 [00:17&lt;00:04, 48.99it/s, loss=0.000002]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|███▍      | 102/300 [00:17&lt;00:04, 48.99it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|███▍      | 102/300 [00:17&lt;00:04, 48.99it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|███▍      | 102/300 [00:17&lt;00:04, 48.99it/s, loss=0.000002]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|███▍      | 102/300 [00:17&lt;00:04, 48.99it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 34%|███▍      | 102/300 [00:17&lt;00:04, 48.99it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|███▌      | 108/300 [00:17&lt;00:03, 50.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|███▌      | 108/300 [00:17&lt;00:03, 50.69it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|███▌      | 108/300 [00:17&lt;00:03, 50.69it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|███▌      | 108/300 [00:17&lt;00:03, 50.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|███▌      | 108/300 [00:17&lt;00:03, 50.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|███▌      | 108/300 [00:17&lt;00:03, 50.69it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 36%|███▌      | 108/300 [00:17&lt;00:03, 50.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|███▊      | 114/300 [00:17&lt;00:03, 52.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|███▊      | 114/300 [00:17&lt;00:03, 52.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|███▊      | 114/300 [00:17&lt;00:03, 52.39it/s, loss=0.000001]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|███▊      | 114/300 [00:17&lt;00:03, 52.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|███▊      | 114/300 [00:17&lt;00:03, 52.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|███▊      | 114/300 [00:17&lt;00:03, 52.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 38%|███▊      | 114/300 [00:17&lt;00:03, 52.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|████      | 120/300 [00:17&lt;00:03, 53.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|████      | 120/300 [00:17&lt;00:03, 53.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|████      | 120/300 [00:17&lt;00:03, 53.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|████      | 120/300 [00:17&lt;00:03, 53.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|████      | 120/300 [00:18&lt;00:03, 53.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|████      | 120/300 [00:18&lt;00:03, 53.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 40%|████      | 120/300 [00:18&lt;00:03, 53.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 42%|████▏     | 126/300 [00:18&lt;00:03, 54.48it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████▍     | 133/300 [00:18&lt;00:02, 56.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████▍     | 133/300 [00:18&lt;00:02, 56.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████▍     | 133/300 [00:18&lt;00:02, 56.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████▍     | 133/300 [00:18&lt;00:02, 56.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████▍     | 133/300 [00:18&lt;00:02, 56.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████▍     | 133/300 [00:18&lt;00:02, 56.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 44%|████▍     | 133/300 [00:18&lt;00:02, 56.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████▋     | 139/300 [00:18&lt;00:03, 52.66it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████▋     | 139/300 [00:18&lt;00:03, 52.66it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████▋     | 139/300 [00:18&lt;00:03, 52.66it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████▋     | 139/300 [00:18&lt;00:03, 52.66it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████▋     | 139/300 [00:18&lt;00:03, 52.66it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████▋     | 139/300 [00:18&lt;00:03, 52.66it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 46%|████▋     | 139/300 [00:18&lt;00:03, 52.66it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|████▊     | 145/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|████▊     | 145/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|████▊     | 145/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|████▊     | 145/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|████▊     | 145/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|████▊     | 145/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 48%|████▊     | 145/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 50%|█████     | 151/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 50%|█████     | 151/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 50%|█████     | 151/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 50%|█████     | 151/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 50%|█████     | 151/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 50%|█████     | 151/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 50%|█████     | 151/300 [00:18&lt;00:02, 52.67it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████▏    | 157/300 [00:18&lt;00:02, 52.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████▏    | 157/300 [00:18&lt;00:02, 52.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████▏    | 157/300 [00:18&lt;00:02, 52.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████▏    | 157/300 [00:18&lt;00:02, 52.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████▏    | 157/300 [00:18&lt;00:02, 52.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████▏    | 157/300 [00:18&lt;00:02, 52.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 52%|█████▏    | 157/300 [00:18&lt;00:02, 52.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|█████▍    | 163/300 [00:18&lt;00:02, 53.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|█████▍    | 163/300 [00:18&lt;00:02, 53.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|█████▍    | 163/300 [00:18&lt;00:02, 53.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|█████▍    | 163/300 [00:18&lt;00:02, 53.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|█████▍    | 163/300 [00:18&lt;00:02, 53.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|█████▍    | 163/300 [00:18&lt;00:02, 53.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 54%|█████▍    | 163/300 [00:18&lt;00:02, 53.39it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|█████▋    | 169/300 [00:18&lt;00:02, 54.33it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|█████▋    | 169/300 [00:18&lt;00:02, 54.33it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|█████▋    | 169/300 [00:18&lt;00:02, 54.33it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|█████▋    | 169/300 [00:18&lt;00:02, 54.33it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|█████▋    | 169/300 [00:18&lt;00:02, 54.33it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|█████▋    | 169/300 [00:18&lt;00:02, 54.33it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 56%|█████▋    | 169/300 [00:18&lt;00:02, 54.33it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████▊    | 175/300 [00:18&lt;00:02, 54.53it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████▊    | 175/300 [00:18&lt;00:02, 54.53it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████▊    | 175/300 [00:19&lt;00:02, 54.53it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████▊    | 175/300 [00:19&lt;00:02, 54.53it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████▊    | 175/300 [00:19&lt;00:02, 54.53it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████▊    | 175/300 [00:19&lt;00:02, 54.53it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 58%|█████▊    | 175/300 [00:19&lt;00:02, 54.53it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 60%|██████    | 181/300 [00:19&lt;00:02, 55.47it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 60%|██████    | 181/300 [00:19&lt;00:02, 55.47it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 60%|██████    | 181/300 [00:19&lt;00:02, 55.47it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 60%|██████    | 181/300 [00:19&lt;00:02, 55.47it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 60%|██████    | 181/300 [00:19&lt;00:02, 55.47it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 60%|██████    | 181/300 [00:19&lt;00:02, 55.47it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 60%|██████    | 181/300 [00:19&lt;00:02, 55.47it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 62%|██████▏   | 187/300 [00:19&lt;00:02, 55.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 62%|██████▏   | 187/300 [00:19&lt;00:02, 55.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 62%|██████▏   | 187/300 [00:19&lt;00:02, 55.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 62%|██████▏   | 187/300 [00:19&lt;00:02, 55.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 62%|██████▏   | 187/300 [00:19&lt;00:02, 55.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 62%|██████▏   | 187/300 [00:19&lt;00:02, 55.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 62%|██████▏   | 187/300 [00:19&lt;00:02, 55.69it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|██████▍   | 193/300 [00:19&lt;00:01, 54.80it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|██████▍   | 193/300 [00:19&lt;00:01, 54.80it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|██████▍   | 193/300 [00:19&lt;00:01, 54.80it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|██████▍   | 193/300 [00:19&lt;00:01, 54.80it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|██████▍   | 193/300 [00:19&lt;00:01, 54.80it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|██████▍   | 193/300 [00:19&lt;00:01, 54.80it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 64%|██████▍   | 193/300 [00:19&lt;00:01, 54.80it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████▋   | 199/300 [00:19&lt;00:01, 55.75it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████▋   | 199/300 [00:19&lt;00:01, 55.75it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████▋   | 199/300 [00:19&lt;00:01, 55.75it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████▋   | 199/300 [00:19&lt;00:01, 55.75it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████▋   | 199/300 [00:19&lt;00:01, 55.75it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████▋   | 199/300 [00:19&lt;00:01, 55.75it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 66%|██████▋   | 199/300 [00:19&lt;00:01, 55.75it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|██████▊   | 205/300 [00:19&lt;00:01, 56.41it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|██████▊   | 205/300 [00:19&lt;00:01, 56.41it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|██████▊   | 205/300 [00:19&lt;00:01, 56.41it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|██████▊   | 205/300 [00:19&lt;00:01, 56.41it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|██████▊   | 205/300 [00:19&lt;00:01, 56.41it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|██████▊   | 205/300 [00:19&lt;00:01, 56.41it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 68%|██████▊   | 205/300 [00:19&lt;00:01, 56.41it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████   | 211/300 [00:19&lt;00:01, 56.63it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████   | 211/300 [00:19&lt;00:01, 56.63it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████   | 211/300 [00:19&lt;00:01, 56.63it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████   | 211/300 [00:19&lt;00:01, 56.63it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████   | 211/300 [00:19&lt;00:01, 56.63it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████   | 211/300 [00:19&lt;00:01, 56.63it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 70%|███████   | 211/300 [00:19&lt;00:01, 56.63it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|███████▏  | 217/300 [00:19&lt;00:01, 56.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|███████▏  | 217/300 [00:19&lt;00:01, 56.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|███████▏  | 217/300 [00:19&lt;00:01, 56.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|███████▏  | 217/300 [00:19&lt;00:01, 56.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|███████▏  | 217/300 [00:19&lt;00:01, 56.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|███████▏  | 217/300 [00:19&lt;00:01, 56.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 72%|███████▏  | 217/300 [00:19&lt;00:01, 56.23it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 74%|███████▍  | 223/300 [00:19&lt;00:01, 55.97it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 74%|███████▍  | 223/300 [00:19&lt;00:01, 55.97it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 74%|███████▍  | 223/300 [00:19&lt;00:01, 55.97it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 74%|███████▍  | 223/300 [00:19&lt;00:01, 55.97it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 74%|███████▍  | 223/300 [00:19&lt;00:01, 55.97it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 74%|███████▍  | 223/300 [00:19&lt;00:01, 55.97it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 74%|███████▍  | 223/300 [00:19&lt;00:01, 55.97it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|███████▋  | 229/300 [00:19&lt;00:01, 56.40it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|███████▋  | 229/300 [00:19&lt;00:01, 56.40it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|███████▋  | 229/300 [00:19&lt;00:01, 56.40it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|███████▋  | 229/300 [00:19&lt;00:01, 56.40it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|███████▋  | 229/300 [00:19&lt;00:01, 56.40it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|███████▋  | 229/300 [00:20&lt;00:01, 56.40it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 76%|███████▋  | 229/300 [00:20&lt;00:01, 56.40it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████▊  | 235/300 [00:20&lt;00:01, 56.00it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████▊  | 235/300 [00:20&lt;00:01, 56.00it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████▊  | 235/300 [00:20&lt;00:01, 56.00it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████▊  | 235/300 [00:20&lt;00:01, 56.00it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████▊  | 235/300 [00:20&lt;00:01, 56.00it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████▊  | 235/300 [00:20&lt;00:01, 56.00it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 78%|███████▊  | 235/300 [00:20&lt;00:01, 56.00it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|████████  | 241/300 [00:20&lt;00:01, 55.32it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|████████  | 241/300 [00:20&lt;00:01, 55.32it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|████████  | 241/300 [00:20&lt;00:01, 55.32it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|████████  | 241/300 [00:20&lt;00:01, 55.32it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|████████  | 241/300 [00:20&lt;00:01, 55.32it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|████████  | 241/300 [00:20&lt;00:01, 55.32it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 80%|████████  | 241/300 [00:20&lt;00:01, 55.32it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████▏ | 247/300 [00:20&lt;00:00, 54.55it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████▏ | 247/300 [00:20&lt;00:00, 54.55it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████▏ | 247/300 [00:20&lt;00:00, 54.55it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████▏ | 247/300 [00:20&lt;00:00, 54.55it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████▏ | 247/300 [00:20&lt;00:00, 54.55it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████▏ | 247/300 [00:20&lt;00:00, 54.55it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 82%|████████▏ | 247/300 [00:20&lt;00:00, 54.55it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|████████▍ | 253/300 [00:20&lt;00:00, 54.59it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|████████▍ | 253/300 [00:20&lt;00:00, 54.59it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|████████▍ | 253/300 [00:20&lt;00:00, 54.59it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|████████▍ | 253/300 [00:20&lt;00:00, 54.59it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|████████▍ | 253/300 [00:20&lt;00:00, 54.59it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|████████▍ | 253/300 [00:20&lt;00:00, 54.59it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 84%|████████▍ | 253/300 [00:20&lt;00:00, 54.59it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████▋ | 259/300 [00:20&lt;00:00, 55.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████▋ | 259/300 [00:20&lt;00:00, 55.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████▋ | 259/300 [00:20&lt;00:00, 55.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████▋ | 259/300 [00:20&lt;00:00, 55.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████▋ | 259/300 [00:20&lt;00:00, 55.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████▋ | 259/300 [00:20&lt;00:00, 55.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 86%|████████▋ | 259/300 [00:20&lt;00:00, 55.09it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 265/300 [00:20&lt;00:00, 55.90it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 265/300 [00:20&lt;00:00, 55.90it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 265/300 [00:20&lt;00:00, 55.90it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 265/300 [00:20&lt;00:00, 55.90it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 265/300 [00:20&lt;00:00, 55.90it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 265/300 [00:20&lt;00:00, 55.90it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 265/300 [00:20&lt;00:00, 55.90it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████ | 271/300 [00:20&lt;00:00, 56.05it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████ | 271/300 [00:20&lt;00:00, 56.05it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████ | 271/300 [00:20&lt;00:00, 56.05it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████ | 271/300 [00:20&lt;00:00, 56.05it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████ | 271/300 [00:20&lt;00:00, 56.05it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████ | 271/300 [00:20&lt;00:00, 56.05it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|█████████ | 271/300 [00:20&lt;00:00, 56.05it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 277/300 [00:20&lt;00:00, 55.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 277/300 [00:20&lt;00:00, 55.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 277/300 [00:20&lt;00:00, 55.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 277/300 [00:20&lt;00:00, 55.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 277/300 [00:20&lt;00:00, 55.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 277/300 [00:20&lt;00:00, 55.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 277/300 [00:20&lt;00:00, 55.85it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▍| 283/300 [00:20&lt;00:00, 55.64it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▍| 283/300 [00:20&lt;00:00, 55.64it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▍| 283/300 [00:20&lt;00:00, 55.64it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▍| 283/300 [00:20&lt;00:00, 55.64it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▍| 283/300 [00:20&lt;00:00, 55.64it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▍| 283/300 [00:20&lt;00:00, 55.64it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▍| 283/300 [00:21&lt;00:00, 55.64it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▋| 289/300 [00:21&lt;00:00, 55.29it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▋| 289/300 [00:21&lt;00:00, 55.29it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▋| 289/300 [00:21&lt;00:00, 55.29it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▋| 289/300 [00:21&lt;00:00, 55.29it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▋| 289/300 [00:21&lt;00:00, 55.29it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▋| 289/300 [00:21&lt;00:00, 55.29it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▋| 289/300 [00:21&lt;00:00, 55.29it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 295/300 [00:21&lt;00:00, 54.81it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 295/300 [00:21&lt;00:00, 54.81it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 295/300 [00:21&lt;00:00, 54.81it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 295/300 [00:21&lt;00:00, 54.81it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 295/300 [00:21&lt;00:00, 54.81it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 295/300 [00:21&lt;00:00, 54.81it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 300/300 [00:21&lt;00:00, 14.14it/s, loss=0.000000]
+</pre></div>
+</div>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">delta_length</span> <span class="o">=</span> <span class="n">optim_params</span><span class="p">(</span><span class="n">optim_state</span><span class="p">)</span>
+<span class="n">delta_length</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.9359
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see what we’ve got over a range of wavelengths:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span> <span class="o">+</span> <span class="n">delta_length</span><span class="p">},</span> <span class="n">btm</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">})</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1550</span><span class="p">,</span> <span class="mi">1550</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/01_quick_start_47_0.png" src="../_images/01_quick_start_47_0.png" />
+</div>
+</div>
+<p>The minimum of the MZI is perfectly located at 1550nm.</p>
+</section>
+<section id="mzi-chain">
+<h2>MZI Chain<a class="headerlink" href="#mzi-chain" title="Permalink to this headline">#</a></h2>
+<p>Let’s now create a chain of MZIs. For this, we first create a subcomponent: a directional coupler with arms:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                 <span class="n">top</span>
+                            <span class="n">in0</span> <span class="o">-----</span> <span class="n">out0</span> <span class="o">-&gt;</span> <span class="n">out1</span>
+    <span class="n">in1</span> <span class="o">&lt;-</span> <span class="n">in1</span>        <span class="n">out1</span>                 
+              \  <span class="n">dc</span>  <span class="o">/</span>                  
+               <span class="o">======</span>                  
+              <span class="o">/</span>      \                
+    <span class="n">in0</span> <span class="o">&lt;-</span> <span class="n">in0</span>        <span class="n">out0</span>       <span class="n">btm</span>    
+                            <span class="n">in0</span> <span class="o">-----</span> <span class="n">out0</span> <span class="o">-&gt;</span> <span class="n">out0</span>
+</pre></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dc_with_arms</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
+        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="n">waveguide</span><span class="p">,</span>
+        <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="n">waveguide</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+    <span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,out0&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,out0&quot;</span><span class="p">,</span>
+    <span class="p">},</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>An MZI chain can now be created by cascading these directional couplers with arms:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>      <span class="n">_</span>    <span class="n">_</span>    <span class="n">_</span>    <span class="n">_</span>             <span class="n">_</span>    <span class="n">_</span>  
+    \<span class="o">/</span>   \<span class="o">/</span>   \<span class="o">/</span>   \<span class="o">/</span>     <span class="o">...</span>    \<span class="o">/</span>   \<span class="o">/</span>   
+    <span class="o">/</span>\<span class="n">_</span>  <span class="o">/</span>\<span class="n">_</span>  <span class="o">/</span>\<span class="n">_</span>  <span class="o">/</span>\<span class="n">_</span>           <span class="o">/</span>\<span class="n">_</span>  <span class="o">/</span>\<span class="n">_</span>  
+</pre></div>
+</div>
+<p>Let’s create a <em>model factory</em> (<code class="docutils literal notranslate"><span class="pre">ModelFactory</span></code>) for this. In SAX, a <em>model factory</em> is any keyword-only function that generates a <code class="docutils literal notranslate"><span class="pre">Model</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mzi_chain</span><span class="p">(</span><span class="n">num_mzis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
+    <span class="n">chain</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+        <span class="n">instances</span><span class="o">=</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">dc_with_arms</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_mzis</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)},</span>
+        <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,out0&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">,in0&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_mzis</span><span class="p">)},</span>
+            <span class="o">**</span><span class="p">{</span><span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,out1&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">i</span><span class="o">+</span><span class="mi">1</span><span class="si">}</span><span class="s2">,in1&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_mzis</span><span class="p">)},</span>
+        <span class="p">},</span>
+        <span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+            <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;dc0,in0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;dc0,in1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">num_mzis</span><span class="si">}</span><span class="s2">,out0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">num_mzis</span><span class="si">}</span><span class="s2">,out1&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">chain</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s for example create a chain with 15 MZIs. We can also update the settings dictionary as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">chain</span> <span class="o">=</span> <span class="n">mzi_chain</span><span class="p">(</span><span class="n">num_mzis</span><span class="o">=</span><span class="mi">15</span><span class="p">)</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">get_settings</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">dc</span> <span class="ow">in</span> <span class="n">settings</span><span class="p">:</span>
+    <span class="n">settings</span><span class="p">[</span><span class="n">dc</span><span class="p">][</span><span class="s2">&quot;top&quot;</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">25.0</span>
+    <span class="n">settings</span><span class="p">[</span><span class="n">dc</span><span class="p">][</span><span class="s2">&quot;btm&quot;</span><span class="p">][</span><span class="s2">&quot;length&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">15.0</span>
+<span class="n">settings</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">update_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">wl</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mi">1000</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can simulate this:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%</span><span class="k">time</span> S = chain(**settings) # time to evaluate the MZI
+<span class="n">func</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">chain</span><span class="p">)</span>
+<span class="o">%</span><span class="k">time</span> S = func(**settings) # time to jit the MZI
+<span class="o">%</span><span class="k">time</span> S = func(**settings) # time to evaluate the MZI after jitting
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.58 s, sys: 7.97 ms, total: 1.59 s
+Wall time: 1.58 s
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 4min 13s, sys: 758 ms, total: 4min 14s
+Wall time: 4min 14s
+CPU times: user 48.7 ms, sys: 0 ns, total: 48.7 ms
+Wall time: 35.9 ms
+</pre></div>
+</div>
+</div>
+</div>
+<p>Where we see that the unjitted evaluation of the MZI chain takes about a second, while the jitting of the MZI chain takes about two minutes (on a CPU). However, after the MZI chain has been jitted, the evaluation is in the order of about a millisecond!</p>
+<p>Anyway, let’s see what this gives:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="mf">1e3</span> <span class="o">*</span> <span class="n">settings</span><span class="p">[</span><span class="s2">&quot;dc0&quot;</span><span class="p">][</span><span class="s2">&quot;top&quot;</span><span class="p">][</span><span class="s2">&quot;wl&quot;</span><span class="p">],</span> <span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/01_quick_start_59_0.png" src="../_images/01_quick_start_59_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "sax"
+        },
+        kernelOptions: {
+            kernelName: "sax",
+            path: "./examples"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'sax'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="../index.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">SAX</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="02_all_pass_filter.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Simulating an All-Pass Filter</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Floris Laporte<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>

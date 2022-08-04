@@ -1,0 +1,1388 @@
+
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+
+    <title>SAX + GDSFactory tutorial &#8212; sax</title>
+    
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+
+    
+  <link rel="stylesheet"
+    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
+  <link rel="preload" as="font" type="font/woff2" crossorigin
+    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
+    
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <link rel="canonical" href="https://flaport.github.io/sax/examples/07_layout_aware.html" />
+    <link rel="shortcut icon" href="../_static/favicon.ico"/>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Typing" href="../nbs/00_typing.html" />
+    <link rel="prev" title="Additive Backend" href="06_additive_backend.html" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="docsearch:language" content="None">
+    
+
+    <!-- Google Analytics -->
+    
+  </head>
+  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
+<!-- Checkboxes to toggle the left sidebar -->
+<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
+<label class="overlay overlay-navbar" for="__navigation">
+    <div class="visually-hidden">Toggle navigation sidebar</div>
+</label>
+<!-- Checkboxes to toggle the in-page toc -->
+<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
+<label class="overlay overlay-pagetoc" for="__page-toc">
+    <div class="visually-hidden">Toggle in-page Table of Contents</div>
+</label>
+<!-- Headers at the top -->
+<div class="announcement header-item noprint"></div>
+<div class="header header-item noprint"></div>
+
+    
+    <div class="container-fluid" id="banner"></div>
+
+    
+
+    <div class="container-xl">
+      <div class="row">
+          
+<!-- Sidebar -->
+<div class="bd-sidebar noprint" id="site-navigation">
+    <div class="bd-sidebar__content">
+        <div class="bd-sidebar__top"><div class="navbar-brand-box">
+    <a class="navbar-brand text-wrap" href="../index.html">
+      
+        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+        
+      
+      
+      <img src="../_static/logo.png" class="logo" alt="logo">
+      
+      
+      <h1 class="site-logo" id="site-title">sax</h1>
+      
+    </a>
+</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
+  <i class="icon fas fa-search"></i>
+  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
+</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../index.html">
+                    SAX
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Examples
+ </span>
+</p>
+<ul class="current nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="01_quick_start.html">
+   SAX Quick Start
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="02_all_pass_filter.html">
+   Simulating an All-Pass Filter
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="03_circuit_from_yaml.html">
+   Circuit from YAML
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="04_multimode_simulations.html">
+   Multimode simulations
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="05_thinfilm.html">
+   Thin film optimization
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="06_additive_backend.html">
+   Additive Backend
+  </a>
+ </li>
+ <li class="toctree-l1 current active">
+  <a class="current reference internal" href="#">
+   SAX + GDSFactory tutorial
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Core Lib
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/00_typing.html">
+   Typing
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/02_utils.html">
+   Utils
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/04_multimode.html">
+   Multimode
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/05_models.html">
+   Models
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/06_netlist.html">
+   Netlist
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/08_circuit.html">
+   Circuit
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/03_caching.html">
+   Caching
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Backends
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07_backends.html">
+   Backend
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07a_backends_default.html">
+   Backend - default
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07b_backends_klu.html">
+   Backend - KLU
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/07c_backends_additive.html">
+   Backend - additive
+  </a>
+ </li>
+</ul>
+<p aria-level="2" class="caption" role="heading">
+ <span class="caption-text">
+  Neural Networks
+ </span>
+</p>
+<ul class="nav bd-sidenav">
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09_nn.html">
+   NN - Neural Networks
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09a_nn_loss.html">
+   NN - Loss
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09b_nn_utils.html">
+   NN - Utils
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09c_nn_core.html">
+   NN - Core
+  </a>
+ </li>
+ <li class="toctree-l1">
+  <a class="reference internal" href="../nbs/09d_nn_io.html">
+   NN - IO
+  </a>
+ </li>
+</ul>
+
+    </div>
+</nav></div>
+        <div class="bd-sidebar__bottom">
+             <!-- To handle the deprecated key -->
+            
+            <div class="navbar_extra_footer">
+            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
+            </div>
+            
+        </div>
+    </div>
+    <div id="rtd-footer-container"></div>
+</div>
+
+
+          
+
+
+          
+<!-- A tiny helper pixel to detect if we've scrolled -->
+<div class="sbt-scroll-pixel-helper"></div>
+<!-- Main content -->
+<div class="col py-0 content-container">
+    
+    <div class="header-article row sticky-top noprint">
+        
+
+
+
+<div class="col py-1 d-flex header-article-main">
+    <div class="header-article__left">
+        
+        <label for="__navigation"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="right"
+title="Toggle navigation"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-bars"></i>
+  </span>
+
+</label>
+
+        
+    </div>
+    <div class="header-article__right">
+<div class="menu-dropdown menu-dropdown-launch-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Launch interactive content">
+      <i class="fas fa-rocket"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="https://mybinder.org/v2/gh/flaport/sax/master?urlpath=tree/docs/examples/07_layout_aware.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Launch on Binder"
+>
+  
+
+<span class="headerbtn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="headerbtn__text-container">Binder</span>
+</a>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+
+<button onclick="toggleFullScreen()"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="bottom"
+title="Fullscreen mode"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+<a href="https://github.com/flaport/sax"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="bottom"
+title="Source repository"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+<div class="menu-dropdown menu-dropdown-download-buttons">
+  <button class="headerbtn menu-dropdown__trigger"
+      aria-label="Download this page">
+      <i class="fas fa-download"></i>
+  </button>
+  <div class="menu-dropdown__content">
+    <ul>
+      <li>
+        <a href="../_sources/examples/07_layout_aware.ipynb"
+   class="headerbtn"
+   data-toggle="tooltip"
+data-placement="left"
+title="Download source file"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="headerbtn__text-container">.ipynb</span>
+</a>
+
+      </li>
+      
+      <li>
+        
+<button onclick="printPdf(this)"
+  class="headerbtn"
+  data-toggle="tooltip"
+data-placement="left"
+title="Print to PDF"
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="headerbtn__text-container">.pdf</span>
+</button>
+
+      </li>
+      
+    </ul>
+  </div>
+</div>
+<label for="__page-toc"
+  class="headerbtn headerbtn-page-toc"
+  
+>
+  
+
+<span class="headerbtn__icon-container">
+  <i class="fas fa-list"></i>
+  </span>
+
+</label>
+
+    </div>
+</div>
+
+<!-- Table of contents -->
+<div class="col-md-3 bd-toc show noprint">
+    <div class="tocsection onthispage pt-5 pb-3">
+        <i class="fas fa-list"></i> Contents
+    </div>
+    <nav id="bd-toc-nav" aria-label="Page">
+        <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simple-mzi-layout">
+   Simple MZI Layout
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulate-mzi">
+   Simulate MZI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#waveguide-model">
+   Waveguide Model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulate-mzi-again">
+   Simulate MZI again
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimize-mzi">
+   Optimize MZI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#layout-aware-monte-carlo">
+   Layout-aware Monte Carlo
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compact-mzi">
+   Compact MZI
+  </a>
+ </li>
+</ul>
+
+    </nav>
+</div>
+    </div>
+    <div class="article row">
+        <div class="col pl-md-3 pl-lg-5 content-container">
+            <!-- Table of contents that is only displayed when printing the page -->
+            <div id="jb-print-docs-body" class="onlyprint">
+                <h1>SAX + GDSFactory tutorial</h1>
+                <!-- Table of contents -->
+                <div id="print-main-content">
+                    <div id="jb-print-toc">
+                        
+                        <div>
+                            <h2> Contents </h2>
+                        </div>
+                        <nav aria-label="Page">
+                            <ul class="visible nav section-nav flex-column">
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simple-mzi-layout">
+   Simple MZI Layout
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulate-mzi">
+   Simulate MZI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#waveguide-model">
+   Waveguide Model
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#simulate-mzi-again">
+   Simulate MZI again
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#optimize-mzi">
+   Optimize MZI
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#layout-aware-monte-carlo">
+   Layout-aware Monte Carlo
+  </a>
+ </li>
+ <li class="toc-h2 nav-item toc-entry">
+  <a class="reference internal nav-link" href="#compact-mzi">
+   Compact MZI
+  </a>
+ </li>
+</ul>
+
+                        </nav>
+                    </div>
+                </div>
+            </div>
+            <main id="main-content" role="main">
+                
+              <div>
+                
+  <section class="tex2jax_ignore mathjax_ignore" id="sax-gdsfactory-tutorial">
+<h1>SAX + GDSFactory tutorial<a class="headerlink" href="#sax-gdsfactory-tutorial" title="Permalink to this headline">#</a></h1>
+<blockquote>
+<div><p>Towards layout aware optimization</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">itertools</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
+
+<span class="kn">import</span> <span class="nn">gdsfactory</span> <span class="k">as</span> <span class="nn">gf</span>
+<span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.example_libraries.optimizers</span> <span class="k">as</span> <span class="nn">opt</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">sax</span>
+<span class="kn">from</span> <span class="nn">numpy.fft</span> <span class="kn">import</span> <span class="n">fft2</span><span class="p">,</span> <span class="n">fftfreq</span><span class="p">,</span> <span class="n">fftshift</span><span class="p">,</span> <span class="n">ifft2</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">tqdm</span><span class="p">,</span> <span class="n">trange</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-08-04 04:40:46.176 | INFO     | gdsfactory.config:&lt;module&gt;:52 - Load &#39;/opt/conda/lib/python3.9/site-packages/gdsfactory&#39; 5.15.0
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># In interactive notebooks it&#39;s often pretty annoying to have a cache...</span>
+<span class="c1"># let&#39;s disable gdsfactory cache with this horrible one-liner 🙂</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">modules</span><span class="p">[</span><span class="s1">&#39;gdsfactory.cell&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">CACHE</span> <span class="o">=</span> <span class="nb">type</span><span class="p">(</span><span class="s1">&#39;FakeCache&#39;</span><span class="p">,</span> <span class="p">(</span><span class="nb">dict</span><span class="p">,),</span> <span class="p">{</span><span class="s1">&#39;__setitem__&#39;</span><span class="p">:</span> <span class="p">(</span><span class="k">lambda</span> <span class="o">*</span><span class="n">args</span><span class="p">:</span> <span class="kc">None</span><span class="p">)})()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="simple-mzi-layout">
+<h2>Simple MZI Layout<a class="headerlink" href="#simple-mzi-layout" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@gf</span><span class="o">.</span><span class="n">cell</span>
+<span class="k">def</span> <span class="nf">simple_mzi</span><span class="p">():</span>
+    <span class="k">global</span> <span class="n">bend_top1_</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">Component</span><span class="p">()</span>
+    
+    <span class="c1"># instances</span>
+    <span class="n">mmi_in</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">mmi1x2</span><span class="p">()</span>
+    <span class="n">mmi_out</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">mmi2x2</span><span class="p">()</span>
+    <span class="n">bend</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">bend_euler</span><span class="p">()</span>
+    <span class="n">half_delay_straight</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">straight</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">)</span>
+    
+    <span class="c1"># references (sax convention: vars ending in underscore are references)</span>
+    <span class="n">mmi_in_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mmi_in</span>
+    <span class="n">mmi_out_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mmi_out</span>
+    <span class="n">straight_top1_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">half_delay_straight</span>
+    <span class="n">straight_top2_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">half_delay_straight</span>
+    <span class="n">bend_top1_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    <span class="n">bend_top2_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+    <span class="n">bend_top3_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+    <span class="n">bend_top4_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    <span class="n">bend_btm1_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+    <span class="n">bend_btm2_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    <span class="n">bend_btm3_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    <span class="n">bend_btm4_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+
+    <span class="c1"># connections</span>
+    <span class="n">bend_top1_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">mmi_in_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">straight_top1_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_top1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_top2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">straight_top1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_top3_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_top2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">straight_top2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_top3_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_top4_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">straight_top2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+
+    <span class="n">bend_btm1_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">mmi_in_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o3&#39;</span><span class="p">])</span>
+    <span class="n">bend_btm2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_btm1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_btm3_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_btm2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_btm4_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_btm3_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+
+    <span class="n">mmi_out_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="n">bend_btm4_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># ports</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mmi_in_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">],</span> <span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mmi_out_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o3&#39;</span><span class="p">])</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o3&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mmi_out_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o4&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">c</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">simple_mzi</span><span class="p">()</span>
+<span class="n">mzi</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_5_0.png" src="../_images/07_layout_aware_5_0.png" />
+<div class="output text_html">simple_mzi: uid 0, ports ['o1', 'o2', 'o3'], aliases [], 0 polygons, 12 references</div></div>
+</div>
+</section>
+<section id="simulate-mzi">
+<h2>Simulate MZI<a class="headerlink" href="#simulate-mzi" title="Permalink to this headline">#</a></h2>
+<p>We used the following components to construct the MZI circuit:</p>
+<ul class="simple">
+<li><p>mmi1x2</p></li>
+<li><p>mmi2x2</p></li>
+<li><p>straight</p></li>
+<li><p>bend_euler</p></li>
+</ul>
+<p>We need a model for each of those components to be able to simulate the circuit with SAX. Let’s create some dummy models for now.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mmi1x2</span><span class="p">():</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">):</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o3&quot;</span><span class="p">):</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mmi2x2</span><span class="p">():</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o3&quot;</span><span class="p">):</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o4&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">&quot;o2&quot;</span><span class="p">,</span> <span class="s2">&quot;o3&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="p">(</span><span class="s2">&quot;o2&quot;</span><span class="p">,</span> <span class="s2">&quot;o4&quot;</span><span class="p">):</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">straight</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">):</span> <span class="mf">1.0</span> <span class="c1"># we&#39;ll improve this model later!</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bend_euler</span><span class="p">(</span><span class="n">length</span><span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">dy</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">radius_min</span><span class="o">=</span><span class="mi">7</span><span class="p">,</span> <span class="n">radius</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">straight</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="n">length</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span> <span class="c1"># stub with straight for now</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s create a SAX circuit with our very simple placeholder models:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;mmi1x2&#39;</span><span class="p">:</span> <span class="n">mmi1x2</span><span class="p">,</span> <span class="s1">&#39;mmi2x2&#39;</span><span class="p">:</span> <span class="n">mmi2x2</span><span class="p">,</span> <span class="s1">&#39;straight&#39;</span><span class="p">:</span> <span class="n">straight</span><span class="p">,</span> <span class="s1">&#39;bend_euler&#39;</span><span class="p">:</span> <span class="n">bend_euler</span><span class="p">}</span>
+<span class="n">mzi1</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit_from_gdsfactory</span><span class="p">(</span><span class="n">mzi</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">)</span>
+mzi1<span class="o">?</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+</pre></div>
+</div>
+</div>
+</div>
+<p>the resulting circuit is just a model function on its own! Hence, calling it will give the result:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi1</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): 0.0,
+ (&#39;o2&#39;, &#39;o2&#39;): 0j,
+ (&#39;o2&#39;, &#39;o3&#39;): 0j,
+ (&#39;o3&#39;, &#39;o2&#39;): 0j,
+ (&#39;o3&#39;, &#39;o3&#39;): 0j,
+ (&#39;o2&#39;, &#39;o1&#39;): 0.5+0.5j,
+ (&#39;o3&#39;, &#39;o1&#39;): 0.5+0.5j,
+ (&#39;o1&#39;, &#39;o2&#39;): 0.5+0.5j,
+ (&#39;o1&#39;, &#39;o3&#39;): 0.5+0.5j}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="waveguide-model">
+<h2>Waveguide Model<a class="headerlink" href="#waveguide-model" title="Permalink to this headline">#</a></h2>
+<p>Our waveguide model is not very good (it just has 100% transmission and no phase). Let’s do something about the phase calculation. To do this, we need to find the effective index of the waveguide in relation to its parameters. We can use meep to obtain the waveguide parameters. Let’s use gdsfactory’s convenient <code class="docutils literal notranslate"><span class="pre">find_modes_waveguide</span></code> function to find the waveguide modes. This function uses <code class="docutils literal notranslate"><span class="pre">mpb</span></code> under the hood.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">silicon_index</span><span class="p">(</span><span class="n">wl</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot; a rudimentary silicon refractive index model &quot;&quot;&quot;</span>
+    <span class="n">a</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="mf">0.2411478522088102</span><span class="p">,</span> <span class="mf">3.3229394315868976</span>
+    <span class="k">return</span> <span class="n">a</span> <span class="o">/</span> <span class="n">wl</span> <span class="o">+</span> <span class="n">b</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">gdsfactory.simulation.modes</span> <span class="kn">import</span> <span class="n">find_modes_waveguide</span>
+
+<span class="n">wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">,</span> <span class="mi">10</span><span class="p">)</span>
+<span class="n">widths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.6</span><span class="p">,</span> <span class="mi">5</span><span class="p">)</span>
+
+<span class="n">wavelengths</span><span class="p">,</span> <span class="n">widths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[</span><span class="mf">1.5</span><span class="p">:</span><span class="mf">1.6</span><span class="p">:</span><span class="mi">10</span><span class="n">j</span><span class="p">,</span><span class="mf">0.4</span><span class="p">:</span><span class="mf">0.6</span><span class="p">:</span><span class="mi">5</span><span class="n">j</span><span class="p">]</span>
+<span class="n">neffs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">)</span>
+<span class="n">neffs_</span> <span class="o">=</span> <span class="n">neffs</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="n">w</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">tqdm</span><span class="p">(</span><span class="n">wavelengths</span><span class="o">.</span><span class="n">ravel</span><span class="p">()),</span> <span class="n">widths</span><span class="o">.</span><span class="n">ravel</span><span class="p">())):</span>
+    <span class="n">modes</span> <span class="o">=</span> <span class="n">find_modes_waveguide</span><span class="p">(</span><span class="n">wavelength</span><span class="o">=</span><span class="n">wl</span><span class="p">,</span> <span class="n">wg_width</span><span class="o">=</span><span class="n">w</span><span class="p">,</span> <span class="n">mode_number</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">wg_thickness</span><span class="o">=</span><span class="mf">0.22</span><span class="p">,</span> <span class="n">slab_thickness</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">ncore</span><span class="o">=</span><span class="n">silicon_index</span><span class="p">(</span><span class="n">wl</span><span class="p">),</span> <span class="n">nclad</span><span class="o">=</span><span class="mf">1.4</span><span class="p">)</span>
+    <span class="n">neffs_</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="o">=</span> <span class="n">modes</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">neff</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-08-04 04:40:50.696 | INFO     | gdsfactory.simulation.gmeep:&lt;module&gt;:28 - Meep &#39;1.23.0&#39; installed at [&#39;/opt/conda/lib/python3.9/site-packages/meep&#39;]
+</pre></div>
+</div>
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Using MPI version 4.0, 1 processes
+</pre></div>
+</div>
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "b084a1c5476147daa7829cc6cbed3d62", "version_major": 2, "version_minor": 0}
+</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.9/site-packages/gdsfactory/types.py:229: ComplexWarning: Casting complex values to real discards the imaginary part
+  return np.array(val, dtype=cls.inner_type)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">visualize_mode</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">field</span><span class="p">):</span>
+    <span class="n">field</span><span class="p">,</span> <span class="n">comp</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">field</span><span class="p">)</span>
+    <span class="n">idx</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">index</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;y&#39;</span><span class="p">),</span> <span class="nb">getattr</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="s1">&#39;z&#39;</span><span class="p">)</span>
+    <span class="n">Y</span><span class="p">,</span> <span class="n">X</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">mode</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="nb">getattr</span><span class="p">(</span><span class="n">mode</span><span class="p">,</span> <span class="n">field</span><span class="p">)[</span><span class="o">...</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">idx</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">contour</span><span class="p">(</span><span class="n">X</span><span class="p">,</span> <span class="n">Y</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;inferno&quot;</span><span class="p">,</span> <span class="n">levels</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">mode</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">mode</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">8</span><span class="p">))</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">colorbar</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="s2">&quot;mode&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.4</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="n">X</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">X</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="n">Y</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">Y</span><span class="o">.</span><span class="n">max</span><span class="p">())</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;y&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;z&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">axis</span><span class="p">(</span><span class="s2">&quot;scaled&quot;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">visualize_mode</span><span class="p">(</span><span class="n">modes</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="s2">&quot;Hz&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_20_0.png" src="../_images/07_layout_aware_20_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">widths</span><span class="p">,</span> <span class="n">neffs</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [μm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;width [μm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_21_0.png" src="../_images/07_layout_aware_21_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">)),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">unique</span><span class="p">(</span><span class="n">widths</span><span class="p">))]</span>
+<span class="n">_data</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">neffs</span><span class="p">)</span>
+
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">_get_coordinate</span><span class="p">(</span><span class="n">arr1d</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">,</span> <span class="n">value</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">interp</span><span class="p">(</span><span class="n">value</span><span class="p">,</span> <span class="n">arr1d</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">arr1d</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">_get_coordinates</span><span class="p">(</span><span class="n">arrs1d</span><span class="p">:</span> <span class="n">List</span><span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">],</span> <span class="n">values</span><span class="p">:</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+    <span class="c1"># don&#39;t use vmap as arrays in arrs1d could have different shapes...</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">_get_coordinate</span><span class="p">(</span><span class="n">a</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">a</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">arrs1d</span><span class="p">,</span> <span class="n">values</span><span class="p">)])</span>
+
+<span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">neff</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">wl</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">width</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span><span class="n">_get_coordinates</span><span class="p">(</span><span class="n">_grid</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">map_coordinates</span><span class="p">(</span><span class="n">_data</span><span class="p">,</span> <span class="n">coords</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;nearest&quot;</span><span class="p">)</span>
+
+<span class="n">neff</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="p">[</span><span class="mf">1.52</span><span class="p">,</span> <span class="mf">1.58</span><span class="p">],</span> <span class="n">width</span><span class="o">=</span><span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">0.55</span><span class="p">])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>array([2.4759295, 2.4804046])
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wavelengths_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">wavelengths</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">wavelengths</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">widths_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">widths</span><span class="o">.</span><span class="n">min</span><span class="p">(),</span> <span class="n">widths</span><span class="o">.</span><span class="n">max</span><span class="p">(),</span> <span class="mi">100</span><span class="p">)</span>
+<span class="n">wavelengths_</span><span class="p">,</span> <span class="n">widths_</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">wavelengths_</span><span class="p">,</span> <span class="n">widths_</span><span class="p">)</span>
+<span class="n">neffs_</span> <span class="o">=</span> <span class="n">neff</span><span class="p">(</span><span class="n">wavelengths_</span><span class="p">,</span> <span class="n">widths_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">pcolormesh</span><span class="p">(</span><span class="n">wavelengths_</span><span class="p">,</span> <span class="n">widths_</span><span class="p">,</span> <span class="n">neffs_</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [μm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;width [μm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_23_0.png" src="../_images/07_layout_aware_23_0.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">straight</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">np</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="n">width</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl</span> <span class="o">*</span> <span class="n">length</span><span class="p">),</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Even though this still is lossless transmission, we’re at least modeling the phase correctly.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">straight</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o2&#39;): -0.0123-0.99992j, (&#39;o2&#39;, &#39;o1&#39;): -0.0123-0.99992j}
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="simulate-mzi-again">
+<h2>Simulate MZI again<a class="headerlink" href="#simulate-mzi-again" title="Permalink to this headline">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span><span class="p">[</span><span class="s1">&#39;straight&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">straight</span>
+<span class="n">mzi2</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit_from_gdsfactory</span><span class="p">(</span><span class="n">mzi</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">)</span>
+<span class="n">mzi2</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): 0j,
+ (&#39;o2&#39;, &#39;o2&#39;): 0j,
+ (&#39;o2&#39;, &#39;o3&#39;): 0j,
+ (&#39;o3&#39;, &#39;o2&#39;): 0j,
+ (&#39;o3&#39;, &#39;o3&#39;): 0j,
+ (&#39;o2&#39;, &#39;o1&#39;): 0.46253-0.52323j,
+ (&#39;o3&#39;, &#39;o1&#39;): -0.47405+0.53626j,
+ (&#39;o1&#39;, &#39;o2&#39;): 0.46253-0.52323j,
+ (&#39;o1&#39;, &#39;o3&#39;): -0.47405+0.53626j}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wl</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.51</span><span class="p">,</span> <span class="mf">1.59</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">mzi2</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [μm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.9/site-packages/numpy/core/getlimits.py:499: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/opt/conda/lib/python3.9/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float32&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+</pre></div>
+</div>
+<img alt="../_images/07_layout_aware_29_1.png" src="../_images/07_layout_aware_29_1.png" />
+</div>
+</div>
+</section>
+<section id="optimize-mzi">
+<h2>Optimize MZI<a class="headerlink" href="#optimize-mzi" title="Permalink to this headline">#</a></h2>
+<p>We’d like to optimize an MZI such that one of the minima is at 1550nm. To do this, we need to define a loss function for the circuit at 1550nm. This function should take the parameters that you want to optimize as positional arguments:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">loss_fn</span><span class="p">(</span><span class="n">delta_length</span><span class="p">):</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">mzi2</span><span class="p">(</span>
+        <span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span>
+        <span class="n">straight_25p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">delta_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">},</span>
+        <span class="n">straight_45p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">delta_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can use this loss function to define a grad function which works on the parameters of the loss function:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">grad_fn</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span>
+    <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+        <span class="n">loss_fn</span><span class="p">,</span>
+        <span class="n">argnums</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># JAX gradient function for the first positional argument, jitted</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Next, we need to define a JAX optimizer, which on its own is nothing more than three more functions:  an initialization function with which to initialize the optimizer state, an update function which will update the optimizer state (and with it the model parameters). The third function that’s being returned will give the model parameters given the optimizer state.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">initial_delta_length</span> <span class="o">=</span> <span class="mf">10.0</span>
+<span class="n">init_fn</span><span class="p">,</span> <span class="n">update_fn</span><span class="p">,</span> <span class="n">params_fn</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">adam</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">init_fn</span><span class="p">(</span><span class="n">initial_delta_length</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Given all this, a single training step can be defined:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">step_fn</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">params_fn</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">grad</span> <span class="o">=</span> <span class="n">grad_fn</span><span class="p">(</span><span class="n">params</span><span class="p">)</span>
+    <span class="n">state</span> <span class="o">=</span> <span class="n">update_fn</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">grad</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">loss</span><span class="p">,</span> <span class="n">state</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And we can use this step function to start the training of the MZI:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pb</span><span class="o">:=</span><span class="n">trange</span><span class="p">(</span><span class="mi">300</span><span class="p">)):</span> <span class="c1"># the first two iterations take a while because the circuit is being jitted...</span>
+    <span class="n">loss</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">step_fn</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+    <span class="n">pb</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "bff51365ac3d424dae3e7ce1d0546cc3", "version_major": 2, "version_minor": 0}
+</script></div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">delta_length</span> <span class="o">=</span> <span class="n">params_fn</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="n">delta_length</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.68374
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s see what we’ve got over a range of wavelengths:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">S</span> <span class="o">=</span> <span class="n">Sl</span> <span class="o">=</span> <span class="n">mzi2</span><span class="p">(</span>
+    <span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">,</span>
+    <span class="n">straight_25p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">delta_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">},</span>
+    <span class="n">straight_45p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="n">delta_length</span> <span class="o">/</span> <span class="mi">2</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1550</span><span class="p">,</span> <span class="mi">1550</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_43_0.png" src="../_images/07_layout_aware_43_0.png" />
+</div>
+</div>
+<p>Note that we could’ve just as well optimized the waveguide width:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span> <span class="nf">loss_fn</span><span class="p">(</span><span class="n">width</span><span class="p">):</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">mzi2</span><span class="p">(</span>
+        <span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span>
+        <span class="n">straight_25p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">},</span>
+        <span class="n">straight_45p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">width</span><span class="p">},</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">grad_fn</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span>
+    <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span>
+        <span class="n">loss_fn</span><span class="p">,</span>
+        <span class="n">argnums</span><span class="o">=</span><span class="mi">0</span><span class="p">,</span>  <span class="c1"># JAX gradient function for the first positional argument, jitted</span>
+    <span class="p">)</span>
+<span class="p">)</span>
+<span class="n">initial_width</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">init_fn</span><span class="p">,</span> <span class="n">update_fn</span><span class="p">,</span> <span class="n">params_fn</span> <span class="o">=</span> <span class="n">opt</span><span class="o">.</span><span class="n">adam</span><span class="p">(</span><span class="n">step_size</span><span class="o">=</span><span class="mf">0.01</span><span class="p">)</span>
+<span class="n">state</span> <span class="o">=</span> <span class="n">init_fn</span><span class="p">(</span><span class="n">initial_width</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="p">(</span><span class="n">pb</span><span class="o">:=</span><span class="n">trange</span><span class="p">(</span><span class="mi">300</span><span class="p">)):</span> <span class="c1"># the first two iterations take a while because the circuit is being jitted...</span>
+    <span class="n">loss</span><span class="p">,</span> <span class="n">state</span> <span class="o">=</span> <span class="n">step_fn</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">state</span><span class="p">)</span>
+    <span class="n">pb</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">loss</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="n">optim_width</span> <span class="o">=</span> <span class="n">params_fn</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">Sw</span> <span class="o">=</span> <span class="n">mzi2</span><span class="p">(</span>
+    <span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">,</span>
+    <span class="n">straight_25p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">optim_width</span><span class="p">},</span>
+    <span class="n">straight_45p5_15p625</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;width&quot;</span><span class="p">:</span> <span class="n">optim_width</span><span class="p">},</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1550</span><span class="p">,</span> <span class="mi">1550</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">
+{"model_id": "21246980330846bd808644fd3dfba5e2", "version_major": 2, "version_minor": 0}
+</script><img alt="../_images/07_layout_aware_45_1.png" src="../_images/07_layout_aware_45_1.png" />
+</div>
+</div>
+</section>
+<section id="layout-aware-monte-carlo">
+<h2>Layout-aware Monte Carlo<a class="headerlink" href="#layout-aware-monte-carlo" title="Permalink to this headline">#</a></h2>
+<p>Let’s assume the waveguide width changes with a certain correlation length. We can create a ‘wafermap’ of width variations by randomly varying the width and low pass filtering with a spatial frequency being the inverse of the correlation length (there are probably better ways to do this, but this works for this tutorial).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_wafermaps</span><span class="p">(</span><span class="n">placements</span><span class="p">,</span> <span class="n">correlation_length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">num_maps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+    <span class="n">dx</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">correlation_length</span> <span class="o">/</span> <span class="mi">200</span>
+    <span class="n">xs</span><span class="p">,</span> <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">placements</span><span class="o">.</span><span class="n">values</span><span class="p">()],</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">placements</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="nb">min</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">xs</span><span class="p">),</span> <span class="nb">min</span><span class="p">(</span><span class="n">ys</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">ys</span><span class="p">)</span>
+    <span class="n">wx</span><span class="p">,</span> <span class="n">wy</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">ymax</span><span class="o">-</span><span class="n">ymin</span>
+    <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">xmin</span> <span class="o">-</span> <span class="n">wx</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="n">wx</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">-</span> <span class="n">wy</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="n">wy</span>
+    <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="o">+</span><span class="n">dx</span><span class="p">,</span> <span class="n">dx</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span><span class="o">+</span><span class="n">dy</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
+    <span class="n">W0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_maps</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+
+    <span class="n">fx</span><span class="p">,</span> <span class="n">fy</span> <span class="o">=</span> <span class="n">fftshift</span><span class="p">(</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">])),</span> <span class="n">fftshift</span><span class="p">(</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="o">=</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">-</span><span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
+    <span class="n">fY</span><span class="p">,</span> <span class="n">fX</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">fy</span><span class="p">,</span> <span class="n">fx</span><span class="p">)</span>
+
+    <span class="n">fW</span> <span class="o">=</span> <span class="n">fftshift</span><span class="p">(</span><span class="n">fft2</span><span class="p">(</span><span class="n">W0</span><span class="p">))</span>
+    
+    <span class="k">if</span> <span class="n">correlation_length</span> <span class="o">&gt;=</span> <span class="nb">min</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">fW</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">fW</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">fW</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">fX</span><span class="o">**</span><span class="mi">2</span> <span class="o">+</span> <span class="n">fY</span><span class="o">**</span><span class="mi">2</span><span class="p">)[</span><span class="kc">None</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="o">/</span><span class="n">correlation_length</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">fW</span><span class="p">)</span>
+
+    <span class="n">W</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">fftshift</span><span class="p">(</span><span class="n">ifft2</span><span class="p">(</span><span class="n">fW</span><span class="p">)))</span><span class="o">**</span><span class="mi">2</span>
+    
+    <span class="n">mean_</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    
+    <span class="n">std_</span> <span class="o">=</span> <span class="n">W</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="n">keepdims</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="k">if</span> <span class="p">(</span><span class="n">std_</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">all</span><span class="p">():</span> <span class="n">std_</span> <span class="o">=</span> <span class="mi">1</span>
+    
+    <span class="n">W</span> <span class="o">=</span> <span class="p">(</span><span class="n">W</span> <span class="o">-</span> <span class="n">mean_</span><span class="p">)</span> <span class="o">/</span> <span class="n">std_</span>
+    
+    <span class="n">W</span> <span class="o">=</span> <span class="n">W</span> <span class="o">*</span> <span class="n">std</span> <span class="o">+</span> <span class="n">mean</span>
+    
+    <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">W</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">placements</span> <span class="o">=</span> <span class="n">mzi</span><span class="o">.</span><span class="n">get_netlist_dict</span><span class="p">()[</span><span class="s1">&#39;placements&#39;</span><span class="p">]</span>
+<span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">wmaps</span> <span class="o">=</span> <span class="n">create_wafermaps</span><span class="p">(</span><span class="n">placements</span><span class="p">,</span> <span class="n">correlation_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">num_maps</span><span class="o">=</span><span class="mi">100</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wmaps</span><span class="p">):</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">imshow</span><span class="p">(</span><span class="n">wmap</span><span class="p">,</span> <span class="n">cmap</span><span class="o">=</span><span class="s1">&#39;RdBu&#39;</span><span class="p">)</span>
+    <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">break</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_48_0.png" src="../_images/07_layout_aware_48_0.png" />
+<img alt="../_images/07_layout_aware_48_1.png" src="../_images/07_layout_aware_48_1.png" />
+<img alt="../_images/07_layout_aware_48_2.png" src="../_images/07_layout_aware_48_2.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">widths</span><span class="p">(</span><span class="n">xw</span><span class="p">,</span> <span class="n">yw</span><span class="p">,</span> <span class="n">wmaps</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">):</span>
+    <span class="n">_wmap_grid</span> <span class="o">=</span> <span class="p">[</span><span class="n">xw</span><span class="p">,</span> <span class="n">yw</span><span class="p">]</span>
+    <span class="n">params</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">y</span><span class="p">)),</span> <span class="mi">0</span><span class="p">)</span>
+    <span class="n">coords</span> <span class="o">=</span><span class="n">_get_coordinates</span><span class="p">(</span><span class="n">_wmap_grid</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    
+    <span class="n">map_coordinates</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">scipy</span><span class="o">.</span><span class="n">ndimage</span><span class="o">.</span><span class="n">map_coordinates</span><span class="p">,</span> <span class="n">coordinates</span><span class="o">=</span><span class="n">coords</span><span class="p">,</span> <span class="n">order</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s1">&#39;nearest&#39;</span><span class="p">)</span>
+    <span class="n">w</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">map_coordinates</span><span class="p">)(</span><span class="n">wmaps</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">w</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now sample the MZI width variation on the wafer map (let’s assume a single width variation per point):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi_params</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">get_settings</span><span class="p">(</span><span class="n">mzi2</span><span class="p">)</span>
+<span class="n">placements</span> <span class="o">=</span> <span class="n">mzi</span><span class="o">.</span><span class="n">get_netlist_dict</span><span class="p">()[</span><span class="s1">&#39;placements&#39;</span><span class="p">]</span>
+<span class="n">width_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="n">widths</span><span class="p">(</span><span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">wmaps</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">placements</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s1">&#39;width&#39;</span> <span class="ow">in</span> <span class="n">mzi_params</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
+
+<span class="n">S0</span> <span class="o">=</span> <span class="n">mzi2</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">mzi2</span><span class="p">(</span>
+    <span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">[:,</span><span class="kc">None</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">width_params</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">nps</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S0</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1550</span><span class="p">,</span> <span class="mi">1550</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figlegend</span><span class="p">([</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:],</span> <span class="o">*</span><span class="n">nps</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;MC&quot;</span><span class="p">,</span> <span class="s2">&quot;nominal&quot;</span><span class="p">],</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">))</span>
+<span class="n">rmse</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S0</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">][:,</span><span class="kc">None</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rmse</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_51_0.png" src="../_images/07_layout_aware_51_0.png" />
+</div>
+</div>
+</section>
+<section id="compact-mzi">
+<h2>Compact MZI<a class="headerlink" href="#compact-mzi" title="Permalink to this headline">#</a></h2>
+<p>Let’s see if we can improve variability (i.e. the RMSE w.r.t. nominal) by making the MZI more compact:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@gf</span><span class="o">.</span><span class="n">cell</span>
+<span class="k">def</span> <span class="nf">compact_mzi</span><span class="p">():</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">Component</span><span class="p">()</span>
+    
+    <span class="c1"># instances</span>
+    <span class="n">mmi_in</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">mmi1x2</span><span class="p">()</span>
+    <span class="n">mmi_out</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">mmi2x2</span><span class="p">()</span>
+    <span class="n">bend</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">bend_euler</span><span class="p">()</span>
+    <span class="n">half_delay_straight</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">straight</span><span class="p">()</span>
+    <span class="n">middle_straight</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">straight</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mf">6.0</span><span class="p">)</span>
+    <span class="n">half_middle_straight</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">components</span><span class="o">.</span><span class="n">straight</span><span class="p">(</span><span class="mf">3.0</span><span class="p">)</span>
+    
+    <span class="c1"># references (sax convention: vars ending in underscore are references)</span>
+    <span class="n">mmi_in_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mmi_in</span>
+    
+    <span class="n">bend_top1_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    <span class="n">straight_top1_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">half_delay_straight</span>
+    <span class="n">bend_top2_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+    <span class="n">straight_top2_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">middle_straight</span>
+    <span class="n">bend_top3_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+    <span class="n">straight_top3_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">half_delay_straight</span>
+    <span class="n">bend_top4_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    
+    <span class="n">straight_btm1_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">half_middle_straight</span>
+    <span class="n">bend_btm1_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    <span class="n">bend_btm2_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+    <span class="n">bend_btm3_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span><span class="p">)</span><span class="o">.</span><span class="n">mirror</span><span class="p">()</span>
+    <span class="n">bend_btm4_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">bend</span>
+    <span class="n">straight_btm2_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">half_middle_straight</span>
+    
+    <span class="n">mmi_out_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mmi_out</span>
+
+    <span class="c1"># connections</span>
+    <span class="n">bend_top1_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">mmi_in_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">straight_top1_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_top1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_top2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">straight_top1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">straight_top2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_top2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_top3_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">straight_top2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">straight_top3_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_top3_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_top4_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">straight_top3_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+
+    <span class="n">straight_btm1_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">mmi_in_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o3&#39;</span><span class="p">])</span>
+    <span class="n">bend_btm1_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">straight_btm1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_btm2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_btm1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_btm3_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_btm2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">bend_btm4_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_btm3_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="n">straight_btm2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">bend_btm4_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+
+    <span class="n">mmi_out_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="n">straight_btm2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># ports</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mmi_in_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">],</span> <span class="p">)</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mmi_out_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o3&#39;</span><span class="p">])</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o3&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mmi_out_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o4&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">c</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">compact_mzi1</span> <span class="o">=</span> <span class="n">compact_mzi</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">compact_mzi1</span><span class="p">)</span>
+<span class="n">placements</span> <span class="o">=</span> <span class="n">compact_mzi1</span><span class="o">.</span><span class="n">get_netlist_dict</span><span class="p">()[</span><span class="s1">&#39;placements&#39;</span><span class="p">]</span>
+<span class="n">mzi3</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit_from_gdsfactory</span><span class="p">(</span><span class="n">compact_mzi1</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">)</span>
+<span class="n">mzi3</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_54_0.png" src="../_images/07_layout_aware_54_0.png" />
+<div class="output text_html">compact_mzi: uid 13, ports ['o1', 'o2', 'o3'], aliases [], 0 polygons, 15 references</div><div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): 0j,
+ (&#39;o3&#39;, &#39;o3&#39;): 0j,
+ (&#39;o3&#39;, &#39;o2&#39;): 0j,
+ (&#39;o2&#39;, &#39;o3&#39;): 0j,
+ (&#39;o2&#39;, &#39;o2&#39;): 0j,
+ (&#39;o1&#39;, &#39;o3&#39;): 0.28028-0.65859j,
+ (&#39;o1&#39;, &#39;o2&#39;): -0.27347+0.64259j,
+ (&#39;o3&#39;, &#39;o1&#39;): 0.28028-0.65859j,
+ (&#39;o2&#39;, &#39;o1&#39;): -0.27347+0.64259j}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi_params</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">get_settings</span><span class="p">(</span><span class="n">mzi3</span><span class="p">)</span>
+<span class="n">placements</span> <span class="o">=</span> <span class="n">compact_mzi1</span><span class="o">.</span><span class="n">get_netlist_dict</span><span class="p">()[</span><span class="s1">&#39;placements&#39;</span><span class="p">]</span>
+<span class="n">width_params</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="s1">&#39;width&#39;</span><span class="p">:</span> <span class="n">widths</span><span class="p">(</span><span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">wmaps</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;x&#39;</span><span class="p">],</span> <span class="n">v</span><span class="p">[</span><span class="s1">&#39;y&#39;</span><span class="p">])}</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">placements</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="s1">&#39;width&#39;</span> <span class="ow">in</span> <span class="n">mzi_params</span><span class="p">[</span><span class="n">k</span><span class="p">]}</span>
+
+<span class="n">S0</span> <span class="o">=</span> <span class="n">mzi3</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">mzi3</span><span class="p">(</span>
+    <span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">[:,</span><span class="kc">None</span><span class="p">],</span>
+    <span class="o">**</span><span class="n">width_params</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="n">ps</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C0&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.1</span><span class="p">)</span>
+<span class="n">nps</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wl</span> <span class="o">*</span> <span class="mf">1e3</span><span class="p">,</span> <span class="nb">abs</span><span class="p">(</span><span class="n">S0</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="s2">&quot;o2&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s1">&#39;C1&#39;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;λ [nm]&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;T&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">1550</span><span class="p">,</span> <span class="mi">1550</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;black&quot;</span><span class="p">,</span> <span class="n">ls</span><span class="o">=</span><span class="s2">&quot;:&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="o">-</span><span class="mf">0.05</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">grid</span><span class="p">(</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figlegend</span><span class="p">([</span><span class="o">*</span><span class="n">ps</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">:],</span> <span class="o">*</span><span class="n">nps</span><span class="p">],</span> <span class="p">[</span><span class="s2">&quot;MC&quot;</span><span class="p">,</span> <span class="s2">&quot;nominal&quot;</span><span class="p">],</span> <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">1.1</span><span class="p">,</span><span class="mf">0.9</span><span class="p">))</span>
+<span class="n">rmse</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span> <span class="o">-</span> <span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S0</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="s1">&#39;o2&#39;</span><span class="p">][:,</span><span class="kc">None</span><span class="p">])</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">rmse</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/07_layout_aware_55_0.png" src="../_images/07_layout_aware_55_0.png" />
+</div>
+</div>
+</section>
+</section>
+
+
+<script type="application/vnd.jupyter.widget-state+json">
+{"state": {"167db278789b48fbb99cfe1322256865": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "177da3916be74fdcae3760a03f5a1b2f": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_baec0564cfc5470fb63711f9f9415a65", "placeholder": "\u200b", "style": "IPY_MODEL_be8afb01450540209da55b1ef037f1a6", "value": "100%"}}, "21246980330846bd808644fd3dfba5e2": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HBoxModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_177da3916be74fdcae3760a03f5a1b2f", "IPY_MODEL_adf8cdb7d3ee442580180f2ec972823d", "IPY_MODEL_42dcb19cf059408a9f20dea792dd3c2b"], "layout": "IPY_MODEL_be11cd5644184a5ba4e5a2ad0b4f1b5c"}}, "2339953f739e4377aa67a222cf3f3225": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "23c9aa0b75024d77b0e2203dc47d9b90": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "ProgressStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "39ab933d4bc24d2cab26b12b7e88e837": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "3fe2284e189e4933b515b2e57f07ddab": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "FloatProgressModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_2339953f739e4377aa67a222cf3f3225", "max": 50.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_23c9aa0b75024d77b0e2203dc47d9b90", "value": 50.0}}, "42dcb19cf059408a9f20dea792dd3c2b": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_4eff1583ae6348d7aaf96d3567aa2746", "placeholder": "\u200b", "style": "IPY_MODEL_a3f585736662401ca4488f1888f6606d", "value": " 300/300 [01:10&lt;00:00,  5.10it/s, loss=0.000000]"}}, "453091248f064d0ab47b8e91cf817051": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "4eff1583ae6348d7aaf96d3567aa2746": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5a379f592fa54f949f6e6ee6d6f81668": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "677e2e70dd234fe8b7decbf8effb43be": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "6e0c76f950b04c23b0b42a57dfc604b5": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_dfc82ffd046d49549c9ea58e96302934", "placeholder": "\u200b", "style": "IPY_MODEL_453091248f064d0ab47b8e91cf817051", "value": "100%"}}, "7045c14a286c4dd6b6f7f413421fa18f": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_ea67d9d9796746769bcf4be34c0c8a64", "placeholder": "\u200b", "style": "IPY_MODEL_39ab933d4bc24d2cab26b12b7e88e837", "value": " 50/50 [01:11&lt;00:00,  1.36s/it]"}}, "72d1a1b6737a42d2b437de645dfff5ff": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_bd0a09c8c96843c5b4bd2bdb35fe0c89", "placeholder": "\u200b", "style": "IPY_MODEL_df20c718c8fc48388418b5adbff620fe", "value": " 300/300 [01:18&lt;00:00, 50.08it/s, loss=0.000000]"}}, "7793e565f2b849309dc64c114626315e": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "ProgressStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "9dcd1465156148709b3dfb8c276200cd": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "ProgressStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "a3aa565f1c1f4129b10c53cb2fde3cae": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "a3f585736662401ca4488f1888f6606d": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "a9522369a54d4700b65a517fd6baa813": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "adf8cdb7d3ee442580180f2ec972823d": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "FloatProgressModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_167db278789b48fbb99cfe1322256865", "max": 300.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_9dcd1465156148709b3dfb8c276200cd", "value": 300.0}}, "b084a1c5476147daa7829cc6cbed3d62": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HBoxModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_c0c20dd6682c438b9f24fb1b410f552e", "IPY_MODEL_3fe2284e189e4933b515b2e57f07ddab", "IPY_MODEL_7045c14a286c4dd6b6f7f413421fa18f"], "layout": "IPY_MODEL_677e2e70dd234fe8b7decbf8effb43be"}}, "baec0564cfc5470fb63711f9f9415a65": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "bd0a09c8c96843c5b4bd2bdb35fe0c89": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "be11cd5644184a5ba4e5a2ad0b4f1b5c": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "be8afb01450540209da55b1ef037f1a6": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "bff51365ac3d424dae3e7ce1d0546cc3": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HBoxModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_6e0c76f950b04c23b0b42a57dfc604b5", "IPY_MODEL_f59c8aebfc5b42428f8253e692b809c8", "IPY_MODEL_72d1a1b6737a42d2b437de645dfff5ff"], "layout": "IPY_MODEL_5a379f592fa54f949f6e6ee6d6f81668"}}, "c0c20dd6682c438b9f24fb1b410f552e": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "HTMLView", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_d30ac9ab5fa64099ae62fe42d8f08e86", "placeholder": "\u200b", "style": "IPY_MODEL_a3aa565f1c1f4129b10c53cb2fde3cae", "value": "100%"}}, "d30ac9ab5fa64099ae62fe42d8f08e86": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "df20c718c8fc48388418b5adbff620fe": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "DescriptionStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "DescriptionStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "StyleView", "description_width": ""}}, "dfc82ffd046d49549c9ea58e96302934": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ea67d9d9796746769bcf4be34c0c8a64": {"model_module": "@jupyter-widgets/base", "model_module_version": "1.2.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "1.2.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "1.2.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "overflow_x": null, "overflow_y": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "f59c8aebfc5b42428f8253e692b809c8": {"model_module": "@jupyter-widgets/controls", "model_module_version": "1.5.0", "model_name": "FloatProgressModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "1.5.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "1.5.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_tooltip": null, "layout": "IPY_MODEL_a9522369a54d4700b65a517fd6baa813", "max": 300.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_7793e565f2b849309dc64c114626315e", "value": 300.0}}}, "version_major": 2, "version_minor": 0}
+</script>
+
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "sax"
+        },
+        kernelOptions: {
+            kernelName: "sax",
+            path: "./examples"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'sax'</script>
+
+              </div>
+              
+            </main>
+            <footer class="footer-article noprint">
+                
+    <!-- Previous / next buttons -->
+<div class='prev-next-area'>
+    <a class='left-prev' id="prev-link" href="06_additive_backend.html" title="previous page">
+        <i class="fas fa-angle-left"></i>
+        <div class="prev-next-info">
+            <p class="prev-next-subtitle">previous</p>
+            <p class="prev-next-title">Additive Backend</p>
+        </div>
+    </a>
+    <a class='right-next' id="next-link" href="../nbs/00_typing.html" title="next page">
+    <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Typing</p>
+    </div>
+    <i class="fas fa-angle-right"></i>
+    </a>
+</div>
+            </footer>
+        </div>
+    </div>
+    <div class="footer-content row">
+        <footer class="col footer"><p>
+  
+    By Floris Laporte<br/>
+  
+      &copy; Copyright 2022.<br/>
+</p>
+        </footer>
+    </div>
+    
+</div>
+
+
+      </div>
+    </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+
+
+  </body>
+</html>
