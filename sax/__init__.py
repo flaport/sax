@@ -8,7 +8,7 @@ __all__ = []
 
 # Internal Cell
 __author__ = "Floris Laporte"
-__version__ = "0.7.2"
+__version__ = "0.7.3"
 
 # Internal Cell
 #nbdev_comment from __future__ import annotations
