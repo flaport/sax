@@ -17,7 +17,7 @@ dive in...
 
 ## Quick Start
 
-[Full Quick Start page](https://flaport.github.io/sax/quick_start) -
+[Full Quick Start page](https://flaport.github.io/sax/examples/01_quick_start.html) -
 [Documentation](https://flaport.github.io/sax).
 
 Let's first import the SAX library, along with JAX and the JAX-version of numpy:

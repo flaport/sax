@@ -17,7 +17,6 @@ sax: $(SRC)
 
 lib:
 	rm -rf docs/nbs docs/examples docs/index.ipynb
-	find docs -type d -name "_*" | xargs rm -rf
 	nbdev_build_lib
 
 sync:

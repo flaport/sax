@@ -42,4 +42,5 @@ dependencies:
     - jax
     - jaxlib
     - tmm
+    - sphinx-autodoc-typehints
     - sax==0.7.3
