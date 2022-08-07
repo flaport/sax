@@ -26,6 +26,7 @@
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
     <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
     
   <!-- Pre-loaded scripts that we'll load fully later -->
@@ -456,11 +457,19 @@ title="Print to PDF"
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.core.preprocess">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.core.</span></span><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">jax._src.numpy.lax_numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">jax._src.numpy.lax_numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.nn.core.preprocess" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.core.</span></span><span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.core.preprocess" title="Permalink to this definition">#</a></dt>
 <dd><p>preprocess parameters</p>
 <dl class="simple">
 <dt>&gt; Note: (1) all arguments are first casted into the same shape. (2) then pairs</dt><dd><p>of arguments are divided into each other to create relative arguments. (3) all
 arguments are then stacked into one big tensor</p>
+</dd>
+</dl>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>params</strong> (<em>Union</em><em>[</em><em>complex</em><em>, </em><em>float</em><em>, </em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -490,8 +499,23 @@ arguments are then stacked into one big tensor</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.core.dense">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.core.</span></span><span class="sig-name descname"><span class="pre">dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">weights:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">typing.Union[jax._src.numpy.lax_numpy.ndarray,</span> <span class="pre">numpy.ndarray]],</span> <span class="pre">*params:</span> <span class="pre">typing.Union[complex,</span> <span class="pre">float,</span> <span class="pre">jax._src.numpy.lax_numpy.ndarray,</span> <span class="pre">numpy.ndarray],</span> <span class="pre">x_norm:</span> <span class="pre">typing.Tuple[float,</span> <span class="pre">float]</span> <span class="pre">=</span> <span class="pre">(0.0,</span> <span class="pre">1.0),</span> <span class="pre">y_norm:</span> <span class="pre">typing.Tuple[float,</span> <span class="pre">float]</span> <span class="pre">=</span> <span class="pre">(0.0,</span> <span class="pre">1.0),</span> <span class="pre">preprocess:</span> <span class="pre">typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">preprocess&gt;,</span> <span class="pre">activation:</span> <span class="pre">typing.Callable</span> <span class="pre">=</span> <span class="pre">&lt;function</span> <span class="pre">leaky_relu&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">jax._src.numpy.lax_numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.nn.core.dense" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.core.</span></span><span class="sig-name descname"><span class="pre">dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_norm=(0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_norm=(0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;function</span> <span class="pre">leaky_relu&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.core.dense" title="Permalink to this definition">#</a></dt>
 <dd><p>simple dense neural network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>weights</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>params</strong> (<em>Union</em><em>[</em><em>complex</em><em>, </em><em>float</em><em>, </em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em>) – </p></li>
+<li><p><strong>x_norm</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>y_norm</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
+<li><p><strong>preprocess</strong> (<em>Callable</em>) – </p></li>
+<li><p><strong>activation</strong> (<em>Callable</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -519,8 +543,21 @@ arguments are then stacked into one big tensor</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.core.generate_dense_weights">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.core.</span></span><span class="sig-name descname"><span class="pre">generate_dense_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">key:</span> <span class="pre">typing.Union[int,</span> <span class="pre">jax._src.numpy.lax_numpy.ndarray,</span> <span class="pre">numpy.ndarray],</span> <span class="pre">sizes:</span> <span class="pre">typing.Tuple[int,</span> <span class="pre">...],</span> <span class="pre">input_names:</span> <span class="pre">typing.Optional[typing.Tuple[str,</span> <span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">output_names:</span> <span class="pre">typing.Optional[typing.Tuple[str,</span> <span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None,</span> <span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">complex</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">float</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">jax._src.numpy.lax_numpy.ndarray</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">numpy.ndarray</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.nn.core.generate_dense_weights" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.core.</span></span><span class="sig-name descname"><span class="pre">generate_dense_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.core.generate_dense_weights" title="Permalink to this definition">#</a></dt>
 <dd><p>Generate the weights for a dense neural network</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>key</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em>) – </p></li>
+<li><p><strong>sizes</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – </p></li>
+<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
+<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type</dt>
+<dd class="field-even"><p><em>Dict</em>[str, <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]]</p>
+</dd>
+</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
