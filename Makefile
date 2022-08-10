@@ -16,8 +16,7 @@ sax: $(SRC)
 	nbdev_build_lib
 
 lib:
-	rm -rf docs/nbs docs/examples docs/index.ipynb
-	nbdev_build_lib
+	nbdev_build_lib --fname 'nbs/*.ipynb'
 
 sync:
 	nbdev_update_lib
@@ -30,7 +29,7 @@ docs: lib
 	python -m sax.make_docs
 
 run:
-	find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill {} {}
+	find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill {} {} -k sax
 
 test:
 	nbdev_test_nbs

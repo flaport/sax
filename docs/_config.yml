@@ -39,7 +39,26 @@ sphinx:
     - 'sphinx.ext.napoleon'
     - 'sphinx.ext.autodoc.typehints'
   config:
-    autodoc_typehints: description
+    #autodoc_typehints: description
+    autodoc_type_aliases:
+      'Array': 'Array'
+      'Int': 'Int'
+      'Float': 'Float'
+      'ComplexFloat': 'ComplexFloat'
+      'Settings': 'Settings'
+      'SDict': 'SDict'
+      'SCoo': 'SCoo'
+      'SDense': 'SDense'
+      'SType': 'SType'
+      'Model': 'Model'
+      'ModelFactory': 'ModelFactory'
+      'GeneralModel': 'GeneralModel'
+      'Models': 'Models'
+      'Instance': 'Instance'
+      'GeneralInstance': 'GeneralInstance'
+      'Instances': 'Instances'
+      'Netlist': 'Netlist'
+      'LogicalNetlist': 'LogicalNetlist'
 
 
 baseurl: /sax/

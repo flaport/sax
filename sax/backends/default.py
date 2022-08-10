@@ -26,7 +26,7 @@ except ImportError:
     jax = SimpleNamespace(jit=jit)
     JAX_AVAILABLE = False
 
-from ..typing_ import SDict, SType, sdict
+from ..typing_ import SDict, SType, SDense, sdict
 
 # Cell
 

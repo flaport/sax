@@ -12,7 +12,6 @@ __all__ = ['Array', 'Int', 'Float', 'ComplexFloat', 'Settings', 'SDict', 'SCoo',
 
 # Cell
 #nbdev_comment from __future__ import annotations
-
 import functools
 import inspect
 from collections.abc import Callable as CallableABC
@@ -170,7 +169,6 @@ def _is_callable_annotation(annotation: Any) -> bool:
     """check if an annotation is `Callable`-like"""
     if isinstance(annotation, str):
         # happens when
-        # from __future__ import annotations
         # was imported at the top of the file...
         return annotation.startswith("Callable") or annotation.endswith("Model")
         # TODO: this is not a very robust check...
