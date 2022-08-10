@@ -239,27 +239,27 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="09_nn.html">
-   NN - Neural Networks
+   Neural Networks
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09a_nn_loss.html">
-   NN - Loss
+   Loss
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09b_nn_utils.html">
-   NN - Utils
+   Utils
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09c_nn_core.html">
-   NN - Core
+   Core
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09d_nn_io.html">
-   NN - IO
+   IO
   </a>
  </li>
 </ul>
@@ -769,17 +769,8 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <h2>Circuit Evaluation<a class="headerlink" href="#circuit-evaluation" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.backends.klu.evaluate_circuit_klu">
-<span class="sig-prename descclassname"><span class="pre">sax.backends.klu.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit_klu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.backends.klu.evaluate_circuit_klu" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.backends.klu.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit_klu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">instances:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">&lt;sphinx.util.inspect.TypeAliasForwardRef</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6cb412310&gt;],</span> <span class="pre">connections:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">str],</span> <span class="pre">ports:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">str]</span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.backends.klu.evaluate_circuit_klu" title="Permalink to this definition">#</a></dt>
 <dd><p>evaluate a circuit using KLU for the given sdicts.</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>Dict</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>complex</em><em>, </em><em>float</em><em>, </em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>]</em><em>, </em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>, </em><em>Union</em><em>[</em><em>complex</em><em>, </em><em>float</em><em>, </em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>, </em><em>Tuple</em><em>[</em><em>Union</em><em>[</em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">

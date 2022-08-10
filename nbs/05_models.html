@@ -237,27 +237,27 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="09_nn.html">
-   NN - Neural Networks
+   Neural Networks
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09a_nn_loss.html">
-   NN - Loss
+   Loss
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09b_nn_utils.html">
-   NN - Utils
+   Utils
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09c_nn_core.html">
-   NN - Core
+   Core
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09d_nn_io.html">
-   NN - IO
+   IO
   </a>
  </li>
 </ul>
@@ -533,23 +533,8 @@ title="Print to PDF"
 <h2>Standard Models<a class="headerlink" href="#standard-models" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.models.straight">
-<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">straight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wl</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wl0</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">1.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neff</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">2.34</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ng</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">3.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.straight" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">straight</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wl</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wl0</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">1.55</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">neff</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">2.34</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ng</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">3.4</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">length</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">10.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">loss</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.0</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SDict</span></span></span><a class="headerlink" href="#sax.models.straight" title="Permalink to this definition">#</a></dt>
 <dd><p>a simple straight waveguide model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>wl</strong> (<em>float</em>) – </p></li>
-<li><p><strong>wl0</strong> (<em>float</em>) – </p></li>
-<li><p><strong>neff</strong> (<em>float</em>) – </p></li>
-<li><p><strong>ng</strong> (<em>float</em>) – </p></li>
-<li><p><strong>length</strong> (<em>float</em>) – </p></li>
-<li><p><strong>loss</strong> (<em>float</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Dict</em>[<em>Tuple</em>[str, str], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -594,16 +579,8 @@ title="Print to PDF"
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.models.coupler">
-<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">coupler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coupling</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.coupler" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">coupler</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">coupling</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SDict</span></span></span><a class="headerlink" href="#sax.models.coupler" title="Permalink to this definition">#</a></dt>
 <dd><p>a simple coupler model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>coupling</strong> (<em>float</em>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Dict</em>[<em>Tuple</em>[str, str], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -649,20 +626,8 @@ title="Print to PDF"
 <h2>Model Factories<a class="headerlink" href="#model-factories" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.models.unitary">
-<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">unitary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.unitary" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_inputs</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
-<li><p><strong>num_outputs</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
-<li><p><strong>ports</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Callable</em>[[…], <em>Union</em>[<em>Dict</em>[<em>Tuple</em>[str, str], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]]]]</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">unitary</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.models.unitary" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -875,19 +840,8 @@ title="Print to PDF"
 <p>Because this is a pretty common usecase we have a dedicated model factory for this as well. This passthru component just takes the number of links (<code class="docutils literal notranslate"><span class="pre">'in{i}'</span> <span class="pre">-&gt;</span> <span class="pre">'out{i]'</span></code>) as input. Alternatively, as before, one can also specify the port names directly but one needs to ensure that <code class="docutils literal notranslate"><span class="pre">len(ports)</span> <span class="pre">==</span> <span class="pre">2*num_links</span></code>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.models.passthru">
-<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">passthru</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.passthru" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_links</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
-<li><p><strong>ports</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Callable</em>[[…], <em>Union</em>[<em>Dict</em>[<em>Tuple</em>[str, str], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]]]]</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">passthru</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_links</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.models.passthru" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -953,28 +907,16 @@ title="Print to PDF"
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): 0.49904,
  (&#39;out0&#39;, &#39;out0&#39;): 0.49904,
- (&#39;in0&#39;, &#39;out0&#39;): 0.86544,
- (&#39;out0&#39;, &#39;in0&#39;): 0.86544}
+ (&#39;out0&#39;, &#39;in0&#39;): 0.86544,
+ (&#39;in0&#39;, &#39;out0&#39;): 0.86544}
 </pre></div>
 </div>
 </div>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.models.copier">
-<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">copier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_inputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.copier" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_inputs</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
-<li><p><strong>num_outputs</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
-<li><p><strong>ports</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Callable</em>[[…], <em>Union</em>[<em>Dict</em>[<em>Tuple</em>[str, str], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]]]]</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">copier</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_inputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">num_outputs</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">diagonal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">False</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.models.copier" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1155,19 +1097,8 @@ title="Print to PDF"
 <p>Because this is a pretty common usecase we have a dedicated model factory for this as well. This passthru component just takes the number of links (<code class="docutils literal notranslate"><span class="pre">'in{i}'</span> <span class="pre">-&gt;</span> <span class="pre">'out{i]'</span></code>) as input. Alternatively, as before, one can also specify the port names directly but one needs to ensure that <code class="docutils literal notranslate"><span class="pre">len(ports)</span> <span class="pre">==</span> <span class="pre">2*num_links</span></code>.</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.models.passthru">
-<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">passthru</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_links</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.passthru" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>num_links</strong> (<em>Optional</em><em>[</em><em>int</em><em>]</em>) – </p></li>
-<li><p><strong>ports</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Callable</em>[[…], <em>Union</em>[<em>Dict</em>[<em>Tuple</em>[str, str], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]], <em>Tuple</em>[<em>Union</em>[jax._src.numpy.lax_numpy.ndarray, numpy.ndarray], <em>Dict</em>[str, int]]]]</p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">passthru</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">num_links</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">jit</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">reciprocal</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.models.passthru" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
@@ -1233,8 +1164,8 @@ title="Print to PDF"
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): 0.49904,
  (&#39;out0&#39;, &#39;out0&#39;): 0.49904,
- (&#39;in0&#39;, &#39;out0&#39;): 0.86544,
- (&#39;out0&#39;, &#39;in0&#39;): 0.86544}
+ (&#39;out0&#39;, &#39;in0&#39;): 0.86544,
+ (&#39;in0&#39;, &#39;out0&#39;): 0.86544}
 </pre></div>
 </div>
 </div>
@@ -1244,13 +1175,8 @@ title="Print to PDF"
 <h2>All Models<a class="headerlink" href="#all-models" title="Permalink to this headline">#</a></h2>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.models.get_models">
-<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">get_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.get_models" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>copy</strong> (<em>bool</em>) – </p>
-</dd>
-</dl>
-</dd></dl>
+<span class="sig-prename descclassname"><span class="pre">sax.models.</span></span><span class="sig-name descname"><span class="pre">get_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">copy</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">bool</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">True</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.models.get_models" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1282,16 +1208,16 @@ title="Print to PDF"
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "sax-np"
+            mode: "sax"
         },
         kernelOptions: {
-            kernelName: "sax-np",
+            kernelName: "sax",
             path: "./nbs"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'sax-np'</script>
+    <script>kernelName = 'sax'</script>
 
               </div>
               

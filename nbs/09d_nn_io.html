@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
 
-    <title>NN - IO &#8212; sax</title>
+    <title>IO &#8212; sax</title>
     
   <!-- Loaded before other Sphinx assets -->
   <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
@@ -57,7 +57,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="prev" title="NN - Core" href="09c_nn_core.html" />
+    <link rel="prev" title="Core" href="09c_nn_core.html" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="docsearch:language" content="None">
     
@@ -236,27 +236,27 @@ const thebe_selector_output = ".output, .cell_output"
 <ul class="current nav bd-sidenav">
  <li class="toctree-l1">
   <a class="reference internal" href="09_nn.html">
-   NN - Neural Networks
+   Neural Networks
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09a_nn_loss.html">
-   NN - Loss
+   Loss
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09b_nn_utils.html">
-   NN - Utils
+   Utils
   </a>
  </li>
  <li class="toctree-l1">
   <a class="reference internal" href="09c_nn_core.html">
-   NN - Core
+   Core
   </a>
  </li>
  <li class="toctree-l1 current active">
   <a class="current reference internal" href="#">
-   NN - IO
+   IO
   </a>
  </li>
 </ul>
@@ -423,7 +423,7 @@ title="Print to PDF"
         <div class="col pl-md-3 pl-lg-5 content-container">
             <!-- Table of contents that is only displayed when printing the page -->
             <div id="jb-print-docs-body" class="onlyprint">
-                <h1>NN - IO</h1>
+                <h1>IO</h1>
                 <!-- Table of contents -->
                 <div id="print-main-content">
                     <div id="jb-print-toc">
@@ -435,8 +435,8 @@ title="Print to PDF"
                 
               <div>
                 
-  <section class="tex2jax_ignore mathjax_ignore" id="nn-io">
-<h1>NN - IO<a class="headerlink" href="#nn-io" title="Permalink to this headline">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="io">
+<h1>IO<a class="headerlink" href="#io" title="Permalink to this headline">#</a></h1>
 <blockquote>
 <div><p>IO Utilitites for SAX neural networks</p>
 </div></blockquote>
@@ -459,16 +459,8 @@ title="Print to PDF"
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.io.load_nn_weights_json">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">load_nn_weights_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.load_nn_weights_json" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">load_nn_weights_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Dict[str,</span> <span class="pre">&lt;sphinx.util.inspect.TypeAliasForwardRef</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6e6593370&gt;]</span></span></span><a class="headerlink" href="#sax.nn.io.load_nn_weights_json" title="Permalink to this definition">#</a></dt>
 <dd><p>Load json weights from given path</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – </p>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Dict</em>[str, <em>Union</em>[complex, float, jax._src.numpy.lax_numpy.ndarray, numpy.ndarray]]</p>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -490,16 +482,8 @@ title="Print to PDF"
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.io.save_nn_weights_json">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">save_nn_weights_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.save_nn_weights_json" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">save_nn_weights_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="pre">weights:</span> <span class="pre">typing.Dict[str,</span> <span class="pre">&lt;sphinx.util.inspect.TypeAliasForwardRef</span> <span class="pre">object</span> <span class="pre">at</span> <span class="pre">0x7ff6caa83b50&gt;],</span> <span class="pre">path:</span> <span class="pre">str</span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.save_nn_weights_json" title="Permalink to this definition">#</a></dt>
 <dd><p>Save json weights to given path</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>weights</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Union</em><em>[</em><em>complex</em><em>, </em><em>float</em><em>, </em><em>jax._src.numpy.lax_numpy.ndarray</em><em>, </em><em>numpy.ndarray</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>path</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -521,25 +505,12 @@ title="Print to PDF"
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.io.get_available_sizes">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">get_available_sizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.get_available_sizes" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">get_available_sizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">int</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.nn.io.get_available_sizes" title="Permalink to this definition">#</a></dt>
 <dd><p>Get all available json weight hidden sizes given filename parameters</p>
 <dl class="simple">
 <dt>&gt; Note: this function does NOT return the input size and the output size</dt><dd><p>of the neural network. ONLY the hidden sizes are reported. The input
 and output sizes can easily be derived from <cite>input_names</cite> (after
 preprocessing) and <cite>output_names</cite>.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dirpath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>prefix</strong> (<em>str</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>List</em>[<em>Tuple</em>[int, …]]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -589,19 +560,8 @@ preprocessing) and <cite>output_names</cite>.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.io.get_dense_weights_path">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">get_dense_weights_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath='weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix='dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.get_dense_weights_path" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">get_dense_weights_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*sizes:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names:</span> <span class="pre">typing.Optional[typing.Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names:</span> <span class="pre">typing.Optional[typing.Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.get_dense_weights_path" title="Permalink to this definition">#</a></dt>
 <dd><p>Create the SAX conventional path for a given weight dictionary</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sizes</strong> (<em>int</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>dirpath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>prefix</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -634,19 +594,8 @@ preprocessing) and <cite>output_names</cite>.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.io.get_norm_path">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">get_norm_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath='norms'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix='norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.get_norm_path" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">get_norm_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*shape:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names:</span> <span class="pre">typing.Optional[typing.Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names:</span> <span class="pre">typing.Optional[typing.Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'norms'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix:</span> <span class="pre">str</span> <span class="pre">=</span> <span class="pre">'norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.get_norm_path" title="Permalink to this definition">#</a></dt>
 <dd><p>Create the SAX conventional path for the normalization constants</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>shape</strong> (<em>int</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>dirpath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>prefix</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -683,20 +632,8 @@ preprocessing) and <cite>output_names</cite>.</p>
 </div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.nn.io.load_nn_dense">
-<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">load_nn_dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weightprefix='dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weightdirpath='weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normdirpath='norms'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normprefix='norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.nn.io.load_nn_dense" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.nn.io.</span></span><span class="sig-name descname"><span class="pre">load_nn_dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*sizes:</span> <span class="pre">int</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names:</span> <span class="pre">typing.Optional[typing.Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names:</span> <span class="pre">typing.Optional[typing.Tuple[str</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">...]]</span> <span class="pre">=</span> <span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weightprefix='dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weightdirpath='weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normdirpath='norms'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normprefix='norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="headerlink" href="#sax.nn.io.load_nn_dense" title="Permalink to this definition">#</a></dt>
 <dd><p>Load a pre-trained dense model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sizes</strong> (<em>int</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type</dt>
-<dd class="field-even"><p><em>Callable</em></p>
-</dd>
-</dl>
 </dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -782,7 +719,7 @@ preprocessing) and <cite>output_names</cite>.</p>
         <i class="fas fa-angle-left"></i>
         <div class="prev-next-info">
             <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">NN - Core</p>
+            <p class="prev-next-title">Core</p>
         </div>
     </a>
 </div>
