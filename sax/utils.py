@@ -4,9 +4,9 @@
 from __future__ import annotations
 
 
-__all__ = ['block_diag', 'clean_string', 'copy_settings', 'validate_settings', 'try_float', 'flatten_dict',
-           'unflatten_dict', 'get_ports', 'get_port_combinations', 'get_settings', 'grouped_interp', 'merge_dicts',
-           'mode_combinations', 'reciprocal', 'rename_params', 'rename_ports', 'update_settings',
+__all__ = ['block_diag', 'clean_string', 'clean_string', 'copy_settings', 'validate_settings', 'try_float',
+           'flatten_dict', 'unflatten_dict', 'get_ports', 'get_port_combinations', 'get_settings', 'grouped_interp',
+           'merge_dicts', 'mode_combinations', 'reciprocal', 'rename_params', 'rename_ports', 'update_settings',
            'validate_not_mixedmode', 'validate_multimode', 'validate_sdict', 'get_inputs_outputs']
 
 # Cell
@@ -76,6 +76,18 @@ def block_diag(*arrs: Array) -> Array:
         block_diag = jnp.stack(arrs, 0)
 
     return block_diag.reshape(*batch_shape, N, N)
+
+# Cell
+
+def clean_string(s: str) -> str:
+    """clean a string such that it is a valid python identifier"""
+    s = s.strip()
+    s = s.replace(".", "p")  # point
+    s = s.replace("-", "m")  # minus
+    s = re.sub("[^0-9a-zA-Z]", "_", s)
+    if s[0] in "0123456789":
+        s = "_" + s
+    return s
 
 # Cell
 

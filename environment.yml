@@ -3,11 +3,6 @@ channels:
   - conda-forge
   - fastai
 dependencies:
-  - make
-  - patch
-  - suitesparse
-  - python
-  - pip
   - black
   - bokeh
   - build
@@ -17,30 +12,39 @@ dependencies:
   - ipykernel
   - ipympl
   - ipywidgets
+  - isort
+  - jupyter-book
   - jupyterlab
+  - make
   - matplotlib
   - natsort
   - nbdev<2
   - nbstripout
   - networkx
   - numpy
+  - orjson
   - pandas
   - papermill
+  - patch
+  - pip
   - pre-commit
+  - pydantic<2
+  - pydot
   - pyright
   - pytables
   - pytest
+  - python
   - pyyaml
   - scipy
   - shapely
+  - suitesparse
   - tqdm
   - twine
   - typing-extensions
-  - jupyter-book
   - pip:
     - flax
     - jax
     - jaxlib
     - tmm
-    - sphinx-autodoc-typehints
-    - sax==0.7.3
+    - neato
+    - datamodel-codegen
