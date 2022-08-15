@@ -7,7 +7,7 @@ from __future__ import annotations
 __all__ = ['block_diag', 'clean_string', 'clean_string', 'copy_settings', 'validate_settings', 'try_float',
            'flatten_dict', 'unflatten_dict', 'get_ports', 'get_port_combinations', 'get_settings', 'grouped_interp',
            'merge_dicts', 'mode_combinations', 'reciprocal', 'rename_params', 'rename_ports', 'update_settings',
-           'validate_not_mixedmode', 'validate_multimode', 'validate_sdict', 'get_inputs_outputs']
+           'validate_not_mixedmode', 'validate_multimode', 'validate_sdict', 'get_inputs_outputs', 'hash_dict']
 
 # Cell
 #nbdev_comment from __future__ import annotations
@@ -16,8 +16,10 @@ import inspect
 import re
 import warnings
 from functools import lru_cache, partial, wraps
+from hashlib import md5
 from typing import Any, Callable, Dict, Iterable, Iterator, Tuple, Union, cast, overload
 
+import orjson
 from natsort import natsorted
 from .typing_ import (
     Array,
@@ -559,3 +561,13 @@ def get_inputs_outputs(ports: Tuple[str, ...]):
         inputs = tuple(p for p in ports if not p.lower().startswith("out"))
         outputs = tuple(p for p in ports if p.lower().startswith("out"))
     return inputs, outputs
+
+# Cell
+
+def hash_dict(dic: Dict) -> int:
+    return int(
+        md5(
+            orjson.dumps(dic, option=orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_SORT_KEYS)
+        ).hexdigest(),
+        16,
+    )

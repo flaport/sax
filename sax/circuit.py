@@ -4,198 +4,233 @@
 from __future__ import annotations
 
 
-__all__ = ['circuit', 'circuit_from_netlist', 'circuit_from_yaml', 'circuit_from_gdsfactory']
+__all__ = ['create_dag', 'draw_dag', 'find_root', 'find_leaves', 'circuit_from_netlist', 'CircuitInfo']
 
 # Cell
 #nbdev_comment from __future__ import annotations
-
 from functools import partial
-from typing import Dict, Optional, Tuple, Union, cast
+from typing import Any, Dict, List, NamedTuple, Optional, Tuple, Union
 
+import black
+import networkx as nx
+import numpy as np
+from sax import reciprocal
 from .backends import circuit_backends
-from .models import coupler, straight
 from .multimode import multimode, singlemode
-from .netlist import LogicalNetlist, Netlist, logical_netlist, netlist_from_yaml
-from .typing_ import Instances, Model, Models, Netlist, Settings, SType, is_netlist
-from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
+from .netlist import NetlistModel, RecursiveNetlistModel
+from .typing_ import Model, Settings, SType
+from .utils import _replace_kwargs, get_settings, merge_dicts
 
-try:
-    import jax.numpy as jnp
-    JAX_AVAILABLE = True
-except ImportError:
-    import numpy as jnp
-    JAX_AVAILABLE = False
+# Cell
+def create_dag(
+    net: RecursiveNetlistModel,
+    models: Optional[Dict[str, Any]] = None,
+):
+    if models is None:
+        models = {}
+    assert isinstance(models, dict)
+
+    all_models = {}
+    g = nx.DiGraph()
+
+    for model_name, net in net.dict()['__root__'].items():
+        if not model_name in all_models:
+            all_models[model_name] = models.get(model_name, net)
+            g.add_node(model_name)
+        if model_name in models:
+            continue
+        for instance in net['instances'].values():
+            component = instance['component']
+            if not component in all_models:
+                all_models[component] = models.get(component, None)
+                g.add_node(component)
+            g.add_edge(model_name, component)
+
+    return g
 
 # Cell
 
-def circuit(
-    *,
-    instances: Instances,
-    connections: Dict[str, str],
-    ports: Dict[str, str],
-    models: Optional[Models] = None,
-    modes: Optional[Tuple[str, ...]] = None,
-    settings: Optional[Settings] = None,
+def draw_dag(dag, with_labels=True, **kwargs):
+    return nx.draw(dag, _dag_pos(dag), with_labels=with_labels, **kwargs)
+
+def _dag_pos(dag):
+    in_degree = {}
+    for k, v in dag.in_degree():
+        if v not in in_degree:
+            in_degree[v] = []
+        in_degree[v].append(k)
+
+    widths = {k: len(vs) for k, vs in in_degree.items()}
+    width = max(widths.values())
+    height = max(widths) + 1
+
+    horizontal_pos = {k: np.linspace(0, 1, w+2)[1:-1]*width for k, w in widths.items()}
+    print(horizontal_pos)
+
+
+    pos = {}
+    for k, vs in in_degree.items():
+        for x, v in zip(horizontal_pos[k], vs):
+            pos[v] = (x, -k)
+    return pos
+
+# Cell
+def find_root(g):
+    nodes = [n for n, d in g.in_degree() if d == 0]
+    return nodes
+
+# Cell
+def find_leaves(g):
+    nodes = [n for n, d in g.out_degree() if d == 0]
+    return nodes
+
+# Cell
+def _validate_models(models, dag):
+    required_models = find_leaves(dag)
+    missing_models = [m for m in required_models if m not in models]
+    if missing_models:
+        model_diff = {
+            "Missing Models": missing_models,
+            "Given Models": list(models),
+            "Required Models": required_models,
+        }
+        raise ValueError(
+            "Missing models. The following models are still missing to build the circuit:\n"
+            f"{black.format_str(repr(model_diff), mode=black.Mode())}"
+        )
+    return {**models} # shallow copy
+
+# Cell
+def _flat_circuit(instances, connections, ports, models, backend):
+    evaluate_circuit = circuit_backends[backend]
+
+    inst2model = {k: models[inst.component] for k, inst in instances.items()}
+
+    model_settings = {name: get_settings(model) for name, model in inst2model.items()}
+    netlist_settings = {
+        name: {k: v for k, v in inst.settings.items() if k in model_settings[name]}
+        for name, inst in instances.items()
+    }
+    default_settings = merge_dicts(model_settings, netlist_settings)
+
+    def _circuit(**settings: Settings) -> SType:
+        settings = merge_dicts(model_settings, settings)
+        instances: Dict[str, SType] = {}
+        for inst_name, model in inst2model.items():
+            instances[inst_name] = model(**settings.get(inst_name, {}))
+        S = evaluate_circuit(instances, connections, ports)
+        return S
+
+    _replace_kwargs(_circuit, **default_settings)
+
+    return _circuit
+
+# Cell
+def circuit_from_netlist(
+    net: Union[NetlistModel, RecursiveNetlistModel],
+    models: Dict[str, Model],
+    modes: Optional[List[str]] = None,
     backend: str = "default",
-    default_models=None,
-) -> Model:
+) -> Tuple[Model, CircuitInfo]:
+
+    recnet: RecursiveNetlistModel = _validate_net(net)
+    dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))  # directed acyclic graph
+    models = _validate_models(models, dependency_dag)
+    modes = _validate_modes(modes)
+    backend = _validate_circuit_backend(backend)
+
+    circuit = None
+    new_models = {}
+    current_models = {}
+    model_names = list(nx.topological_sort(dependency_dag))[::-1]
+    for model_name in model_names:
+        if model_name in models:
+            new_models[model_name] = models[model_name]
+            continue
+
+        flatnet = recnet.__root__[model_name]
+
+        connections, ports, new_models = _make_singlemode_or_multimode(
+            flatnet, modes, new_models
+        )
+        current_models.update(new_models)
+        new_models = {}
+
+        current_models[model_name] = circuit = _flat_circuit(
+            flatnet.instances, connections, ports, current_models, backend
+        )
+
+    assert circuit is not None
+    return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
+
+class CircuitInfo(NamedTuple):
+    dag: nx.DiGraph
+    models: Dict[str, Model]
+
+def _validate_circuit_backend(backend):
+    backend = backend.lower()
     # assert valid circuit_backend
     if backend not in circuit_backends:
         raise KeyError(
             f"circuit backend {backend} not found. Allowed circuit backends: "
             f"{', '.join(circuit_backends.keys())}."
         )
+    return backend
 
-    evaluate_circuit = circuit_backends[backend]
 
-    _netlist, _settings, _models = logical_netlist(
-        instances=instances,
-        connections=connections,
-        ports=ports,
-        models=models,
-        settings=settings,
-        default_models=default_models,
-    )
-
-    for name in list(_models.keys()):
-        if is_netlist(_models[name]):
-            netlist_model = cast(LogicalNetlist, _models.pop(name))
-            instance_model_names = set(netlist_model["instances"].values())
-            instance_models = {k: _models[k] for k in instance_model_names}
-            netlist_func = circuit_from_netlist(
-                netlist=netlist_model,
-                models=instance_models,
-                backend=backend,
-                modes=modes,
-                settings=None,  # settings are already integrated in netlist by now.
-                default_models=default_models,
-            )
-            _models[name] = netlist_func
-
-    if modes is not None:
-        maybe_multimode = partial(multimode, modes=modes)
-        connections = {
-            f"{p1}@{mode}": f"{p2}@{mode}"
-            for p1, p2 in _netlist["connections"].items()
-            for mode in modes
-        }
-        ports = {
-            f"{p1}@{mode}": f"{p2}@{mode}"
-            for p1, p2 in _netlist["ports"].items()
-            for mode in modes
-        }
+def _validate_modes(modes) -> List[str]:
+    if modes is None:
+        return ["te"]
+    elif not modes:
+        return ["te"]
+    elif isinstance(modes, str):
+        return [modes]
+    elif all(isinstance(m, str) for m in modes):
+        return modes
     else:
-        maybe_multimode = partial(singlemode, mode="te")
-        connections = _netlist["connections"]
-        ports = _netlist["ports"]
+        raise ValueError(f"Invalid modes given: {modes}")
 
-    def _circuit(**settings: Settings) -> SType:
-        settings = merge_dicts(_settings, settings)
-        global_settings = {}
-        for k in list(settings.keys()):
-            if k in _netlist["instances"]:
-                continue
-            global_settings[k] = settings.pop(k)
-        if global_settings:
-            settings = cast(
-                Dict[str, Settings], update_settings(settings, **global_settings)
-            )
-        instances: Dict[str, SType] = {}
-        for name, model_name in _netlist["instances"].items():
-            model = cast(Model, _models[model_name])
-            instances[name] = cast(
-                SType, maybe_multimode(model(**settings.get(name, {})))
-            )
-        S = evaluate_circuit(instances, connections, ports)
-        return S
 
-    settings = {
-        name: get_settings(cast(Model, _models[model]))
-        for name, model in _netlist["instances"].items()
+def _validate_net(
+    net: Union[NetlistModel, RecursiveNetlistModel]
+) -> RecursiveNetlistModel:
+    if isinstance(net, NetlistModel):
+        net = RecursiveNetlistModel(__root__={"top_level": net})
+    return net
+
+
+def _validate_dag(dag):
+    nodes = find_root(dag)
+    if len(nodes) > 1:
+        raise ValueError(f"Multiple top_levels found in netlist: {nodes}")
+    if len(nodes) < 1:
+        raise ValueError(f"Netlist does not contain any nodes.")
+    if not dag.is_directed():
+        raise ValueError("Netlist dependency cycles detected!")
+    return dag
+
+
+def _make_singlemode_or_multimode(net, modes, models):
+    if len(modes) == 1:
+        connections, ports, models = _make_singlemode(net, modes[0], models)
+    else:
+        connections, ports, models = _make_multimode(net, modes, models)
+    return connections, ports, models
+
+
+def _make_singlemode(net, mode, models):
+    models = {k: singlemode(m, mode=mode) for k, m in models.items()}
+    return net.connections, net.ports, models
+
+
+def _make_multimode(net, modes, models):
+    models = {k: multimode(m, modes=modes) for k, m in models.items()}
+    connections = {
+        f"{p1}@{mode}": f"{p2}@{mode}"
+        for p1, p2 in net.connections.items()
+        for mode in modes
     }
-    settings = merge_dicts(settings, _settings)
-    _replace_kwargs(_circuit, **settings)
-
-    return _circuit
-
-# Cell
-
-def circuit_from_netlist(
-    netlist: Union[LogicalNetlist, Netlist],
-    *,
-    models: Optional[Models] = None,
-    modes: Optional[Tuple[str, ...]] = None,
-    settings: Optional[Settings] = None,
-    backend: str = "default",
-    default_models=None,
-) -> Model:
-    """create a circuit model function from a netlist """
-    instances = netlist["instances"]
-    connections = netlist["connections"]
-    ports = netlist["ports"]
-    _circuit = circuit(
-        instances=instances,
-        connections=connections,
-        ports=ports,
-        models=models,
-        modes=modes,
-        settings=settings,
-        backend=backend,
-        default_models=default_models,
-    )
-    return _circuit
-
-# Cell
-def circuit_from_yaml(
-    yaml: str,
-    *,
-    models: Optional[Models] = None,
-    modes: Optional[Tuple[str, ...]] = None,
-    settings: Optional[Settings] = None,
-    backend: str = "default",
-    default_models=None,
-) -> Model:
-    """Load a sax circuit from yaml definition
-
-    Args:
-        yaml: the yaml string to load
-        models: a dictionary which maps component names to model functions
-        modes: the modes of the simulation (if not given, single mode
-            operation is assumed).
-        settings: override netlist instance settings. Use this setting to set
-            global settings like for example the wavelength 'wl'.
-        backend: "default" or "klu". How the circuit S-parameters are
-            calculated.  "klu" is a CPU-only method which generally speaking is
-            much faster for large circuits but cannot be jitted or used for autograd.
-    """
-    netlist, models = netlist_from_yaml(yaml=yaml, models=models, settings=settings)
-    circuit = circuit_from_netlist(
-        netlist=netlist,
-        models=models,
-        modes=modes,
-        settings=None,  # settings are already integrated in the netlist by now
-        backend=backend,
-        default_models=default_models,
-    )
-    return circuit
-
-# Cell
-def circuit_from_gdsfactory(
-    component,
-    *,
-    models: Optional[Models] = None,
-    modes: Optional[Tuple[str, ...]] = None,
-    settings: Optional[Settings] = None,
-    backend: str = "default",
-    default_models=None,
-) -> Model:
-    """Load a sax circuit from a GDSFactory component"""
-    circuit = circuit_from_netlist(
-        component.get_netlist_dict(),
-        models=models,
-        modes=modes,
-        settings=settings,
-        backend=backend,
-        default_models=default_models,
-    )
-    return circuit
+    ports = {
+        f"{p1}@{mode}": f"{p2}@{mode}" for p1, p2 in net.ports.items() for mode in modes
+    }
+    return connections, ports, models

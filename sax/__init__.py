@@ -112,12 +112,12 @@ from .models import get_models as get_models, passthru as passthru
 
 # Cell
 
-from sax import netlist as netlist
-from .netlist import (
-    logical_netlist as logical_netlist,
-    netlist as netlist,
-    netlist_from_yaml as netlist_from_yaml,
-)
+#from sax import netlist as netlist
+#from sax.netlist import (
+#    logical_netlist as logical_netlist,
+#    netlist as netlist,
+#    netlist_from_yaml as netlist_from_yaml,
+#)
 
 # Cell
 
