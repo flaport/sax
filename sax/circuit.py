@@ -196,6 +196,10 @@ class CircuitInfo(NamedTuple):
 
 
 def _extract_instance_models(netlist):
+    if not isinstance(netlist, dict):
+        netlist = netlist.dict()
+    if '__root__' in netlist:
+        netlist = netlist['__root__']
     if 'instances' in netlist:
         netlist = {'top_level': netlist}
     netlist = {**netlist}
