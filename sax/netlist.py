@@ -6,16 +6,12 @@ __all__ = ['Component', 'PortEnum', 'Placement', 'Route', 'Netlist', 'RecursiveN
 import re
 from enum import Enum
 from functools import partial
-from hashlib import md5
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Callable, Dict, Optional, Union
 
 import black
-import jax.numpy as jnp
-import networkx as nx
-import numpy as np
 from pydantic import BaseModel as _BaseModel
 from pydantic import Extra, Field, ValidationError, validator
-from .utils import clean_string, hash_dict
+from .utils import clean_string, get_settings, hash_dict
 
 # Internal Cell
 class BaseModel(_BaseModel):
@@ -47,7 +43,6 @@ class Component(BaseModel):
     settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
 
     # this was added:
-
     @validator("component")
     def validate_component_name(cls, value):
         if "," in value:
@@ -122,7 +117,7 @@ class Netlist(BaseModel):
     # these are extra additions:
 
     @validator("instances", pre=True)
-    def coerce_string_instance_into_component_model(cls, instances):
+    def coerce_different_type_instance_into_component_model(cls, instances):
         new_instances = {}
         for k, v in instances.items():
             if isinstance(v, str):
@@ -131,6 +126,7 @@ class Netlist(BaseModel):
                     "settings": {},
                 }
             new_instances[k] = v
+
         return new_instances
 
     @staticmethod

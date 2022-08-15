@@ -24,7 +24,7 @@ from .backends import circuit_backends
 from .multimode import multimode, singlemode
 from .netlist import Netlist, RecursiveNetlist
 from .typing_ import Model, Settings, SType
-from .utils import _replace_kwargs, get_settings, merge_dicts
+from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
 
 # Cell
 def create_dag(
@@ -128,7 +128,9 @@ def _flat_circuit(instances, connections, ports, models, backend):
     default_settings = merge_dicts(model_settings, netlist_settings)
 
     def _circuit(**settings: Settings) -> SType:
-        settings = merge_dicts(model_settings, settings)
+        settings = merge_dicts(default_settings, settings)
+        settings = _forward_global_settings(inst2model, settings)
+
         instances: Dict[str, SType] = {}
         for inst_name, model in inst2model.items():
             instances[inst_name] = model(**settings.get(inst_name, {}))
@@ -139,17 +141,27 @@ def _flat_circuit(instances, connections, ports, models, backend):
 
     return _circuit
 
+def _forward_global_settings(instances, settings):
+    global_settings = {}
+    for k in list(settings.keys()):
+        if k in instances:
+            continue
+        global_settings[k] = settings.pop(k)
+    if global_settings:
+        settings = update_settings(settings, **global_settings)
+    return settings
+
 # Cell
 def circuit(
     netlist: Union[Netlist, RecursiveNetlist],
-    models: Dict[str, Model],
+    models: Optional[Dict[str, Model]] = None,
     modes: Optional[List[str]] = None,
     backend: str = "default",
 ) -> Tuple[Model, CircuitInfo]:
-
+    netlist, instance_models = _extract_instance_models(netlist) # TODO: do this *after* recursive netlist parsing.
     recnet: RecursiveNetlist = _validate_net(netlist)
     dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))  # directed acyclic graph
-    models = _validate_models(models, dependency_dag)
+    models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
     modes = _validate_modes(modes)
     backend = _validate_circuit_backend(backend)
 
@@ -177,9 +189,36 @@ def circuit(
     assert circuit is not None
     return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
 
+
 class CircuitInfo(NamedTuple):
     dag: nx.DiGraph
     models: Dict[str, Model]
+
+
+def _extract_instance_models(netlist):
+    if 'instances' in netlist:
+        netlist = {'top_level': netlist}
+    netlist = {**netlist}
+
+    models = {}
+    for netname, net in netlist.items():
+        net = {**net}
+        net['instances'] = {**net['instances']}
+        for name, inst in net['instances'].items():
+            if callable(inst):
+                settings = get_settings(inst)
+                if isinstance(inst, partial) and inst.args:
+                    raise ValueError("SAX circuits and netlists don't support partials with positional arguments.")
+                while isinstance(inst, partial):
+                    inst = inst.func
+                models[inst.__name__] = inst
+                net['instances'][name] = {
+                    'component': inst.__name__,
+                    'settings': settings
+                }
+        netlist[netname] = net
+    return netlist, models
+
 
 def _validate_circuit_backend(backend):
     backend = backend.lower()
@@ -205,9 +244,7 @@ def _validate_modes(modes) -> List[str]:
         raise ValueError(f"Invalid modes given: {modes}")
 
 
-def _validate_net(
-    netlist: Union[Netlist, RecursiveNetlist]
-) -> RecursiveNetlist:
+def _validate_net(netlist: Union[Netlist, RecursiveNetlist]) -> RecursiveNetlist:
     if isinstance(netlist, dict):
         try:
             netlist = Netlist.parse_obj(netlist)
@@ -250,6 +287,8 @@ def _make_multimode(netlist, modes, models):
         for mode in modes
     }
     ports = {
-        f"{p1}@{mode}": f"{p2}@{mode}" for p1, p2 in netlist.ports.items() for mode in modes
+        f"{p1}@{mode}": f"{p2}@{mode}"
+        for p1, p2 in netlist.ports.items()
+        for mode in modes
     }
     return connections, ports, models
