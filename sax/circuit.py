@@ -4,26 +4,31 @@
 from __future__ import annotations
 
 
-__all__ = ['create_dag', 'draw_dag', 'find_root', 'find_leaves', 'circuit_from_netlist', 'CircuitInfo']
+__all__ = ['create_dag', 'draw_dag', 'find_root', 'find_leaves', 'circuit', 'CircuitInfo']
 
 # Cell
 #nbdev_comment from __future__ import annotations
+
+import os
+import shutil
+import sys
 from functools import partial
 from typing import Any, Dict, List, NamedTuple, Optional, Tuple, Union
 
 import black
 import networkx as nx
 import numpy as np
+from pydantic import ValidationError
 from sax import reciprocal
 from .backends import circuit_backends
 from .multimode import multimode, singlemode
-from .netlist import NetlistModel, RecursiveNetlistModel
+from .netlist import Netlist, RecursiveNetlist
 from .typing_ import Model, Settings, SType
 from .utils import _replace_kwargs, get_settings, merge_dicts
 
 # Cell
 def create_dag(
-    net: RecursiveNetlistModel,
+    netlist: RecursiveNetlist,
     models: Optional[Dict[str, Any]] = None,
 ):
     if models is None:
@@ -33,13 +38,13 @@ def create_dag(
     all_models = {}
     g = nx.DiGraph()
 
-    for model_name, net in net.dict()['__root__'].items():
+    for model_name, netlist in netlist.dict()['__root__'].items():
         if not model_name in all_models:
-            all_models[model_name] = models.get(model_name, net)
+            all_models[model_name] = models.get(model_name, netlist)
             g.add_node(model_name)
         if model_name in models:
             continue
-        for instance in net['instances'].values():
+        for instance in netlist['instances'].values():
             component = instance['component']
             if not component in all_models:
                 all_models[component] = models.get(component, None)
@@ -51,9 +56,20 @@ def create_dag(
 # Cell
 
 def draw_dag(dag, with_labels=True, **kwargs):
-    return nx.draw(dag, _dag_pos(dag), with_labels=with_labels, **kwargs)
+    _patch_path()
+    if shutil.which('dot'):
+        return nx.draw(dag, nx.nx_pydot.pydot_layout(dag, prog='dot'), with_labels=with_labels, **kwargs)
+    else:
+        return nx.draw(dag, _my_dag_pos(dag), with_labels=with_labels, **kwargs)
 
-def _dag_pos(dag):
+def _patch_path():
+    os_paths = {p: None for p in os.environ.get('PATH', '').split(os.pathsep)}
+    sys_paths = {p: None for p in sys.path}
+    other_paths = {os.path.dirname(sys.executable): None}
+    os.environ['PATH'] = os.pathsep.join({**os_paths, **sys_paths, **other_paths})
+
+def _my_dag_pos(dag):
+    # inferior to pydot
     in_degree = {}
     for k, v in dag.in_degree():
         if v not in in_degree:
@@ -65,8 +81,6 @@ def _dag_pos(dag):
     height = max(widths) + 1
 
     horizontal_pos = {k: np.linspace(0, 1, w+2)[1:-1]*width for k, w in widths.items()}
-    print(horizontal_pos)
-
 
     pos = {}
     for k, vs in in_degree.items():
@@ -126,14 +140,14 @@ def _flat_circuit(instances, connections, ports, models, backend):
     return _circuit
 
 # Cell
-def circuit_from_netlist(
-    net: Union[NetlistModel, RecursiveNetlistModel],
+def circuit(
+    netlist: Union[Netlist, RecursiveNetlist],
     models: Dict[str, Model],
     modes: Optional[List[str]] = None,
     backend: str = "default",
 ) -> Tuple[Model, CircuitInfo]:
 
-    recnet: RecursiveNetlistModel = _validate_net(net)
+    recnet: RecursiveNetlist = _validate_net(netlist)
     dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))  # directed acyclic graph
     models = _validate_models(models, dependency_dag)
     modes = _validate_modes(modes)
@@ -192,11 +206,16 @@ def _validate_modes(modes) -> List[str]:
 
 
 def _validate_net(
-    net: Union[NetlistModel, RecursiveNetlistModel]
-) -> RecursiveNetlistModel:
-    if isinstance(net, NetlistModel):
-        net = RecursiveNetlistModel(__root__={"top_level": net})
-    return net
+    netlist: Union[Netlist, RecursiveNetlist]
+) -> RecursiveNetlist:
+    if isinstance(netlist, dict):
+        try:
+            netlist = Netlist.parse_obj(netlist)
+        except ValidationError:
+            netlist = RecursiveNetlist.parse_obj(netlist)
+    if isinstance(netlist, Netlist):
+        netlist = RecursiveNetlist(__root__={"top_level": netlist})
+    return netlist
 
 
 def _validate_dag(dag):
@@ -210,27 +229,27 @@ def _validate_dag(dag):
     return dag
 
 
-def _make_singlemode_or_multimode(net, modes, models):
+def _make_singlemode_or_multimode(netlist, modes, models):
     if len(modes) == 1:
-        connections, ports, models = _make_singlemode(net, modes[0], models)
+        connections, ports, models = _make_singlemode(netlist, modes[0], models)
     else:
-        connections, ports, models = _make_multimode(net, modes, models)
+        connections, ports, models = _make_multimode(netlist, modes, models)
     return connections, ports, models
 
 
-def _make_singlemode(net, mode, models):
+def _make_singlemode(netlist, mode, models):
     models = {k: singlemode(m, mode=mode) for k, m in models.items()}
-    return net.connections, net.ports, models
+    return netlist.connections, netlist.ports, models
 
 
-def _make_multimode(net, modes, models):
+def _make_multimode(netlist, modes, models):
     models = {k: multimode(m, modes=modes) for k, m in models.items()}
     connections = {
         f"{p1}@{mode}": f"{p2}@{mode}"
-        for p1, p2 in net.connections.items()
+        for p1, p2 in netlist.connections.items()
         for mode in modes
     }
     ports = {
-        f"{p1}@{mode}": f"{p2}@{mode}" for p1, p2 in net.ports.items() for mode in modes
+        f"{p1}@{mode}": f"{p2}@{mode}" for p1, p2 in netlist.ports.items() for mode in modes
     }
     return connections, ports, models

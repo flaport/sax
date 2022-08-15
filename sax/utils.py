@@ -19,6 +19,7 @@ from functools import lru_cache, partial, wraps
 from hashlib import md5
 from typing import Any, Callable, Dict, Iterable, Iterator, Tuple, Union, cast, overload
 
+import numpy as np
 import orjson
 from natsort import natsorted
 from .typing_ import (
@@ -567,7 +568,13 @@ def get_inputs_outputs(ports: Tuple[str, ...]):
 def hash_dict(dic: Dict) -> int:
     return int(
         md5(
-            orjson.dumps(dic, option=orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_SORT_KEYS)
+            orjson.dumps(_numpyfy(dic), option=orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_SORT_KEYS)
         ).hexdigest(),
         16,
     )
+
+def _numpyfy(obj: Any):
+    if not isinstance(obj, dict):
+        return np.asarray(obj)
+    else:
+        return {k: _numpyfy(v) for k, v in obj.items()}

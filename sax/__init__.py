@@ -112,22 +112,11 @@ from .models import get_models as get_models, passthru as passthru
 
 # Cell
 
-#from sax import netlist as netlist
-#from sax.netlist import (
-#    logical_netlist as logical_netlist,
-#    netlist as netlist,
-#    netlist_from_yaml as netlist_from_yaml,
-#)
+from .netlist import netlist as netlist
 
 # Cell
 
-from sax import circuit as circuit
-from .circuit import (
-    circuit as circuit,
-    circuit_from_gdsfactory as circuit_from_gdsfactory,
-    circuit_from_netlist as circuit_from_netlist,
-    circuit_from_yaml as circuit_from_yaml,
-)
+from .circuit import circuit as circuit
 
 # Cell
 
