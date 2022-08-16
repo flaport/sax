@@ -90,7 +90,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Install dependencies
-        run: conda install -y gdspy pymeep=\*=mpi_mpich_\* && pip install datamodel_code_generator git+https://github.com/gdsfactory/gdsfactory
+        run: conda install -y gdspy pymeep=\*=mpi_mpich_\* graphviz pydot && pip install datamodel_code_generator git+https://github.com/gdsfactory/gdsfactory
       - name: Run notebooks
         run: find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill -k python3 {} {}
       - name: Expose 'nbs' as artifact
