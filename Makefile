@@ -6,7 +6,6 @@ all: sax docs
 
 .SILENT: docker
 docker:
-	sed -i "s/^[ ]*-[ ]\bsax\b.*//g" environment.yml
 	-docker build . -t sax
 
 sax: $(SRC)

@@ -76,23 +76,25 @@ waveguide(length=100.0)
 These component models can then be combined into a circuit:
 
 ```python
-mzi = sax.circuit(
-    instances = {
-        "lft": coupler,
-        "top": waveguide,
-        "rgt": coupler,
-    },
-    connections={
-        "lft,out0": "rgt,in0",
-        "lft,out1": "top,in0",
-        "top,out0": "rgt,in1",
-    },
-    ports={
-        "in0": "lft,in0",
-        "in1": "lft,in1",
-        "out0": "rgt,out0",
-        "out1": "rgt,out1",
-    },
+mzi, _ = sax.circuit(
+    netlist={
+        "instances": {
+            "lft": coupler,
+            "top": waveguide,
+            "rgt": coupler,
+        },
+        "connections": {
+            "lft,out0": "rgt,in0",
+            "lft,out1": "top,in0",
+            "top,out0": "rgt,in1",
+        },
+        "ports": {
+            "in0": "lft,in0",
+            "in1": "lft,in1",
+            "out0": "rgt,out0",
+            "out1": "rgt,out1",
+        },
+    }
 )
 
 type(mzi)
