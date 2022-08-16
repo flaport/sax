@@ -483,6 +483,7 @@ title="Print to PDF"
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">import</span> <span class="nn">sax</span>
+<span class="kn">import</span> <span class="nn">yaml</span>
 </pre></div>
 </div>
 </div>
@@ -530,7 +531,33 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit_from_yaml</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;instances&#39;: {&#39;lft&#39;: {&#39;component&#39;: &#39;coupler&#39;, &#39;settings&#39;: {&#39;coupling&#39;: 0.5}},
+  &#39;rgt&#39;: {&#39;component&#39;: &#39;coupler&#39;, &#39;settings&#39;: {&#39;coupling&#39;: 0.5}},
+  &#39;top&#39;: {&#39;component&#39;: &#39;straight&#39;, &#39;settings&#39;: {&#39;length&#39;: 25.0}},
+  &#39;btm&#39;: {&#39;component&#39;: &#39;straight&#39;, &#39;settings&#39;: {&#39;length&#39;: 15.0}}},
+ &#39;connections&#39;: {&#39;lft,out0&#39;: &#39;btm,in0&#39;,
+  &#39;btm,out0&#39;: &#39;rgt,in0&#39;,
+  &#39;lft,out1&#39;: &#39;top,in0&#39;,
+  &#39;top,out0&#39;: &#39;rgt,in1&#39;},
+ &#39;ports&#39;: {&#39;in0&#39;: &#39;lft,in0&#39;,
+  &#39;in1&#39;: &#39;lft,in1&#39;,
+  &#39;out0&#39;: &#39;rgt,out0&#39;,
+  &#39;out1&#39;: &#39;rgt,out1&#39;}}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+    <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">netlist</span><span class="p">),</span>
+    <span class="n">models</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;coupler&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">coupler</span><span class="p">,</span> <span class="s2">&quot;straight&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">straight</span><span class="p">},</span>
+<span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -557,7 +584,7 @@ title="Print to PDF"
   lax._check_user_dtype_supported(dtype, &quot;asarray&quot;)
 </pre></div>
 </div>
-<img alt="../_images/03_circuit_from_yaml_6_1.png" src="../_images/03_circuit_from_yaml_6_1.png" />
+<img alt="../_images/03_circuit_from_yaml_7_1.png" src="../_images/03_circuit_from_yaml_7_1.png" />
 </div>
 </div>
 <p>That was easy! However, during the above YAML conversion, only models available in <code class="docutils literal notranslate"><span class="pre">sax.models</span></code> were used. What if we want to map the YAML component names to custom models? Let’s say we want to use a dispersionless waveguide for the above model for example:</p>
@@ -574,7 +601,7 @@ title="Print to PDF"
 <p>We can regenerate the above circuit again, but this time we specify a models mapping:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit_from_yaml</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;straight&quot;</span><span class="p">:</span> <span class="n">waveguide_without_dispersion</span><span class="p">})</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span><span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">netlist</span><span class="p">),</span> <span class="n">models</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;straight&quot;</span><span class="p">:</span> <span class="n">waveguide_without_dispersion</span><span class="p">,</span> <span class="s1">&#39;coupler&#39;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">coupler</span><span class="p">})</span>
 </pre></div>
 </div>
 </div>
@@ -595,7 +622,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/03_circuit_from_yaml_12_0.png" src="../_images/03_circuit_from_yaml_12_0.png" />
+<img alt="../_images/03_circuit_from_yaml_13_0.png" src="../_images/03_circuit_from_yaml_13_0.png" />
 </div>
 </div>
 </section>

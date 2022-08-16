@@ -441,329 +441,518 @@ title="Print to PDF"
 <blockquote>
 <div><p>SAX Circuits</p>
 </div></blockquote>
+<p>Let’s start where we left off (see <a class="reference internal" href="06_netlist.html"><span class="doc std std-doc">Netlist</span></a>).</p>
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span>
 
+<span class="kn">import</span> <span class="nn">black</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="kn">from</span> <span class="nn">sax</span> <span class="kn">import</span> <span class="n">reciprocal</span>
 <span class="kn">from</span> <span class="nn">sax.backends</span> <span class="kn">import</span> <span class="n">circuit_backends</span>
-<span class="kn">from</span> <span class="nn">sax.models</span> <span class="kn">import</span> <span class="n">coupler</span><span class="p">,</span> <span class="n">straight</span>
 <span class="kn">from</span> <span class="nn">sax.multimode</span> <span class="kn">import</span> <span class="n">multimode</span><span class="p">,</span> <span class="n">singlemode</span>
-<span class="kn">from</span> <span class="nn">sax.netlist</span> <span class="kn">import</span> <span class="n">LogicalNetlist</span><span class="p">,</span> <span class="n">Netlist</span><span class="p">,</span> <span class="n">logical_netlist</span><span class="p">,</span> <span class="n">netlist_from_yaml</span>
-<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">Instances</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Models</span><span class="p">,</span> <span class="n">Netlist</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">is_netlist</span>
+<span class="kn">from</span> <span class="nn">sax.netlist</span> <span class="kn">import</span> <span class="n">Netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span>
+<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">SType</span>
 <span class="kn">from</span> <span class="nn">sax.utils</span> <span class="kn">import</span> <span class="n">_replace_kwargs</span><span class="p">,</span> <span class="n">get_settings</span><span class="p">,</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">update_settings</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s start by creating a simple recursive netlist with gdsfactory.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>We are using gdsfactory to create our netlist because it allows us to see the circuit we want to simulate and because we’re striving to have a compatible netlist implementation in SAX.</p>
+<p>However… gdsfactory is not a dependency of SAX. You can also define your circuits by hand (see <a class="reference internal" href="../examples/01_quick_start.html"><span class="doc std std-doc">SAX Quick Start</span></a> or you can use another tool to programmatically construct your netlists.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gdsfactory</span> <span class="k">as</span> <span class="nn">gf</span>
+<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span> <span class="nn">gdsfactory.components</span> <span class="kn">import</span> <span class="n">mzi</span>
+<span class="kn">from</span> <span class="nn">gdsfactory.get_netlist</span> <span class="kn">import</span> <span class="n">get_netlist_recursive</span><span class="p">,</span> <span class="n">get_netlist_dict</span><span class="p">,</span> <span class="n">get_netlist_yaml</span><span class="p">,</span> <span class="n">get_netlist</span>
 
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-    <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
+<span class="nd">@gf</span><span class="o">.</span><span class="n">cell</span>
+<span class="k">def</span> <span class="nf">twomzi</span><span class="p">():</span>
+    <span class="n">c</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">Component</span><span class="p">()</span>
+    
+    <span class="c1"># instances</span>
+    <span class="n">mzi1</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">delta_length</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+    <span class="n">mzi2</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">delta_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
+    
+    <span class="c1"># references</span>
+    <span class="n">mzi1_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mzi1</span><span class="p">)</span>
+    <span class="n">mzi2_</span> <span class="o">=</span> <span class="p">(</span><span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mzi2</span><span class="p">)</span>
+    
+    <span class="c1"># connections</span>
+    <span class="n">mzi2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">mzi1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    
+    <span class="c1"># ports</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o1&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mzi1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o1&#39;</span><span class="p">])</span>
+    <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s1">&#39;o2&#39;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mzi2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s1">&#39;o2&#39;</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">c</span>
+
+<span class="n">comp</span>  <span class="o">=</span> <span class="n">twomzi</span><span class="p">()</span>
+<span class="n">display</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
+<span class="n">recnet</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">get_netlist_recursive</span><span class="p">(</span><span class="n">comp</span><span class="p">,</span> <span class="n">get_netlist_func</span><span class="o">=</span><span class="n">partial</span><span class="p">(</span><span class="n">get_netlist_dict</span><span class="p">,</span> <span class="n">full_settings</span><span class="o">=</span><span class="kc">True</span><span class="p">)))</span>
+<span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="s1">&#39;mzi_delta_length10&#39;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>2022-08-16 04:19:37.487 | INFO     | gdsfactory.config:&lt;module&gt;:53 - Load &#39;/opt/conda/lib/python3.9/site-packages/gdsfactory&#39; 5.18.2
+</pre></div>
+</div>
+<img alt="../_images/08_circuit_5_1.png" src="../_images/08_circuit_5_1.png" />
+<div class="output text_html">twomzi: uid 0, ports ['o1', 'o2'], aliases [], 0 polygons, 2 references</div></div>
+</div>
+<p>To be able to model this device we’ll need some SAX dummy models:</p>
+<p>In SAX, we usually aggregate the available models in a models dictionary:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s1">&#39;straight&#39;</span><span class="p">:</span> <span class="n">straight</span><span class="p">,</span>
+    <span class="s1">&#39;bend_euler&#39;</span><span class="p">:</span> <span class="n">bend_euler</span><span class="p">,</span>
+    <span class="s1">&#39;mmi1x2&#39;</span><span class="p">:</span> <span class="n">mmi1x2</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now represent our recursive netlist model as a Directed Acyclic Graph:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.circuit.create_dag">
+<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">create_dag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">netlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">sax.netlist.RecursiveNetlist</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.circuit.create_dag" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_dag</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">RecursiveNetlist</span><span class="p">,</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">models</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    
+    <span class="n">all_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">netlist</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">dict</span><span class="p">()[</span><span class="s1">&#39;__root__&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">all_models</span><span class="p">:</span>
+            <span class="n">all_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">netlist</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">netlist</span><span class="p">[</span><span class="s1">&#39;instances&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s1">&#39;component&#39;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">all_models</span><span class="p">:</span>
+                <span class="n">all_models</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+            
+    <span class="k">return</span> <span class="n">g</span>
 </pre></div>
 </div>
 </div>
 </div>
 <dl class="py function">
+<dt class="sig sig-object py" id="sax.circuit.draw_dag">
+<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">draw_dag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.circuit.draw_dag" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">_patch_path</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s1">&#39;dot&#39;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">nx</span><span class="o">.</span><span class="n">nx_pydot</span><span class="o">.</span><span class="n">pydot_layout</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s1">&#39;dot&#39;</span><span class="p">),</span> <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">_my_dag_pos</span><span class="p">(</span><span class="n">dag</span><span class="p">),</span> <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+    
+<span class="k">def</span> <span class="nf">_patch_path</span><span class="p">():</span>
+    <span class="n">os_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">&#39;PATH&#39;</span><span class="p">,</span> <span class="s1">&#39;&#39;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)}</span>
+    <span class="n">sys_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">}</span>
+    <span class="n">other_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">):</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s1">&#39;PATH&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="o">.</span><span class="n">join</span><span class="p">({</span><span class="o">**</span><span class="n">os_paths</span><span class="p">,</span> <span class="o">**</span><span class="n">sys_paths</span><span class="p">,</span> <span class="o">**</span><span class="n">other_paths</span><span class="p">})</span>
+
+<span class="k">def</span> <span class="nf">_my_dag_pos</span><span class="p">(</span><span class="n">dag</span><span class="p">):</span>
+    <span class="c1"># inferior to pydot</span>
+    <span class="n">in_degree</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dag</span><span class="o">.</span><span class="n">in_degree</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">in_degree</span><span class="p">:</span>
+            <span class="n">in_degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">in_degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+    <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vs</span> <span class="ow">in</span> <span class="n">in_degree</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">height</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="p">)</span> <span class="o">+</span> <span class="mi">1</span>
+    
+    <span class="n">horizontal_pos</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">w</span><span class="o">+</span><span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span><span class="o">*</span><span class="n">width</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">widths</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vs</span> <span class="ow">in</span> <span class="n">in_degree</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">horizontal_pos</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">vs</span><span class="p">):</span>
+            <span class="n">pos</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pos</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+<span class="n">draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/08_circuit_18_0.png" src="../_images/08_circuit_18_0.png" />
+</div>
+</div>
+<p>Note that the DAG depends on the models we supply. We could for example stub one of the sub-netlists by a pre-defined model:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dag_</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">,</span> <span class="s1">&#39;mzi_delta_length10&#39;</span><span class="p">:</span> <span class="n">mmi2x2</span><span class="p">})</span>
+<span class="n">draw_dag</span><span class="p">(</span><span class="n">dag_</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/08_circuit_20_0.png" src="../_images/08_circuit_20_0.png" />
+</div>
+</div>
+<p>This is useful if we for example pre-calculated a certain model.</p>
+<p>We can easily find the root of the DAG:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.circuit.find_root">
+<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">find_root</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.circuit.find_root" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_root</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">in_degree</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">nodes</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_root</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;twomzi&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>Similarly we can find the leaves:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.circuit.find_leaves">
+<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">find_leaves</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">g</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.circuit.find_leaves" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_leaves</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">out_degree</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">nodes</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_leaves</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;bend_euler&#39;, &#39;mmi1x2&#39;, &#39;straight&#39;]
+</pre></div>
+</div>
+</div>
+</div>
+<p>To be able to simulate the circuit, we need to supply a model for each of the leaves in the dependency DAG. Let’s write a validator that checks this</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dag</span><span class="p">):</span>
+    <span class="n">required_models</span> <span class="o">=</span> <span class="n">find_leaves</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+    <span class="n">missing_models</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">required_models</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">models</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing_models</span><span class="p">:</span>
+        <span class="n">model_diff</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Missing Models&quot;</span><span class="p">:</span> <span class="n">missing_models</span><span class="p">,</span>
+            <span class="s2">&quot;Given Models&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">models</span><span class="p">),</span>
+            <span class="s2">&quot;Required Models&quot;</span><span class="p">:</span> <span class="n">required_models</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Missing models. The following models are still missing to build the circuit:</span><span class="se">\n</span><span class="s2">&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">black</span><span class="o">.</span><span class="n">format_str</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">model_diff</span><span class="p">),</span> <span class="n">mode</span><span class="o">=</span><span class="n">black</span><span class="o">.</span><span class="n">Mode</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">}</span> <span class="c1"># shallow copy</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="n">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now dow a bottom-up simulation. Since at the bottom of the DAG, our circuit is always flat (i.e. not hierarchical) we can implement a minimal <code class="docutils literal notranslate"><span class="pre">_flat_circuit</span></code> definition, which only needs to work on a flat (non-hierarchical circuit):</p>
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_flat_circuit</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+    <span class="n">evaluate_circuit</span> <span class="o">=</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span>
+
+    <span class="n">inst2model</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="n">component</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+    <span class="n">model_settings</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inst2model</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">netlist_settings</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inst</span><span class="o">.</span><span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">model_settings</span><span class="p">[</span><span class="n">name</span><span class="p">]}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">default_settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">model_settings</span><span class="p">,</span> <span class="n">netlist_settings</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_circuit</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">default_settings</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">_forward_global_settings</span><span class="p">(</span><span class="n">inst2model</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+
+        <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">inst_name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inst2model</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">instances</span><span class="p">[</span><span class="n">inst_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">inst_name</span><span class="p">,</span> <span class="p">{}))</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">S</span>
+
+    <span class="n">_replace_kwargs</span><span class="p">(</span><span class="n">_circuit</span><span class="p">,</span> <span class="o">**</span><span class="n">default_settings</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_circuit</span>
+
+<span class="k">def</span> <span class="nf">_forward_global_settings</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="n">global_settings</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">global_settings</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">global_settings</span><span class="p">:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">update_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="o">**</span><span class="n">global_settings</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">settings</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="s1">&#39;mzi_delta_length10&#39;</span><span class="p">]</span>
+<span class="n">single_mzi</span> <span class="o">=</span> <span class="n">_flat_circuit</span><span class="p">(</span><span class="n">flatnet</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span> <span class="n">flatnet</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span> <span class="n">flatnet</span><span class="o">.</span><span class="n">ports</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING:absl:No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+</pre></div>
+</div>
+</div>
+</div>
+<p>The resulting circuit is just another SAX model (i.e. a python function) returing an SType:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>single_mzi<span class="o">?</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s ‘execute’ the circuit:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">single_mzi</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): 0.0, (&#39;o2&#39;, &#39;o2&#39;): 0.0, (&#39;o2&#39;, &#39;o1&#39;): 0.9, (&#39;o1&#39;, &#39;o2&#39;): 0.9}
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now that we can handle flat circuits the extension to hierarchical circuits is not so difficult:</p>
+<dl class="py function">
 <dt class="sig sig-object py" id="sax.circuit.circuit">
-<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Models</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Settings</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_models</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.circuit.circuit" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">netlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Netlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RecursiveNetlist</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">List</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">CircuitInfo</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.circuit.circuit" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <div class="cell tag_hide-input docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">circuit</span><span class="p">(</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">instances</span><span class="p">:</span> <span class="n">Instances</span><span class="p">,</span>
-    <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-    <span class="n">ports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Models</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Settings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">],</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="n">default_models</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">CircuitInfo</span><span class="p">]:</span>
+    <span class="n">netlist</span><span class="p">,</span> <span class="n">instance_models</span> <span class="o">=</span> <span class="n">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span> <span class="c1"># TODO: do this *after* recursive netlist parsing.</span>
+    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">_validate_net</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="n">dependency_dag</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span> <span class="o">=</span> <span class="n">_validate_dag</span><span class="p">(</span><span class="n">create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">))</span>  <span class="c1"># directed acyclic graph</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">_validate_models</span><span class="p">({</span><span class="o">**</span><span class="p">(</span><span class="n">models</span> <span class="ow">or</span> <span class="p">{}),</span> <span class="o">**</span><span class="n">instance_models</span><span class="p">},</span> <span class="n">dependency_dag</span><span class="p">)</span>
+    <span class="n">modes</span> <span class="o">=</span> <span class="n">_validate_modes</span><span class="p">(</span><span class="n">modes</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">_validate_circuit_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+
+    <span class="n">circuit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">new_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">current_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">model_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">topological_sort</span><span class="p">(</span><span class="n">dependency_dag</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">model_names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+            <span class="n">new_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+            <span class="k">continue</span>
+
+        <span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+
+        <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">new_models</span> <span class="o">=</span> <span class="n">_make_singlemode_or_multimode</span><span class="p">(</span>
+            <span class="n">flatnet</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">new_models</span>
+        <span class="p">)</span>
+        <span class="n">current_models</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_models</span><span class="p">)</span>
+        <span class="n">new_models</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">current_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">circuit</span> <span class="o">=</span> <span class="n">_flat_circuit</span><span class="p">(</span>
+            <span class="n">flatnet</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">current_models</span><span class="p">,</span> <span class="n">backend</span>
+        <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">circuit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="k">return</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">CircuitInfo</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dependency_dag</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">current_models</span><span class="p">)</span>
+
+
+<span class="k">class</span> <span class="nc">CircuitInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="n">dag</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">netlist</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s1">&#39;__root__&#39;</span> <span class="ow">in</span> <span class="n">netlist</span><span class="p">:</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">netlist</span><span class="p">[</span><span class="s1">&#39;__root__&#39;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s1">&#39;instances&#39;</span> <span class="ow">in</span> <span class="n">netlist</span><span class="p">:</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="p">{</span><span class="s1">&#39;top_level&#39;</span><span class="p">:</span> <span class="n">netlist</span><span class="p">}</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">netlist</span><span class="p">}</span>
+        
+    <span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">netname</span><span class="p">,</span> <span class="n">net</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">net</span><span class="p">}</span>
+        <span class="n">net</span><span class="p">[</span><span class="s1">&#39;instances&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">net</span><span class="p">[</span><span class="s1">&#39;instances&#39;</span><span class="p">]}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">net</span><span class="p">[</span><span class="s1">&#39;instances&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="n">callable</span><span class="p">(</span><span class="n">inst</span><span class="p">):</span>
+                <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">partial</span><span class="p">)</span> <span class="ow">and</span> <span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;SAX circuits and netlists don&#39;t support partials with positional arguments.&quot;</span><span class="p">)</span>
+                <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
+                    <span class="n">inst</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">func</span>
+                <span class="n">models</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst</span>
+                <span class="n">net</span><span class="p">[</span><span class="s1">&#39;instances&#39;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s1">&#39;component&#39;</span><span class="p">:</span> <span class="n">inst</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="s1">&#39;settings&#39;</span><span class="p">:</span> <span class="n">settings</span>
+                <span class="p">}</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="n">netname</span><span class="p">]</span> <span class="o">=</span> <span class="n">net</span>
+    <span class="k">return</span> <span class="n">netlist</span><span class="p">,</span> <span class="n">models</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_circuit_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
     <span class="c1"># assert valid circuit_backend</span>
     <span class="k">if</span> <span class="n">backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">circuit_backends</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
             <span class="sa">f</span><span class="s2">&quot;circuit backend </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2"> not found. Allowed circuit backends: &quot;</span>
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">circuit_backends</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="p">)</span>
+    <span class="k">return</span> <span class="n">backend</span>
 
-    <span class="n">evaluate_circuit</span> <span class="o">=</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span>
 
-    <span class="n">_netlist</span><span class="p">,</span> <span class="n">_settings</span><span class="p">,</span> <span class="n">_models</span> <span class="o">=</span> <span class="n">logical_netlist</span><span class="p">(</span>
-        <span class="n">instances</span><span class="o">=</span><span class="n">instances</span><span class="p">,</span>
-        <span class="n">connections</span><span class="o">=</span><span class="n">connections</span><span class="p">,</span>
-        <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span>
-        <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span>
-        <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
-        <span class="n">default_models</span><span class="o">=</span><span class="n">default_models</span><span class="p">,</span>
-    <span class="p">)</span>
-
-    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">_models</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-        <span class="k">if</span> <span class="n">is_netlist</span><span class="p">(</span><span class="n">_models</span><span class="p">[</span><span class="n">name</span><span class="p">]):</span>
-            <span class="n">netlist_model</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">LogicalNetlist</span><span class="p">,</span> <span class="n">_models</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">name</span><span class="p">))</span>
-            <span class="n">instance_model_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">netlist_model</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
-            <span class="n">instance_models</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_models</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">instance_model_names</span><span class="p">}</span>
-            <span class="n">netlist_func</span> <span class="o">=</span> <span class="n">circuit_from_netlist</span><span class="p">(</span>
-                <span class="n">netlist</span><span class="o">=</span><span class="n">netlist_model</span><span class="p">,</span>
-                <span class="n">models</span><span class="o">=</span><span class="n">instance_models</span><span class="p">,</span>
-                <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
-                <span class="n">modes</span><span class="o">=</span><span class="n">modes</span><span class="p">,</span>
-                <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># settings are already integrated in netlist by now.</span>
-                <span class="n">default_models</span><span class="o">=</span><span class="n">default_models</span><span class="p">,</span>
-            <span class="p">)</span>
-            <span class="n">_models</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">netlist_func</span>
-
-    <span class="k">if</span> <span class="n">modes</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="n">maybe_multimode</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">multimode</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="n">modes</span><span class="p">)</span>
-        <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p1</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">_netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">modes</span>
-        <span class="p">}</span>
-        <span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
-            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p1</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span>
-            <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">_netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
-            <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">modes</span>
-        <span class="p">}</span>
+<span class="k">def</span> <span class="nf">_validate_modes</span><span class="p">(</span><span class="n">modes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">modes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;te&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="ow">not</span> <span class="n">modes</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;te&quot;</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">modes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="k">return</span> <span class="p">[</span><span class="n">modes</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modes</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">modes</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">maybe_multimode</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">singlemode</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;te&quot;</span><span class="p">)</span>
-        <span class="n">connections</span> <span class="o">=</span> <span class="n">_netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">]</span>
-        <span class="n">ports</span> <span class="o">=</span> <span class="n">_netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">]</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid modes given: </span><span class="si">{</span><span class="n">modes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_circuit</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
-        <span class="n">settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">_settings</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
-        <span class="n">global_settings</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
-            <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">_netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]:</span>
-                <span class="k">continue</span>
-            <span class="n">global_settings</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">global_settings</span><span class="p">:</span>
-            <span class="n">settings</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
-                <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Settings</span><span class="p">],</span> <span class="n">update_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="o">**</span><span class="n">global_settings</span><span class="p">)</span>
-            <span class="p">)</span>
-        <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">_netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-            <span class="n">model</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">])</span>
-            <span class="n">instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span>
-                <span class="n">SType</span><span class="p">,</span> <span class="n">maybe_multimode</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="p">{})))</span>
-            <span class="p">)</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">S</span>
 
-    <span class="n">settings</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="n">name</span><span class="p">:</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">_models</span><span class="p">[</span><span class="n">model</span><span class="p">]))</span>
-        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">_netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+<span class="k">def</span> <span class="nf">_validate_net</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlist</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">netlist</span> <span class="o">=</span> <span class="n">Netlist</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ValidationError</span><span class="p">:</span>
+            <span class="n">netlist</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">Netlist</span><span class="p">):</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="p">(</span><span class="n">__root__</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;top_level&quot;</span><span class="p">:</span> <span class="n">netlist</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">netlist</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">find_root</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Multiple top_levels found in netlist: </span><span class="si">{</span><span class="n">nodes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Netlist does not contain any nodes.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dag</span><span class="o">.</span><span class="n">is_directed</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Netlist dependency cycles detected!&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dag</span>
+
+
+<span class="k">def</span> <span class="nf">_make_singlemode_or_multimode</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">modes</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span> <span class="o">=</span> <span class="n">_make_singlemode</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">modes</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">models</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span> <span class="o">=</span> <span class="n">_make_multimode</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span>
+
+
+<span class="k">def</span> <span class="nf">_make_singlemode</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">mode</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">singlemode</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">mode</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">netlist</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span> <span class="n">netlist</span><span class="o">.</span><span class="n">ports</span><span class="p">,</span> <span class="n">models</span>
+
+
+<span class="k">def</span> <span class="nf">_make_multimode</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">modes</span><span class="p">,</span> <span class="n">models</span><span class="p">):</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">multimode</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="n">modes</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">models</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p1</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">modes</span>
     <span class="p">}</span>
-    <span class="n">settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="n">_settings</span><span class="p">)</span>
-    <span class="n">_replace_kwargs</span><span class="p">(</span><span class="n">_circuit</span><span class="p">,</span> <span class="o">**</span><span class="n">settings</span><span class="p">)</span>
-
-    <span class="k">return</span> <span class="n">_circuit</span>
+    <span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p1</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">ports</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+        <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="n">modes</span>
+    <span class="p">}</span>
+    <span class="k">return</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span>
 </pre></div>
 </div>
 </div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span>
-    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;btm,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in1&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">ports</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">models</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;straight&quot;</span><span class="p">:</span> <span class="n">straight</span><span class="p">,</span>
-        <span class="s2">&quot;coupler&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-
-mzi<span class="o">?</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">double_mzi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+<span class="n">double_mzi</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">top</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">25.0</span><span class="p">},</span> <span class="n">btm</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">})</span>
-<span class="n">result</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">approx</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">))</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">result</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
-</pre></div>
-</div>
-</div>
-</div>
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.circuit.circuit_from_netlist">
-<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">circuit_from_netlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">netlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">LogicalNetlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Netlist</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Models</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Settings</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_models</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.circuit.circuit_from_netlist" title="Permalink to this definition">#</a></dt>
-<dd><p>create a circuit model function from a netlist</p>
-</dd></dl>
-
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">circuit_from_netlist</span><span class="p">(</span>
-    <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">LogicalNetlist</span><span class="p">,</span> <span class="n">Netlist</span><span class="p">],</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Models</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Settings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="n">default_models</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;create a circuit model function from a netlist &quot;&quot;&quot;</span>
-    <span class="n">instances</span> <span class="o">=</span> <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span>
-    <span class="n">connections</span> <span class="o">=</span> <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">]</span>
-    <span class="n">ports</span> <span class="o">=</span> <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">]</span>
-    <span class="n">_circuit</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span>
-        <span class="n">instances</span><span class="o">=</span><span class="n">instances</span><span class="p">,</span>
-        <span class="n">connections</span><span class="o">=</span><span class="n">connections</span><span class="p">,</span>
-        <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span>
-        <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span>
-        <span class="n">modes</span><span class="o">=</span><span class="n">modes</span><span class="p">,</span>
-        <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
-        <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
-        <span class="n">default_models</span><span class="o">=</span><span class="n">default_models</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">_circuit</span>
-</pre></div>
-</div>
-</div>
-</div>
-<blockquote>
-<div><p>Example</p>
-</div></blockquote>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">circuit_from_netlist</span><span class="p">(</span>
-    <span class="n">netlist</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;btm,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in1&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="n">models</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;straight&quot;</span><span class="p">:</span> <span class="n">straight</span><span class="p">,</span>
-        <span class="s2">&quot;coupler&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-
-mzi<span class="o">?</span>
-</pre></div>
-</div>
-</div>
-</div>
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.circuit.circuit_from_yaml">
-<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">circuit_from_yaml</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">yaml</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Models</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Settings</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_models</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.circuit.circuit_from_yaml" title="Permalink to this definition">#</a></dt>
-<dd><p>Load a sax circuit from yaml definition</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters</dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>yaml</strong> – the yaml string to load</p></li>
-<li><p><strong>models</strong> – a dictionary which maps component names to model functions</p></li>
-<li><p><strong>modes</strong> – the modes of the simulation (if not given, single mode
-operation is assumed).</p></li>
-<li><p><strong>settings</strong> – override netlist instance settings. Use this setting to set
-global settings like for example the wavelength ‘wl’.</p></li>
-<li><p><strong>backend</strong> – “default” or “klu”. How the circuit S-parameters are
-calculated.  “klu” is a CPU-only method which generally speaking is
-much faster for large circuits but cannot be jitted or used for autograd.</p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">circuit_from_yaml</span><span class="p">(</span>
-    <span class="n">yaml</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Models</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Settings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="n">default_models</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Load a sax circuit from yaml definition</span>
-
-<span class="sd">    Args:</span>
-<span class="sd">        yaml: the yaml string to load</span>
-<span class="sd">        models: a dictionary which maps component names to model functions</span>
-<span class="sd">        modes: the modes of the simulation (if not given, single mode</span>
-<span class="sd">            operation is assumed).</span>
-<span class="sd">        settings: override netlist instance settings. Use this setting to set</span>
-<span class="sd">            global settings like for example the wavelength &#39;wl&#39;.</span>
-<span class="sd">        backend: &quot;default&quot; or &quot;klu&quot;. How the circuit S-parameters are</span>
-<span class="sd">            calculated.  &quot;klu&quot; is a CPU-only method which generally speaking is</span>
-<span class="sd">            much faster for large circuits but cannot be jitted or used for autograd.</span>
-<span class="sd">    &quot;&quot;&quot;</span>
-    <span class="n">netlist</span><span class="p">,</span> <span class="n">models</span> <span class="o">=</span> <span class="n">netlist_from_yaml</span><span class="p">(</span><span class="n">yaml</span><span class="o">=</span><span class="n">yaml</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
-    <span class="n">circuit</span> <span class="o">=</span> <span class="n">circuit_from_netlist</span><span class="p">(</span>
-        <span class="n">netlist</span><span class="o">=</span><span class="n">netlist</span><span class="p">,</span>
-        <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span>
-        <span class="n">modes</span><span class="o">=</span><span class="n">modes</span><span class="p">,</span>
-        <span class="n">settings</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>  <span class="c1"># settings are already integrated in the netlist by now</span>
-        <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
-        <span class="n">default_models</span><span class="o">=</span><span class="n">default_models</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">circuit</span>
-</pre></div>
-</div>
-</div>
-</div>
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.circuit.circuit_from_gdsfactory">
-<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">circuit_from_gdsfactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">component</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Models</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">modes</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="p"><span class="pre">...</span></span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">settings</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Settings</span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">default_models</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="headerlink" href="#sax.circuit.circuit_from_gdsfactory" title="Permalink to this definition">#</a></dt>
-<dd><p>Load a sax circuit from a GDSFactory component</p>
-</dd></dl>
-
-<div class="cell tag_hide-input docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">circuit_from_gdsfactory</span><span class="p">(</span>
-    <span class="n">component</span><span class="p">,</span>
-    <span class="o">*</span><span class="p">,</span>
-    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Models</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">settings</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Settings</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
-    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
-    <span class="n">default_models</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
-    <span class="sd">&quot;&quot;&quot;Load a sax circuit from a GDSFactory component&quot;&quot;&quot;</span>
-    <span class="n">circuit</span> <span class="o">=</span> <span class="n">circuit_from_netlist</span><span class="p">(</span>
-        <span class="n">component</span><span class="o">.</span><span class="n">get_netlist_dict</span><span class="p">(),</span>
-        <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span>
-        <span class="n">modes</span><span class="o">=</span><span class="n">modes</span><span class="p">,</span>
-        <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">,</span>
-        <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">,</span>
-        <span class="n">default_models</span><span class="o">=</span><span class="n">default_models</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">circuit</span>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): 0.0, (&#39;o2&#39;, &#39;o2&#39;): 0.0, (&#39;o2&#39;, &#39;o1&#39;): 0.81, (&#39;o1&#39;, &#39;o2&#39;): 0.81}
 </pre></div>
 </div>
 </div>

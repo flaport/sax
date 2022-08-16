@@ -884,21 +884,27 @@ title="Print to PDF"
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
-    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="s1">&#39;u12&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s1">&#39;u11&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="s1">&#39;u12&#39;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">},</span>
-    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
+    <span class="n">models</span><span class="o">=</span><span class="p">{</span>
+        <span class="s1">&#39;u12&#39;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s1">&#39;u11&#39;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="p">},</span>
-    <span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
 <span class="p">)</span>
 <span class="n">mzi</span><span class="p">()</span>
 </pre></div>
@@ -1135,37 +1141,6 @@ title="Print to PDF"
  (&#39;out0&#39;, &#39;in0&#39;): 1.0,
  (&#39;out1&#39;, &#39;in1&#39;): 1.0,
  (&#39;out2&#39;, &#39;in2&#39;): 1.0}
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
-    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
-        <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-    <span class="p">},</span>
-    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">)</span>
-<span class="n">mzi</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): 0.49904,
- (&#39;out0&#39;, &#39;out0&#39;): 0.49904,
- (&#39;out0&#39;, &#39;in0&#39;): 0.86544,
- (&#39;in0&#39;, &#39;out0&#39;): 0.86544}
 </pre></div>
 </div>
 </div>

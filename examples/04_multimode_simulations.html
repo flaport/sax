@@ -638,25 +638,28 @@ title="Print to PDF"
 <p>We can now combine these models into a circuit in much the same way as before. We just need to add the <code class="docutils literal notranslate"><span class="pre">modes=</span></code> keyword:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
-    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">coupler</span><span class="p">,</span>  <span class="c1"># single mode models will be automatically converted to multimode models without cross polarization.</span>
-        <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">waveguide</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">25.0</span><span class="p">),</span>
-        <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">partial</span><span class="p">(</span><span class="n">waveguide</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">15.0</span><span class="p">),</span>
-        <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">coupler</span><span class="p">,</span>  <span class="c1"># single mode models will be automatically converted to multimode models without cross polarization.</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="o">=</span><span class="p">{</span>
+        <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>  <span class="c1"># single mode models will be automatically converted to multimode models without cross polarization.</span>
+            <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">25.0</span><span class="p">}},</span>
+            <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">}},</span>
+            <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>  <span class="c1"># single mode models will be automatically converted to multimode models without cross polarization.</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;btm,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in1&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
+        <span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">{</span>
+            <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
+        <span class="p">},</span>
     <span class="p">},</span>
-    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;btm,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in1&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">ports</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
+    <span class="n">models</span><span class="o">=</span><span class="n">sax</span><span class="o">.</span><span class="n">get_models</span><span class="p">(),</span>
     <span class="n">modes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;te&quot;</span><span class="p">,</span> <span class="s2">&quot;tm&quot;</span><span class="p">),</span>
 <span class="p">)</span>
 </pre></div>
@@ -670,70 +673,74 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1@tm&#39;, &#39;in1@tm&#39;): 0j,
- (&#39;in1@tm&#39;, &#39;in1@te&#39;): 0j,
- (&#39;in1@tm&#39;, &#39;in0@te&#39;): 0j,
- (&#39;in1@tm&#39;, &#39;in0@tm&#39;): 0j,
- (&#39;in1@te&#39;, &#39;in1@tm&#39;): 0j,
- (&#39;in1@te&#39;, &#39;in1@te&#39;): 0j,
- (&#39;in1@te&#39;, &#39;in0@te&#39;): 0j,
- (&#39;in1@te&#39;, &#39;in0@tm&#39;): 0j,
- (&#39;in0@te&#39;, &#39;in1@tm&#39;): 0j,
- (&#39;in0@te&#39;, &#39;in1@te&#39;): 0j,
- (&#39;in0@te&#39;, &#39;in0@te&#39;): 0j,
- (&#39;in0@te&#39;, &#39;in0@tm&#39;): 0j,
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.9/site-packages/jax/_src/numpy/lax_numpy.py:3658: UserWarning: Explicitly requested dtype &lt;class &#39;complex&#39;&gt; requested in asarray is not available, and will be truncated to dtype complex64. To enable more dtypes, set the jax_enable_x64 configuration option or the JAX_ENABLE_X64 shell environment variable. See https://github.com/google/jax#current-gotchas for more.
+  lax._check_user_dtype_supported(dtype, &quot;asarray&quot;)
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0@tm&#39;, &#39;in0@tm&#39;): 0j,
+ (&#39;in0@tm&#39;, &#39;in0@te&#39;): 0j,
  (&#39;in0@tm&#39;, &#39;in1@tm&#39;): 0j,
  (&#39;in0@tm&#39;, &#39;in1@te&#39;): 0j,
- (&#39;in0@tm&#39;, &#39;in0@te&#39;): 0j,
- (&#39;in0@tm&#39;, &#39;in0@tm&#39;): 0j,
- (&#39;out0@te&#39;, &#39;out0@te&#39;): 0j,
- (&#39;out0@te&#39;, &#39;out1@te&#39;): 0j,
- (&#39;out0@te&#39;, &#39;out0@tm&#39;): 0j,
- (&#39;out0@te&#39;, &#39;out1@tm&#39;): 0j,
- (&#39;out0@te&#39;, &#39;in1@tm&#39;): 0.04474-0.01657j,
- (&#39;out0@te&#39;, &#39;in1@te&#39;): 0.85001-0.3148j,
- (&#39;out0@te&#39;, &#39;in0@te&#39;): -0.2667+0.09877j,
- (&#39;out0@te&#39;, &#39;in0@tm&#39;): -0.01404+0.0052j,
- (&#39;out1@te&#39;, &#39;out0@te&#39;): 0j,
- (&#39;out1@te&#39;, &#39;out1@te&#39;): 0j,
- (&#39;out1@te&#39;, &#39;out0@tm&#39;): 0j,
- (&#39;out1@te&#39;, &#39;out1@tm&#39;): 0j,
- (&#39;out1@te&#39;, &#39;in1@tm&#39;): 0.01404-0.0052j,
- (&#39;out1@te&#39;, &#39;in1@te&#39;): 0.2667-0.09877j,
- (&#39;out1@te&#39;, &#39;in0@te&#39;): 0.85001-0.3148j,
- (&#39;out1@te&#39;, &#39;in0@tm&#39;): 0.04474-0.01657j,
- (&#39;out0@tm&#39;, &#39;out0@te&#39;): 0j,
- (&#39;out0@tm&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;in0@te&#39;, &#39;in0@tm&#39;): 0j,
+ (&#39;in0@te&#39;, &#39;in0@te&#39;): 0j,
+ (&#39;in0@te&#39;, &#39;in1@tm&#39;): 0j,
+ (&#39;in0@te&#39;, &#39;in1@te&#39;): 0j,
+ (&#39;in1@tm&#39;, &#39;in0@tm&#39;): 0j,
+ (&#39;in1@tm&#39;, &#39;in0@te&#39;): 0j,
+ (&#39;in1@tm&#39;, &#39;in1@tm&#39;): 0j,
+ (&#39;in1@tm&#39;, &#39;in1@te&#39;): 0j,
+ (&#39;in1@te&#39;, &#39;in0@tm&#39;): 0j,
+ (&#39;in1@te&#39;, &#39;in0@te&#39;): 0j,
+ (&#39;in1@te&#39;, &#39;in1@tm&#39;): 0j,
+ (&#39;in1@te&#39;, &#39;in1@te&#39;): 0j,
  (&#39;out0@tm&#39;, &#39;out0@tm&#39;): 0j,
+ (&#39;out0@tm&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;out0@tm&#39;, &#39;out0@te&#39;): 0j,
  (&#39;out0@tm&#39;, &#39;out1@tm&#39;): 0j,
- (&#39;out0@tm&#39;, &#39;in1@tm&#39;): 0.76054-0.28166j,
- (&#39;out0@tm&#39;, &#39;in1@te&#39;): 0.04474-0.01657j,
- (&#39;out0@tm&#39;, &#39;in0@te&#39;): -0.01404+0.0052j,
- (&#39;out0@tm&#39;, &#39;in0@tm&#39;): -0.23862+0.08837j,
- (&#39;out1@tm&#39;, &#39;out0@te&#39;): 0j,
- (&#39;out1@tm&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;out0@tm&#39;, &#39;in0@tm&#39;): -0.28073+0.10397j,
+ (&#39;out0@tm&#39;, &#39;in0@te&#39;): 0j,
+ (&#39;out0@tm&#39;, &#39;in1@tm&#39;): 0.89475-0.33137j,
+ (&#39;out0@tm&#39;, &#39;in1@te&#39;): 0j,
+ (&#39;out1@te&#39;, &#39;out0@tm&#39;): 0j,
+ (&#39;out1@te&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;out1@te&#39;, &#39;out0@te&#39;): 0j,
+ (&#39;out1@te&#39;, &#39;out1@tm&#39;): 0j,
+ (&#39;out1@te&#39;, &#39;in0@tm&#39;): 0j,
+ (&#39;out1@te&#39;, &#39;in0@te&#39;): 0.89475-0.33137j,
+ (&#39;out1@te&#39;, &#39;in1@tm&#39;): 0j,
+ (&#39;out1@te&#39;, &#39;in1@te&#39;): 0.28073-0.10397j,
+ (&#39;out0@te&#39;, &#39;out0@tm&#39;): 0j,
+ (&#39;out0@te&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;out0@te&#39;, &#39;out0@te&#39;): 0j,
+ (&#39;out0@te&#39;, &#39;out1@tm&#39;): 0j,
+ (&#39;out0@te&#39;, &#39;in0@tm&#39;): 0j,
+ (&#39;out0@te&#39;, &#39;in0@te&#39;): -0.28073+0.10397j,
+ (&#39;out0@te&#39;, &#39;in1@tm&#39;): 0j,
+ (&#39;out0@te&#39;, &#39;in1@te&#39;): 0.89475-0.33137j,
  (&#39;out1@tm&#39;, &#39;out0@tm&#39;): 0j,
+ (&#39;out1@tm&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;out1@tm&#39;, &#39;out0@te&#39;): 0j,
  (&#39;out1@tm&#39;, &#39;out1@tm&#39;): 0j,
- (&#39;out1@tm&#39;, &#39;in1@tm&#39;): 0.23862-0.08837j,
- (&#39;out1@tm&#39;, &#39;in1@te&#39;): 0.01404-0.0052j,
- (&#39;out1@tm&#39;, &#39;in0@te&#39;): 0.04474-0.01657j,
- (&#39;out1@tm&#39;, &#39;in0@tm&#39;): 0.76054-0.28166j,
- (&#39;in1@tm&#39;, &#39;out0@te&#39;): 0.04474-0.01657j,
- (&#39;in1@tm&#39;, &#39;out1@te&#39;): 0.01404-0.0052j,
- (&#39;in1@tm&#39;, &#39;out0@tm&#39;): 0.76054-0.28166j,
- (&#39;in1@tm&#39;, &#39;out1@tm&#39;): 0.23862-0.08837j,
- (&#39;in1@te&#39;, &#39;out0@te&#39;): 0.85001-0.3148j,
- (&#39;in1@te&#39;, &#39;out1@te&#39;): 0.2667-0.09877j,
- (&#39;in1@te&#39;, &#39;out0@tm&#39;): 0.04474-0.01657j,
- (&#39;in1@te&#39;, &#39;out1@tm&#39;): 0.01404-0.0052j,
- (&#39;in0@te&#39;, &#39;out0@te&#39;): -0.2667+0.09877j,
- (&#39;in0@te&#39;, &#39;out1@te&#39;): 0.85001-0.3148j,
- (&#39;in0@te&#39;, &#39;out0@tm&#39;): -0.01404+0.0052j,
- (&#39;in0@te&#39;, &#39;out1@tm&#39;): 0.04474-0.01657j,
- (&#39;in0@tm&#39;, &#39;out0@te&#39;): -0.01404+0.0052j,
- (&#39;in0@tm&#39;, &#39;out1@te&#39;): 0.04474-0.01657j,
- (&#39;in0@tm&#39;, &#39;out0@tm&#39;): -0.23862+0.08837j,
- (&#39;in0@tm&#39;, &#39;out1@tm&#39;): 0.76054-0.28166j}
+ (&#39;out1@tm&#39;, &#39;in0@tm&#39;): 0.89475-0.33137j,
+ (&#39;out1@tm&#39;, &#39;in0@te&#39;): 0j,
+ (&#39;out1@tm&#39;, &#39;in1@tm&#39;): 0.28073-0.10397j,
+ (&#39;out1@tm&#39;, &#39;in1@te&#39;): 0j,
+ (&#39;in0@tm&#39;, &#39;out0@tm&#39;): -0.28073+0.10397j,
+ (&#39;in0@tm&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;in0@tm&#39;, &#39;out0@te&#39;): 0j,
+ (&#39;in0@tm&#39;, &#39;out1@tm&#39;): 0.89475-0.33137j,
+ (&#39;in0@te&#39;, &#39;out0@tm&#39;): 0j,
+ (&#39;in0@te&#39;, &#39;out1@te&#39;): 0.89475-0.33137j,
+ (&#39;in0@te&#39;, &#39;out0@te&#39;): -0.28073+0.10397j,
+ (&#39;in0@te&#39;, &#39;out1@tm&#39;): 0j,
+ (&#39;in1@tm&#39;, &#39;out0@tm&#39;): 0.89475-0.33137j,
+ (&#39;in1@tm&#39;, &#39;out1@te&#39;): 0j,
+ (&#39;in1@tm&#39;, &#39;out0@te&#39;): 0j,
+ (&#39;in1@tm&#39;, &#39;out1@tm&#39;): 0.28073-0.10397j,
+ (&#39;in1@te&#39;, &#39;out0@tm&#39;): 0j,
+ (&#39;in1@te&#39;, &#39;out1@te&#39;): 0.28073-0.10397j,
+ (&#39;in1@te&#39;, &#39;out0@te&#39;): 0.89475-0.33137j,
+ (&#39;in1@te&#39;, &#39;out1@tm&#39;): 0j}
 </pre></div>
 </div>
 </div>
@@ -747,22 +754,22 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): 0j,
  (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;out1&#39;): 0j,
- (&#39;out0&#39;, &#39;in1&#39;): 0.85001-0.3148j,
- (&#39;out0&#39;, &#39;in0&#39;): -0.2667+0.09877j,
- (&#39;out1&#39;, &#39;out0&#39;): 0j,
+ (&#39;in1&#39;, &#39;in0&#39;): 0j,
+ (&#39;in1&#39;, &#39;in1&#39;): 0j,
  (&#39;out1&#39;, &#39;out1&#39;): 0j,
- (&#39;out1&#39;, &#39;in1&#39;): 0.2667-0.09877j,
- (&#39;out1&#39;, &#39;in0&#39;): 0.85001-0.3148j,
- (&#39;in1&#39;, &#39;out0&#39;): 0.85001-0.3148j,
- (&#39;in1&#39;, &#39;out1&#39;): 0.2667-0.09877j,
- (&#39;in0&#39;, &#39;out0&#39;): -0.2667+0.09877j,
- (&#39;in0&#39;, &#39;out1&#39;): 0.85001-0.3148j}
+ (&#39;out1&#39;, &#39;out0&#39;): 0j,
+ (&#39;out1&#39;, &#39;in0&#39;): 0.89475-0.33137j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.28073-0.10397j,
+ (&#39;out0&#39;, &#39;out1&#39;): 0j,
+ (&#39;out0&#39;, &#39;out0&#39;): 0j,
+ (&#39;out0&#39;, &#39;in0&#39;): -0.28073+0.10397j,
+ (&#39;out0&#39;, &#39;in1&#39;): 0.89475-0.33137j,
+ (&#39;in0&#39;, &#39;out1&#39;): 0.89475-0.33137j,
+ (&#39;in0&#39;, &#39;out0&#39;): -0.28073+0.10397j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.28073-0.10397j,
+ (&#39;in1&#39;, &#39;out0&#39;): 0.89475-0.33137j}
 </pre></div>
 </div>
 </div>

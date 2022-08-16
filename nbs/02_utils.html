@@ -449,8 +449,11 @@ title="Print to PDF"
 <span class="kn">import</span> <span class="nn">re</span>
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">overload</span>
 
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">orjson</span>
 <span class="kn">from</span> <span class="nn">natsort</span> <span class="kn">import</span> <span class="n">natsorted</span>
 <span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">Array</span><span class="p">,</span>
@@ -536,6 +539,27 @@ title="Print to PDF"
       <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
       <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">]]]</span>
 <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.utils.clean_string">
+<span class="sig-prename descclassname"><span class="pre">sax.utils.</span></span><span class="sig-name descname"><span class="pre">clean_string</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">s</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">str</span></span></span><a class="headerlink" href="#sax.utils.clean_string" title="Permalink to this definition">#</a></dt>
+<dd><p>clean a string such that it is a valid python identifier</p>
+</dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">clean_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="sd">&quot;&quot;&quot;clean a string such that it is a valid python identifier&quot;&quot;&quot;</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="s2">&quot;p&quot;</span><span class="p">)</span>  <span class="c1"># point</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="s2">&quot;m&quot;</span><span class="p">)</span>  <span class="c1"># minus</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[^0-9a-zA-Z]&quot;</span><span class="p">,</span> <span class="s2">&quot;_&quot;</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">&quot;0123456789&quot;</span><span class="p">:</span>
+        <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">s</span>
+    <span class="k">return</span> <span class="n">s</span>
 </pre></div>
 </div>
 </div>
@@ -973,7 +997,7 @@ title="Print to PDF"
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/02_utils_38_0.png" src="../_images/02_utils_38_0.png" />
+<img alt="../_images/02_utils_40_0.png" src="../_images/02_utils_40_0.png" />
 </div>
 </div>
 <dl class="py function">
@@ -1470,6 +1494,30 @@ title="Print to PDF"
 <span class="k">assert</span> <span class="n">get_inputs_outputs</span><span class="p">([</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="p">((),</span> <span class="p">(</span><span class="s1">&#39;out0&#39;</span><span class="p">,</span> <span class="s1">&#39;out1&#39;</span><span class="p">))</span>
 <span class="k">assert</span> <span class="n">get_inputs_outputs</span><span class="p">([</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;dc0&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="p">((</span><span class="s1">&#39;dc0&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;out0&#39;</span><span class="p">,))</span>
 <span class="k">assert</span> <span class="n">get_inputs_outputs</span><span class="p">([</span><span class="s2">&quot;dc0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">])</span> <span class="o">==</span> <span class="p">((</span><span class="s1">&#39;in0&#39;</span><span class="p">,),</span> <span class="p">(</span><span class="s1">&#39;dc0&#39;</span><span class="p">,))</span>
+</pre></div>
+</div>
+</div>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.utils.hash_dict">
+<span class="sig-prename descclassname"><span class="pre">sax.utils.</span></span><span class="sig-name descname"><span class="pre">hash_dict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dic</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">int</span></span></span><a class="headerlink" href="#sax.utils.hash_dict" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">hash_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+    <span class="k">return</span> <span class="nb">int</span><span class="p">(</span>
+        <span class="n">md5</span><span class="p">(</span>
+            <span class="n">orjson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">_numpyfy</span><span class="p">(</span><span class="n">dic</span><span class="p">),</span> <span class="n">option</span><span class="o">=</span><span class="n">orjson</span><span class="o">.</span><span class="n">OPT_SERIALIZE_NUMPY</span> <span class="o">|</span> <span class="n">orjson</span><span class="o">.</span><span class="n">OPT_SORT_KEYS</span><span class="p">)</span>
+        <span class="p">)</span><span class="o">.</span><span class="n">hexdigest</span><span class="p">(),</span>
+        <span class="mi">16</span><span class="p">,</span>
+    <span class="p">)</span>
+
+<span class="k">def</span> <span class="nf">_numpyfy</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_numpyfy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 </pre></div>
 </div>
 </div>
