@@ -3,49 +3,58 @@ channels:
   - conda-forge
   - fastai
 dependencies:
+  # required
+  - python>=3.8
   - black
-  - bokeh
-  - build
-  - bump2version
   - fastcore
   - h5py
-  - ipykernel
-  - ipympl
-  - ipywidgets
-  - isort
-  - jupyter-book
-  - jupyterlab
-  - make
-  - matplotlib
   - natsort
-  - nbdev<2
-  - nbstripout
   - networkx
   - numpy
   - orjson
+  - pydantic<2
+  - pyyaml
+  - pytables
+  - tqdm
+
+  # full (recommended)
+  - bokeh
+  - gdsfactory>=5
+  - graphviz
+  - ipykernel
+  - ipympl
+  - ipywidgets
+  - jupyterlab
+  - matplotlib
+# - pymeep=\*=mpi_mpich_\*
   - pandas
+  - pydot
+  - scipy
+  - shapely
+
+  # dev
+  - build
+  - bump2version
+  - isort
+  - jupyter-book
+  - make
+  - nbdev<2
+  - nbstripout
   - papermill
   - patch
   - pip
   - pre-commit
-  - pydantic<2
-  - pydot
   - pyright
-  - pytables
   - pytest
-  - python
-  - pyyaml
-  - scipy
-  - shapely
-  - suitesparse
-  - tqdm
+# - suitesparse # not supported on windows
   - twine
-  - typing-extensions
-  - graphviz
+
   - pip:
-    - flax
+    # jax dependency
     - jax
+    - flax
     - jaxlib
+#   - klujax # not suppored on windows
+    # other
     - tmm
-    - neato
-    - datamodel-codegen
+    - sax==0.7.3

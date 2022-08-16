@@ -7,10 +7,7 @@ all: sax docs
 .SILENT: docker
 docker:
 	sed -i "s/^[ ]*-[ ]\bsax\b.*//g" environment.yml
-	sed -i "s/\$${RPYPI_USER}/${RPYPI_USER}/g" environment.yml
-	sed -i "s/\$${RPYPI_TOKEN}/${RPYPI_TOKEN}/g" environment.yml
 	-docker build . -t sax
-	git checkout -- environment.yml
 
 sax: $(SRC)
 	nbdev_build_lib
