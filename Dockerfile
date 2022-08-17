@@ -34,8 +34,7 @@ RUN curl -L https://github.com/conda-forge/miniforge/releases/latest/download/Ma
     && rm /tmp/miniforge.sh \
     && sed -i "s/^[ ]*-[ ]*sax=\+.*//g" /home/sax/environment.yml \
     && mamba env update -n base -f /home/sax/environment.yml \
-    && conda install pymeep=\*=mpi_mpich_\* gdsfactory suitesparse pybind11
-
-RUN pip install klujax klayout /home/sax[dev] \
+    && conda install pymeep=\*=mpi_mpich_\* gdsfactory suitesparse pybind11 \
+    && pip install klujax klayout /home/sax[dev] \
     && conda run -n base python -m ipykernel install --user --name base --display-name base \
     && conda run -n base python -m ipykernel install --user --name sax --display-name sax

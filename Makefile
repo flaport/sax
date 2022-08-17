@@ -23,6 +23,7 @@ serve:
 .PHONY: docs
 docs: lib
 	python -m sax.make_docs
+	find docs/_build/html -name "*.html" | xargs sed -i 's|urlpath=tree/docs|urlpath=tree|g'
 
 run:
 	find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill {} {} -k sax

@@ -139,6 +139,8 @@ jobs:
         run: pip install -e .[dev]
       - name: Build docs
         run: python -m sax.make_docs && touch /github/workspace/docs/_build/html/.nojekyll
+      - name: Patch binder links
+        run: find docs/_build/html -name "*.html" | xargs sed -i 's|urlpath=tree/docs|urlpath=tree|g'
       - name: Store artifacts
         uses: actions/upload-artifact@master
         with:
