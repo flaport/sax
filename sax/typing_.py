@@ -5,10 +5,9 @@ from __future__ import annotations
 
 
 __all__ = ['Array', 'Int', 'Float', 'ComplexFloat', 'Settings', 'SDict', 'SCoo', 'SDense', 'SType', 'Model',
-           'ModelFactory', 'GeneralModel', 'Models', 'Instance', 'GeneralInstance', 'Instances', 'Netlist',
-           'LogicalNetlist', 'is_float', 'is_complex', 'is_complex_float', 'is_sdict', 'is_scoo', 'is_sdense',
-           'is_model', 'is_model_factory', 'validate_model', 'is_instance', 'is_netlist', 'is_stype', 'is_singlemode',
-           'is_multimode', 'is_mixedmode', 'sdict', 'scoo', 'sdense', 'modelfactory']
+           'ModelFactory', 'Models', 'is_float', 'is_complex', 'is_complex_float', 'is_sdict', 'is_scoo', 'is_sdense',
+           'is_model', 'is_model_factory', 'validate_model', 'is_stype', 'is_singlemode', 'is_multimode',
+           'is_mixedmode', 'sdict', 'scoo', 'sdense', 'modelfactory']
 
 # Cell
 #nbdev_comment from __future__ import annotations
@@ -65,47 +64,7 @@ Model = Callable[..., SType]
 ModelFactory = Callable[..., Model]
 
 # Cell
-GeneralModel = Union[Model, "LogicalNetlist"]
-
-# Cell
-Models = Dict[str, GeneralModel]
-
-# Cell
-Instance = TypedDict(
-    "Instance",
-    {
-        "component": str,
-        "settings": Settings,
-    },
-)
-
-# Cell
-GeneralInstance = Union[str, Instance, "LogicalNetlist", "Netlist"]
-
-# Cell
-Instances = Union[Dict[str, str], Dict[str, GeneralInstance]]
-
-# Cell
-
-Netlist = TypedDict(
-    "Netlist",
-    {
-        "instances": Instances,
-        "connections": Dict[str, str],
-        "ports": Dict[str, str],
-    },
-)
-
-# Cell
-
-LogicalNetlist = TypedDict(
-    "LogicalNetlist",
-    {
-        "instances": Dict[str, str],
-        "connections": Dict[str, str],
-        "ports": Dict[str, str],
-    },
-)
+Models = Dict[str, Model]
 
 # Cell
 def is_float(x: Any) -> bool:
@@ -199,26 +158,6 @@ def validate_model(model: Callable):
             f"model '{model}' takes positional arguments {', '.join(positional_arguments)} "
             "and hence is not a valid SAX Model! A SAX model should ONLY take keyword arguments (or no arguments at all)."
         )
-
-# Cell
-def is_instance(instance: Any) -> bool:
-    """check if a dictionary is an instance"""
-    if not isinstance(instance, dict):
-        return False
-    return "component" in instance
-
-# Cell
-def is_netlist(netlist: Any) -> bool:
-    """check if a dictionary is a netlist"""
-    if not isinstance(netlist, dict):
-        return False
-    if not "instances" in netlist:
-        return False
-    if not "connections" in netlist:
-        return False
-    if not "ports" in netlist:
-        return False
-    return True
 
 # Cell
 def is_stype(stype: Any) -> bool:

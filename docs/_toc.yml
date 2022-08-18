@@ -16,14 +16,13 @@ parts:
   - file: nbs/04_multimode.ipynb
   - file: nbs/05_models.ipynb
   - file: nbs/06_netlist.ipynb
-  - file: nbs/08_circuit.ipynb
-  - file: nbs/03_caching.ipynb
+  - file: nbs/07_circuit.ipynb
 - caption: Backends
   chapters:
-  - file: nbs/07_backends.ipynb
-  - file: nbs/07a_backends_default.ipynb
-  - file: nbs/07b_backends_klu.ipynb
-  - file: nbs/07c_backends_additive.ipynb
+  - file: nbs/08_backends.ipynb
+  - file: nbs/08a_backends_default.ipynb
+  - file: nbs/08b_backends_klu.ipynb
+  - file: nbs/08c_backends_additive.ipynb
 - caption: Neural Networks
   chapters:
   - file: nbs/09_nn.ipynb

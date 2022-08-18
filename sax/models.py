@@ -10,11 +10,11 @@ __all__ = ['straight', 'coupler', 'unitary', 'passthru', 'copier', 'passthru', '
 #nbdev_comment from __future__ import annotations
 
 import warnings
+from functools import lru_cache as cache
 from types import SimpleNamespace
 from typing import Optional, Tuple
 
 import sax
-from .caching import cache
 from .typing_ import Model, SCoo, SDict
 from .utils import get_inputs_outputs, reciprocal
 

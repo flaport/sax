@@ -30,13 +30,9 @@ from .typing_ import (
     Array as Array,
     ComplexFloat as ComplexFloat,
     Float as Float,
-    Instance as Instance,
-    Instances as Instances,
-    LogicalNetlist as LogicalNetlist,
     Model as Model,
     ModelFactory as ModelFactory,
     Models as Models,
-    Netlist as Netlist,
     SCoo as SCoo,
     SDense as SDense,
     SDict as SDict,
@@ -45,12 +41,10 @@ from .typing_ import (
     is_complex as is_complex,
     is_complex_float as is_complex_float,
     is_float as is_float,
-    is_instance as is_instance,
     is_mixedmode as is_mixedmode,
     is_model as is_model,
     is_model_factory as is_model_factory,
     is_multimode as is_multimode,
-    is_netlist as is_netlist,
     is_scoo as is_scoo,
     is_sdense as is_sdense,
     is_sdict as is_sdict,
@@ -87,14 +81,6 @@ from .utils import (
     validate_not_mixedmode as validate_not_mixedmode,
     validate_sdict as validate_sdict,
     validate_settings as validate_settings,
-)
-
-# Cell
-
-from sax import caching as caching
-from .caching import (
-    cache as cache,
-    cache_clear as cache_clear,
 )
 
 # Cell

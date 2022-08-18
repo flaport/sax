@@ -9,6 +9,7 @@ from functools import partial
 from typing import Any, Callable, Dict, Optional, Union
 
 import black
+import numpy as np
 from pydantic import BaseModel as _BaseModel
 from pydantic import Extra, Field, ValidationError, validator
 from .utils import clean_string, get_settings, hash_dict
@@ -19,6 +20,7 @@ class BaseModel(_BaseModel):
         extra = Extra.ignore
         allow_mutation = False
         frozen = True
+        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
 
     def __repr__(self):
         s = super().__repr__()
@@ -38,6 +40,7 @@ class Component(BaseModel):
         extra = Extra.ignore
         allow_mutation = False
         frozen = True
+        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
 
     component: Union[str, Dict[str, Any]] = Field(..., title="Component")
     settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
@@ -70,6 +73,7 @@ class Placement(BaseModel):
         extra = Extra.ignore
         allow_mutation = False
         frozen = True
+        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
 
     x: Optional[Union[str, float]] = Field(0, title="X")
     y: Optional[Union[str, float]] = Field(0, title="Y")
@@ -89,6 +93,7 @@ class Route(BaseModel):
         extra = Extra.ignore
         allow_mutation = False
         frozen = True
+        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
 
     links: Dict[str, str] = Field(..., title="Links")
     settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
@@ -100,6 +105,7 @@ class Netlist(BaseModel):
         extra = Extra.ignore
         allow_mutation = False
         frozen = True
+        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
 
     instances: Dict[str, Component] = Field(..., title="Instances")
     connections: Optional[Dict[str, str]] = Field(None, title="Connections")
