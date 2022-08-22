@@ -6,7 +6,7 @@ all: sax docs
 
 .SILENT: docker
 docker:
-	-docker build . -t flaport/sax:latest
+	-docker build . -f Dockerfile.dev -t flaport/sax:latest
 
 sax: $(SRC)
 	nbdev_build_lib
