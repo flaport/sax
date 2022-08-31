@@ -59,4 +59,4 @@ dependencies:
 #   - klujax # not suppored on windows
     # other
     - tmm
-    - sax==0.8.0
+    - sax==0.8.1
