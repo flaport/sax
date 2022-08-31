@@ -4,7 +4,8 @@
 from __future__ import annotations
 
 
-__all__ = ['create_dag', 'draw_dag', 'find_root', 'find_leaves', 'circuit', 'CircuitInfo']
+__all__ = ['create_dag', 'draw_dag', 'find_root', 'find_leaves', 'circuit', 'NetlistDict', 'CircuitInfo',
+           'RecursiveNetlistDict']
 
 # Cell
 #nbdev_comment from __future__ import annotations
@@ -13,7 +14,7 @@ import os
 import shutil
 import sys
 from functools import partial
-from typing import Any, Dict, List, NamedTuple, Optional, Tuple, Union
+from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Union
 
 import black
 import networkx as nx
@@ -152,8 +153,9 @@ def _forward_global_settings(instances, settings):
     return settings
 
 # Cell
+
 def circuit(
-    netlist: Union[Netlist, RecursiveNetlist],
+    netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,
     modes: Optional[List[str]] = None,
     backend: str = "default",
@@ -189,6 +191,12 @@ def circuit(
     assert circuit is not None
     return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
 
+class NetlistDict(TypedDict):
+    instances: Dict
+    connections: Dict[str, str]
+    ports: Dict[str, str]
+
+RecursiveNetlistDict = Dict[str, NetlistDict]
 
 class CircuitInfo(NamedTuple):
     dag: nx.DiGraph
