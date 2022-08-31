@@ -29,7 +29,7 @@ run:
 	find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill {} {} -k sax
 
 test:
-	nbdev_test_nbs
+	pytest -s tests.py -n auto --cov=sax --cov-config=.coveragerc
 
 release: pypi conda_release
 	nbdev_bump_version

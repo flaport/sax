@@ -46,6 +46,8 @@ dependencies:
   - pre-commit
   - pyright
   - pytest
+  - pytest-cov
+  - pytest-xdist
 # - suitesparse # not supported on windows
   - twine
 
