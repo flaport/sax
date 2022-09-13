@@ -123,7 +123,7 @@ def _flat_circuit(instances, connections, ports, models, backend):
 
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
     netlist_settings = {
-        name: {k: v for k, v in inst.settings.items() if k in model_settings[name]}
+        name: {k: v for k, v in (inst.settings or {}).items() if k in model_settings[name]}
         for name, inst in instances.items()
     }
     default_settings = merge_dicts(model_settings, netlist_settings)
