@@ -24,6 +24,7 @@ from .typing_ import (
     is_sdense,
     is_sdict,
     is_singlemode,
+    _consolidate_sdense,
 )
 from .utils import (
     block_diag,
@@ -229,4 +230,4 @@ def _singlemode_sdense(sdense: SDense, mode: str = "te") -> SDense:
         for port, idx in port_map.items()
         if port.endswith(f"@{mode}")
     }
-    return Sx, port_map
+    return _consolidate_sdense(Sx, port_map)

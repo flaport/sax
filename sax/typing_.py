@@ -286,8 +286,14 @@ def scoo(S: Union[Callable, SType]) -> Union[Callable, SCoo]:
 
     return S
 
+def _consolidate_sdense(S, pm):
+    idxs = list(pm.values())
+    S = S[..., idxs, :][..., :, idxs]
+    pm = {p: i for i, p in enumerate(pm)}
+    return S, pm
 
 def _sdense_to_scoo(S: Array, ports_map: Dict[str, int]) -> SCoo:
+    S, ports_map = _consolidate_sdense(S, ports_map)
     Sj, Si = jnp.meshgrid(jnp.arange(S.shape[-1]), jnp.arange(S.shape[-2]))
     return Si.ravel(), Sj.ravel(), S.reshape(*S.shape[:-2], -1), ports_map
 

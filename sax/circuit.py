@@ -140,6 +140,9 @@ def _flat_circuit(instances, connections, ports, models, backend):
         instances: Dict[str, SType] = {}
         for inst_name, model in inst2model.items():
             instances[inst_name] = model(**settings.get(inst_name, {}))
+        #print(f"{instances=}")
+        #print(f"{connections=}")
+        #print(f"{ports=}")
         S = evaluate_circuit(instances, connections, ports)
         return S
 
