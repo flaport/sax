@@ -19,7 +19,7 @@ dependencies:
 
   # full (recommended)
   - bokeh
-  - gdsfactory>=5
+  - gdsfactory>=5.33.11
   - graphviz
   - ipykernel
   - ipympl
