@@ -23,7 +23,7 @@ from pydantic import ValidationError
 from sax import reciprocal
 from .backends import circuit_backends
 from .multimode import multimode, singlemode
-from .netlist import Netlist, RecursiveNetlist
+from .netlist import Netlist, RecursiveNetlist, load_recursive_netlist
 from .typing_ import Model, Settings, SType
 from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
 
@@ -39,18 +39,23 @@ def create_dag(
     all_models = {}
     g = nx.DiGraph()
 
-    for model_name, netlist in netlist.dict()['__root__'].items():
+    for model_name, subnetlist in netlist.dict()['__root__'].items():
         if not model_name in all_models:
-            all_models[model_name] = models.get(model_name, netlist)
+            all_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)
         if model_name in models:
             continue
-        for instance in netlist['instances'].values():
+        for instance in subnetlist['instances'].values():
             component = instance['component']
             if not component in all_models:
                 all_models[component] = models.get(component, None)
                 g.add_node(component)
             g.add_edge(model_name, component)
+
+    # we only need the nodes that depend on the parent...
+    parent_node = next(iter(netlist.__root__.keys()))
+    nodes = [parent_node, *nx.descendants(g, parent_node)]
+    g = nx.induced_subgraph(g, nodes)
 
     return g
 

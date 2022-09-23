@@ -99,6 +99,8 @@ from .models import get_models as get_models, passthru as passthru
 # Cell
 
 from .netlist import netlist as netlist
+from .netlist import load_netlist as load_netlist
+from .netlist import load_recursive_netlist as load_recursive_netlist
 
 # Cell
 

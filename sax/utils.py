@@ -4,9 +4,9 @@
 from __future__ import annotations
 
 
-__all__ = ['block_diag', 'clean_string', 'clean_string', 'copy_settings', 'validate_settings', 'try_float',
-           'flatten_dict', 'unflatten_dict', 'get_ports', 'get_port_combinations', 'get_settings', 'grouped_interp',
-           'merge_dicts', 'mode_combinations', 'reciprocal', 'rename_params', 'rename_ports', 'update_settings',
+__all__ = ['block_diag', 'clean_string', 'copy_settings', 'validate_settings', 'try_float', 'flatten_dict',
+           'unflatten_dict', 'get_ports', 'get_port_combinations', 'get_settings', 'grouped_interp', 'merge_dicts',
+           'mode_combinations', 'reciprocal', 'rename_params', 'rename_ports', 'update_settings',
            'validate_not_mixedmode', 'validate_multimode', 'validate_sdict', 'get_inputs_outputs', 'hash_dict']
 
 # Cell
@@ -82,24 +82,12 @@ def block_diag(*arrs: Array) -> Array:
 
 # Cell
 
-def clean_string(s: str) -> str:
+def clean_string(s: str, dot='p', minus='m', other='_') -> str:
     """clean a string such that it is a valid python identifier"""
     s = s.strip()
-    s = s.replace(".", "p")  # point
-    s = s.replace("-", "m")  # minus
-    s = re.sub("[^0-9a-zA-Z]", "_", s)
-    if s[0] in "0123456789":
-        s = "_" + s
-    return s
-
-# Cell
-
-def clean_string(s: str) -> str:
-    """clean a string such that it is a valid python identifier"""
-    s = s.strip()
-    s = s.replace(".", "p")  # point
-    s = s.replace("-", "m")  # minus
-    s = re.sub("[^0-9a-zA-Z]", "_", s)
+    s = s.replace(".", dot)  # dot
+    s = s.replace("-", minus)  # minus
+    s = re.sub("[^0-9a-zA-Z]", other, s)
     if s[0] in "0123456789":
         s = "_" + s
     return s
