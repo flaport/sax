@@ -150,6 +150,10 @@ class Netlist(BaseModel):
     def validate_instance_names(cls, instances):
         return {cls.clean_instance_string(k): v for k, v in instances.items()}
 
+    @validator("placements")
+    def validate_placement_names(cls, placements):
+        return {cls.clean_instance_string(k): v for k, v in placements.items()}
+
     @classmethod
     def clean_connection_string(cls, value):
         *comp, port = value.split(",")
@@ -157,10 +161,17 @@ class Netlist(BaseModel):
         return f"{comp},{port}"
 
     @validator("connections")
-    def validate_connection_names(cls, instances):
+    def validate_connection_names(cls, connections):
         return {
             cls.clean_connection_string(k): cls.clean_connection_string(v)
-            for k, v in instances.items()
+            for k, v in connections.items()
+        }
+
+    @validator("ports")
+    def validate_port_names(cls, ports):
+        return {
+            cls.clean_instance_string(k): cls.clean_connection_string(v)
+            for k, v in ports.items()
         }
 
 # Cell
