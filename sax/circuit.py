@@ -14,6 +14,7 @@ import os
 import shutil
 import sys
 from functools import partial
+from pprint import pprint
 from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Union
 
 import black
@@ -24,6 +25,7 @@ from sax import reciprocal
 from .backends import circuit_backends
 from .multimode import multimode, singlemode
 from .netlist import Netlist, RecursiveNetlist, load_recursive_netlist
+from .netlist_cleaning import remove_unused_instances
 from .typing_ import Model, Settings, SType
 from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
 
@@ -168,7 +170,12 @@ def circuit(
     modes: Optional[List[str]] = None,
     backend: str = "default",
 ) -> Tuple[Model, CircuitInfo]:
-    netlist, instance_models = _extract_instance_models(netlist) # TODO: do this *after* recursive netlist parsing.
+    netlist = _ensure_recursive_netlist_dict(netlist)
+
+    # TODO: do the following two steps *after* recursive netlist parsing.
+    netlist = remove_unused_instances(netlist)
+    netlist, instance_models = _extract_instance_models(netlist)
+
     recnet: RecursiveNetlist = _validate_net(netlist)
     dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))  # directed acyclic graph
     models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
@@ -210,8 +217,7 @@ class CircuitInfo(NamedTuple):
     dag: nx.DiGraph
     models: Dict[str, Model]
 
-
-def _extract_instance_models(netlist):
+def _ensure_recursive_netlist_dict(netlist):
     if not isinstance(netlist, dict):
         netlist = netlist.dict()
     if '__root__' in netlist:
@@ -219,7 +225,11 @@ def _extract_instance_models(netlist):
     if 'instances' in netlist:
         netlist = {'top_level': netlist}
     netlist = {**netlist}
+    for k, v in netlist.items():
+        netlist[k] = {**v}
+    return netlist
 
+def _extract_instance_models(netlist):
     models = {}
     for netname, net in netlist.items():
         net = {**net}
@@ -270,7 +280,7 @@ def _validate_net(netlist: Union[Netlist, RecursiveNetlist]) -> RecursiveNetlist
             netlist = Netlist.parse_obj(netlist)
         except ValidationError:
             netlist = RecursiveNetlist.parse_obj(netlist)
-    if isinstance(netlist, Netlist):
+    elif isinstance(netlist, Netlist):
         netlist = RecursiveNetlist(__root__={"top_level": netlist})
     return netlist
 

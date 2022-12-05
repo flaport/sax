@@ -60,3 +60,4 @@ dependencies:
     # other
     - tmm
     - sax==0.8.4
+    - datamodel_code_generator
