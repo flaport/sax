@@ -129,6 +129,7 @@ def _flat_circuit(instances, connections, ports, models, backend):
     inst2model = {k: models[inst.component] for k, inst in instances.items()}
 
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
+    print(model_settings)
     netlist_settings = {
         name: {k: v for k, v in (inst.settings or {}).items() if k in model_settings[name]}
         for name, inst in instances.items()
@@ -167,6 +168,7 @@ def _forward_global_settings(instances, settings):
 def circuit(
     netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,
+    connection_models: Optional[Dict[Tuple(str,str), Model]] = None,
     modes: Optional[List[str]] = None,
     backend: str = "default",
 ) -> Tuple[Model, CircuitInfo]:
@@ -177,6 +179,11 @@ def circuit(
     netlist, instance_models = _extract_instance_models(netlist)
 
     recnet: RecursiveNetlist = _validate_net(netlist)
+
+    # add connection models into recursive netlist
+    if connection_models:
+        recnet, models = _add_connection_models_recursive(recnet, models, connection_models)
+
     dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))  # directed acyclic graph
     models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
     modes = _validate_modes(modes)
@@ -322,3 +329,37 @@ def _make_multimode(netlist, modes, models):
         for mode in modes
     }
     return connections, ports, models
+
+
+def _add_connection_models_recursive(recnet, models, connection_models):
+    for net, netlist in recnet.__root__.items():
+        netlist, models = _add_connection_models(netlist, models, connection_models)
+    return recnet, models
+
+def _add_connection_models(netlist, models, connection_models):
+    print(netlist.instances)
+    for (ports1, ports2), connection_model in connection_models.items():
+        found_connection = False
+        if (ports1, ports2) in netlist.connections.items():
+            del netlist.connections[ports1]
+            port_in, port_out = ports1, ports2
+            found_connection = True
+        elif (ports2, ports1) in netlist.connections.items():
+            del netlist.connections[ports2]
+            port_in, port_out = ports2, ports1
+            found_connection = True
+        if found_connection:
+            netlist.connections[port_in] = port_out
+            # Try adding a dict with "component" key
+            # netlist.instances[f"{port_in}:{port_out}"] = {"component": f"{port_in}:{port_out}", "settings": {}}
+            # Try adding a dummy component
+            netlist.instances[f"{port_in}:{port_out}"] = gf.Component(name=f"{port_in}:{port_out}")
+            models[f"{port_in}:{port_out}"] = connection_model
+    return netlist, models
+
+# def _validate_connection_models(recnet, connection_models):
+#     for key, value in connection_models.items():
+#         if key not in recnet["connections"]:
+#             raise ValueError(f"Found connection model key {key} not in netlist connections.")
+
+#     return connection_models
