@@ -1,6 +1,105 @@
 [build-system]
-requires = ["setuptools", "pip", "build", "wheel"]
+requires = ["setuptools", "pip", "build", "wheel", "pybind11"]
 build-backend = "setuptools.build_meta"
+
+[project]
+name = "sax"
+version = "0.8.5"
+authors = [
+{ name = "Floris Laporte", email = "floris.laporte@rockleyphotonics.com" },
+]
+description = "Autograd and XLA for S-parameters"
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Science/Research",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Programming Language :: Python :: 3.8",
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Topic :: Scientific/Engineering",
+  "Topic :: Scientific/Engineering :: Physics",
+]
+
+dependencies = [
+  "black",
+  "fastcore",
+  "h5py",
+  "natsort",
+  "networkx",
+  "numpy",
+  "orjson",
+  "pydantic<2",
+  "pyyaml",
+  "tables",
+  "tqdm",
+]
+
+[project.optional-dependencies]
+nojax = ["sax"]
+jax = ["sax", "jax", "flax", "jaxlib"]
+klu = ["sax[jax]", "klujax"]
+full = [
+  "sax[jax,klu]",
+  "bokeh",
+  "gdsfactory>=6",
+  "graphviz",
+  "ipykernel",
+  "ipympl",
+  "ipywidgets",
+  "jupyterlab",
+  "matplotlib",
+  "meep",
+  "pandas",
+  "pydot",
+  "scipy",
+  "shapely",
+]
+dev = [
+  "sax[full]",
+  "bump2version",
+  "datamodel-code-generator",
+  "flax",
+  "ipykernel",
+  "ipympl",
+  "ipywidgets",
+  "isort",
+  "jax",
+  "jaxlib",
+  "jupyter-book",
+  "jupyterlab",
+  "line_profiler",
+  "matplotlib",
+  "nbdev<2",
+  "nbstripout",
+  "pandas",
+  "papermill",
+  "pre-commit",
+  "pyright",
+  "pytest",
+  "pyyaml",
+  "scipy",
+  "tmm",
+  "tqdm",
+  "twine",
+]
+
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sax", "sax.nn", "sax.backends"]
+exclude = []
+namespaces = true
+
+
+[tool.setuptools.package-data]
+"*" = [
+  "settings.ini",
+  "LICENSE",
+  "CONTRIBUTING.md",
+  "README.md",
+]
 
 [tool.black]
 line-length = 88
@@ -9,3 +108,4 @@ include = '\.pyi?$'
 
 [tool.pyright]
 reportPrivateImportUsage = false
+
