@@ -1,49 +1,60 @@
 
+
 <!DOCTYPE html>
 
-<html>
+
+<html lang="en" >
+
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.17.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
     <title>SAX Quick Start &#8212; sax</title>
-    
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=1999514e3f237ded88cf" rel="stylesheet">
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
 
-    
-  <link rel="stylesheet"
-    href="../_static/vendor/fontawesome/5.13.0/css/all.min.css">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-solid-900.woff2">
-  <link rel="preload" as="font" type="font/woff2" crossorigin
-    href="../_static/vendor/fontawesome/5.13.0/webfonts/fa-brands-400.woff2">
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
-    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=5115cc725059bd94278eecd172e13a965bf8f5a9" type="text/css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
     <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/mystnb.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
     <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
     <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.b7bb847fb20b106c3d81b95245e65545.min.css" />
-    
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf">
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
     <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
-    <script src="../_static/scripts/sphinx-book-theme.js?digest=9c920249402e914e316237a7dbc6769907cce411"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
     <script>let toggleHintShow = 'Click to show';</script>
     <script>let toggleHintHide = 'Click to hide';</script>
     <script>let toggleOpenOnPrint = 'true';</script>
     <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown, .tag_hide_input div.cell_input, .tag_hide-input div.cell_input, .tag_hide_output div.cell_output, .tag_hide-output div.cell_output, .tag_hide_cell.cell, .tag_hide-cell.cell';</script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
     <script src="../_static/design-tabs.js"></script>
     <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
 const thebe_selector = ".thebe,.cell"
@@ -51,65 +62,98 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
-    <script src="https://unpkg.com/@jupyter-widgets/html-manager@^0.20.0/dist/embed-amd.js"></script>
+    <script type="application/vnd.jupyter.widget-state+json">{"state": {"160e4306c1854cd9a3444e0332a661fc": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e282ed0188b54cfe84465a093ff7a445", "placeholder": "\u200b", "style": "IPY_MODEL_711ba7923aab475cb2c40ada4d0659f5", "tabbable": null, "tooltip": null, "value": "100%"}}, "16a8a6bc22be41b6ad6230eb4ce92870": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "ProgressStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "2c2972dfe7c2462f8af64b8772cf7196": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "FloatProgressModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_515022dea9b2484da69f5beeaab133f5", "max": 300.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_16a8a6bc22be41b6ad6230eb4ce92870", "tabbable": null, "tooltip": null, "value": 300.0}}, "41dbcab9efc8425ba75770517cd0e9c4": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_e2ab78e93763484d9753a8b43f18082b", "placeholder": "\u200b", "style": "IPY_MODEL_43f11dd7d04c400facfd8f89b9669a32", "tabbable": null, "tooltip": null, "value": " 300/300 [00:10&lt;00:00, 27.43it/s, loss=0.000000]"}}, "43f11dd7d04c400facfd8f89b9669a32": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "515022dea9b2484da69f5beeaab133f5": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "5553c6356397446a933450ab52848e23": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "710e095868e343a7bee50816b2193447": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HBoxModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_160e4306c1854cd9a3444e0332a661fc", "IPY_MODEL_2c2972dfe7c2462f8af64b8772cf7196", "IPY_MODEL_41dbcab9efc8425ba75770517cd0e9c4"], "layout": "IPY_MODEL_5553c6356397446a933450ab52848e23", "tabbable": null, "tooltip": null}}, "711ba7923aab475cb2c40ada4d0659f5": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "e282ed0188b54cfe84465a093ff7a445": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "e2ab78e93763484d9753a8b43f18082b": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}}, "version_major": 2, "version_minor": 0}</script>
+    <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
+    <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/01_quick_start';</script>
     <link rel="canonical" href="https://flaport.github.io/sax/examples/01_quick_start.html" />
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Simulating an All-Pass Filter" href="02_all_pass_filter.html" />
     <link rel="prev" title="SAX" href="../index.html" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="docsearch:language" content="None">
-    
-
-    <!-- Google Analytics -->
-    
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
   </head>
-  <body data-spy="scroll" data-target="#bd-toc-nav" data-offset="60">
-<!-- Checkboxes to toggle the left sidebar -->
-<input type="checkbox" class="sidebar-toggle" name="__navigation" id="__navigation" aria-label="Toggle navigation sidebar">
-<label class="overlay overlay-navbar" for="__navigation">
-    <div class="visually-hidden">Toggle navigation sidebar</div>
-</label>
-<!-- Checkboxes to toggle the in-page toc -->
-<input type="checkbox" class="sidebar-toggle" name="__page-toc" id="__page-toc" aria-label="Toggle in-page Table of Contents">
-<label class="overlay overlay-pagetoc" for="__page-toc">
-    <div class="visually-hidden">Toggle in-page Table of Contents</div>
-</label>
-<!-- Headers at the top -->
-<div class="announcement header-item noprint"></div>
-<div class="header header-item noprint"></div>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
 
-    
-    <div class="container-fluid" id="banner"></div>
-
-    
-
-    <div class="container-xl">
-      <div class="row">
-          
-<!-- Sidebar -->
-<div class="bd-sidebar noprint" id="site-navigation">
-    <div class="bd-sidebar__content">
-        <div class="bd-sidebar__top"><div class="navbar-brand-box">
-    <a class="navbar-brand text-wrap" href="../index.html">
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
       
-        <!-- `logo` is deprecated in Sphinx 4.0, so remove this when we stop supporting 3 -->
+      <div class="bd-sidebar-primary bd-sidebar">
         
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
       
-      
-      <img src="../_static/logo.png" class="logo" alt="logo">
-      
-      
-      <h1 class="site-logo" id="site-title">sax</h1>
-      
-    </a>
-</div><form class="bd-search d-flex align-items-center" action="../search.html" method="get">
-  <i class="icon fas fa-search"></i>
-  <input type="search" class="form-control" name="q" id="search-input" placeholder="Search this book..." aria-label="Search this book..." autocomplete="off" >
-</form><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
-    <div class="bd-toc-item active">
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
         
         <ul class="nav bd-sidenav bd-sidenav__home-link">
             <li class="toctree-l1">
@@ -118,444 +162,225 @@ const thebe_selector_output = ".output, .cell_output"
                 </a>
             </li>
         </ul>
-        <p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Examples
- </span>
-</p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current nav bd-sidenav">
- <li class="toctree-l1 current active">
-  <a class="current reference internal" href="#">
-   SAX Quick Start
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="02_all_pass_filter.html">
-   Simulating an All-Pass Filter
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="03_circuit_from_yaml.html">
-   Circuit from YAML
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="04_multimode_simulations.html">
-   Multimode simulations
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="05_thinfilm.html">
-   Thin film optimization
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="06_additive_backend.html">
-   Additive Backend
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="07_layout_aware.html">
-   Layout Aware Monte Carlo with GDSFactory
-  </a>
- </li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">SAX Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_circuit_from_yaml.html">Circuit from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_multimode_simulations.html">Multimode simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_thinfilm.html">Thin film optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_additive_backend.html">Additive Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Core Lib
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Core Lib</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/00_typing.html">
-   Typing
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/02_utils.html">
-   Utils
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/04_multimode.html">
-   Multimode
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/05_models.html">
-   Models
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/06_netlist.html">
-   Netlist
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/08_circuit.html">
-   Circuit
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/03_caching.html">
-   Caching
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/00_typing.html">Typing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/02_utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/04_multimode.html">Multimode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/05_models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/07_circuit.html">Circuit</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Backends
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/07_backends.html">
-   Backend
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/07a_backends_default.html">
-   Backend - default
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/07b_backends_klu.html">
-   Backend - KLU
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/07c_backends_additive.html">
-   Backend - additive
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/08_backends.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/08a_backends_default.html">Backend - default</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/08b_backends_klu.html">Backend - KLU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/08c_backends_additive.html">Backend - additive</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading">
- <span class="caption-text">
-  Neural Networks
- </span>
-</p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Networks</span></p>
 <ul class="nav bd-sidenav">
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/09_nn.html">
-   Neural Networks
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/09a_nn_loss.html">
-   Loss
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/09b_nn_utils.html">
-   Utils
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/09c_nn_core.html">
-   Core
-  </a>
- </li>
- <li class="toctree-l1">
-  <a class="reference internal" href="../nbs/09d_nn_io.html">
-   IO
-  </a>
- </li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/09_nn.html">Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/09a_nn_loss.html">Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/09b_nn_utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/09c_nn_core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/09d_nn_io.html">IO</a></li>
 </ul>
 
     </div>
 </nav></div>
-        <div class="bd-sidebar__bottom">
-             <!-- To handle the deprecated key -->
-            
-            <div class="navbar_extra_footer">
-            Powered by <a href="https://jupyterbook.org">Jupyter Book</a>
-            </div>
-            
-        </div>
     </div>
-    <div id="rtd-footer-container"></div>
-</div>
-
-
-          
-
-
-          
-<!-- A tiny helper pixel to detect if we've scrolled -->
-<div class="sbt-scroll-pixel-helper"></div>
-<!-- Main content -->
-<div class="col py-0 content-container">
-    
-    <div class="header-article row sticky-top noprint">
-        
-
-
-
-<div class="col py-1 d-flex header-article-main">
-    <div class="header-article__left">
-        
-        <label for="__navigation"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="right"
-title="Toggle navigation"
->
   
-
-<span class="headerbtn__icon-container">
-  <i class="fas fa-bars"></i>
-  </span>
-
-</label>
-
-        
-    </div>
-    <div class="header-article__right">
-<div class="menu-dropdown menu-dropdown-launch-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Launch interactive content">
-      <i class="fas fa-rocket"></i>
-  </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="https://mybinder.org/v2/gh/flaport/sax/master?urlpath=tree/examples/01_quick_start.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Launch on Binder"
->
   
-
-<span class="headerbtn__icon-container">
-  
-    <img src="../_static/images/logo_binder.svg">
-  </span>
-<span class="headerbtn__text-container">Binder</span>
-</a>
-
-      </li>
-      
-    </ul>
+  <div class="sidebar-primary-items__end sidebar-primary__section">
   </div>
-</div>
+  
+  <div id="rtd-footer-container"></div>
 
-<button onclick="toggleFullScreen()"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="bottom"
-title="Fullscreen mode"
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+<a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-expand"></i>
-  </span>
-
-</button>
-<a href="https://github.com/flaport/sax"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="bottom"
-title="Source repository"
->
-  
-
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
 
 </a>
 
-<div class="menu-dropdown menu-dropdown-download-buttons">
-  <button class="headerbtn menu-dropdown__trigger"
-      aria-label="Download this page">
-      <i class="fas fa-download"></i>
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
   </button>
-  <div class="menu-dropdown__content">
-    <ul>
-      <li>
-        <a href="../_sources/examples/01_quick_start.ipynb"
-   class="headerbtn"
-   data-toggle="tooltip"
-data-placement="left"
-title="Download source file"
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/examples/01_quick_start.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="headerbtn__text-container">.ipynb</span>
+<span class="btn__text-container">.ipynb</span>
 </a>
-
-      </li>
+</li>
+      
+      
+      
       
       <li>
-        
-<button onclick="printPdf(this)"
-  class="headerbtn"
-  data-toggle="tooltip"
-data-placement="left"
-title="Print to PDF"
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
+<span class="btn__icon-container">
   <i class="fas fa-file-pdf"></i>
   </span>
-<span class="headerbtn__text-container">.pdf</span>
+<span class="btn__text-container">.pdf</span>
 </button>
-
-      </li>
+</li>
       
-    </ul>
-  </div>
+  </ul>
 </div>
-<label for="__page-toc"
-  class="headerbtn headerbtn-page-toc"
-  
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
 >
   
 
-<span class="headerbtn__icon-container">
-  <i class="fas fa-list"></i>
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
   </span>
 
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
 </label>
-
+</div></div>
+      
     </div>
+  
 </div>
-
-<!-- Table of contents -->
-<div class="col-md-3 bd-toc show noprint">
-    <div class="tocsection onthispage pt-5 pb-3">
-        <i class="fas fa-list"></i> Contents
-    </div>
-    <nav id="bd-toc-nav" aria-label="Page">
-        <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-variables">
-   Environment variables
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#imports">
-   Imports
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#scatter-dictionaries">
-   Scatter
-   <em>
-    dictionaries
-   </em>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#parametrized-models">
-   Parametrized Models
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#circuit-models">
-   Circuit Models
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#simulating-the-parametrized-mzi">
-   Simulating the parametrized MZI
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#optimization">
-   Optimization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#mzi-chain">
-   MZI Chain
-  </a>
- </li>
-</ul>
-
-    </nav>
 </div>
-    </div>
-    <div class="article row">
-        <div class="col pl-md-3 pl-lg-5 content-container">
-            <!-- Table of contents that is only displayed when printing the page -->
-            <div id="jb-print-docs-body" class="onlyprint">
-                <h1>SAX Quick Start</h1>
-                <!-- Table of contents -->
-                <div id="print-main-content">
-                    <div id="jb-print-toc">
-                        
-                        <div>
-                            <h2> Contents </h2>
-                        </div>
-                        <nav aria-label="Page">
-                            <ul class="visible nav section-nav flex-column">
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#environment-variables">
-   Environment variables
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#imports">
-   Imports
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#scatter-dictionaries">
-   Scatter
-   <em>
-    dictionaries
-   </em>
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#parametrized-models">
-   Parametrized Models
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#circuit-models">
-   Circuit Models
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#simulating-the-parametrized-mzi">
-   Simulating the parametrized MZI
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#optimization">
-   Optimization
-  </a>
- </li>
- <li class="toc-h2 nav-item toc-entry">
-  <a class="reference internal nav-link" href="#mzi-chain">
-   MZI Chain
-  </a>
- </li>
-</ul>
+              
+              
 
-                        </nav>
-                    </div>
-                </div>
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>SAX Quick Start</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
             </div>
-            <main id="main-content" role="main">
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-variables">Environment variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-dictionaries">Scatter <em>dictionaries</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametrized-models">Parametrized Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#circuit-models">Circuit Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-the-parametrized-mzi">Simulating the parametrized MZI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mzi-chain">MZI Chain</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
                 
-              <div>
-                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
   <section class="tex2jax_ignore mathjax_ignore" id="sax-quick-start">
-<h1>SAX Quick Start<a class="headerlink" href="#sax-quick-start" title="Permalink to this headline">#</a></h1>
+<h1>SAX Quick Start<a class="headerlink" href="#sax-quick-start" title="Permalink to this heading">#</a></h1>
 <blockquote>
 <div><p>Let’s go over the core functionality of SAX.</p>
 </div></blockquote>
 <section id="environment-variables">
-<h2>Environment variables<a class="headerlink" href="#environment-variables" title="Permalink to this headline">#</a></h2>
+<h2>Environment variables<a class="headerlink" href="#environment-variables" title="Permalink to this heading">#</a></h2>
 <p>SAX is based on JAX… here are some useful environment variables for working with JAX:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -587,7 +412,7 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 </div>
 </section>
 <section id="imports">
-<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this headline">#</a></h2>
+<h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
@@ -597,14 +422,14 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># plotting</span>
 <span class="kn">import</span> <span class="nn">sax</span>
-<span class="kn">import</span> <span class="nn">tqdm</span>  <span class="c1"># progress bars</span>
+<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">trange</span>
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="scatter-dictionaries">
-<h2>Scatter <em>dictionaries</em><a class="headerlink" href="#scatter-dictionaries" title="Permalink to this headline">#</a></h2>
+<h2>Scatter <em>dictionaries</em><a class="headerlink" href="#scatter-dictionaries" title="Permalink to this heading">#</a></h2>
 <p>The core datastructure for specifying scatter parameters in SAX is a dictionary… more specifically a dictionary which maps a port combination (2-tuple) to a scatter parameter (or an array of scatter parameters when considering multiple wavelengths for example). Such a specific dictionary mapping is called ann <code class="docutils literal notranslate"><span class="pre">SDict</span></code> in SAX (<code class="docutils literal notranslate"><span class="pre">SDict</span> <span class="pre">≈</span> <span class="pre">Dict[Tuple[str,str],</span> <span class="pre">float]</span></code>).</p>
 <p>Dictionaries are in fact much better suited for characterizing S-parameters than, say, (jax-)numpy arrays due to the inherent sparse nature of scatter parameters. Moreover, dictonaries allow for string indexing, which makes them much more pleasant to use in this context. Let’s for example create an <code class="docutils literal notranslate"><span class="pre">SDict</span></code> for a 50/50 coupler:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">in1</span>          <span class="n">out1</span>
@@ -678,7 +503,7 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 </div>
 </section>
 <section id="parametrized-models">
-<h2>Parametrized Models<a class="headerlink" href="#parametrized-models" title="Permalink to this headline">#</a></h2>
+<h2>Parametrized Models<a class="headerlink" href="#parametrized-models" title="Permalink to this heading">#</a></h2>
 <p>Constructing such an <code class="docutils literal notranslate"><span class="pre">SDict</span></code> is easy, however, usually we’re more interested in having parametrized models for our components. To parametrize the coupler <code class="docutils literal notranslate"><span class="pre">SDict</span></code>, just wrap it in a function to obtain a SAX <code class="docutils literal notranslate"><span class="pre">Model</span></code>, which is a keyword-only function mapping to an <code class="docutils literal notranslate"><span class="pre">SDict</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -735,7 +560,7 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 <p>That’s pretty straightforward. Let’s now move on to parametrized circuits:</p>
 </section>
 <section id="circuit-models">
-<h2>Circuit Models<a class="headerlink" href="#circuit-models" title="Permalink to this headline">#</a></h2>
+<h2>Circuit Models<a class="headerlink" href="#circuit-models" title="Permalink to this heading">#</a></h2>
 <p>Existing models can now be combined into a circuit using <code class="docutils literal notranslate"><span class="pre">sax.circuit</span></code>, which basically creates a new <code class="docutils literal notranslate"><span class="pre">Model</span></code> function:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -785,26 +610,26 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.26 s, sys: 12.6 ms, total: 2.27 s
-Wall time: 2.27 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.08 s, sys: 26.3 ms, total: 2.11 s
+Wall time: 3 s
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
- (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;in1&#39;, &#39;out1&#39;): 0j,
- (&#39;in1&#39;, &#39;out0&#39;): -0.57127+0.82076j,
- (&#39;in0&#39;, &#39;out1&#39;): -0.57127+0.82076j,
- (&#39;in0&#39;, &#39;out0&#39;): 0j,
- (&#39;out1&#39;, &#39;in1&#39;): 0j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.57127+0.82076j,
- (&#39;out1&#39;, &#39;out1&#39;): 0j,
- (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.57127+0.82076j,
- (&#39;out0&#39;, &#39;in0&#39;): 0j,
- (&#39;out0&#39;, &#39;out1&#39;): 0j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
@@ -823,26 +648,26 @@ Wall time: 2.27 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.8 s, sys: 28.1 ms, total: 3.83 s
-Wall time: 3.81 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 666 ms, sys: 27.2 ms, total: 694 ms
+Wall time: 1.06 s
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;out0&#39;): 0j,
- (&#39;in0&#39;, &#39;out1&#39;): -0.57127+0.82076j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
- (&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;out0&#39;): -0.57127+0.82076j,
- (&#39;in1&#39;, &#39;out1&#39;): 0j,
- (&#39;out0&#39;, &#39;in0&#39;): 0j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.57127+0.82076j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;out1&#39;): 0j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.57127+0.82076j,
- (&#39;out1&#39;, &#39;in1&#39;): 0j,
- (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out1&#39;, &#39;out1&#39;): 0j}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
@@ -854,26 +679,26 @@ Wall time: 3.81 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 219 µs, sys: 7 µs, total: 226 µs
-Wall time: 155 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 255 µs, sys: 18 µs, total: 273 µs
+Wall time: 182 µs
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;out0&#39;): 0j,
- (&#39;in0&#39;, &#39;out1&#39;): -0.57127+0.82076j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
- (&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;out0&#39;): -0.57127+0.82076j,
- (&#39;in1&#39;, &#39;out1&#39;): 0j,
- (&#39;out0&#39;, &#39;in0&#39;): 0j,
- (&#39;out0&#39;, &#39;in1&#39;): -0.57127+0.82076j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;out1&#39;): 0j,
- (&#39;out1&#39;, &#39;in0&#39;): -0.57127+0.82076j,
- (&#39;out1&#39;, &#39;in1&#39;): 0j,
- (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out1&#39;, &#39;out1&#39;): 0j}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.57127243+0.8207605j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
@@ -886,29 +711,29 @@ Wall time: 155 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): 0j,
- (&#39;in1&#39;, &#39;in0&#39;): 0j,
- (&#39;in0&#39;, &#39;in1&#39;): 0j,
- (&#39;in0&#39;, &#39;in0&#39;): 0j,
- (&#39;in1&#39;, &#39;out1&#39;): 0.28073-0.10397j,
- (&#39;in1&#39;, &#39;out0&#39;): 0.89475-0.33137j,
- (&#39;in0&#39;, &#39;out1&#39;): 0.89475-0.33137j,
- (&#39;in0&#39;, &#39;out0&#39;): -0.28073+0.10397j,
- (&#39;out1&#39;, &#39;in1&#39;): 0.28073-0.10397j,
- (&#39;out1&#39;, &#39;in0&#39;): 0.89475-0.33137j,
- (&#39;out1&#39;, &#39;out1&#39;): 0j,
- (&#39;out1&#39;, &#39;out0&#39;): 0j,
- (&#39;out0&#39;, &#39;in1&#39;): 0.89475-0.33137j,
- (&#39;out0&#39;, &#39;in0&#39;): -0.28073+0.10397j,
- (&#39;out0&#39;, &#39;out1&#39;): 0j,
- (&#39;out0&#39;, &#39;out0&#39;): 0j}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.28073177-0.10396835j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(0.8947488-0.33136806j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(0.8947488-0.33136806j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.28073177+0.10396835j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.28073177-0.10396835j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(0.8947488-0.33136806j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(0.8947488-0.33136806j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.28073177+0.10396835j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
 </div>
 </section>
 <section id="simulating-the-parametrized-mzi">
-<h2>Simulating the parametrized MZI<a class="headerlink" href="#simulating-the-parametrized-mzi" title="Permalink to this headline">#</a></h2>
+<h2>Simulating the parametrized MZI<a class="headerlink" href="#simulating-the-parametrized-mzi" title="Permalink to this heading">#</a></h2>
 <p>We can simulate the above mzi for multiple wavelengths as well by specifying the wavelength at the top level of the circuit call. Each setting specified at the top level of the circuit call will be propagated to all subcomponents of the circuit which have that setting:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -918,8 +743,8 @@ Wall time: 155 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.01 s, sys: 7.91 ms, total: 2.02 s
-Wall time: 2.02 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.99 s, sys: 19 ms, total: 2.01 s
+Wall time: 3.08 s
 </pre></div>
 </div>
 </div>
@@ -937,12 +762,12 @@ Wall time: 2.02 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_quick_start_33_0.png" src="../_images/01_quick_start_33_0.png" />
+<img alt="../_images/7cd59f162ed182ce14e0f98e55d6cad271dcc9c3748dfd8a9e46525fe1c3a0d6.png" src="../_images/7cd59f162ed182ce14e0f98e55d6cad271dcc9c3748dfd8a9e46525fe1c3a0d6.png" />
 </div>
 </div>
 </section>
 <section id="optimization">
-<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this headline">#</a></h2>
+<h2>Optimization<a class="headerlink" href="#optimization" title="Permalink to this heading">#</a></h2>
 <p>We’d like to optimize an MZI such that one of the minima is at 1550nm. To do this, we need to define a loss function for the circuit at 1550nm. This function should take the parameters that you want to optimize as positional arguments:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -961,11 +786,11 @@ Wall time: 2.02 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.88 s, sys: 24 ms, total: 3.91 s
-Wall time: 3.88 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 323 ms, sys: 3.75 ms, total: 327 ms
+Wall time: 519 ms
 </pre></div>
 </div>
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>0.08962
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array(0.08961975, dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -1009,7 +834,7 @@ Wall time: 3.88 s
 <p>And we can use this step function to start the training of the MZI:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">range_</span> <span class="o">=</span> <span class="n">tqdm</span><span class="o">.</span><span class="n">trange</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">range_</span> <span class="o">=</span> <span class="n">trange</span><span class="p">(</span><span class="mi">300</span><span class="p">)</span>
 <span class="k">for</span> <span class="n">step</span> <span class="ow">in</span> <span class="n">range_</span><span class="p">:</span>
     <span class="n">lossvalue</span><span class="p">,</span> <span class="n">optim_state</span> <span class="o">=</span> <span class="n">train_step</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">optim_state</span><span class="p">)</span>
     <span class="n">range_</span><span class="o">.</span><span class="n">set_postfix</span><span class="p">(</span><span class="n">loss</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">lossvalue</span><span class="si">:</span><span class="s2">.6f</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
@@ -1017,1066 +842,7 @@ Wall time: 3.88 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/300 [00:00&lt;?, ?it/s]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 0/300 [00:05&lt;?, ?it/s, loss=0.089620]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 1/300 [00:05&lt;25:19,  5.08s/it, loss=0.089620]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  0%|          | 1/300 [00:14&lt;25:19,  5.08s/it, loss=0.028705]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.028705]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.069302]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.019680]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.001940]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.029862]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.035199]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.012873]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  1%|          | 2/300 [00:14&lt;36:41,  7.39s/it, loss=0.000004]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.000004]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.010713]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.021764]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.015683]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.003059]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.000902]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.008971]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  3%|▎         | 9/300 [00:14&lt;05:16,  1.09s/it, loss=0.013113]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.013113]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.007586]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.000788]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.001352]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.006516]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.007730]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.003501]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  5%|▌         | 16/300 [00:14&lt;02:21,  2.01it/s, loss=0.000083]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.000083]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.001618]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.004673]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.004280]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.001253]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.000048]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.001810]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>  8%|▊         | 23/300 [00:14&lt;01:19,  3.50it/s, loss=0.003187]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:14&lt;00:49,  5.50it/s, loss=0.003187]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:14&lt;00:49,  5.50it/s, loss=0.001977]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:14&lt;00:49,  5.50it/s, loss=0.000195]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:14&lt;00:49,  5.50it/s, loss=0.000403]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:14&lt;00:49,  5.50it/s, loss=0.001763]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:14&lt;00:49,  5.50it/s, loss=0.001828]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 10%|█         | 30/300 [00:14&lt;00:49,  5.50it/s, loss=0.000566]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 36/300 [00:14&lt;00:34,  7.75it/s, loss=0.000566]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 36/300 [00:14&lt;00:34,  7.75it/s, loss=0.000021]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 36/300 [00:14&lt;00:34,  7.75it/s, loss=0.000796]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 36/300 [00:14&lt;00:34,  7.75it/s, loss=0.001318]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 36/300 [00:14&lt;00:34,  7.75it/s, loss=0.000687]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 36/300 [00:14&lt;00:34,  7.75it/s, loss=0.000019]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 12%|█▏        | 36/300 [00:14&lt;00:34,  7.75it/s, loss=0.000315]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█▍        | 42/300 [00:14&lt;00:24, 10.60it/s, loss=0.000315]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█▍        | 42/300 [00:14&lt;00:24, 10.60it/s, loss=0.000841]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█▍        | 42/300 [00:14&lt;00:24, 10.60it/s, loss=0.000610]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█▍        | 42/300 [00:14&lt;00:24, 10.60it/s, loss=0.000069]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█▍        | 42/300 [00:14&lt;00:24, 10.60it/s, loss=0.000119]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█▍        | 42/300 [00:14&lt;00:24, 10.60it/s, loss=0.000515]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 14%|█▍        | 42/300 [00:14&lt;00:24, 10.60it/s, loss=0.000465]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█▌        | 48/300 [00:14&lt;00:17, 14.13it/s, loss=0.000465]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█▌        | 48/300 [00:14&lt;00:17, 14.13it/s, loss=0.000085]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█▌        | 48/300 [00:14&lt;00:17, 14.13it/s, loss=0.000048]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█▌        | 48/300 [00:14&lt;00:17, 14.13it/s, loss=0.000320]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█▌        | 48/300 [00:14&lt;00:17, 14.13it/s, loss=0.000328]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█▌        | 48/300 [00:14&lt;00:17, 14.13it/s, loss=0.000071]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 16%|█▌        | 48/300 [00:14&lt;00:17, 14.13it/s, loss=0.000025]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|█▊        | 54/300 [00:14&lt;00:13, 18.33it/s, loss=0.000025]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|█▊        | 54/300 [00:14&lt;00:13, 18.33it/s, loss=0.000209]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|█▊        | 54/300 [00:14&lt;00:13, 18.33it/s, loss=0.000221]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|█▊        | 54/300 [00:15&lt;00:13, 18.33it/s, loss=0.000047]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|█▊        | 54/300 [00:15&lt;00:13, 18.33it/s, loss=0.000019]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|█▊        | 54/300 [00:15&lt;00:13, 18.33it/s, loss=0.000145]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 18%|█▊        | 54/300 [00:15&lt;00:13, 18.33it/s, loss=0.000143]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000143]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000024]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000019]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000105]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000088]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000008]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000022]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 20%|██        | 60/300 [00:15&lt;00:10, 23.06it/s, loss=0.000077]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000077]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000048]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000025]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000054]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000022]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 22%|██▏       | 67/300 [00:15&lt;00:07, 29.14it/s, loss=0.000026]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000026]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000034]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000007]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000004]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000024]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000017]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 25%|██▍       | 74/300 [00:15&lt;00:06, 35.11it/s, loss=0.000008]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000008]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000018]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000006]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000010]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000010]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 27%|██▋       | 81/300 [00:15&lt;00:05, 40.46it/s, loss=0.000003]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██▉       | 88/300 [00:15&lt;00:04, 45.21it/s, loss=0.000003]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██▉       | 88/300 [00:15&lt;00:04, 45.21it/s, loss=0.000009]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██▉       | 88/300 [00:15&lt;00:04, 45.21it/s, loss=0.000003]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██▉       | 88/300 [00:15&lt;00:04, 45.21it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██▉       | 88/300 [00:15&lt;00:04, 45.21it/s, loss=0.000005]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██▉       | 88/300 [00:15&lt;00:04, 45.21it/s, loss=0.000005]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 29%|██▉       | 88/300 [00:15&lt;00:04, 45.21it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███▏      | 94/300 [00:15&lt;00:04, 48.30it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███▏      | 94/300 [00:15&lt;00:04, 48.30it/s, loss=0.000002]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███▏      | 94/300 [00:15&lt;00:04, 48.30it/s, loss=0.000004]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███▏      | 94/300 [00:15&lt;00:04, 48.30it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███▏      | 94/300 [00:15&lt;00:04, 48.30it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███▏      | 94/300 [00:15&lt;00:04, 48.30it/s, loss=0.000003]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 31%|███▏      | 94/300 [00:15&lt;00:04, 48.30it/s, loss=0.000002]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 100/300 [00:15&lt;00:03, 50.68it/s, loss=0.000002]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 100/300 [00:15&lt;00:03, 50.68it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 100/300 [00:15&lt;00:03, 50.68it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 100/300 [00:15&lt;00:03, 50.68it/s, loss=0.000002]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 100/300 [00:15&lt;00:03, 50.68it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 100/300 [00:15&lt;00:03, 50.68it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 33%|███▎      | 100/300 [00:15&lt;00:03, 50.68it/s, loss=0.000002]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|███▌      | 106/300 [00:15&lt;00:03, 52.83it/s, loss=0.000002]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|███▌      | 106/300 [00:15&lt;00:03, 52.83it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|███▌      | 106/300 [00:15&lt;00:03, 52.83it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|███▌      | 106/300 [00:15&lt;00:03, 52.83it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|███▌      | 106/300 [00:15&lt;00:03, 52.83it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|███▌      | 106/300 [00:15&lt;00:03, 52.83it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 35%|███▌      | 106/300 [00:15&lt;00:03, 52.83it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███▋      | 112/300 [00:15&lt;00:03, 54.49it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███▋      | 112/300 [00:15&lt;00:03, 54.49it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███▋      | 112/300 [00:15&lt;00:03, 54.49it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███▋      | 112/300 [00:15&lt;00:03, 54.49it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███▋      | 112/300 [00:16&lt;00:03, 54.49it/s, loss=0.000001]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███▋      | 112/300 [00:16&lt;00:03, 54.49it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 37%|███▋      | 112/300 [00:16&lt;00:03, 54.49it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|███▉      | 118/300 [00:16&lt;00:03, 54.93it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|███▉      | 118/300 [00:16&lt;00:03, 54.93it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|███▉      | 118/300 [00:16&lt;00:03, 54.93it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|███▉      | 118/300 [00:16&lt;00:03, 54.93it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|███▉      | 118/300 [00:16&lt;00:03, 54.93it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|███▉      | 118/300 [00:16&lt;00:03, 54.93it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 39%|███▉      | 118/300 [00:16&lt;00:03, 54.93it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████▏     | 124/300 [00:16&lt;00:03, 55.57it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████▏     | 124/300 [00:16&lt;00:03, 55.57it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████▏     | 124/300 [00:16&lt;00:03, 55.57it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████▏     | 124/300 [00:16&lt;00:03, 55.57it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████▏     | 124/300 [00:16&lt;00:03, 55.57it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████▏     | 124/300 [00:16&lt;00:03, 55.57it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 41%|████▏     | 124/300 [00:16&lt;00:03, 55.57it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████▎     | 130/300 [00:16&lt;00:03, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████▎     | 130/300 [00:16&lt;00:03, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████▎     | 130/300 [00:16&lt;00:03, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████▎     | 130/300 [00:16&lt;00:03, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████▎     | 130/300 [00:16&lt;00:03, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████▎     | 130/300 [00:16&lt;00:03, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 43%|████▎     | 130/300 [00:16&lt;00:03, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████▌     | 136/300 [00:16&lt;00:02, 56.75it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████▌     | 136/300 [00:16&lt;00:02, 56.75it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████▌     | 136/300 [00:16&lt;00:02, 56.75it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████▌     | 136/300 [00:16&lt;00:02, 56.75it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████▌     | 136/300 [00:16&lt;00:02, 56.75it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████▌     | 136/300 [00:16&lt;00:02, 56.75it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 45%|████▌     | 136/300 [00:16&lt;00:02, 56.75it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|████▋     | 142/300 [00:16&lt;00:02, 56.66it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|████▋     | 142/300 [00:16&lt;00:02, 56.66it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|████▋     | 142/300 [00:16&lt;00:02, 56.66it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|████▋     | 142/300 [00:16&lt;00:02, 56.66it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|████▋     | 142/300 [00:16&lt;00:02, 56.66it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|████▋     | 142/300 [00:16&lt;00:02, 56.66it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 47%|████▋     | 142/300 [00:16&lt;00:02, 56.66it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████▉     | 148/300 [00:16&lt;00:02, 57.29it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████▉     | 148/300 [00:16&lt;00:02, 57.29it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████▉     | 148/300 [00:16&lt;00:02, 57.29it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████▉     | 148/300 [00:16&lt;00:02, 57.29it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████▉     | 148/300 [00:16&lt;00:02, 57.29it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████▉     | 148/300 [00:16&lt;00:02, 57.29it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 49%|████▉     | 148/300 [00:16&lt;00:02, 57.29it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|█████▏    | 154/300 [00:16&lt;00:02, 57.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|█████▏    | 154/300 [00:16&lt;00:02, 57.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|█████▏    | 154/300 [00:16&lt;00:02, 57.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|█████▏    | 154/300 [00:16&lt;00:02, 57.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|█████▏    | 154/300 [00:16&lt;00:02, 57.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|█████▏    | 154/300 [00:16&lt;00:02, 57.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 51%|█████▏    | 154/300 [00:16&lt;00:02, 57.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|█████▎    | 160/300 [00:16&lt;00:02, 57.02it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|█████▎    | 160/300 [00:16&lt;00:02, 57.02it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|█████▎    | 160/300 [00:16&lt;00:02, 57.02it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|█████▎    | 160/300 [00:16&lt;00:02, 57.02it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|█████▎    | 160/300 [00:16&lt;00:02, 57.02it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|█████▎    | 160/300 [00:16&lt;00:02, 57.02it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 53%|█████▎    | 160/300 [00:16&lt;00:02, 57.02it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████▌    | 166/300 [00:16&lt;00:02, 57.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████▌    | 166/300 [00:16&lt;00:02, 57.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████▌    | 166/300 [00:16&lt;00:02, 57.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████▌    | 166/300 [00:16&lt;00:02, 57.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████▌    | 166/300 [00:16&lt;00:02, 57.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████▌    | 166/300 [00:16&lt;00:02, 57.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 55%|█████▌    | 166/300 [00:16&lt;00:02, 57.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 57%|█████▋    | 172/300 [00:16&lt;00:02, 56.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 57%|█████▋    | 172/300 [00:17&lt;00:02, 56.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 57%|█████▋    | 172/300 [00:17&lt;00:02, 56.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 57%|█████▋    | 172/300 [00:17&lt;00:02, 56.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 57%|█████▋    | 172/300 [00:17&lt;00:02, 56.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 57%|█████▋    | 172/300 [00:17&lt;00:02, 56.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 57%|█████▋    | 172/300 [00:17&lt;00:02, 56.27it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|█████▉    | 178/300 [00:17&lt;00:02, 55.90it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|█████▉    | 178/300 [00:17&lt;00:02, 55.90it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|█████▉    | 178/300 [00:17&lt;00:02, 55.90it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|█████▉    | 178/300 [00:17&lt;00:02, 55.90it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|█████▉    | 178/300 [00:17&lt;00:02, 55.90it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|█████▉    | 178/300 [00:17&lt;00:02, 55.90it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 59%|█████▉    | 178/300 [00:17&lt;00:02, 55.90it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████▏   | 184/300 [00:17&lt;00:02, 55.40it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████▏   | 184/300 [00:17&lt;00:02, 55.40it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████▏   | 184/300 [00:17&lt;00:02, 55.40it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████▏   | 184/300 [00:17&lt;00:02, 55.40it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████▏   | 184/300 [00:17&lt;00:02, 55.40it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████▏   | 184/300 [00:17&lt;00:02, 55.40it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 61%|██████▏   | 184/300 [00:17&lt;00:02, 55.40it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|██████▎   | 190/300 [00:17&lt;00:01, 55.16it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|██████▎   | 190/300 [00:17&lt;00:01, 55.16it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|██████▎   | 190/300 [00:17&lt;00:01, 55.16it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|██████▎   | 190/300 [00:17&lt;00:01, 55.16it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|██████▎   | 190/300 [00:17&lt;00:01, 55.16it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|██████▎   | 190/300 [00:17&lt;00:01, 55.16it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 63%|██████▎   | 190/300 [00:17&lt;00:01, 55.16it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 65%|██████▌   | 196/300 [00:17&lt;00:01, 56.01it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 65%|██████▌   | 196/300 [00:17&lt;00:01, 56.01it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 65%|██████▌   | 196/300 [00:17&lt;00:01, 56.01it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 65%|██████▌   | 196/300 [00:17&lt;00:01, 56.01it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 65%|██████▌   | 196/300 [00:17&lt;00:01, 56.01it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 65%|██████▌   | 196/300 [00:17&lt;00:01, 56.01it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 65%|██████▌   | 196/300 [00:17&lt;00:01, 56.01it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████▋   | 202/300 [00:17&lt;00:01, 56.52it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████▋   | 202/300 [00:17&lt;00:01, 56.52it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████▋   | 202/300 [00:17&lt;00:01, 56.52it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████▋   | 202/300 [00:17&lt;00:01, 56.52it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████▋   | 202/300 [00:17&lt;00:01, 56.52it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████▋   | 202/300 [00:17&lt;00:01, 56.52it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 67%|██████▋   | 202/300 [00:17&lt;00:01, 56.52it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 69%|██████▉   | 208/300 [00:17&lt;00:01, 56.77it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 69%|██████▉   | 208/300 [00:17&lt;00:01, 56.77it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 69%|██████▉   | 208/300 [00:17&lt;00:01, 56.77it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 69%|██████▉   | 208/300 [00:17&lt;00:01, 56.77it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 69%|██████▉   | 208/300 [00:17&lt;00:01, 56.77it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 69%|██████▉   | 208/300 [00:17&lt;00:01, 56.77it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 69%|██████▉   | 208/300 [00:17&lt;00:01, 56.77it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|███████▏  | 214/300 [00:17&lt;00:01, 56.80it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|███████▏  | 214/300 [00:17&lt;00:01, 56.80it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|███████▏  | 214/300 [00:17&lt;00:01, 56.80it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|███████▏  | 214/300 [00:17&lt;00:01, 56.80it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|███████▏  | 214/300 [00:17&lt;00:01, 56.80it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|███████▏  | 214/300 [00:17&lt;00:01, 56.80it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 71%|███████▏  | 214/300 [00:17&lt;00:01, 56.80it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|███████▎  | 220/300 [00:17&lt;00:01, 56.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|███████▎  | 220/300 [00:17&lt;00:01, 56.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|███████▎  | 220/300 [00:17&lt;00:01, 56.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|███████▎  | 220/300 [00:17&lt;00:01, 56.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|███████▎  | 220/300 [00:17&lt;00:01, 56.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|███████▎  | 220/300 [00:17&lt;00:01, 56.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 73%|███████▎  | 220/300 [00:17&lt;00:01, 56.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|███████▌  | 226/300 [00:17&lt;00:01, 56.81it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|███████▌  | 226/300 [00:17&lt;00:01, 56.81it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|███████▌  | 226/300 [00:17&lt;00:01, 56.81it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|███████▌  | 226/300 [00:17&lt;00:01, 56.81it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|███████▌  | 226/300 [00:18&lt;00:01, 56.81it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|███████▌  | 226/300 [00:18&lt;00:01, 56.81it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 75%|███████▌  | 226/300 [00:18&lt;00:01, 56.81it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 77%|███████▋  | 232/300 [00:18&lt;00:01, 56.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 77%|███████▋  | 232/300 [00:18&lt;00:01, 56.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 77%|███████▋  | 232/300 [00:18&lt;00:01, 56.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 77%|███████▋  | 232/300 [00:18&lt;00:01, 56.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 77%|███████▋  | 232/300 [00:18&lt;00:01, 56.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 77%|███████▋  | 232/300 [00:18&lt;00:01, 56.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 77%|███████▋  | 232/300 [00:18&lt;00:01, 56.50it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 79%|███████▉  | 238/300 [00:18&lt;00:01, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 79%|███████▉  | 238/300 [00:18&lt;00:01, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 79%|███████▉  | 238/300 [00:18&lt;00:01, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 79%|███████▉  | 238/300 [00:18&lt;00:01, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 79%|███████▉  | 238/300 [00:18&lt;00:01, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 79%|███████▉  | 238/300 [00:18&lt;00:01, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 79%|███████▉  | 238/300 [00:18&lt;00:01, 56.31it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████▏ | 244/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████▏ | 244/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████▏ | 244/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████▏ | 244/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████▏ | 244/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████▏ | 244/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 81%|████████▏ | 244/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 250/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 250/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 250/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 250/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 250/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 250/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 83%|████████▎ | 250/300 [00:18&lt;00:00, 56.17it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 85%|████████▌ | 256/300 [00:18&lt;00:00, 56.05it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 263/300 [00:18&lt;00:00, 57.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 263/300 [00:18&lt;00:00, 57.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 263/300 [00:18&lt;00:00, 57.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 263/300 [00:18&lt;00:00, 57.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 263/300 [00:18&lt;00:00, 57.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 263/300 [00:18&lt;00:00, 57.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 88%|████████▊ | 263/300 [00:18&lt;00:00, 57.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|████████▉ | 269/300 [00:18&lt;00:00, 57.76it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|████████▉ | 269/300 [00:18&lt;00:00, 57.76it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|████████▉ | 269/300 [00:18&lt;00:00, 57.76it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|████████▉ | 269/300 [00:18&lt;00:00, 57.76it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|████████▉ | 269/300 [00:18&lt;00:00, 57.76it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|████████▉ | 269/300 [00:18&lt;00:00, 57.76it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 90%|████████▉ | 269/300 [00:18&lt;00:00, 57.76it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 275/300 [00:18&lt;00:00, 58.23it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 275/300 [00:18&lt;00:00, 58.23it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 275/300 [00:18&lt;00:00, 58.23it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 275/300 [00:18&lt;00:00, 58.23it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 275/300 [00:18&lt;00:00, 58.23it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 275/300 [00:18&lt;00:00, 58.23it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 92%|█████████▏| 275/300 [00:18&lt;00:00, 58.23it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▎| 281/300 [00:18&lt;00:00, 58.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▎| 281/300 [00:18&lt;00:00, 58.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▎| 281/300 [00:18&lt;00:00, 58.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▎| 281/300 [00:18&lt;00:00, 58.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▎| 281/300 [00:18&lt;00:00, 58.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▎| 281/300 [00:18&lt;00:00, 58.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 94%|█████████▎| 281/300 [00:19&lt;00:00, 58.18it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▌| 287/300 [00:19&lt;00:00, 57.06it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▌| 287/300 [00:19&lt;00:00, 57.06it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▌| 287/300 [00:19&lt;00:00, 57.06it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▌| 287/300 [00:19&lt;00:00, 57.06it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▌| 287/300 [00:19&lt;00:00, 57.06it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▌| 287/300 [00:19&lt;00:00, 57.06it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 96%|█████████▌| 287/300 [00:19&lt;00:00, 57.06it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 293/300 [00:19&lt;00:00, 57.07it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 293/300 [00:19&lt;00:00, 57.07it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 293/300 [00:19&lt;00:00, 57.07it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 293/300 [00:19&lt;00:00, 57.07it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 293/300 [00:19&lt;00:00, 57.07it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 293/300 [00:19&lt;00:00, 57.07it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span> 98%|█████████▊| 293/300 [00:19&lt;00:00, 57.07it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████▉| 299/300 [00:19&lt;00:00, 57.08it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|█████████▉| 299/300 [00:19&lt;00:00, 57.08it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>100%|██████████| 300/300 [00:19&lt;00:00, 15.59it/s, loss=0.000000]
-</pre></div>
-</div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>
-</pre></div>
-</div>
-</div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "710e095868e343a7bee50816b2193447", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -2086,7 +852,7 @@ Wall time: 3.88 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>9.9359
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array(9.9359, dtype=float32)
 </pre></div>
 </div>
 </div>
@@ -2105,13 +871,13 @@ Wall time: 3.88 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_quick_start_48_0.png" src="../_images/01_quick_start_48_0.png" />
+<img alt="../_images/0c069ec0927002b3331010a6c8b09bd36fbd2128d3c854e5e1190c90f569b697.png" src="../_images/0c069ec0927002b3331010a6c8b09bd36fbd2128d3c854e5e1190c90f569b697.png" />
 </div>
 </div>
 <p>The minimum of the MZI is perfectly located at 1550nm.</p>
 </section>
 <section id="mzi-chain">
-<h2>MZI Chain<a class="headerlink" href="#mzi-chain" title="Permalink to this headline">#</a></h2>
+<h2>MZI Chain<a class="headerlink" href="#mzi-chain" title="Permalink to this heading">#</a></h2>
 <p>Let’s now create a chain of MZIs. For this, we first create a subcomponent: a directional coupler with arms:</p>
 <div class="highlight-default notranslate"><div class="highlight"><pre><span></span>                                 <span class="n">top</span>
                             <span class="n">in0</span> <span class="o">-----</span> <span class="n">out0</span> <span class="o">-&gt;</span> <span class="n">out1</span>
@@ -2208,14 +974,14 @@ Wall time: 3.88 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.42 s, sys: 3.9 ms, total: 1.43 s
-Wall time: 1.43 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.44 s, sys: 8.68 ms, total: 1.45 s
+Wall time: 2.16 s
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3min 50s, sys: 543 ms, total: 3min 50s
-Wall time: 3min 50s
-CPU times: user 50.2 ms, sys: 3.99 ms, total: 54.2 ms
-Wall time: 38.9 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1min 22s, sys: 486 ms, total: 1min 23s
+Wall time: 1min 26s
+CPU times: user 34.2 ms, sys: 0 ns, total: 34.2 ms
+Wall time: 34.2 ms
 </pre></div>
 </div>
 </div>
@@ -2234,7 +1000,7 @@ Wall time: 38.9 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/01_quick_start_60_0.png" src="../_images/01_quick_start_60_0.png" />
+<img alt="../_images/89b6cc4dbbe47dd0321b3b0fee28d309f1c1e83047ba0939ad655086f0e02018.png" src="../_images/89b6cc4dbbe47dd0321b3b0fee28d309f1c1e83047ba0939ad655086f0e02018.png" />
 </div>
 </div>
 </section>
@@ -2252,7 +1018,7 @@ Wall time: 38.9 ms
             mode: "sax"
         },
         kernelOptions: {
-            kernelName: "sax",
+            name: "sax",
             path: "./examples"
         },
         predefinedOutput: true
@@ -2260,50 +1026,112 @@ Wall time: 38.9 ms
     </script>
     <script>kernelName = 'sax'</script>
 
-              </div>
+                </article>
               
-            </main>
-            <footer class="footer-article noprint">
-                
-    <!-- Previous / next buttons -->
-<div class='prev-next-area'>
-    <a class='left-prev' id="prev-link" href="../index.html" title="previous page">
-        <i class="fas fa-angle-left"></i>
-        <div class="prev-next-info">
-            <p class="prev-next-subtitle">previous</p>
-            <p class="prev-next-title">SAX</p>
-        </div>
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="../index.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">SAX</p>
+      </div>
     </a>
-    <a class='right-next' id="next-link" href="02_all_pass_filter.html" title="next page">
-    <div class="prev-next-info">
+    <a class="right-next"
+       href="02_all_pass_filter.html"
+       title="next page">
+      <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
         <p class="prev-next-title">Simulating an All-Pass Filter</p>
-    </div>
-    <i class="fas fa-angle-right"></i>
-    </a>
-</div>
-            </footer>
-        </div>
-    </div>
-    <div class="footer-content row">
-        <footer class="col footer"><p>
-  
-    By Floris Laporte<br/>
-  
-      &copy; Copyright 2022.<br/>
-</p>
-        </footer>
-    </div>
-    
-</div>
-
-
       </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#environment-variables">Environment variables</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#imports">Imports</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#scatter-dictionaries">Scatter <em>dictionaries</em></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametrized-models">Parametrized Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#circuit-models">Circuit Models</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#simulating-the-parametrized-mzi">Simulating the parametrized MZI</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#optimization">Optimization</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#mzi-chain">MZI Chain</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Floris Laporte
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
     </div>
+  </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/pydata-sphinx-theme.js?digest=1999514e3f237ded88cf"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
 
-
+  <footer class="bd-footer">
+  </footer>
   </body>
 </html>
