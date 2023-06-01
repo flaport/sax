@@ -56,8 +56,6 @@ full = [
   "pydot",
   "scipy",
   "shapely",
-  "nlopt",
-  "autograd",
 ]
 dev = [
   "sax[full]",
