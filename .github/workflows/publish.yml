@@ -40,14 +40,14 @@ jobs:
         uses: softprops/action-gh-release@v1
         with:
           files: |
-            dist/sax-0.8.6.tar.gz
-            dist/sax-0.8.6-py3-none-any.whl
+            dist/sax-0.8.7.tar.gz
+            dist/sax-0.8.7-py3-none-any.whl
       - name: Publish to PyPI
         run: |
           pip install --user twine \
           && twine upload \
-            dist/sax-0.8.6.tar.gz \
-            dist/sax-0.8.6-py3-none-any.whl \
+            dist/sax-0.8.7.tar.gz \
+            dist/sax-0.8.7-py3-none-any.whl \
           --username __token__ \
           --password ${{ secrets.PYPI_TOKEN }}
 

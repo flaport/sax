@@ -61,5 +61,5 @@ dependencies:
 #   - klujax # not suppored on windows
     # other
     - tmm
-    - sax==0.8.6
+    - sax==0.8.7
     - datamodel_code_generator
