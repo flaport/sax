@@ -13,8 +13,8 @@ from typing import Any, Callable, Dict, Optional, Union
 import black
 import numpy as np
 import yaml
-from pydantic import BaseModel as _BaseModel
-from pydantic import Extra, Field, ValidationError, validator
+from pydantic.v1 import BaseModel as _BaseModel
+from pydantic.v1 import Extra, Field, ValidationError, validator
 from .utils import clean_string, get_settings, hash_dict
 
 # Internal Cell

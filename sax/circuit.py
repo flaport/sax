@@ -20,7 +20,7 @@ from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Unio
 import black
 import networkx as nx
 import numpy as np
-from pydantic import ValidationError
+from pydantic.v1 import ValidationError
 from sax import reciprocal
 from .backends import circuit_backends
 from .multimode import multimode, singlemode
