@@ -85,9 +85,6 @@ jobs:
 
   run:
     runs-on: ubuntu-latest
-    needs:
-      - clean
-      - diff
     container:
       image: condaforge/mambaforge
       volumes:
