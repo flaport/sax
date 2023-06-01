@@ -26,11 +26,13 @@ dependencies:
   - ipywidgets
   - jupyterlab
   - matplotlib
-# - pymeep=\*=mpi_mpich_\*
   - pandas
   - pydot
   - scipy
   - shapely
+  - nlopt
+  - autograd
+# - pymeep=\*=mpi_mpich_\*
 
   # dev
   - build
@@ -59,5 +61,5 @@ dependencies:
 #   - klujax # not suppored on windows
     # other
     - tmm
-    - sax==0.8.5
+    - sax==0.8.6
     - datamodel_code_generator

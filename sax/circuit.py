@@ -14,7 +14,6 @@ import os
 import shutil
 import sys
 from functools import partial
-from pprint import pprint
 from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Union
 
 import black
@@ -24,7 +23,7 @@ from pydantic import ValidationError
 from sax import reciprocal
 from .backends import circuit_backends
 from .multimode import multimode, singlemode
-from .netlist import Netlist, RecursiveNetlist, load_recursive_netlist
+from .netlist import Netlist, RecursiveNetlist
 from .netlist_cleaning import remove_unused_instances
 from .typing_ import Model, Settings, SType
 from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
@@ -41,14 +40,14 @@ def create_dag(
     all_models = {}
     g = nx.DiGraph()
 
-    for model_name, subnetlist in netlist.dict()['__root__'].items():
+    for model_name, subnetlist in netlist.dict()["__root__"].items():
         if not model_name in all_models:
             all_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)
         if model_name in models:
             continue
-        for instance in subnetlist['instances'].values():
-            component = instance['component']
+        for instance in subnetlist["instances"].values():
+            component = instance["component"]
             if not component in all_models:
                 all_models[component] = models.get(component, None)
                 g.add_node(component)
@@ -63,18 +62,26 @@ def create_dag(
 
 # Cell
 
+
 def draw_dag(dag, with_labels=True, **kwargs):
     _patch_path()
-    if shutil.which('dot'):
-        return nx.draw(dag, nx.nx_pydot.pydot_layout(dag, prog='dot'), with_labels=with_labels, **kwargs)
+    if shutil.which("dot"):
+        return nx.draw(
+            dag,
+            nx.nx_pydot.pydot_layout(dag, prog="dot"),
+            with_labels=with_labels,
+            **kwargs
+        )
     else:
         return nx.draw(dag, _my_dag_pos(dag), with_labels=with_labels, **kwargs)
 
+
 def _patch_path():
-    os_paths = {p: None for p in os.environ.get('PATH', '').split(os.pathsep)}
+    os_paths = {p: None for p in os.environ.get("PATH", "").split(os.pathsep)}
     sys_paths = {p: None for p in sys.path}
     other_paths = {os.path.dirname(sys.executable): None}
-    os.environ['PATH'] = os.pathsep.join({**os_paths, **sys_paths, **other_paths})
+    os.environ["PATH"] = os.pathsep.join({**os_paths, **sys_paths, **other_paths})
+
 
 def _my_dag_pos(dag):
     # inferior to pydot
@@ -88,7 +95,9 @@ def _my_dag_pos(dag):
     width = max(widths.values())
     height = max(widths) + 1
 
-    horizontal_pos = {k: np.linspace(0, 1, w+2)[1:-1]*width for k, w in widths.items()}
+    horizontal_pos = {
+        k: np.linspace(0, 1, w + 2)[1:-1] * width for k, w in widths.items()
+    }
 
     pos = {}
     for k, vs in in_degree.items():
@@ -177,7 +186,9 @@ def circuit(
     netlist, instance_models = _extract_instance_models(netlist)
 
     recnet: RecursiveNetlist = _validate_net(netlist)
-    dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))  # directed acyclic graph
+    dependency_dag: nx.DiGraph = _validate_dag(
+        create_dag(recnet, models)
+    )  # directed acyclic graph
     models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
     modes = _validate_modes(modes)
     backend = _validate_circuit_backend(backend)
@@ -206,45 +217,52 @@ def circuit(
     assert circuit is not None
     return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
 
+
 class NetlistDict(TypedDict):
     instances: Dict
     connections: Dict[str, str]
     ports: Dict[str, str]
 
+
 RecursiveNetlistDict = Dict[str, NetlistDict]
+
 
 class CircuitInfo(NamedTuple):
     dag: nx.DiGraph
     models: Dict[str, Model]
 
+
 def _ensure_recursive_netlist_dict(netlist):
     if not isinstance(netlist, dict):
         netlist = netlist.dict()
-    if '__root__' in netlist:
-        netlist = netlist['__root__']
-    if 'instances' in netlist:
-        netlist = {'top_level': netlist}
+    if "__root__" in netlist:
+        netlist = netlist["__root__"]
+    if "instances" in netlist:
+        netlist = {"top_level": netlist}
     netlist = {**netlist}
     for k, v in netlist.items():
         netlist[k] = {**v}
     return netlist
 
+
 def _extract_instance_models(netlist):
     models = {}
     for netname, net in netlist.items():
         net = {**net}
-        net['instances'] = {**net['instances']}
-        for name, inst in net['instances'].items():
+        net["instances"] = {**net["instances"]}
+        for name, inst in net["instances"].items():
             if callable(inst):
                 settings = get_settings(inst)
                 if isinstance(inst, partial) and inst.args:
-                    raise ValueError("SAX circuits and netlists don't support partials with positional arguments.")
+                    raise ValueError(
+                        "SAX circuits and netlists don't support partials with positional arguments."
+                    )
                 while isinstance(inst, partial):
                     inst = inst.func
                 models[inst.__name__] = inst
-                net['instances'][name] = {
-                    'component': inst.__name__,
-                    'settings': settings
+                net["instances"][name] = {
+                    "component": inst.__name__,
+                    "settings": settings,
                 }
         netlist[netname] = net
     return netlist, models

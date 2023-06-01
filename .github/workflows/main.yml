@@ -87,7 +87,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Install dependencies
-        run: conda install -y gdspy pymeep=\*=mpi_mpich_\* graphviz pydot && pip install datamodel_code_generator git+https://github.com/gdsfactory/gdsfactory
+        run: conda install -y nlopt gdspy autograd pymeep=\*=mpi_mpich_\* graphviz pydot && pip install datamodel_code_generator gdsfactory && pip install --upgrade --force-reinstall .[full]
       - name: Run notebooks
         run: find . -name "*.ipynb" | grep -v ipynb_checkpoints | xargs -I {} papermill -k python3 {} {}
       - name: Expose 'nbs' as artifact
