@@ -120,7 +120,7 @@ plt.show()
 ![png](docs/output_10_0.png)
 
 Those are the basics. For more info, check out the **full**
-[SAX Quick Start page](https://flaport.github.io/sax/quick_start) or the rest of the [Documentation](https://flaport.github.io/sax).
+[SAX Quick Start page](https://flaport.github.io/sax/examples/01_quick_start.html) or the rest of the [Documentation](https://flaport.github.io/sax).
 
 ## Installation
 
