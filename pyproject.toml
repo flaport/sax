@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sax"
-version = "0.8.5"
+version = "0.8.6"
 authors = [
 { name = "Floris Laporte", email = "floris.laporte@rockleyphotonics.com" },
 ]
