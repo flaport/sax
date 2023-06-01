@@ -585,14 +585,14 @@ document.write(`
  (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
  (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
  (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in0&#39;, &#39;out0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;in1&#39;, &#39;out1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
- (&#39;out0&#39;, &#39;in0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
  (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;out1&#39;, &#39;in1&#39;): Array(0.24999999-0.433015j, dtype=complex64)}
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.24999999+0.433015j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
@@ -780,14 +780,14 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,in0&#39;,
- &#39;dc1,out0&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc2,in1&#39;,
+ &#39;dc2,in0&#39;,
+ &#39;dc2,out1&#39;,
+ &#39;dc2,out0&#39;,
  &#39;dc1,in1&#39;,
  &#39;dc1,out1&#39;,
- &#39;dc2,in0&#39;,
- &#39;dc2,out0&#39;,
- &#39;dc2,out1&#39;,
- &#39;dc2,in1&#39;)
+ &#39;dc1,in0&#39;,
+ &#39;dc1,out0&#39;)
 </pre></div>
 </div>
 </div>
@@ -862,14 +862,14 @@ document.write(`
  (&#39;dc2,out0&#39;, &#39;dc2,in1&#39;): Array(0.+0.70710677j, dtype=complex64),
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): Array(0.+0.70710677j, dtype=complex64),
  (&#39;dc2,out1&#39;, &#39;dc2,in1&#39;): Array(0.70710677+0.j, dtype=complex64),
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.49999997+0.j, dtype=complex64),
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.49999997j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.49999997j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.49999997+0.j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.49999997+0.j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.49999997+0.j, dtype=complex64),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(0.+0.49999997j, dtype=complex64),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.49999997+0.j, dtype=complex64)}
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.49999997+0.j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.49999997+0.j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.49999997+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
@@ -902,14 +902,14 @@ document.write(`
  (&#39;dc2,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.70710677j, dtype=complex64),
  (&#39;dc2,out0&#39;, &#39;dc2,in0&#39;): Array(0.70710677+0.j, dtype=complex64),
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): Array(0.+0.70710677j, dtype=complex64),
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.49999997+0.j, dtype=complex64),
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.49999997j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.49999997j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.49999997+0.j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.49999997+0.j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.49999997+0.j, dtype=complex64),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(0.+0.49999997j, dtype=complex64),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.49999997+0.j, dtype=complex64)}
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.49999997+0.j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.49999997+0.j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.49999997j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.49999997+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
@@ -949,22 +949,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
- (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex64),
  (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex64)}
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
@@ -982,22 +982,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;in1&#39;, &#39;out1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
- (&#39;out0&#39;, &#39;in0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;out1&#39;, &#39;in1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
  (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;out1&#39;, &#39;in1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
- (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
  (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64)}
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
+ (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64)}
 </pre></div>
 </div>
 </div>
