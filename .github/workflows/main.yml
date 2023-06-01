@@ -74,7 +74,7 @@ jobs:
 #         mamba env update -n base -f environment.yml && \
 #         mamba install -y gdspy pymeep=\*=mpi_mpich_\* && \
 #         pip install datamodel_code_generator gdsfactory && \
-#         pip install --upgrade --force-reinstall .[full]
+#         pip install --upgrade --force-reinstall --no-deps .[full]
 #     - name: Test notebooks
 #       run: nbdev_test_nbs | tee nbdev_test_nbs.log
 #     - name: Expose 'nbdev_test_nbs.log' as artifact
@@ -100,9 +100,9 @@ jobs:
           sed -i "s/- sax==/#- sax==/g" environment.yml && \
           pip install klujax>=0.1.4 && \
           mamba env update -n base -f environment.yml && \
-          mamba install -y gdspy pymeep=\*=mpi_mpich_\* && \
+          mamba install -y parallel gdspy pymeep=\*=mpi_mpich_\* && \
           pip install datamodel_code_generator gdsfactory && \
-          pip install --upgrade --force-reinstall .[full]
+          pip install --upgrade --force-reinstall --no-deps .
       - name: Run notebooks
         run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs parallel papermill {} {} -k python3 ':::'
       - name: Expose 'nbs' as artifact
