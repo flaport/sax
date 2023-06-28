@@ -345,7 +345,7 @@ def _make_multimode(netlist, modes, models):
 def get_required_circuit_models(
         netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
         models: Optional[Dict[str, Model]] = None,
-) -> Dict:
+) -> List:
     if models is None:
         models = {}
     assert isinstance(models, dict)
