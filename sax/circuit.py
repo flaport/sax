@@ -5,7 +5,7 @@ from __future__ import annotations
 
 
 __all__ = ['create_dag', 'draw_dag', 'find_root', 'find_leaves', 'circuit', 'NetlistDict', 'CircuitInfo',
-           'RecursiveNetlistDict']
+           'RecursiveNetlistDict', 'get_required_circuit_models']
 
 # Cell
 #nbdev_comment from __future__ import annotations
@@ -340,3 +340,37 @@ def _make_multimode(netlist, modes, models):
         for mode in modes
     }
     return connections, ports, models
+
+# Cell
+
+def get_required_circuit_models(
+        netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
+        models: Optional[Dict[str, Model]] = None,
+) -> List:
+    if models is None:
+        models = {}
+    assert isinstance(models, dict)
+    netlist = _ensure_recursive_netlist_dict(netlist)
+    # TODO: do the following two steps *after* recursive netlist parsing.
+    netlist = remove_unused_instances(netlist)
+    netlist, instance_models = _extract_instance_models(netlist)
+    recnet: RecursiveNetlist = _validate_net(netlist)
+
+    missing_models = {}
+    missing_model_names = []
+    g = nx.DiGraph()
+
+    for model_name, subnetlist in recnet.dict()["__root__"].items():
+        if not model_name in missing_models:
+            missing_models[model_name] = models.get(model_name, subnetlist)
+            g.add_node(model_name)
+        if model_name in models:
+            continue
+        for instance in subnetlist["instances"].values():
+            component = instance["component"]
+            if not component in missing_models:
+                missing_models[component] = models.get(component, None)
+                missing_model_names.append(component)
+                g.add_node(component)
+            g.add_edge(model_name, component)
+    return missing_model_names

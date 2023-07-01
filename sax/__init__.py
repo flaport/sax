@@ -105,6 +105,7 @@ from .netlist import load_recursive_netlist as load_recursive_netlist
 # Cell
 
 from .circuit import circuit as circuit
+from .circuit import get_required_circuit_models as get_required_circuit_models
 
 # Cell
 
