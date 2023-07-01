@@ -10,7 +10,7 @@ __all__ = []
 #nbdev_comment from __future__ import annotations
 
 __author__ = "Floris Laporte"
-__version__ = "0.8.7"
+__version__ = "0.8.8"
 
 # Cell
 from functools import partial as partial
