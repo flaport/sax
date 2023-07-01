@@ -438,17 +438,11 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-06-01 21:50:29.568</span> | <span class=" -Color -Color-Bold -Color-Bold-Yellow">WARNING </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">get_active_pdk</span>:<span class=" -Color -Color-Cyan">603</span> - <span class=" -Color -Color-Bold -Color-Bold-Yellow">No active PDK. Activating generic PDK.</span>
-
-</pre></div>
-</div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You can install `pip install gdsfactory[full]` for better visualization
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You can install `pip install gdsfactory[cad]` for better visualization
+You can install `pip install gdsfactory[full]` for better visualization
 </pre></div>
 </div>
 <img alt="../_images/b2f4d1012e2e6a26517331626b29d40f99a16ce65ec974000d9e05d8b41cf213.png" src="../_images/b2f4d1012e2e6a26517331626b29d40f99a16ce65ec974000d9e05d8b41cf213.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>twomzi: uid bd506562, ports [&#39;o1&#39;, &#39;o2&#39;], references [&#39;mzi_1&#39;, &#39;mzi_2&#39;], 0 polygons
-</pre></div>
-</div>
 </div>
 </div>
 <p>To be able to model this device we’ll need some SAX dummy models:</p>
@@ -979,6 +973,71 @@ document.write(`
  (&#39;o2&#39;, &#39;o2&#39;): Array(0., dtype=float32, weak_type=True),
  (&#39;o2&#39;, &#39;o1&#39;): Array(0.81000006, dtype=float32, weak_type=True),
  (&#39;o1&#39;, &#39;o2&#39;): Array(0.81000006, dtype=float32, weak_type=True)}
+</pre></div>
+</div>
+</div>
+</div>
+<p>sometimes it’s useful to get the required circuit model names to be able to create the circuit:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.circuit.get_required_circuit_models">
+<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">get_required_circuit_models</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">netlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Netlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NetlistDict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RecursiveNetlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NetlistDict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">List</span></span></span><a class="headerlink" href="#sax.circuit.get_required_circuit_models" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_required_circuit_models</span><span class="p">(</span>
+        <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">RecursiveNetlistDict</span><span class="p">],</span>
+        <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+    <span class="k">if</span> <span class="n">models</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="n">_ensure_recursive_netlist_dict</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="c1"># TODO: do the following two steps *after* recursive netlist parsing.</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="n">remove_unused_instances</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="n">netlist</span><span class="p">,</span> <span class="n">instance_models</span> <span class="o">=</span> <span class="n">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">_validate_net</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+
+    <span class="n">missing_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">missing_model_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">subnetlist</span> <span class="ow">in</span> <span class="n">recnet</span><span class="o">.</span><span class="n">dict</span><span class="p">()[</span><span class="s2">&quot;__root__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">missing_models</span><span class="p">:</span>
+            <span class="n">missing_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">subnetlist</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">subnetlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="ow">not</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">missing_models</span><span class="p">:</span>
+                <span class="n">missing_models</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">missing_model_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">missing_model_names</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_required_circuit_models</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;mzi_delta_length10&#39;,
+ &#39;mzi_delta_length20&#39;,
+ &#39;bend_euler&#39;,
+ &#39;mmi1x2&#39;,
+ &#39;straight&#39;]
 </pre></div>
 </div>
 </div>
