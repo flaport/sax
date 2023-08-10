@@ -101,6 +101,8 @@ from .models import get_models as get_models, passthru as passthru
 from .netlist import netlist as netlist
 from .netlist import load_netlist as load_netlist
 from .netlist import load_recursive_netlist as load_recursive_netlist
+from .netlist import get_netlist_instances_by_prefix as get_netlist_instances_by_prefix
+from .netlist import get_component_instances as get_component_instances
 
 # Cell
 
