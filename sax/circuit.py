@@ -368,7 +368,7 @@ def get_required_circuit_models(
             continue
         for instance in subnetlist["instances"].values():
             component = instance["component"]
-            if not component in missing_models:
+            if (not component in missing_models) and (not component in models):
                 missing_models[component] = models.get(component, None)
                 missing_model_names.append(component)
                 g.add_node(component)
