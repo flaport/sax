@@ -342,7 +342,6 @@ def _make_multimode(netlist, modes, models):
     return connections, ports, models
 
 # Cell
-
 def get_required_circuit_models(
         netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
         models: Optional[Dict[str, Model]] = None,
