@@ -31,7 +31,7 @@ dependencies = [
   "networkx",
   "numpy",
   "orjson",
-  "pydantic<2",
+  "pydantic>=2",
   "pyyaml",
   "tables",
   "tqdm",
