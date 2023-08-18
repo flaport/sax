@@ -342,7 +342,6 @@ def _make_multimode(netlist, modes, models):
     return connections, ports, models
 
 # Cell
-
 def get_required_circuit_models(
         netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
         models: Optional[Dict[str, Model]] = None,
@@ -368,7 +367,7 @@ def get_required_circuit_models(
             continue
         for instance in subnetlist["instances"].values():
             component = instance["component"]
-            if not component in missing_models:
+            if (not component in missing_models) and (not component in models):
                 missing_models[component] = models.get(component, None)
                 missing_model_names.append(component)
                 g.add_node(component)
