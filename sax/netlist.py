@@ -14,17 +14,17 @@ from typing import Any, Callable, Dict, Optional, Union
 import black
 import numpy as np
 import yaml
-from pydantic.v1 import BaseModel as _BaseModel
-from pydantic.v1 import Extra, Field, ValidationError, validator
+from pydantic import BaseModel as _BaseModel, RootModel
+from pydantic import ConfigDict, Field, ValidationError, field_validator
 from .utils import clean_string, get_settings, hash_dict
 
 # Internal Cell
+
 class BaseModel(_BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
+    model_config = ConfigDict(
+        extra="ignore",
+        frozen=True,
+    )
 
     def __repr__(self):
         s = super().__repr__()
@@ -40,17 +40,17 @@ class BaseModel(_BaseModel):
 # Cell
 
 class Component(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
+    model_config = ConfigDict(
+        extra="ignore",
+        frozen=True,
+    )
 
     component: Union[str, Dict[str, Any]] = Field(..., title="Component")
     settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
 
     # this was added:
-    @validator("component")
+    @field_validator("component")
+    @classmethod
     def validate_component_name(cls, value):
         if "," in value:
             raise ValueError(
@@ -73,11 +73,10 @@ class PortEnum(Enum):
 
 
 class Placement(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
+    model_config = ConfigDict(
+        extra="ignore",
+        frozen=True,
+    )
 
     x: Optional[Union[str, float]] = Field(0, title="X")
     y: Optional[Union[str, float]] = Field(0, title="Y")
@@ -93,11 +92,10 @@ class Placement(BaseModel):
 
 
 class Route(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
+    model_config = ConfigDict(
+        extra="ignore",
+        frozen=True,
+    )
 
     links: Dict[str, str] = Field(..., title="Links")
     settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
@@ -105,11 +103,10 @@ class Route(BaseModel):
 
 
 class Netlist(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
+    model_config = ConfigDict(
+        extra="ignore",
+        frozen=True,
+    )
 
     instances: Dict[str, Component] = Field(..., title="Instances")
     connections: Optional[Dict[str, str]] = Field(None, title="Connections")
@@ -126,7 +123,8 @@ class Netlist(BaseModel):
 
     # these are extra additions:
 
-    @validator("instances", pre=True)
+    @field_validator("instances", mode="before")
+    @classmethod
     def coerce_different_type_instance_into_component_model(cls, instances):
         new_instances = {}
         for k, v in instances.items():
@@ -147,11 +145,13 @@ class Netlist(BaseModel):
             )
         return clean_string(value)
 
-    @validator("instances")
+    @field_validator("instances")
+    @classmethod
     def validate_instance_names(cls, instances):
         return {cls.clean_instance_string(k): v for k, v in instances.items()}
 
-    @validator("placements")
+    @field_validator("placements")
+    @classmethod
     def validate_placement_names(cls, placements):
         return {cls.clean_instance_string(k): v for k, v in placements.items()}
 
@@ -161,14 +161,16 @@ class Netlist(BaseModel):
         comp = cls.clean_instance_string(",".join(comp))
         return f"{comp},{port}"
 
-    @validator("connections")
+    @field_validator("connections")
+    @classmethod
     def validate_connection_names(cls, connections):
         return {
             cls.clean_connection_string(k): cls.clean_connection_string(v)
             for k, v in connections.items()
         }
 
-    @validator("ports")
+    @field_validator("ports")
+    @classmethod
     def validate_port_names(cls, ports):
         return {
             cls.clean_instance_string(k): cls.clean_connection_string(v)
@@ -177,13 +179,9 @@ class Netlist(BaseModel):
 
 # Cell
 
-class RecursiveNetlist(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-
-    __root__: Dict[str, Netlist]
+class RecursiveNetlist(RootModel):
+    model_config = ConfigDict(extra="ignore", frozen=True)
+    root: Dict[str, Netlist]
 
 # Cell
 
