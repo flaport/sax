@@ -191,10 +191,10 @@ def netlist(dic: Dict) -> RecursiveNetlist:
     elif isinstance(dic, Netlist):
         dic = dic.dict()
     try:
-        flat_net = Netlist.parse_obj(dic)
-        net = RecursiveNetlist.parse_obj({'top_level': flat_net})
+        flat_net = Netlist.model_validate(dic)
+        net = RecursiveNetlist.model_validate({'top_level': flat_net})
     except ValidationError:
-        net = RecursiveNetlist.parse_obj(dic)
+        net = RecursiveNetlist.model_validate(dic)
     return net
 
 # Cell
@@ -202,7 +202,7 @@ def netlist(dic: Dict) -> RecursiveNetlist:
 def load_netlist(pic_path) -> Netlist:
     with open(pic_path, "r") as file:
         net = yaml.safe_load(file.read())
-    return Netlist.parse_obj(net)
+    return Netlist.model_validate(net)
 
 # Cell
 @lru_cache()
@@ -215,7 +215,7 @@ def load_recursive_netlist(pic_path, ext='.yml'):
         if not os.path.isfile(path) or not path.endswith(ext):
             continue
         netlists[_clean_string(path)] = load_netlist(path)
-    return RecursiveNetlist.parse_obj(netlists)
+    return RecursiveNetlist.model_validate(netlists)
 
 # Cell
 def get_netlist_instances_by_prefix(

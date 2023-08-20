@@ -293,9 +293,9 @@ def _validate_modes(modes) -> List[str]:
 def _validate_net(netlist: Union[Netlist, RecursiveNetlist]) -> RecursiveNetlist:
     if isinstance(netlist, dict):
         try:
-            netlist = Netlist.parse_obj(netlist)
+            netlist = Netlist.model_validate(netlist)
         except ValidationError:
-            netlist = RecursiveNetlist.parse_obj(netlist)
+            netlist = RecursiveNetlist.model_validate(netlist)
     elif isinstance(netlist, Netlist):
         netlist = RecursiveNetlist(root={"top_level": netlist})
     return netlist
