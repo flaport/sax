@@ -14,9 +14,11 @@ from typing import Any, Callable, Dict, Optional, Union
 import black
 import numpy as np
 import yaml
+from .utils import clean_string, get_settings, hash_dict
+
+# Cell
 from pydantic import BaseModel as _BaseModel, RootModel
 from pydantic import ConfigDict, Field, ValidationError, field_validator
-from .utils import clean_string, get_settings, hash_dict
 
 # Internal Cell
 
@@ -180,7 +182,7 @@ class Netlist(BaseModel):
 # Cell
 
 class RecursiveNetlist(RootModel):
-    model_config = ConfigDict(extra="ignore", frozen=True)
+    model_config = ConfigDict(frozen=True)
     root: Dict[str, Netlist]
 
 # Cell
