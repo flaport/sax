@@ -12,14 +12,14 @@ dependencies:
   - networkx
   - numpy
   - orjson
-  - pydantic>=2
+  - pydantic
   - pyyaml
   - pytables
   - tqdm
 
   # full (recommended)
   - bokeh
-  - gdsfactory>=5.33.11
+  - gdsfactory>=6.0.0
   - graphviz
   - ipykernel
   - ipympl
@@ -30,8 +30,8 @@ dependencies:
   - pydot
   - scipy
   - shapely
-  - nlopt
   - autograd
+# - nlopt
 # - pymeep=\*=mpi_mpich_\*
 
   # dev

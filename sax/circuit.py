@@ -19,7 +19,6 @@ from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Unio
 import black
 import networkx as nx
 import numpy as np
-from pydantic.v1 import ValidationError
 from sax import reciprocal
 from .backends import circuit_backends
 from .multimode import multimode, singlemode
@@ -27,6 +26,12 @@ from .netlist import Netlist, RecursiveNetlist
 from .netlist_cleaning import remove_unused_instances
 from .typing_ import Model, Settings, SType
 from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
+
+# Cell
+try:
+    from pydantic.v1 import ValidationError
+except ImportError:
+    from pydantic import ValidationError
 
 # Cell
 def create_dag(
