@@ -98,7 +98,9 @@ jobs:
           pip install klujax>=0.1.4 && \
           mamba env update -n base -f environment.yml && \
           mamba install -y parallel gdspy pymeep=\*=mpi_mpich_\* && \
-          pip install datamodel_code_generator gdsfactory && \
+          pip install datamodel_code_generator && \
+          pip install pydantic\>2 pydantic-settings && \
+          pip install --upgrade git+https://github.com/gdsfactory/gdsfactory@pydantic2_3 && \
           pip install --upgrade --force-reinstall --no-deps .
       - name: Run notebooks
         run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs parallel papermill {} {} -k python3 ':::'
