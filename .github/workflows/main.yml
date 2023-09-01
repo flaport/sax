@@ -105,7 +105,7 @@ jobs:
           pip install --upgrade gdsfactory[cad]\>=7.4.2 gplugins kweb nlopt autograd future && \
           pip install --upgrade --force-reinstall --no-deps .
       - name: Run notebooks
-        run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs parallel papermill {} {} -k python3 ':::'
+        run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3
       - name: Expose 'nbs' as artifact
         uses: actions/upload-artifact@master
         with:
