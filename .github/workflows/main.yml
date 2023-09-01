@@ -75,7 +75,7 @@ jobs:
           mamba install -y parallel gdspy pymeep=\*=mpi_mpich_\* && \
           pip install datamodel_code_generator jax jaxlib klujax && \
           pip install pydantic\>2 pydantic-settings && \
-          pip install --upgrade gdsfactory\>=7.4.2 && \
+          pip install --upgrade gdsfactory[cad]\>=7.4.2 gplugins kweb nlopt autograd future && \
           pip install --upgrade --force-reinstall --no-deps .
       - name: Test notebooks
         run: nbdev_test_nbs | tee nbdev_test_nbs.log
@@ -102,7 +102,7 @@ jobs:
           mamba install -y parallel gdspy pymeep=\*=mpi_mpich_\* && \
           pip install datamodel_code_generator jax jaxlib klujax && \
           pip install pydantic\>2 pydantic-settings && \
-          pip install --upgrade gdsfactory\>=7.4.2 && \
+          pip install --upgrade gdsfactory[cad]\>=7.4.2 gplugins kweb nlopt autograd future && \
           pip install --upgrade --force-reinstall --no-deps .
       - name: Run notebooks
         run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs parallel papermill {} {} -k python3 ':::'
