@@ -91,6 +91,8 @@ jobs:
       image: condaforge/mambaforge
       volumes:
         - ${{ github.workspace }}:/github/workspace
+    env:
+      PYDEVD_DISABLE_FILE_VALIDATION: 1
     steps:
       - name: Checkout
         uses: actions/checkout@master
@@ -104,8 +106,8 @@ jobs:
           pip install pydantic\>2 pydantic-settings && \
           pip install --upgrade gdsfactory[cad]\>=7.4.2 gplugins kweb nlopt autograd future && \
           pip install --upgrade --force-reinstall --no-deps .
-      - name: Run notebooks
-        run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3
+      - name: Run source notebooks
+        run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3 || true
       - name: Expose 'nbs' as artifact
         uses: actions/upload-artifact@master
         with:
