@@ -67,7 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Circuit" href="07_circuit.html" />
+    <link rel="next" title="Netlist" href="06a_netlist.html" />
     <link rel="prev" title="Multimode" href="04_multimode.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -175,6 +175,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="02_utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_multimode.html">Multimode</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06a_netlist.html">Netlist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_circuit.html">Circuit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
@@ -790,10 +791,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;out0&#39;, &#39;out0&#39;): Array(0., dtype=float64),
- (&#39;out0&#39;, &#39;in0&#39;): Array(1., dtype=float64),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0., dtype=float64),
  (&#39;in0&#39;, &#39;out0&#39;): Array(1., dtype=float64),
- (&#39;in0&#39;, &#39;in0&#39;): Array(0., dtype=float64)}
+ (&#39;out0&#39;, &#39;in0&#39;): Array(1., dtype=float64),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0., dtype=float64)}
 </pre></div>
 </div>
 </div>
@@ -1086,11 +1087,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="07_circuit.html"
+       href="06a_netlist.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Circuit</p>
+        <p class="prev-next-title">Netlist</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

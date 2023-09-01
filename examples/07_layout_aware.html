@@ -175,6 +175,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../nbs/02_utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../nbs/04_multimode.html">Multimode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../nbs/05_models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/06a_netlist.html">Netlist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../nbs/07_circuit.html">Circuit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
@@ -383,6 +384,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">List</span>
 
 <span class="kn">import</span> <span class="nn">gdsfactory</span> <span class="k">as</span> <span class="nn">gf</span>  <span class="c1"># conda install gdsfactory</span>
+<span class="kn">from</span> <span class="nn">gdsfactory.quickplotter</span> <span class="kn">import</span> <span class="n">quickplot</span>
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.example_libraries.optimizers</span> <span class="k">as</span> <span class="nn">opt</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
@@ -469,16 +471,13 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span> <span class="o">=</span> <span class="n">simple_mzi</span><span class="p">()</span>
-<span class="n">mzi</span>
+<span class="n">quickplot</span><span class="p">(</span><span class="n">mzi</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.11/site-packages/pydantic/main.py:309: UserWarning: Pydantic serializer warnings:
-  Expected `bool` but got `int` - serialized value may not be as expected
-  return self.__pydantic_serializer__.to_python(
-</pre></div>
-</div>
+<img alt="../_images/76f27bb9df94ce66154e9bed662d9777a3e098703046252d0160bf63d1b496ed.png" src="../_images/76f27bb9df94ce66154e9bed662d9777a3e098703046252d0160bf63d1b496ed.png" />
+<img alt="../_images/76f27bb9df94ce66154e9bed662d9777a3e098703046252d0160bf63d1b496ed.png" src="../_images/76f27bb9df94ce66154e9bed662d9777a3e098703046252d0160bf63d1b496ed.png" />
 </div>
 </div>
 </section>
@@ -557,6 +556,19 @@ mzi1?
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0., dtype=float64, weak_type=True),
+ (&#39;o3&#39;, &#39;o3&#39;): Array(0.+0.j, dtype=complex128, weak_type=True),
+ (&#39;o3&#39;, &#39;o2&#39;): Array(0.+0.j, dtype=complex128, weak_type=True),
+ (&#39;o2&#39;, &#39;o3&#39;): Array(0.+0.j, dtype=complex128, weak_type=True),
+ (&#39;o2&#39;, &#39;o2&#39;): Array(0.+0.j, dtype=complex128, weak_type=True),
+ (&#39;o1&#39;, &#39;o3&#39;): Array(0.5+0.5j, dtype=complex128, weak_type=True),
+ (&#39;o1&#39;, &#39;o2&#39;): Array(0.5+0.5j, dtype=complex128, weak_type=True),
+ (&#39;o3&#39;, &#39;o1&#39;): Array(0.5+0.5j, dtype=complex128, weak_type=True),
+ (&#39;o2&#39;, &#39;o1&#39;): Array(0.5+0.5j, dtype=complex128, weak_type=True)}
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="waveguide-model">
@@ -595,6 +607,12 @@ mzi1?
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "1b22fd900b5b43ea8a633c18e14fb213", "version_major": 2, "version_minor": 0}</script><div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.11/site-packages/gdsfactory/typings.py:330: ComplexWarning: Casting complex values to real discards the imaginary part
+  return np.array(val, dtype=cls.inner_type)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -626,6 +644,9 @@ mzi1?
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/3b0f9b7ba55b63ecced26b611652112b0ecfddc1facaad1003599819c9931709.png" src="../_images/3b0f9b7ba55b63ecced26b611652112b0ecfddc1facaad1003599819c9931709.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -635,6 +656,9 @@ mzi1?
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/a41eaaa8860faa6c0760bd1137cd5639da970b775093a2f0c0f5bd18864afd78.png" src="../_images/a41eaaa8860faa6c0760bd1137cd5639da970b775093a2f0c0f5bd18864afd78.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -665,6 +689,11 @@ mzi1?
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([2.47592927, 2.48040469], dtype=float64)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -678,6 +707,9 @@ mzi1?
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/8d96e6296000f1ee05a3707429096fcceca77989589ce37f04e066dc00b1fd6a.png" src="../_images/8d96e6296000f1ee05a3707429096fcceca77989589ce37f04e066dc00b1fd6a.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -698,6 +730,12 @@ mzi1?
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o2&#39;): Array(-0.01230821-0.99992425j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o1&#39;): Array(-0.01230821-0.99992425j, dtype=complex128)}
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="simulate-mzi-again">
@@ -707,6 +745,19 @@ mzi1?
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">models</span><span class="p">[</span><span class="s2">&quot;straight&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">straight</span>
 <span class="n">mzi2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span><span class="n">mzi</span><span class="o">.</span><span class="n">get_netlist_recursive</span><span class="p">(),</span> <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">)</span>
 <span class="n">mzi2</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o3&#39;, &#39;o3&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o3&#39;, &#39;o2&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o3&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o2&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o1&#39;, &#39;o3&#39;): Array(-0.47403003+0.53628612j, dtype=complex128),
+ (&#39;o1&#39;, &#39;o2&#39;): Array(0.46250213-0.52324421j, dtype=complex128),
+ (&#39;o3&#39;, &#39;o1&#39;): Array(-0.47403003+0.53628612j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o1&#39;): Array(0.46250213-0.52324421j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -724,6 +775,15 @@ mzi1?
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.11/site-packages/numpy/core/getlimits.py:549: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  setattr(self, word, getattr(machar, word).flat[0])
+/opt/conda/lib/python3.11/site-packages/numpy/core/getlimits.py:89: UserWarning: The value of the smallest subnormal for &lt;class &#39;numpy.float64&#39;&gt; type is zero.
+  return self._float_to_str(self.smallest_subnormal)
+</pre></div>
+</div>
+<img alt="../_images/b6cfcb8961b66194bcd8a037eac7576f44846edb6ffae328f8aca9150706a3ad.png" src="../_images/b6cfcb8961b66194bcd8a037eac7576f44846edb6ffae328f8aca9150706a3ad.png" />
 </div>
 </div>
 </section>
@@ -789,11 +849,18 @@ mzi1?
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "d7250578fc0c40188a314b162ecc4b25", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">delta_length</span> <span class="o">=</span> <span class="n">params_fn</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
 <span class="n">delta_length</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array(9.68374414, dtype=float64)
 </pre></div>
 </div>
 </div>
@@ -815,6 +882,9 @@ mzi1?
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/4f9a9a0a434044e58c69f9827cae3fc1dd6e74b27d7f07968ffe3ac557490a20.png" src="../_images/4f9a9a0a434044e58c69f9827cae3fc1dd6e74b27d7f07968ffe3ac557490a20.png" />
 </div>
 </div>
 <p>Note that we could’ve just as well optimized the waveguide width:</p>
@@ -861,6 +931,9 @@ mzi1?
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "f90802100d9642fe8a39164b3e161bfe", "version_major": 2, "version_minor": 0}</script><img alt="../_images/707b220fee3c419fd4484b8948089cfbe52e79a589b14c77670b174eb94d0361.png" src="../_images/707b220fee3c419fd4484b8948089cfbe52e79a589b14c77670b174eb94d0361.png" />
+</div>
 </div>
 </section>
 <section id="layout-aware-monte-carlo">
@@ -868,7 +941,7 @@ mzi1?
 <p>Let’s assume the waveguide width changes with a certain correlation length. We can create a ‘wafermap’ of width variations by randomly varying the width and low pass filtering with a spatial frequency being the inverse of the correlation length (there are probably better ways to do this, but this works for this tutorial).</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_wafermaps</span><span class="p">(</span><span class="n">placements</span><span class="p">,</span> <span class="n">correlation_length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">num_maps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1.0</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_wafermaps</span><span class="p">(</span><span class="n">placements</span><span class="p">,</span> <span class="n">correlation_length</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">num_maps</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.0</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="n">dx</span> <span class="o">=</span> <span class="n">dy</span> <span class="o">=</span> <span class="n">correlation_length</span> <span class="o">/</span> <span class="mi">200</span>
     <span class="n">xs</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s2">&quot;x&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">placements</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
     <span class="n">ys</span> <span class="o">=</span> <span class="p">[</span><span class="n">p</span><span class="p">[</span><span class="s2">&quot;y&quot;</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">placements</span><span class="o">.</span><span class="n">values</span><span class="p">()]</span>
@@ -876,7 +949,11 @@ mzi1?
     <span class="n">wx</span><span class="p">,</span> <span class="n">wy</span> <span class="o">=</span> <span class="n">xmax</span> <span class="o">-</span> <span class="n">xmin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">-</span> <span class="n">ymin</span>
     <span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span><span class="p">,</span> <span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">=</span> <span class="n">xmin</span> <span class="o">-</span> <span class="n">wx</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="n">wx</span><span class="p">,</span> <span class="n">ymin</span> <span class="o">-</span> <span class="n">wy</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="n">wy</span>
     <span class="n">x</span><span class="p">,</span> <span class="n">y</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">xmin</span><span class="p">,</span> <span class="n">xmax</span> <span class="o">+</span> <span class="n">dx</span><span class="p">,</span> <span class="n">dx</span><span class="p">),</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">ymin</span><span class="p">,</span> <span class="n">ymax</span> <span class="o">+</span> <span class="n">dy</span><span class="p">,</span> <span class="n">dy</span><span class="p">)</span>
-    <span class="n">W0</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_maps</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">seed</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">r</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">RandomState</span><span class="p">(</span><span class="n">seed</span><span class="o">=</span><span class="n">seed</span><span class="p">)</span>
+    <span class="n">W0</span> <span class="o">=</span> <span class="n">r</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">num_maps</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
 
     <span class="n">fx</span> <span class="o">=</span> <span class="n">fftshift</span><span class="p">(</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="o">=</span><span class="n">x</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">x</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
     <span class="n">fy</span> <span class="o">=</span> <span class="n">fftshift</span><span class="p">(</span><span class="n">fftfreq</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">d</span><span class="o">=</span><span class="n">y</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="n">y</span><span class="p">[</span><span class="mi">0</span><span class="p">]))</span>
@@ -910,7 +987,12 @@ mzi1?
 <div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">placements</span> <span class="o">=</span> <span class="n">mzi</span><span class="o">.</span><span class="n">get_netlist</span><span class="p">()[</span><span class="s2">&quot;placements&quot;</span><span class="p">]</span>
 <span class="n">xm</span><span class="p">,</span> <span class="n">ym</span><span class="p">,</span> <span class="n">wmaps</span> <span class="o">=</span> <span class="n">create_wafermaps</span><span class="p">(</span>
-    <span class="n">placements</span><span class="p">,</span> <span class="n">correlation_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span> <span class="n">mean</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">std</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span> <span class="n">num_maps</span><span class="o">=</span><span class="mi">100</span>
+    <span class="n">placements</span><span class="p">,</span>
+    <span class="n">correlation_length</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">mean</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">std</span><span class="o">=</span><span class="mf">0.002</span><span class="p">,</span>
+    <span class="n">num_maps</span><span class="o">=</span><span class="mi">100</span><span class="p">,</span>
+    <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
 <span class="p">)</span>
 
 <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">wmap</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">wmaps</span><span class="p">):</span>
@@ -920,6 +1002,11 @@ mzi1?
         <span class="k">break</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/9385b5425b6b8b537bdfbf184360364a7f547debed8bfffa78b959a97849fcf4.png" src="../_images/9385b5425b6b8b537bdfbf184360364a7f547debed8bfffa78b959a97849fcf4.png" />
+<img alt="../_images/23a53d4cb14347b65fbd571e00620f5cbe761c533d25a561ab404753e6ab6e28.png" src="../_images/23a53d4cb14347b65fbd571e00620f5cbe761c533d25a561ab404753e6ab6e28.png" />
+<img alt="../_images/1d6fb752338be3b830c0ad3e2e0997fd0d07bc4dae4b6074bd434e3b6cf86ce5.png" src="../_images/1d6fb752338be3b830c0ad3e2e0997fd0d07bc4dae4b6074bd434e3b6cf86ce5.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -969,6 +1056,9 @@ mzi1?
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c8907f2b7cac7268a4b2307c4a7ce775a793b805f47d8633afb81055091e2d89.png" src="../_images/c8907f2b7cac7268a4b2307c4a7ce775a793b805f47d8633afb81055091e2d89.png" />
 </div>
 </div>
 </section>
@@ -1046,6 +1136,24 @@ mzi1?
 <span class="n">placements</span> <span class="o">=</span> <span class="n">compact_mzi1</span><span class="o">.</span><span class="n">get_netlist</span><span class="p">()[</span><span class="s2">&quot;placements&quot;</span><span class="p">]</span>
 <span class="n">mzi3</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span><span class="n">compact_mzi1</span><span class="o">.</span><span class="n">get_netlist_recursive</span><span class="p">(),</span> <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">)</span>
 <span class="n">mzi3</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.11/site-packages/pydantic/main.py:309: UserWarning: Pydantic serializer warnings:
+  Expected `bool` but got `int` - serialized value may not be as expected
+  return self.__pydantic_serializer__.to_python(
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o3&#39;, &#39;o3&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o3&#39;, &#39;o2&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o3&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o2&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o1&#39;, &#39;o3&#39;): Array(0.28025161-0.65860937j, dtype=complex128),
+ (&#39;o1&#39;, &#39;o2&#39;): Array(-0.27343619+0.6425927j, dtype=complex128),
+ (&#39;o3&#39;, &#39;o1&#39;): Array(0.28025161-0.65860937j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o1&#39;): Array(-0.27343619+0.6425927j, dtype=complex128)}
 </pre></div>
 </div>
 </div>

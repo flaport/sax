@@ -67,6 +67,8 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Circuit" href="07_circuit.html" />
+    <link rel="prev" title="Models" href="05_models.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -168,11 +170,12 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Core Lib</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="00_typing.html">Typing</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="04_multimode.html">Multimode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="05_models.html">Models</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Netlist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_circuit.html">Circuit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
@@ -407,145 +410,6 @@ document.write(`
 </div>
 </div>
 </details>
-</div>
-<p>The models were generated as follows:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">io</span>
-<span class="kn">import</span> <span class="nn">json</span>
-<span class="kn">from</span> <span class="nn">contextlib</span> <span class="kn">import</span> <span class="n">redirect_stdout</span>
-<span class="kn">from</span> <span class="nn">urllib.request</span> <span class="kn">import</span> <span class="n">urlopen</span>
-
-<span class="kn">import</span> <span class="nn">datamodel_code_generator</span> <span class="k">as</span> <span class="nn">dcg</span>
-
-<span class="n">NETLIST_SCHEMA_URL</span> <span class="o">=</span> <span class="s2">&quot;https://raw.githubusercontent.com/gdsfactory/gdsfactory/v6.3.5/gdsfactory/tests/schemas/netlist.json&quot;</span> <span class="c1"># TODO: update to latest gdsfactory version.</span>
-
-
-<span class="k">def</span> <span class="nf">download_schema</span><span class="p">(</span><span class="n">url</span><span class="o">=</span><span class="n">NETLIST_SCHEMA_URL</span><span class="p">):</span>
-    <span class="n">response</span> <span class="o">=</span> <span class="n">urlopen</span><span class="p">(</span><span class="n">url</span><span class="p">)</span>
-    <span class="n">json_text</span> <span class="o">=</span> <span class="n">response</span><span class="o">.</span><span class="n">read</span><span class="p">()</span><span class="o">.</span><span class="n">decode</span><span class="p">()</span>
-    <span class="n">schema_dict</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">loads</span><span class="p">(</span><span class="n">json_text</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">schema_dict</span>
-
-
-<span class="k">def</span> <span class="nf">generate_models</span><span class="p">():</span>
-    <span class="n">schema_dict</span> <span class="o">=</span> <span class="n">download_schema</span><span class="p">()</span>
-    <span class="n">json_text</span> <span class="o">=</span> <span class="n">json</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span><span class="n">schema_dict</span><span class="p">)</span>
-    <span class="n">buf</span> <span class="o">=</span> <span class="n">io</span><span class="o">.</span><span class="n">StringIO</span><span class="p">()</span>
-    <span class="k">with</span> <span class="n">redirect_stdout</span><span class="p">(</span><span class="n">buf</span><span class="p">):</span>
-        <span class="n">dcg</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">input_</span><span class="o">=</span><span class="n">json_text</span><span class="p">)</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">buf</span><span class="o">.</span><span class="n">getvalue</span><span class="p">()</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span>
-        <span class="s2">&quot;extra = Extra.forbid&quot;</span><span class="p">,</span>
-        <span class="p">(</span>
-            <span class="s2">&quot;extra = Extra.ignore</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;        allow_mutation = False</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;        frozen = True</span><span class="se">\n</span><span class="s2">&quot;</span>
-            <span class="s2">&quot;        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}&quot;</span>
-        <span class="p">),</span>
-    <span class="p">)</span>
-    <span class="n">content</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">content</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;ComponentModel&quot;</span><span class="p">,</span> <span class="s2">&quot;Component&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;PlacemetModel&quot;</span><span class="p">,</span> <span class="s2">&quot;Placement&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;RouteModel&quot;</span><span class="p">,</span> <span class="s2">&quot;Route&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;NetlistModel&quot;</span><span class="p">,</span> <span class="s2">&quot;Netlist&quot;</span><span class="p">)</span>
-        <span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;PlacementModel&quot;</span><span class="p">,</span> <span class="s2">&quot;Placement&quot;</span><span class="p">)</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">content</span>
-
-
-<span class="nb">print</span><span class="p">(</span><span class="n">generate_models</span><span class="p">())</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span># generated by datamodel-codegen:
-#   filename:  &lt;stdin&gt;
-#   timestamp: 2023-09-01T15:54:50+00:00
-
-from __future__ import annotations
-
-from enum import Enum
-from typing import Any, Dict, Optional, Union
-
-from pydantic import BaseModel, Extra, Field
-
-
-class Component(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
-    component: Union[str, Dict[str, Any]] = Field(..., title=&#39;Component&#39;)
-    settings: Optional[Dict[str, Any]] = Field(None, title=&#39;Settings&#39;)
-
-
-class PortEnum(Enum):
-    ce = &#39;ce&#39;
-    cw = &#39;cw&#39;
-    nc = &#39;nc&#39;
-    ne = &#39;ne&#39;
-    nw = &#39;nw&#39;
-    sc = &#39;sc&#39;
-    se = &#39;se&#39;
-    sw = &#39;sw&#39;
-    center = &#39;center&#39;
-    cc = &#39;cc&#39;
-
-
-class Placement(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
-    x: Optional[Union[str, float]] = Field(0, title=&#39;X&#39;)
-    y: Optional[Union[str, float]] = Field(0, title=&#39;Y&#39;)
-    xmin: Optional[Union[str, float]] = Field(None, title=&#39;Xmin&#39;)
-    ymin: Optional[Union[str, float]] = Field(None, title=&#39;Ymin&#39;)
-    xmax: Optional[Union[str, float]] = Field(None, title=&#39;Xmax&#39;)
-    ymax: Optional[Union[str, float]] = Field(None, title=&#39;Ymax&#39;)
-    dx: Optional[float] = Field(0, title=&#39;Dx&#39;)
-    dy: Optional[float] = Field(0, title=&#39;Dy&#39;)
-    port: Optional[Union[str, PortEnum]] = Field(None, title=&#39;Port&#39;)
-    rotation: Optional[int] = Field(0, title=&#39;Rotation&#39;)
-    mirror: Optional[bool] = Field(False, title=&#39;Mirror&#39;)
-
-
-class Route(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
-    links: Dict[str, str] = Field(..., title=&#39;Links&#39;)
-    settings: Optional[Dict[str, Any]] = Field(None, title=&#39;Settings&#39;)
-    routing_strategy: Optional[str] = Field(None, title=&#39;Routing Strategy&#39;)
-
-
-class Netlist(BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
-    instances: Dict[str, Component] = Field(..., title=&#39;Instances&#39;)
-    placements: Optional[Dict[str, Placement]] = Field(None, title=&#39;Placements&#39;)
-    connections: Optional[Dict[str, str]] = Field(None, title=&#39;Connections&#39;)
-    routes: Optional[Dict[str, Route]] = Field(None, title=&#39;Routes&#39;)
-    name: Optional[str] = Field(None, title=&#39;Name&#39;)
-    info: Optional[Dict[str, Any]] = Field(None, title=&#39;Info&#39;)
-    settings: Optional[Dict[str, Any]] = Field(None, title=&#39;Settings&#39;)
-    pdk: Optional[str] = Field(None, title=&#39;Pdk&#39;)
-    ports: Optional[Dict[str, str]] = Field(None, title=&#39;Ports&#39;)
-</pre></div>
-</div>
-</div>
 </div>
 <p>This was autogenerated from the gdsfactory netlist json spec. Only a few validators were added and a few irrelevant fields were disabled.</p>
 <div class="cell tag_hide-input docutils container">
@@ -790,13 +654,6 @@ class Netlist(BaseModel):
 </div>
 <section id="load-netlist-from-folder">
 <h2>Load Netlist from folder<a class="headerlink" href="#load-netlist-from-folder" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">path</span> <span class="o">=</span> <span class="s2">&quot;/home/flaport/ProgrammingWin/OctansModeling/octans/assets/basic_b1/_wavemeter_help.ba.pic.yml&quot;</span>
-</pre></div>
-</div>
-</div>
-</div>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.netlist.load_netlist">
 <span class="sig-prename descclassname"><span class="pre">sax.netlist.</span></span><span class="sig-name descname"><span class="pre">load_netlist</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">pic_path</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Netlist</span></span></span><a class="headerlink" href="#sax.netlist.load_netlist" title="Permalink to this definition">#</a></dt>
@@ -1091,6 +948,24 @@ class Netlist(BaseModel):
   
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="05_models.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Models</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="07_circuit.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Circuit</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div></div>
   
 </div>

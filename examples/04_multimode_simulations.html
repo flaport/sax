@@ -175,6 +175,7 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="../nbs/02_utils.html">Utils</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../nbs/04_multimode.html">Multimode</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../nbs/05_models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../nbs/06a_netlist.html">Netlist</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../nbs/07_circuit.html">Circuit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
@@ -366,7 +367,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="multimode-simulations">
+  <p><span style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">An Exception was encountered at ‘<a href="#papermill-error-cell">In [6]</a>’.</span></p>
+<section class="tex2jax_ignore mathjax_ignore" id="multimode-simulations">
 <h1>Multimode simulations<a class="headerlink" href="#multimode-simulations" title="Permalink to this heading">#</a></h1>
 <blockquote>
 <div><p>SAX can handle multiple modes too!</p>
@@ -513,6 +515,7 @@ document.write(`
 <section id="multimode-mzi">
 <h2>Multimode MZI<a class="headerlink" href="#multimode-mzi" title="Permalink to this heading">#</a></h2>
 <p>We can now combine these models into a circuit in much the same way as before. We just need to add the <code class="docutils literal notranslate"><span class="pre">modes=</span></code> keyword:</p>
+<p><span id="papermill-error-cell" style="color:red; font-family:Helvetica Neue, Helvetica, Arial, sans-serif; font-size:2em;">Execution using papermill encountered an exception here and stopped:</span></p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
@@ -542,78 +545,43 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output traceback highlight-ipythontb notranslate"><div class="highlight"><pre><span></span><span class="gt">---------------------------------------------------------------------------</span>
+<span class="ne">TypeError</span><span class="g g-Whitespace">                                 </span>Traceback (most recent call last)
+<span class="n">Cell</span> <span class="n">In</span><span class="p">[</span><span class="mi">6</span><span class="p">],</span> <span class="n">line</span> <span class="mi">1</span>
+<span class="ne">----&gt; </span><span class="mi">1</span> <span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
+<span class="g g-Whitespace">      </span><span class="mi">2</span>     <span class="n">netlist</span><span class="o">=</span><span class="p">{</span>
+<span class="g g-Whitespace">      </span><span class="mi">3</span>         <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="g g-Whitespace">      </span><span class="mi">4</span>             <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>  <span class="c1"># single mode models will be automatically converted to multimode models without cross polarization.</span>
+<span class="g g-Whitespace">      </span><span class="mi">5</span>             <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">25.0</span><span class="p">}},</span>
+<span class="g g-Whitespace">      </span><span class="mi">6</span>             <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;straight&quot;</span><span class="p">,</span> <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">}},</span>
+<span class="g g-Whitespace">      </span><span class="mi">7</span>             <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="s2">&quot;coupler&quot;</span><span class="p">,</span>  <span class="c1"># single mode models will be automatically converted to multimode models without cross polarization.</span>
+<span class="g g-Whitespace">      </span><span class="mi">8</span>         <span class="p">},</span>
+<span class="g g-Whitespace">      </span><span class="mi">9</span>         <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="g g-Whitespace">     </span><span class="mi">10</span>             <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">11</span>             <span class="s2">&quot;btm,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">12</span>             <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">13</span>             <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in1&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">14</span>         <span class="p">},</span>
+<span class="g g-Whitespace">     </span><span class="mi">15</span>         <span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">{</span>
+<span class="g g-Whitespace">     </span><span class="mi">16</span>             <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">17</span>             <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">18</span>             <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">19</span>             <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
+<span class="g g-Whitespace">     </span><span class="mi">20</span>         <span class="p">},</span>
+<span class="g g-Whitespace">     </span><span class="mi">21</span>     <span class="p">},</span>
+<span class="g g-Whitespace">     </span><span class="mi">22</span>     <span class="n">models</span><span class="o">=</span><span class="n">sax</span><span class="o">.</span><span class="n">get_models</span><span class="p">(),</span>
+<span class="g g-Whitespace">     </span><span class="mi">23</span>     <span class="n">modes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;te&quot;</span><span class="p">,</span> <span class="s2">&quot;tm&quot;</span><span class="p">),</span>
+<span class="g g-Whitespace">     </span><span class="mi">24</span> <span class="p">)</span>
+
+<span class="ne">TypeError</span>: circuit() got an unexpected keyword argument &#39;modes&#39;
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1@te&#39;, &#39;in1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@te&#39;, &#39;in0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@te&#39;, &#39;in1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@te&#39;, &#39;in0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;in1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;in0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;in1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;in0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;in1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;in0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;in1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;in0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;in1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;in0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;in1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;in0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@te&#39;, &#39;out0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@te&#39;, &#39;out0@te&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;in1@te&#39;, &#39;out1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@te&#39;, &#39;out1@te&#39;): Array(0.28072841-0.10397039j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;out0@tm&#39;): Array(-0.28072841+0.10397039j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;out0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;out1@tm&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;in0@tm&#39;, &#39;out1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;out0@tm&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;out0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;out1@tm&#39;): Array(0.28072841-0.10397039j, dtype=complex128),
- (&#39;in1@tm&#39;, &#39;out1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;out0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;out0@te&#39;): Array(-0.28072841+0.10397039j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;out1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0@te&#39;, &#39;out1@te&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;in1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;in0@tm&#39;): Array(-0.28072841+0.10397039j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;in1@tm&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;in0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;out0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;out0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;out1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@tm&#39;, &#39;out1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;in1@te&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;in0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;in1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;in0@te&#39;): Array(-0.28072841+0.10397039j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;out0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;out0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;out1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0@te&#39;, &#39;out1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;in1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;in0@tm&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;in1@tm&#39;): Array(0.28072841-0.10397039j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;in0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;out0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;out0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;out1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@tm&#39;, &#39;out1@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;in1@te&#39;): Array(0.28072841-0.10397039j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;in0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;in1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;in0@te&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;out0@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;out0@te&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;out1@tm&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1@te&#39;, &#39;out1@te&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -623,26 +591,6 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi_te</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">singlemode</span><span class="p">(</span><span class="n">mzi</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;te&quot;</span><span class="p">)</span>
 <span class="n">mzi_te</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;in1&#39;, &#39;out1&#39;): Array(0.28072841-0.10397039j, dtype=complex128),
- (&#39;in0&#39;, &#39;out0&#39;): Array(-0.28072841+0.10397039j, dtype=complex128),
- (&#39;in0&#39;, &#39;out1&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(-0.28072841+0.10397039j, dtype=complex128),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;in1&#39;): Array(0.28072841-0.10397039j, dtype=complex128),
- (&#39;out1&#39;, &#39;in0&#39;): Array(0.89474612-0.33137758j, dtype=complex128),
- (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
