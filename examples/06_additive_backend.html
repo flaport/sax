@@ -441,11 +441,6 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
-</pre></div>
-</div>
-</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -454,14 +449,14 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)],
- (&#39;in0&#39;, &#39;out1&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)],
- (&#39;in1&#39;, &#39;out0&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)],
- (&#39;in1&#39;, &#39;out1&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)],
- (&#39;out0&#39;, &#39;in0&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)],
- (&#39;out0&#39;, &#39;in1&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)],
- (&#39;out1&#39;, &#39;in0&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)],
- (&#39;out1&#39;, &#39;in1&#39;): [Array([200.], dtype=float32), Array([600.], dtype=float32)]}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
+ (&#39;in0&#39;, &#39;out1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
+ (&#39;in1&#39;, &#39;out0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
+ (&#39;in1&#39;, &#39;out1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
+ (&#39;out0&#39;, &#39;in0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
+ (&#39;out0&#39;, &#39;in1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
+ (&#39;out1&#39;, &#39;in0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
+ (&#39;out1&#39;, &#39;in1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)]}
 </pre></div>
 </div>
 </div>
@@ -478,16 +473,16 @@ document.write(`
         },
         codeMirrorConfig: {
             theme: "abcdef",
-            mode: "python"
+            mode: "sax"
         },
         kernelOptions: {
-            name: "python3",
+            name: "sax",
             path: "./examples"
         },
         predefinedOutput: true
     }
     </script>
-    <script>kernelName = 'python3'</script>
+    <script>kernelName = 'sax'</script>
 
                 </article>
               

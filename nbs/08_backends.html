@@ -374,27 +374,31 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit_backends</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="n">evaluate_circuit</span><span class="p">,</span>
-    <span class="s2">&quot;klu&quot;</span><span class="p">:</span> <span class="n">evaluate_circuit_klu</span><span class="p">,</span>
-    <span class="s2">&quot;additive&quot;</span><span class="p">:</span> <span class="n">evaluate_circuit_additive</span><span class="p">,</span>
+    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">analyze_circuit</span><span class="p">,</span> <span class="n">evaluate_circuit</span><span class="p">),</span>
+    <span class="s2">&quot;additive&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">analyze_circuit_additive</span><span class="p">,</span> <span class="n">evaluate_circuit_additive</span><span class="p">),</span>
 <span class="p">}</span>
 
-<span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">JAX_AVAILABLE</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">KLUJAX_AVAILABLE</span><span class="p">):</span>
-    <span class="k">del</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;klu&quot;</span><span class="p">]</span>
+<span class="k">if</span> <span class="n">JAX_AVAILABLE</span> <span class="ow">and</span> <span class="n">KLUJAX_AVAILABLE</span><span class="p">:</span>
+    <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;klu&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">analyze_circuit_klu</span><span class="p">,</span> <span class="n">evaluate_circuit_klu</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
-<p>SAX allows to easily interchange the backend of a circuit. A SAX backend needs to have the following signature:</p>
+<p>SAX allows to easily interchange the backend of a circuit. A SAX backend consists of a static analysis step and an evaluation step:</p>
 <div class="cell tag_remove-input docutils container">
 <div class="cell_output docutils container">
-<h4 id="evaluate_circuit" class="doc_header"><code>evaluate_circuit</code><a href="https://github.com/flaport/sax/tree/master/sax/backends/default.py#L33" class="source_link" style="float:right">[source]</a></h4>
+<h4 id="analyze_circuit" class="doc_header"><code>analyze_circuit</code><a href="https://github.com/flaport/sax/tree/master/sax/backends/default.py#L33" class="source_link" style="float:right">[source]</a></h4>
 <blockquote>
-<div><p><code>evaluate_circuit</code>(<strong><code class="docutils literal notranslate"><span class="pre">instances</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">SType]</span></code>, <strong><code class="docutils literal notranslate"><span class="pre">connections</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">str]</span></code>, <strong><code class="docutils literal notranslate"><span class="pre">ports</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">str]</span></code>)</p>
+<div><p><code>analyze_circuit</code>(<strong><code class="docutils literal notranslate"><span class="pre">connections</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">ports</span></code></strong>)</p>
+</div></blockquote>
+<h4 id="evaluate_circuit" class="doc_header"><code>evaluate_circuit</code><a href="https://github.com/flaport/sax/tree/master/sax/backends/default.py#L39" class="source_link" style="float:right">[source]</a></h4>
+<blockquote>
+<div><p><code>evaluate_circuit</code>(<strong><code class="docutils literal notranslate"><span class="pre">analyzed</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">instances</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">SType]</span></code>)</p>
 </div></blockquote>
 </div>
 </div>
-<p>i.e. it takes a dictionary of instance names pointing to <code class="docutils literal notranslate"><span class="pre">SType</span></code>s (usually <code class="docutils literal notranslate"><span class="pre">SDict</span></code>s), a connection dictionary and an (output) ports dictionary. Internally it must construct the output <code class="docutils literal notranslate"><span class="pre">SType</span></code> (usually output <code class="docutils literal notranslate"><span class="pre">SDict</span></code>).</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be needed to be recalculated when any parameters of the circuit change.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">evaluate_circuit</span></code> step evaluates the circuit for given <code class="docutils literal notranslate"><span class="pre">SType</span></code> instances.</p>
 <blockquote>
 <div><p>Example</p>
 </div></blockquote>
@@ -415,46 +419,75 @@ document.write(`
     <span class="p">{</span><span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
 <span class="p">)</span>
 
-<span class="n">mzi_sdict</span><span class="p">:</span> <span class="n">SDict</span> <span class="o">=</span> <span class="n">evaluate_circuit</span><span class="p">(</span>
-    <span class="n">instances</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
-        <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
-        <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">connections</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
-    <span class="p">},</span>
-    <span class="n">ports</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
-        <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
-    <span class="p">}</span>
-<span class="p">)</span>
+<span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
 
-<span class="n">mzi_sdict</span>
+<span class="n">analyzed</span> <span class="o">=</span> <span class="n">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+<span class="n">mzi_sdict</span> <span class="o">=</span> <span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">mzi_sdict</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex64),
- (&#39;in0&#39;, &#39;out0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;in1&#39;, &#39;out1&#39;): Array(0.24999999-0.433015j, dtype=complex64),
- (&#39;out0&#39;, &#39;in0&#39;): Array(-0.24999999+0.433015j, dtype=complex64),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.74999994j, dtype=complex64),
- (&#39;out1&#39;, &#39;in1&#39;): Array(0.24999999-0.433015j, dtype=complex64)}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128)}
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyzed</span> <span class="o">=</span> <span class="n">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+<span class="n">mzi_sdict_klu</span> <span class="o">=</span> <span class="n">sdict</span><span class="p">(</span><span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">))</span>
+<span class="n">display</span><span class="p">(</span><span class="n">mzi_sdict_klu</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128)}
 </pre></div>
 </div>
 </div>

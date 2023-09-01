@@ -367,7 +367,7 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
 <span class="kn">import</span> <span class="nn">os</span>
 <span class="kn">import</span> <span class="nn">shutil</span>
@@ -378,14 +378,29 @@ document.write(`
 <span class="kn">import</span> <span class="nn">black</span>
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 <span class="kn">from</span> <span class="nn">sax</span> <span class="kn">import</span> <span class="n">reciprocal</span>
 <span class="kn">from</span> <span class="nn">sax.backends</span> <span class="kn">import</span> <span class="n">circuit_backends</span>
 <span class="kn">from</span> <span class="nn">sax.multimode</span> <span class="kn">import</span> <span class="n">multimode</span><span class="p">,</span> <span class="n">singlemode</span>
 <span class="kn">from</span> <span class="nn">sax.netlist</span> <span class="kn">import</span> <span class="n">Netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span>
 <span class="kn">from</span> <span class="nn">sax.netlist_cleaning</span> <span class="kn">import</span> <span class="n">remove_unused_instances</span>
-<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">SType</span>
+<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">sdense</span>
 <span class="kn">from</span> <span class="nn">sax.utils</span> <span class="kn">import</span> <span class="n">_replace_kwargs</span><span class="p">,</span> <span class="n">get_settings</span><span class="p">,</span> <span class="n">merge_dicts</span><span class="p">,</span> <span class="n">update_settings</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pydantic.v1</span> <span class="kn">import</span> <span class="n">ValidationError</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>
 </pre></div>
 </div>
 </div>
@@ -399,7 +414,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gdsfactory</span> <span class="k">as</span> <span class="nn">gf</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gdsfactory</span> <span class="k">as</span> <span class="nn">gf</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
 <span class="kn">from</span> <span class="nn">gdsfactory.components</span> <span class="kn">import</span> <span class="n">mzi</span>
 <span class="kn">from</span> <span class="nn">gdsfactory.get_netlist</span> <span class="kn">import</span> <span class="n">get_netlist_recursive</span><span class="p">,</span> <span class="n">get_netlist</span><span class="p">,</span> <span class="n">get_netlist_yaml</span>
@@ -437,19 +452,12 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>You can install `pip install gdsfactory[cad]` for better visualization
-You can install `pip install gdsfactory[full]` for better visualization
-</pre></div>
-</div>
-<img alt="../_images/b2f4d1012e2e6a26517331626b29d40f99a16ce65ec974000d9e05d8b41cf213.png" src="../_images/b2f4d1012e2e6a26517331626b29d40f99a16ce65ec974000d9e05d8b41cf213.png" />
-</div>
 </div>
 <p>To be able to model this device we’ll need some SAX dummy models:</p>
 <p>In SAX, we usually aggregate the available models in a models dictionary:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">&#39;straight&#39;</span><span class="p">:</span> <span class="n">straight</span><span class="p">,</span>
     <span class="s1">&#39;bend_euler&#39;</span><span class="p">:</span> <span class="n">bend_euler</span><span class="p">,</span>
     <span class="s1">&#39;mmi1x2&#39;</span><span class="p">:</span> <span class="n">mmi1x2</span><span class="p">,</span>
@@ -471,7 +479,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_dag</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">create_dag</span><span class="p">(</span>
     <span class="n">netlist</span><span class="p">:</span> <span class="n">RecursiveNetlist</span><span class="p">,</span>
     <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">):</span>
@@ -518,7 +526,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
     <span class="n">_patch_path</span><span class="p">()</span>
     <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;dot&quot;</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
@@ -566,25 +574,19 @@ You can install `pip install gdsfactory[full]` for better visualization
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
 <span class="n">draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/9149095008fff0e9bbf5546e3e8954f4912bd297225a8480a01c1c3a1413c35f.png" src="../_images/9149095008fff0e9bbf5546e3e8954f4912bd297225a8480a01c1c3a1413c35f.png" />
 </div>
 </div>
 <p>Note that the DAG depends on the models we supply. We could for example stub one of the sub-netlists by a pre-defined model:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dag_</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">,</span> <span class="s1">&#39;mzi_delta_length10&#39;</span><span class="p">:</span> <span class="n">mmi2x2</span><span class="p">})</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">dag_</span> <span class="o">=</span> <span class="n">create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">,</span> <span class="s1">&#39;mzi_delta_length10&#39;</span><span class="p">:</span> <span class="n">mmi2x2</span><span class="p">})</span>
 <span class="n">draw_dag</span><span class="p">(</span><span class="n">dag_</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
-<div class="cell_output docutils container">
-<img alt="../_images/9317873b5ff2c439b7120a74cf746b4d57fdc3a5dcb620a48a514717c4a0cc6d.png" src="../_images/9317873b5ff2c439b7120a74cf746b4d57fdc3a5dcb620a48a514717c4a0cc6d.png" />
 </div>
 </div>
 <p>This is useful if we for example pre-calculated a certain model.</p>
@@ -601,7 +603,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_root</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_root</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
     <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">in_degree</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">nodes</span>
 </pre></div>
@@ -611,12 +613,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_root</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;twomzi&#39;]
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">find_root</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -634,7 +631,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_leaves</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">find_leaves</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
     <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">out_degree</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
     <span class="k">return</span> <span class="n">nodes</span>
 </pre></div>
@@ -644,12 +641,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">find_leaves</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;bend_euler&#39;, &#39;mmi1x2&#39;, &#39;straight&#39;]
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">find_leaves</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -662,7 +654,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dag</span><span class="p">):</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dag</span><span class="p">):</span>
     <span class="n">required_models</span> <span class="o">=</span> <span class="n">find_leaves</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
     <span class="n">missing_models</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">required_models</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">models</span><span class="p">]</span>
     <span class="k">if</span> <span class="n">missing_models</span><span class="p">:</span>
@@ -683,7 +675,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="n">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">models</span> <span class="o">=</span> <span class="n">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dag</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -696,8 +688,8 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_flat_circuit</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
-    <span class="n">evaluate_circuit</span> <span class="o">=</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">_flat_circuit</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+    <span class="n">analyze_fn</span><span class="p">,</span> <span class="n">evaluate_fn</span> <span class="o">=</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span>
 
     <span class="n">inst2model</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="n">component</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
@@ -707,6 +699,7 @@ You can install `pip install gdsfactory[full]` for better visualization
         <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
     <span class="p">}</span>
     <span class="n">default_settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">model_settings</span><span class="p">,</span> <span class="n">netlist_settings</span><span class="p">)</span>
+    <span class="n">analyzed</span> <span class="o">=</span> <span class="n">analyze_fn</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
 
     <span class="k">def</span> <span class="nf">_circuit</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
         <span class="n">settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">default_settings</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
@@ -718,7 +711,7 @@ You can install `pip install gdsfactory[full]` for better visualization
         <span class="c1">#print(f&quot;{instances=}&quot;)</span>
         <span class="c1">#print(f&quot;{connections=}&quot;)</span>
         <span class="c1">#print(f&quot;{ports=}&quot;)</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">evaluate_fn</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">S</span>
 
     <span class="n">_replace_kwargs</span><span class="p">(</span><span class="n">_circuit</span><span class="p">,</span> <span class="o">**</span><span class="n">default_settings</span><span class="p">)</span>
@@ -741,13 +734,8 @@ You can install `pip install gdsfactory[full]` for better visualization
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="s1">&#39;mzi_delta_length10&#39;</span><span class="p">]</span>
-<span class="n">single_mzi</span> <span class="o">=</span> <span class="n">_flat_circuit</span><span class="p">(</span><span class="n">flatnet</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span> <span class="n">flatnet</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span> <span class="n">flatnet</span><span class="o">.</span><span class="n">ports</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>No GPU/TPU found, falling back to CPU. (Set TF_CPP_MIN_LOG_LEVEL=0 and rerun for more info.)
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="s1">&#39;mzi_delta_length10&#39;</span><span class="p">]</span>
+<span class="n">single_mzi</span> <span class="o">=</span> <span class="n">jit</span><span class="p">(</span><span class="n">_flat_circuit</span><span class="p">(</span><span class="n">flatnet</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span> <span class="n">flatnet</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span> <span class="n">flatnet</span><span class="o">.</span><span class="n">ports</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="s2">&quot;default&quot;</span><span class="p">))</span>
 </pre></div>
 </div>
 </div>
@@ -755,7 +743,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <p>The resulting circuit is just another SAX model (i.e. a python function) returing an SType:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span>single_mzi<span class="o">?</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span>single_mzi?
 </pre></div>
 </div>
 </div>
@@ -763,15 +751,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <p>Let’s ‘execute’ the circuit:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">single_mzi</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0., dtype=float32, weak_type=True),
- (&#39;o2&#39;, &#39;o2&#39;): Array(0., dtype=float32, weak_type=True),
- (&#39;o1&#39;, &#39;o2&#39;): Array(0.90000004, dtype=float32, weak_type=True),
- (&#39;o2&#39;, &#39;o1&#39;): Array(0.90000004, dtype=float32, weak_type=True)}
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">single_mzi</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
@@ -789,7 +769,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">circuit</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">circuit</span><span class="p">(</span>
     <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">RecursiveNetlistDict</span><span class="p">],</span>
     <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">modes</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
@@ -963,16 +943,8 @@ You can install `pip install gdsfactory[full]` for better visualization
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">double_mzi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
-<span class="n">double_mzi</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0., dtype=float32, weak_type=True),
- (&#39;o2&#39;, &#39;o2&#39;): Array(0., dtype=float32, weak_type=True),
- (&#39;o2&#39;, &#39;o1&#39;): Array(0.81000006, dtype=float32, weak_type=True),
- (&#39;o1&#39;, &#39;o2&#39;): Array(0.81000006, dtype=float32, weak_type=True)}
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">double_mzi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+<span class="n">jit</span><span class="p">(</span><span class="n">sdense</span><span class="p">(</span><span class="n">double_mzi</span><span class="p">))()</span>
 </pre></div>
 </div>
 </div>
@@ -990,7 +962,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_required_circuit_models</span><span class="p">(</span>
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">get_required_circuit_models</span><span class="p">(</span>
         <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">RecursiveNetlistDict</span><span class="p">],</span>
         <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
@@ -1015,7 +987,7 @@ You can install `pip install gdsfactory[full]` for better visualization
             <span class="k">continue</span>
         <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">subnetlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
             <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
-            <span class="k">if</span> <span class="ow">not</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">missing_models</span><span class="p">:</span>
+            <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">missing_models</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">component</span> <span class="ow">in</span> <span class="n">models</span><span class="p">):</span>
                 <span class="n">missing_models</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">missing_model_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
                 <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
@@ -1028,16 +1000,7 @@ You can install `pip install gdsfactory[full]` for better visualization
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">get_required_circuit_models</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;mzi_delta_length10&#39;,
- &#39;mzi_delta_length20&#39;,
- &#39;bend_euler&#39;,
- &#39;mmi1x2&#39;,
- &#39;straight&#39;]
+<div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">get_required_circuit_models</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
