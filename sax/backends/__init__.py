@@ -21,16 +21,16 @@ try:
 except ImportError:
     KLUJAX_AVAILABLE = False
 
-from .default import evaluate_circuit
-from .klu import evaluate_circuit_klu
-from .additive import evaluate_circuit_additive
+from .default import analyze_circuit, evaluate_circuit
+from .klu import analyze_circuit_klu, evaluate_circuit_klu
+from .additive import analyze_circuit_additive, evaluate_circuit_additive
 
 # Cell
 
 circuit_backends = {
-    "default": evaluate_circuit,
-    "klu": evaluate_circuit_klu,
-    "additive": evaluate_circuit_additive,
+    "default": (analyze_circuit, evaluate_circuit),
+    "klu": (analyze_circuit_klu, evaluate_circuit_klu),
+    "additive": (analyze_circuit_additive, evaluate_circuit_additive),
 }
 
 if (not JAX_AVAILABLE) or (not KLUJAX_AVAILABLE):

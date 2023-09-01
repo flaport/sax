@@ -5,7 +5,7 @@ from __future__ import annotations
 
 
 __all__ = ['split_port', 'graph_edges', 'prune_internal_output_nodes', 'get_possible_paths', 'path_lengths',
-           'evaluate_circuit_additive']
+           'analyze_circuit_additive', 'evaluate_circuit_additive']
 
 # Cell
 #nbdev_comment from __future__ import annotations
@@ -104,12 +104,18 @@ def path_lengths(graph, paths):
     return lengths
 
 # Cell
-def evaluate_circuit_additive(
-    instances: Dict[str, SDict],
+def analyze_circuit_additive(
     connections: Dict[str, str],
     ports: Dict[str, str],
 ):
+    return connections, ports
+
+def evaluate_circuit_additive(
+    analyzed,
+    instances: Dict[str, SDict],
+):
     """evaluate a circuit for the given sdicts."""
+    connections, ports = analyzed
     edges = graph_edges(instances, connections, ports)
 
     graph = nx.Graph()

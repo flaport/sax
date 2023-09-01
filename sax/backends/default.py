@@ -4,7 +4,7 @@
 from __future__ import annotations
 
 
-__all__ = ['evaluate_circuit']
+__all__ = ['analyze_circuit', 'evaluate_circuit']
 
 # Cell
 #nbdev_comment from __future__ import annotations
@@ -30,12 +30,18 @@ from ..typing_ import SDict, SType, SDense, sdict
 
 # Cell
 
+def analyze_circuit(connections, ports):
+    # skip analysis for now
+    return connections, ports
+
+# Cell
+
 def evaluate_circuit(
+    analyzed,
     instances: Dict[str, SType],
-    connections: Dict[str, str],
-    ports: Dict[str, str],
 ) -> SDict:
     """evaluate a circuit for the given sdicts."""
+    connections, ports = analyzed
 
     # it's actually easier working w reverse:
     reversed_ports = {v: k for k, v in ports.items()}

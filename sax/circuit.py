@@ -17,6 +17,7 @@ from functools import partial
 from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Union
 
 import black
+import jax
 import networkx as nx
 import numpy as np
 from sax import reciprocal
@@ -24,7 +25,7 @@ from .backends import circuit_backends
 from .multimode import multimode, singlemode
 from .netlist import Netlist, RecursiveNetlist
 from .netlist_cleaning import remove_unused_instances
-from .typing_ import Model, Settings, SType
+from .typing_ import Model, Settings, SType, sdense
 from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
 
 # Cell
@@ -138,7 +139,7 @@ def _validate_models(models, dag):
 
 # Cell
 def _flat_circuit(instances, connections, ports, models, backend):
-    evaluate_circuit = circuit_backends[backend]
+    analyze_fn, evaluate_fn = circuit_backends[backend]
 
     inst2model = {k: models[inst.component] for k, inst in instances.items()}
 
@@ -148,6 +149,7 @@ def _flat_circuit(instances, connections, ports, models, backend):
         for name, inst in instances.items()
     }
     default_settings = merge_dicts(model_settings, netlist_settings)
+    analyzed = analyze_fn(connections, ports)
 
     def _circuit(**settings: Settings) -> SType:
         settings = merge_dicts(default_settings, settings)
@@ -159,7 +161,7 @@ def _flat_circuit(instances, connections, ports, models, backend):
         #print(f"{instances=}")
         #print(f"{connections=}")
         #print(f"{ports=}")
-        S = evaluate_circuit(instances, connections, ports)
+        S = evaluate_fn(analyzed, instances)
         return S
 
     _replace_kwargs(_circuit, **default_settings)
