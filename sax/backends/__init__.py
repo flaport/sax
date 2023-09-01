@@ -11,8 +11,10 @@ __all__ = ['circuit_backends']
 
 try:
     import jax
+    import jax.numpy as jnp
     JAX_AVAILABLE = True
 except ImportError:
+    import numpy as jnp
     JAX_AVAILABLE = False
 
 try:
@@ -22,16 +24,17 @@ except ImportError:
     KLUJAX_AVAILABLE = False
 
 from .default import analyze_circuit, evaluate_circuit
-from .klu import analyze_circuit_klu, evaluate_circuit_klu
 from .additive import analyze_circuit_additive, evaluate_circuit_additive
+
+if JAX_AVAILABLE and KLUJAX_AVAILABLE:
+    from .klu import analyze_circuit_klu, evaluate_circuit_klu
 
 # Cell
 
 circuit_backends = {
     "default": (analyze_circuit, evaluate_circuit),
-    "klu": (analyze_circuit_klu, evaluate_circuit_klu),
     "additive": (analyze_circuit_additive, evaluate_circuit_additive),
 }
 
-if (not JAX_AVAILABLE) or (not KLUJAX_AVAILABLE):
-    del circuit_backends["klu"]
+if JAX_AVAILABLE and KLUJAX_AVAILABLE:
+    circuit_backends["klu"] = (analyze_circuit_klu, evaluate_circuit_klu)

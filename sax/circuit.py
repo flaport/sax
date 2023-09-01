@@ -17,7 +17,6 @@ from functools import partial
 from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Union
 
 import black
-import jax
 import networkx as nx
 import numpy as np
 from sax import reciprocal
@@ -67,8 +66,6 @@ def create_dag(
     return g
 
 # Cell
-
-
 def draw_dag(dag, with_labels=True, **kwargs):
     _patch_path()
     if shutil.which("dot"):
@@ -179,7 +176,6 @@ def _forward_global_settings(instances, settings):
     return settings
 
 # Cell
-
 def circuit(
     netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,

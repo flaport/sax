@@ -17,7 +17,6 @@ import jax
 import jax.numpy as jnp
 import klujax
 from natsort import natsorted
-from . import evaluate_circuit
 from ..typing_ import SDense, SDict, SType, scoo, sdense, sdict
 
 # Cell
