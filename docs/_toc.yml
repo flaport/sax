@@ -15,7 +15,7 @@ parts:
   - file: nbs/02_utils.ipynb
   - file: nbs/04_multimode.ipynb
   - file: nbs/05_models.ipynb
-  - file: nbs/06_netlist.ipynb
+  - file: nbs/06a_netlist.ipynb
   - file: nbs/07_circuit.ipynb
 - caption: Backends
   chapters:
