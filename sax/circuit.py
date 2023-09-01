@@ -24,8 +24,14 @@ from .backends import circuit_backends
 from .multimode import multimode, singlemode
 from .netlist import Netlist, RecursiveNetlist
 from .netlist_cleaning import remove_unused_instances
-from .typing_ import Model, Settings, SType, sdense
-from .utils import _replace_kwargs, get_settings, merge_dicts, update_settings
+from .typing_ import Model, Settings, SType
+from .utils import (
+    _replace_kwargs,
+    get_ports,
+    get_settings,
+    merge_dicts,
+    update_settings,
+)
 
 # Cell
 try:
@@ -139,6 +145,12 @@ def _flat_circuit(instances, connections, ports, models, backend):
     analyze_fn, evaluate_fn = circuit_backends[backend]
 
     inst2model = {k: models[inst.component] for k, inst in instances.items()}
+    inst_port_mode = {
+        k: _port_modes_dict(get_ports(models[inst.component]))
+        for k, inst in instances.items()
+    }
+    connections = _get_multimode_connections(connections, inst_port_mode)
+    ports = _get_multimode_ports(ports, inst_port_mode)
 
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
     netlist_settings = {
@@ -155,9 +167,7 @@ def _flat_circuit(instances, connections, ports, models, backend):
         instances: Dict[str, SType] = {}
         for inst_name, model in inst2model.items():
             instances[inst_name] = model(**settings.get(inst_name, {}))
-        #print(f"{instances=}")
-        #print(f"{connections=}")
-        #print(f"{ports=}")
+
         S = evaluate_fn(analyzed, instances)
         return S
 
@@ -175,11 +185,56 @@ def _forward_global_settings(instances, settings):
         settings = update_settings(settings, **global_settings)
     return settings
 
+def _port_modes_dict(port_modes):
+    result = {}
+    for port_mode in port_modes:
+        if "@" in port_mode:
+            port, mode = port_mode.split("@")
+        else:
+            port, mode = port_mode, None
+        if not port in result:
+            result[port] = set()
+        if not mode is None:
+            result[port].add(mode)
+    return result
+
+def _get_multimode_connections(connections, inst_port_mode):
+    mm_connections = {}
+    for inst_port1, inst_port2 in connections.items():
+        inst1, port1 = inst_port1.split(",")
+        inst2, port2 = inst_port2.split(",")
+        modes1 = inst_port_mode[inst1][port1]
+        modes2 = inst_port_mode[inst2][port2]
+        if not modes1 and not modes2:
+            mm_connections[f"{inst1},{port1}"] = f"{inst2},{port2}"
+        elif (not modes1) or (not modes2):
+            raise ValueError(
+                "trying to connect a multimode model to single mode model.\n"
+                "Please update your models dictionary.\n"
+                f"Problematic connection: '{inst_port1}':'{inst_port2}'"
+            )
+        else:
+            common_modes = modes1.intersection(modes2)
+            for mode in sorted(common_modes):
+                mm_connections[f"{inst1},{port1}@{mode}"] = f"{inst2},{port2}@{mode}"
+    return mm_connections
+
+def _get_multimode_ports(ports, inst_port_mode):
+    mm_ports = {}
+    for port, inst_port2 in ports.items():
+        inst2, port2 = inst_port2.split(",")
+        modes2 = inst_port_mode[inst2][port2]
+        if not modes2:
+            mm_ports[port] = f"{inst2},{port2}"
+        else:
+            for mode in sorted(modes2):
+                mm_ports[f"{port}@{mode}"] = f"{inst2},{port2}@{mode}"
+    return mm_ports
+
 # Cell
 def circuit(
     netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,
-    modes: Optional[List[str]] = None,
     backend: str = "default",
 ) -> Tuple[Model, CircuitInfo]:
     netlist = _ensure_recursive_netlist_dict(netlist)
@@ -189,11 +244,8 @@ def circuit(
     netlist, instance_models = _extract_instance_models(netlist)
 
     recnet: RecursiveNetlist = _validate_net(netlist)
-    dependency_dag: nx.DiGraph = _validate_dag(
-        create_dag(recnet, models)
-    )  # directed acyclic graph
+    dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))
     models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
-    modes = _validate_modes(modes)
     backend = _validate_circuit_backend(backend)
 
     circuit = None
@@ -206,15 +258,15 @@ def circuit(
             continue
 
         flatnet = recnet.__root__[model_name]
-
-        connections, ports, new_models = _make_singlemode_or_multimode(
-            flatnet, modes, new_models
-        )
         current_models.update(new_models)
         new_models = {}
 
         current_models[model_name] = circuit = _flat_circuit(
-            flatnet.instances, connections, ports, current_models, backend
+            flatnet.instances,
+            flatnet.connections,
+            flatnet.ports,
+            current_models,
+            backend,
         )
 
     assert circuit is not None
