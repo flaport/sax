@@ -171,26 +171,27 @@ const thebe_selector_output = ".output, .cell_output"
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Core Lib</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../nbs/00_typing.html">Typing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/02_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/04_multimode.html">Multimode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/05_models.html">Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/06a_netlist.html">Netlist</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/07_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/00_typing.html">Typing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/02_utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/04_multimode.html">Multimode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/05_models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/06a_netlist.html">Netlist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/07_circuit.html">Circuit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../nbs/08_backends.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/08b_backends_klu.html">Backend - KLU</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/08c_backends_additive.html">Backend - additive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/08_backends.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/08a_backends_filipsson_gunnar.html">Backend - Filipsson Gunnar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/08b_backends_klu.html">Backend - KLU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/08c_backends_additive.html">Backend - additive</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Networks</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../nbs/09_nn.html">Neural Networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/09a_nn_loss.html">Loss</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/09b_nn_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/09c_nn_core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../nbs/09d_nn_io.html">IO</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/09_nn.html">Neural Networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/09a_nn_loss.html">Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/09b_nn_utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/09c_nn_core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/09d_nn_io.html">IO</a></li>
 </ul>
 
     </div>
@@ -446,12 +447,12 @@ o = \frac{t-10^{-\alpha L/20}\exp(2\pi j n_{\rm eff}(\lambda) L / \lambda)}{1-t1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 256 ms, sys: 4.09 ms, total: 260 ms
-Wall time: 260 ms
-CPU times: user 24.9 ms, sys: 4.11 ms, total: 29 ms
-Wall time: 28 ms
-CPU times: user 25 µs, sys: 3 µs, total: 28 µs
-Wall time: 31.5 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 306 ms, sys: 8.1 ms, total: 314 ms
+Wall time: 313 ms
+CPU times: user 37.3 ms, sys: 0 ns, total: 37.3 ms
+Wall time: 36.4 ms
+CPU times: user 40 µs, sys: 0 ns, total: 40 µs
+Wall time: 43.6 µs
 </pre></div>
 </div>
 <img alt="../_images/70d1ce0192464569d00b1df508eef918ac28b73c86976e61726f04db5eaf4816.png" src="../_images/70d1ce0192464569d00b1df508eef918ac28b73c86976e61726f04db5eaf4816.png" />
@@ -512,12 +513,12 @@ Wall time: 31.5 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 594 ms, sys: 4.31 ms, total: 598 ms
-Wall time: 597 ms
-CPU times: user 278 µs, sys: 0 ns, total: 278 µs
-Wall time: 260 µs
-CPU times: user 23 µs, sys: 0 ns, total: 23 µs
-Wall time: 25.5 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 694 ms, sys: 12.1 ms, total: 706 ms
+Wall time: 706 ms
+CPU times: user 354 µs, sys: 0 ns, total: 354 µs
+Wall time: 333 µs
+CPU times: user 30 µs, sys: 0 ns, total: 30 µs
+Wall time: 32.9 µs
 </pre></div>
 </div>
 <img alt="../_images/cf5c506c9bcc65d2ee29b5f8c19bb6ffb31175c435f0a512275742e1868dd0f6.png" src="../_images/cf5c506c9bcc65d2ee29b5f8c19bb6ffb31175c435f0a512275742e1868dd0f6.png" />

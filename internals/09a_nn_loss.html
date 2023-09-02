@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Additive Backend &#8212; sax</title>
+    <title>Loss &#8212; sax</title>
   
   
   
@@ -62,13 +62,13 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/06_additive_backend';</script>
-    <link rel="canonical" href="https://flaport.github.io/sax/examples/06_additive_backend.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'internals/09a_nn_loss';</script>
+    <link rel="canonical" href="https://flaport.github.io/sax/internals/09a_nn_loss.html" />
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Layout Aware Monte Carlo with GDSFactory" href="07_layout_aware.html" />
-    <link rel="prev" title="Thin film optimization" href="05_thinfilm.html" />
+    <link rel="next" title="Utils" href="09b_nn_utils.html" />
+    <link rel="prev" title="Neural Networks" href="09_nn.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -160,38 +160,38 @@ const thebe_selector_output = ".output, .cell_output"
             </li>
         </ul>
         <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
-<ul class="current nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="01_quick_start.html">SAX Quick Start</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03_circuit_from_yaml.html">Circuit from YAML</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_multimode_simulations.html">Multimode simulations</a></li>
-<li class="toctree-l1"><a class="reference internal" href="05_thinfilm.html">Thin film optimization</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Additive Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../examples/01_quick_start.html">SAX Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/03_circuit_from_yaml.html">Circuit from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/04_multimode_simulations.html">Multimode simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/05_thinfilm.html">Thin film optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/06_additive_backend.html">Additive Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Core Lib</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../internals/00_typing.html">Typing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/02_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/04_multimode.html">Multimode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/05_models.html">Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/06a_netlist.html">Netlist</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/07_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="00_typing.html">Typing</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_multimode.html">Multimode</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_models.html">Models</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06a_netlist.html">Netlist</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_circuit.html">Circuit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../internals/08_backends.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/08a_backends_filipsson_gunnar.html">Backend - Filipsson Gunnar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/08b_backends_klu.html">Backend - KLU</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/08c_backends_additive.html">Backend - additive</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_backends.html">Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08a_backends_filipsson_gunnar.html">Backend - Filipsson Gunnar</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08b_backends_klu.html">Backend - KLU</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08c_backends_additive.html">Backend - additive</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Networks</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../internals/09_nn.html">Neural Networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09a_nn_loss.html">Loss</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09b_nn_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09c_nn_core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09d_nn_io.html">IO</a></li>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="09_nn.html">Neural Networks</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Loss</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09b_nn_utils.html">Utils</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09c_nn_core.html">Core</a></li>
+<li class="toctree-l1"><a class="reference internal" href="09d_nn_io.html">IO</a></li>
 </ul>
 
     </div>
@@ -261,7 +261,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/examples/06_additive_backend.ipynb" target="_blank"
+      <li><a href="../_sources/internals/09a_nn_loss.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -330,9 +330,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -343,20 +341,11 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Additive Backend</h1>
+    <h1>Loss</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametrized-models">Parametrized Models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#circuit-with-additive-backend">Circuit with additive backend</a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -366,103 +355,99 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="additive-backend">
-<h1>Additive Backend<a class="headerlink" href="#additive-backend" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="loss">
+<h1>Loss<a class="headerlink" href="#loss" title="Permalink to this heading">#</a></h1>
 <blockquote>
-<div><p>The additive backend can be used to obtain pathlengths and group delays.</p>
+<div><p>loss functions and utilitites for SAX neural networks</p>
 </div></blockquote>
-<div class="cell docutils container">
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">jax</span>
-<span class="kn">import</span> <span class="nn">jax.example_libraries.optimizers</span> <span class="k">as</span> <span class="nn">opt</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># plotting</span>
-<span class="kn">import</span> <span class="nn">sax</span>
+<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">ComplexFloat</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<section id="parametrized-models">
-<h2>Parametrized Models<a class="headerlink" href="#parametrized-models" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.nn.loss.mse">
+<span class="sig-prename descclassname"><span class="pre">sax.nn.loss.</span></span><span class="sig-name descname"><span class="pre">mse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ComplexFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ComplexFloat</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#sax.nn.loss.mse" title="Permalink to this definition">#</a></dt>
+<dd><p>mean squared error</p>
+</dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">coupler</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mf">50.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
-    <span class="n">sdict</span> <span class="o">=</span>  <span class="p">{</span>
-        <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">length</span><span class="p">,</span>
-        <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">length</span><span class="p">,</span>
-        <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">length</span><span class="p">,</span>
-        <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">length</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">sdict</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexFloat</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ComplexFloat</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;mean squared error&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.nn.loss.huber_loss">
+<span class="sig-prename descclassname"><span class="pre">sax.nn.loss.</span></span><span class="sig-name descname"><span class="pre">huber_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ComplexFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">ComplexFloat</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">float</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#sax.nn.loss.huber_loss" title="Permalink to this definition">#</a></dt>
+<dd><p>huber loss</p>
+</dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">waveguide</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
-    <span class="n">sdict</span> <span class="o">=</span> <span class="p">{</span>
-        <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">length</span><span class="p">,</span>
-    <span class="p">}</span>
-    <span class="k">return</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span><span class="n">sdict</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">huber_loss</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexFloat</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ComplexFloat</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;huber loss&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="p">((</span><span class="n">delta</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">((</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">delta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-</section>
-<section id="circuit-with-additive-backend">
-<h2>Circuit with additive backend<a class="headerlink" href="#circuit-with-additive-backend" title="Permalink to this heading">#</a></h2>
-<div class="cell docutils container">
+<p>The huber loss is like the mean squared error close to zero and mean
+absolute error for outliers</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.nn.loss.l2_reg">
+<span class="sig-prename descclassname"><span class="pre">sax.nn.loss.</span></span><span class="sig-name descname"><span class="pre">l2_reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">ComplexFloat</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">float</span></span></span><a class="headerlink" href="#sax.nn.loss.l2_reg" title="Permalink to this definition">#</a></dt>
+<dd><p>L2 regularization loss</p>
+</dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
-    <span class="n">netlist</span><span class="o">=</span><span class="p">{</span>
-        <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
-            <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><span class="n">waveguide</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">500</span><span class="p">),</span>
-            <span class="s2">&quot;btm&quot;</span><span class="p">:</span> <span class="n">partial</span><span class="p">(</span><span class="n">waveguide</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mi">100</span><span class="p">),</span>
-            <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;btm,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;btm,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;lft,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;top,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;top,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,in1&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-        <span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;lft,in1&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
-            <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out1&quot;</span><span class="p">,</span>
-        <span class="p">},</span>
-    <span class="p">},</span>
-    <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;additive&quot;</span><span class="p">,</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">l2_reg</span><span class="p">(</span><span class="n">weights</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ComplexFloat</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;L2 regularization loss&quot;&quot;&quot;</span>
+    <span class="n">numel</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">weights</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">)):</span>
+        <span class="n">numel</span> <span class="o">=</span> <span class="n">numel</span> <span class="o">+</span> <span class="n">w</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">+</span> <span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">loss</span> <span class="o">/</span> <span class="n">numel</span>
 </pre></div>
 </div>
 </div>
+</details>
 </div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">()</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;in0&#39;, &#39;out1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;in1&#39;, &#39;out0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;in1&#39;, &#39;out1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out0&#39;, &#39;in0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out0&#39;, &#39;in1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out1&#39;, &#39;in0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out1&#39;, &#39;in1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)]}
-</pre></div>
-</div>
-</div>
-</div>
-</section>
 </section>
 
     <script type="text/x-thebe-config">
@@ -478,7 +463,7 @@ document.write(`
         },
         kernelOptions: {
             name: "sax",
-            path: "./examples"
+            path: "./internals"
         },
         predefinedOutput: true
     }
@@ -497,20 +482,20 @@ document.write(`
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
     <a class="left-prev"
-       href="05_thinfilm.html"
+       href="09_nn.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Thin film optimization</p>
+        <p class="prev-next-title">Neural Networks</p>
       </div>
     </a>
     <a class="right-next"
-       href="07_layout_aware.html"
+       href="09b_nn_utils.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Layout Aware Monte Carlo with GDSFactory</p>
+        <p class="prev-next-title">Utils</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -523,21 +508,6 @@ document.write(`
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#parametrized-models">Parametrized Models</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#circuit-with-additive-backend">Circuit with additive backend</a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>
