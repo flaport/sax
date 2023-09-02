@@ -1,6 +1,6 @@
 .ONESHELL:
 SHELL := /bin/bash
-SRC = $(wildcard nbs/*.ipynb)
+SRC = $(wildcard internals/*.ipynb)
 
 all: sax docs
 
@@ -12,7 +12,7 @@ sax: $(SRC)
 	nbdev_build_lib
 
 lib:
-	nbdev_build_lib --fname 'nbs/*.ipynb'
+	nbdev_build_lib --fname 'internals/*.ipynb'
 
 sync:
 	nbdev_update_lib

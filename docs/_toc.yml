@@ -11,23 +11,23 @@ parts:
     - file: examples/07_layout_aware
 - caption: Core Lib
   chapters:
-  - file: nbs/00_typing.ipynb
-  - file: nbs/02_utils.ipynb
-  - file: nbs/04_multimode.ipynb
-  - file: nbs/05_models.ipynb
-  - file: nbs/06a_netlist.ipynb
-  - file: nbs/07_circuit.ipynb
+  - file: internals/00_typing.ipynb
+  - file: internals/02_utils.ipynb
+  - file: internals/04_multimode.ipynb
+  - file: internals/05_models.ipynb
+  - file: internals/06a_netlist.ipynb
+  - file: internals/07_circuit.ipynb
 - caption: Backends
   chapters:
-  - file: nbs/08_backends.ipynb
-  - file: nbs/08a_backends_default.ipynb
-  - file: nbs/08b_backends_klu.ipynb
-  - file: nbs/08c_backends_additive.ipynb
+  - file: internals/08_backends.ipynb
+  - file: internals/08a_backends_filipsson_gunnar.ipynb
+  - file: internals/08b_backends_klu.ipynb
+  - file: internals/08c_backends_additive.ipynb
 - caption: Neural Networks
   chapters:
-  - file: nbs/09_nn.ipynb
-  - file: nbs/09a_nn_loss.ipynb
-  - file: nbs/09b_nn_utils.ipynb
-  - file: nbs/09c_nn_core.ipynb
-  - file: nbs/09d_nn_io.ipynb
+  - file: internals/09_nn.ipynb
+  - file: internals/09a_nn_loss.ipynb
+  - file: internals/09b_nn_utils.ipynb
+  - file: internals/09c_nn_core.ipynb
+  - file: internals/09d_nn_io.ipynb
 root: index

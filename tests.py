@@ -10,7 +10,7 @@ def _find_notebooks(dir):
                 continue
             yield os.path.join(root, file)
 
-@pytest.mark.parametrize('fn', sorted(_find_notebooks('nbs')))
+@pytest.mark.parametrize('fn', sorted(_find_notebooks('internals')))
 def test_nbs(fn):
     print(fn)
     assert _test_one(fn)
