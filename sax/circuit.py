@@ -24,7 +24,7 @@ from .backends import circuit_backends
 from .multimode import multimode, singlemode
 from .netlist import Netlist, RecursiveNetlist
 from .netlist_cleaning import remove_unused_instances
-from .typing_ import Model, Settings, SType
+from .typing_ import Model, Settings, SType, sdict, sdense, scoo
 from .utils import (
     _replace_kwargs,
     get_ports,
@@ -236,6 +236,7 @@ def circuit(
     netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,
     backend: str = "default",
+    return_type: str = "sdict",
 ) -> Tuple[Model, CircuitInfo]:
     netlist = _ensure_recursive_netlist_dict(netlist)
 
@@ -270,6 +271,7 @@ def circuit(
         )
 
     assert circuit is not None
+    circuit = _enforce_return_type(circuit, return_type)
     return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
 
 
@@ -286,6 +288,15 @@ class CircuitInfo(NamedTuple):
     dag: nx.DiGraph
     models: Dict[str, Model]
 
+def _enforce_return_type(model, return_type):
+    stype_func = {
+        "default": lambda x: x,
+        "stype": lambda x: x,
+        "sdict": sdict,
+        "scoo": scoo,
+        "sdense": sdense,
+    }[return_type]
+    return stype_func(model)
 
 def _ensure_recursive_netlist_dict(netlist):
     if not isinstance(netlist, dict):
@@ -332,19 +343,6 @@ def _validate_circuit_backend(backend):
             f"{', '.join(circuit_backends.keys())}."
         )
     return backend
-
-
-def _validate_modes(modes) -> List[str]:
-    if modes is None:
-        return ["te"]
-    elif not modes:
-        return ["te"]
-    elif isinstance(modes, str):
-        return [modes]
-    elif all(isinstance(m, str) for m in modes):
-        return modes
-    else:
-        raise ValueError(f"Invalid modes given: {modes}")
 
 
 def _validate_net(netlist: Union[Netlist, RecursiveNetlist]) -> RecursiveNetlist:
