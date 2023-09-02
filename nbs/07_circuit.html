@@ -383,7 +383,7 @@ document.write(`
 <span class="kn">from</span> <span class="nn">sax.multimode</span> <span class="kn">import</span> <span class="n">multimode</span><span class="p">,</span> <span class="n">singlemode</span>
 <span class="kn">from</span> <span class="nn">sax.netlist</span> <span class="kn">import</span> <span class="n">Netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span>
 <span class="kn">from</span> <span class="nn">sax.netlist_cleaning</span> <span class="kn">import</span> <span class="n">remove_unused_instances</span>
-<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">SType</span>
+<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">sdict</span><span class="p">,</span> <span class="n">sdense</span><span class="p">,</span> <span class="n">scoo</span>
 <span class="kn">from</span> <span class="nn">sax.utils</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_replace_kwargs</span><span class="p">,</span>
     <span class="n">get_ports</span><span class="p">,</span>
@@ -887,7 +887,7 @@ document.write(`
 <p>Now that we can handle flat circuits the extension to hierarchical circuits is not so difficult:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.circuit.circuit">
-<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">netlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Netlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NetlistDict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RecursiveNetlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NetlistDict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">CircuitInfo</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.circuit.circuit" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.circuit.</span></span><span class="sig-name descname"><span class="pre">circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">netlist</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Union</span><span class="p"><span class="pre">[</span></span><span class="pre">Netlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NetlistDict</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">RecursiveNetlist</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">NetlistDict</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Optional</span><span class="p"><span class="pre">[</span></span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span><span class="p"><span class="pre">]</span></span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'default'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">return_type</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">str</span></span><span class="w"> </span><span class="o"><span class="pre">=</span></span><span class="w"> </span><span class="default_value"><span class="pre">'sdict'</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Tuple</span><span class="p"><span class="pre">[</span></span><span class="pre">Model</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">CircuitInfo</span><span class="p"><span class="pre">]</span></span></span></span><a class="headerlink" href="#sax.circuit.circuit" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -901,6 +901,7 @@ document.write(`
     <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">RecursiveNetlistDict</span><span class="p">],</span>
     <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
     <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="n">return_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sdict&quot;</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">CircuitInfo</span><span class="p">]:</span>
     <span class="n">netlist</span> <span class="o">=</span> <span class="n">_ensure_recursive_netlist_dict</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
 
@@ -935,6 +936,7 @@ document.write(`
         <span class="p">)</span>
 
     <span class="k">assert</span> <span class="n">circuit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">_enforce_return_type</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">return_type</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">CircuitInfo</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dependency_dag</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">current_models</span><span class="p">)</span>
 
 
@@ -951,6 +953,15 @@ document.write(`
     <span class="n">dag</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span>
     <span class="n">models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]</span>
 
+<span class="k">def</span> <span class="nf">_enforce_return_type</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">return_type</span><span class="p">):</span>
+    <span class="n">stype_func</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="s2">&quot;stype&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="s2">&quot;sdict&quot;</span><span class="p">:</span> <span class="n">sdict</span><span class="p">,</span>
+        <span class="s2">&quot;scoo&quot;</span><span class="p">:</span> <span class="n">scoo</span><span class="p">,</span>
+        <span class="s2">&quot;sdense&quot;</span><span class="p">:</span> <span class="n">sdense</span><span class="p">,</span>
+    <span class="p">}[</span><span class="n">return_type</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">stype_func</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
 <span class="k">def</span> <span class="nf">_ensure_recursive_netlist_dict</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -997,19 +1008,6 @@ document.write(`
             <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">circuit_backends</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
         <span class="p">)</span>
     <span class="k">return</span> <span class="n">backend</span>
-
-
-<span class="k">def</span> <span class="nf">_validate_modes</span><span class="p">(</span><span class="n">modes</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">[</span><span class="nb">str</span><span class="p">]:</span>
-    <span class="k">if</span> <span class="n">modes</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;te&quot;</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="ow">not</span> <span class="n">modes</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">[</span><span class="s2">&quot;te&quot;</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">modes</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">modes</span><span class="p">]</span>
-    <span class="k">elif</span> <span class="nb">all</span><span class="p">(</span><span class="nb">isinstance</span><span class="p">(</span><span class="n">m</span><span class="p">,</span> <span class="nb">str</span><span class="p">)</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">modes</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">modes</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid modes given: </span><span class="si">{</span><span class="n">modes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
 
 
 <span class="k">def</span> <span class="nf">_validate_net</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlist</span><span class="p">:</span>
@@ -1074,10 +1072,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0.  +0.j, 0.81+0.j],
-        [0.81+0.j, 0.  +0.j]], dtype=complex128),
- {&#39;o1&#39;: Array(0, dtype=int64, weak_type=True),
-  &#39;o2&#39;: Array(1, dtype=int64, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o1&#39;, &#39;o2&#39;): Array(0.81+0.j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o1&#39;): Array(0.81+0.j, dtype=complex128),
+ (&#39;o2&#39;, &#39;o2&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1085,20 +1083,28 @@ document.write(`
 <p>multi mode simulation:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">double_mzi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models_mm</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">double_mzi</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">circuit</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models_mm</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s1">&#39;default&#39;</span><span class="p">,</span> <span class="n">return_type</span><span class="o">=</span><span class="s1">&#39;sdict&#39;</span><span class="p">)</span>
 <span class="n">jit</span><span class="p">(</span><span class="n">double_mzi</span><span class="p">)()</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0.        +0.j, 0.        +0.j, 0.61275581+0.j, 0.29852723+0.j],
-        [0.        +0.j, 0.        +0.j, 0.29852723+0.j, 0.35446338+0.j],
-        [0.61275581+0.j, 0.29852723+0.j, 0.        +0.j, 0.        +0.j],
-        [0.29852723+0.j, 0.35446338+0.j, 0.        +0.j, 0.        +0.j]],      dtype=complex128),
- {&#39;o1@TE&#39;: Array(0, dtype=int64, weak_type=True),
-  &#39;o1@TM&#39;: Array(1, dtype=int64, weak_type=True),
-  &#39;o2@TE&#39;: Array(2, dtype=int64, weak_type=True),
-  &#39;o2@TM&#39;: Array(3, dtype=int64, weak_type=True)})
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1@TE&#39;, &#39;o1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o1@TE&#39;, &#39;o1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o1@TE&#39;, &#39;o2@TE&#39;): Array(0.61275581+0.j, dtype=complex128),
+ (&#39;o1@TE&#39;, &#39;o2@TM&#39;): Array(0.29852723+0.j, dtype=complex128),
+ (&#39;o1@TM&#39;, &#39;o1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o1@TM&#39;, &#39;o1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o1@TM&#39;, &#39;o2@TE&#39;): Array(0.29852723+0.j, dtype=complex128),
+ (&#39;o1@TM&#39;, &#39;o2@TM&#39;): Array(0.35446338+0.j, dtype=complex128),
+ (&#39;o2@TE&#39;, &#39;o1@TE&#39;): Array(0.61275581+0.j, dtype=complex128),
+ (&#39;o2@TE&#39;, &#39;o1@TM&#39;): Array(0.29852723+0.j, dtype=complex128),
+ (&#39;o2@TE&#39;, &#39;o2@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o2@TE&#39;, &#39;o2@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o2@TM&#39;, &#39;o1@TE&#39;): Array(0.29852723+0.j, dtype=complex128),
+ (&#39;o2@TM&#39;, &#39;o1@TM&#39;): Array(0.35446338+0.j, dtype=complex128),
+ (&#39;o2@TM&#39;, &#39;o2@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;o2@TM&#39;, &#39;o2@TM&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
