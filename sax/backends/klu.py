@@ -11,7 +11,7 @@ __all__ = ['solve_klu', 'mul_coo', 'mul_coo', 'get_instance_ports', 'get_dummy_i
 #nbdev_comment from __future__ import annotations
 
 from functools import partial
-from typing import Dict
+from typing import Any, Dict
 
 import jax
 import jax.numpy as jnp
@@ -27,7 +27,7 @@ mul_coo = None
 mul_coo = jax.vmap(klujax.coo_mul_vec, (None, None, 0, 0), 0)
 
 # Cell
-def get_instance_ports(connections, ports):
+def get_instance_ports(connections: Dict[str, str], ports: Dict[str, str]):
     instance_ports = {}
     for connection in connections.items():
         for ip in connection:
@@ -57,7 +57,7 @@ def get_dummy_instances(connections, ports):
 def analyze_circuit_klu(
     connections: Dict[str, str],
     ports: Dict[str, str],
-):
+) -> Any:
     connections = {**connections, **{v: k for k, v in connections.items()}}
     instances = get_dummy_instances(connections, ports)
     inverse_ports = {v: k for k, v in ports.items()}
@@ -99,7 +99,7 @@ def analyze_circuit_klu(
     return n_col, mask, Si, Sj, Cext, Cexti, Cextj, I_CSi, I_CSj, tuple((k, v[1]) for k, v in instances.items()), tuple(port_map)
 
 # Cell
-def evaluate_circuit_klu(analyzed, instances):
+def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
     n_col, mask, Si, Sj, Cext, Cexti, Cextj, I_CSi, I_CSj, dummy_pms, port_map = analyzed
 
     idx = 0

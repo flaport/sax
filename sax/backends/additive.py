@@ -10,7 +10,7 @@ __all__ = ['split_port', 'graph_edges', 'prune_internal_output_nodes', 'get_poss
 # Cell
 #nbdev_comment from __future__ import annotations
 
-from typing import Dict, Tuple
+from typing import Any, Dict, Tuple
 
 import networkx as nx
 from ..typing_ import SDict, SType, sdict
@@ -107,13 +107,13 @@ def path_lengths(graph, paths):
 def analyze_circuit_additive(
     connections: Dict[str, str],
     ports: Dict[str, str],
-):
+) -> Any:
     return connections, ports
 
 def evaluate_circuit_additive(
-    analyzed,
+    analyzed: Any,
     instances: Dict[str, SDict],
-):
+) -> SDict:
     """evaluate a circuit for the given sdicts."""
     connections, ports = analyzed
     edges = graph_edges(instances, connections, ports)
