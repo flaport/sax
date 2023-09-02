@@ -181,7 +181,6 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="08_backends.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08a_backends_default.html">Backend - default</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08b_backends_klu.html">Backend - KLU</a></li>
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Backend - additive</a></li>
 </ul>
@@ -370,7 +369,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span>
 
 <span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
 <span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">SDict</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">sdict</span>
@@ -745,12 +744,12 @@ document.write(`
 <p>This is all brought together in the additive KLU backend:</p>
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.backends.additive.analyze_circuit_additive">
-<span class="sig-prename descclassname"><span class="pre">sax.backends.additive.</span></span><span class="sig-name descname"><span class="pre">analyze_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.backends.additive.analyze_circuit_additive" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.backends.additive.</span></span><span class="sig-name descname"><span class="pre">analyze_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#sax.backends.additive.analyze_circuit_additive" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.backends.additive.evaluate_circuit_additive">
-<span class="sig-prename descclassname"><span class="pre">sax.backends.additive.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SDict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.backends.additive.evaluate_circuit_additive" title="Permalink to this definition">#</a></dt>
+<span class="sig-prename descclassname"><span class="pre">sax.backends.additive.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SDict</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SDict</span></span></span><a class="headerlink" href="#sax.backends.additive.evaluate_circuit_additive" title="Permalink to this definition">#</a></dt>
 <dd><p>evaluate a circuit for the given sdicts.</p>
 </dd></dl>
 
@@ -764,13 +763,13 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">analyze_circuit_additive</span><span class="p">(</span>
     <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">ports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="k">return</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span>
     
 <span class="k">def</span> <span class="nf">evaluate_circuit_additive</span><span class="p">(</span>
-    <span class="n">analyzed</span><span class="p">,</span>
+    <span class="n">analyzed</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SDict</span><span class="p">],</span>
-<span class="p">):</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;evaluate a circuit for the given sdicts.&quot;&quot;&quot;</span>
     <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span> <span class="o">=</span> <span class="n">analyzed</span>
     <span class="n">edges</span> <span class="o">=</span> <span class="n">graph_edges</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>

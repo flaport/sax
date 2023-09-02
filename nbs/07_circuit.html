@@ -181,7 +181,6 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="08_backends.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08a_backends_default.html">Backend - default</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08b_backends_klu.html">Backend - KLU</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08c_backends_additive.html">Backend - additive</a></li>
 </ul>
@@ -838,10 +837,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1&#39;, &#39;o2&#39;): Array(0.9, dtype=float64, weak_type=True),
- (&#39;o2&#39;, &#39;o1&#39;): Array(0.9, dtype=float64, weak_type=True),
- (&#39;o2&#39;, &#39;o2&#39;): Array(0., dtype=float64, weak_type=True)}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0. +0.j, 0.9+0.j],
+        [0.9+0.j, 0. +0.j]], dtype=complex128),
+ {&#39;o1&#39;: Array(0, dtype=int64, weak_type=True),
+  &#39;o2&#39;: Array(1, dtype=int64, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -873,22 +872,14 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1@TE&#39;, &#39;o1@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TE&#39;, &#39;o1@TM&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TE&#39;, &#39;o2@TE&#39;): Array(0.7482, dtype=float64, weak_type=True),
- (&#39;o1@TE&#39;, &#39;o2@TM&#39;): Array(0.23011426, dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o1@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o1@TM&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o2@TE&#39;): Array(0.23011426, dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o2@TM&#39;): Array(0.5491, dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o1@TE&#39;): Array(0.7482, dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o1@TM&#39;): Array(0.23011426, dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o2@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o2@TM&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o1@TE&#39;): Array(0.23011426, dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o1@TM&#39;): Array(0.5491, dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o2@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o2@TM&#39;): Array(0., dtype=float64, weak_type=True)}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0.        +0.j, 0.        +0.j, 0.7482    +0.j, 0.23011426+0.j],
+        [0.        +0.j, 0.        +0.j, 0.23011426+0.j, 0.5491    +0.j],
+        [0.7482    +0.j, 0.23011426+0.j, 0.        +0.j, 0.        +0.j],
+        [0.23011426+0.j, 0.5491    +0.j, 0.        +0.j, 0.        +0.j]],      dtype=complex128),
+ {&#39;o1@TE&#39;: Array(0, dtype=int64, weak_type=True),
+  &#39;o1@TM&#39;: Array(1, dtype=int64, weak_type=True),
+  &#39;o2@TE&#39;: Array(2, dtype=int64, weak_type=True),
+  &#39;o2@TM&#39;: Array(3, dtype=int64, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -1083,10 +1074,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1&#39;, &#39;o1&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1&#39;, &#39;o2&#39;): Array(0.81, dtype=float64, weak_type=True),
- (&#39;o2&#39;, &#39;o1&#39;): Array(0.81, dtype=float64, weak_type=True),
- (&#39;o2&#39;, &#39;o2&#39;): Array(0., dtype=float64, weak_type=True)}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0.  +0.j, 0.81+0.j],
+        [0.81+0.j, 0.  +0.j]], dtype=complex128),
+ {&#39;o1&#39;: Array(0, dtype=int64, weak_type=True),
+  &#39;o2&#39;: Array(1, dtype=int64, weak_type=True)})
 </pre></div>
 </div>
 </div>
@@ -1100,22 +1091,14 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;o1@TE&#39;, &#39;o1@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TE&#39;, &#39;o1@TM&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TE&#39;, &#39;o2@TE&#39;): Array(0.61275581, dtype=float64, weak_type=True),
- (&#39;o1@TE&#39;, &#39;o2@TM&#39;): Array(0.29852723, dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o1@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o1@TM&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o2@TE&#39;): Array(0.29852723, dtype=float64, weak_type=True),
- (&#39;o1@TM&#39;, &#39;o2@TM&#39;): Array(0.35446338, dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o1@TE&#39;): Array(0.61275581, dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o1@TM&#39;): Array(0.29852723, dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o2@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o2@TE&#39;, &#39;o2@TM&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o1@TE&#39;): Array(0.29852723, dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o1@TM&#39;): Array(0.35446338, dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o2@TE&#39;): Array(0., dtype=float64, weak_type=True),
- (&#39;o2@TM&#39;, &#39;o2@TM&#39;): Array(0., dtype=float64, weak_type=True)}
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0.        +0.j, 0.        +0.j, 0.61275581+0.j, 0.29852723+0.j],
+        [0.        +0.j, 0.        +0.j, 0.29852723+0.j, 0.35446338+0.j],
+        [0.61275581+0.j, 0.29852723+0.j, 0.        +0.j, 0.        +0.j],
+        [0.29852723+0.j, 0.35446338+0.j, 0.        +0.j, 0.        +0.j]],      dtype=complex128),
+ {&#39;o1@TE&#39;: Array(0, dtype=int64, weak_type=True),
+  &#39;o1@TM&#39;: Array(1, dtype=int64, weak_type=True),
+  &#39;o2@TE&#39;: Array(2, dtype=int64, weak_type=True),
+  &#39;o2@TM&#39;: Array(3, dtype=int64, weak_type=True)})
 </pre></div>
 </div>
 </div>

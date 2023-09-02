@@ -67,7 +67,7 @@ const thebe_selector_output = ".output, .cell_output"
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Backend - default" href="08a_backends_default.html" />
+    <link rel="next" title="Backend - KLU" href="08b_backends_klu.html" />
     <link rel="prev" title="Circuit" href="07_circuit.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
@@ -181,7 +181,6 @@ const thebe_selector_output = ".output, .cell_output"
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="08a_backends_default.html">Backend - default</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08b_backends_klu.html">Backend - KLU</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08c_backends_additive.html">Backend - additive</a></li>
 </ul>
@@ -375,30 +374,61 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit_backends</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">analyze_circuit</span><span class="p">,</span> <span class="n">evaluate_circuit</span><span class="p">),</span>
+    <span class="s2">&quot;fg&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">analyze_circuit_fg</span><span class="p">,</span> <span class="n">evaluate_circuit_fg</span><span class="p">),</span>
+    <span class="s2">&quot;filipsson_gunnar&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">analyze_circuit_fg</span><span class="p">,</span> <span class="n">evaluate_circuit_fg</span><span class="p">),</span>
     <span class="s2">&quot;additive&quot;</span><span class="p">:</span> <span class="p">(</span><span class="n">analyze_circuit_additive</span><span class="p">,</span> <span class="n">evaluate_circuit_additive</span><span class="p">),</span>
 <span class="p">}</span>
 
 <span class="k">if</span> <span class="n">JAX_AVAILABLE</span> <span class="ow">and</span> <span class="n">KLUJAX_AVAILABLE</span><span class="p">:</span>
     <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;klu&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">analyze_circuit_klu</span><span class="p">,</span> <span class="n">evaluate_circuit_klu</span><span class="p">)</span>
+    <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">analyze_circuit_klu</span><span class="p">,</span> <span class="n">evaluate_circuit_klu</span><span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">analyze_circuit_fg</span><span class="p">,</span> <span class="n">evaluate_circuit_fg</span><span class="p">)</span>
+    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span><span class="s2">&quot;klujax not found. Please install klujax for better performance during circuit evaluation!&quot;</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 </div>
 <p>SAX allows to easily interchange the backend of a circuit. A SAX backend consists of a static analysis step and an evaluation step:</p>
-<div class="cell tag_remove-input docutils container">
-<div class="cell_output docutils container">
-<h4 id="analyze_circuit" class="doc_header"><code>analyze_circuit</code><a href="https://github.com/flaport/sax/tree/master/sax/backends/default.py#L33" class="source_link" style="float:right">[source]</a></h4>
-<blockquote>
-<div><p><code>analyze_circuit</code>(<strong><code class="docutils literal notranslate"><span class="pre">connections</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">ports</span></code></strong>)</p>
-</div></blockquote>
-<h4 id="evaluate_circuit" class="doc_header"><code>evaluate_circuit</code><a href="https://github.com/flaport/sax/tree/master/sax/backends/default.py#L39" class="source_link" style="float:right">[source]</a></h4>
-<blockquote>
-<div><p><code>evaluate_circuit</code>(<strong><code class="docutils literal notranslate"><span class="pre">analyzed</span></code></strong>, <strong><code class="docutils literal notranslate"><span class="pre">instances</span></code></strong>:<code class="docutils literal notranslate"><span class="pre">Dict[str,</span> <span class="pre">SType]</span></code>)</p>
-</div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.__init__.analyze_circuit">
+<span class="sig-prename descclassname"><span class="pre">sax.backends.__init__.</span></span><span class="sig-name descname"><span class="pre">analyze_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#sax.backends.__init__.analyze_circuit" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">ports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="mi">0</span><span class="p">](</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+</pre></div>
 </div>
 </div>
-<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be needed to be recalculated when any parameters of the circuit change.</p>
+</details>
+</div>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.__init__.evaluate_circuit">
+<span class="sig-prename descclassname"><span class="pre">sax.backends.__init__.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SType</span></span></span><a class="headerlink" href="#sax.backends.__init__.evaluate_circuit" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<div class="cell tag_hide-input docutils container">
+<details class="hide above-input">
+<summary aria-label="Toggle hidden content">
+<span class="collapsed">Show code cell source</span>
+<span class="expanded">Hide code cell source</span>
+</summary>
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="s1">&#39;default&#39;</span><span class="p">][</span><span class="mi">1</span><span class="p">](</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</details>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be needed to be recalculated when any parameters of the circuit change. See <a class="reference internal" href="08b_backends_klu.html"><span class="doc std std-doc">KLU backend</span></a> for a non-trivial implementation of the circuit analyzation.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">evaluate_circuit</span></code> step evaluates the circuit for given <code class="docutils literal notranslate"><span class="pre">SType</span></code> instances.</p>
 <blockquote>
 <div><p>Example</p>
@@ -438,7 +468,7 @@ document.write(`
 <span class="p">}</span>
 
 <span class="n">analyzed</span> <span class="o">=</span> <span class="n">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
-<span class="n">mzi_sdict</span> <span class="o">=</span> <span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+<span class="n">mzi_sdict</span> <span class="o">=</span> <span class="n">sdict</span><span class="p">(</span><span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">))</span>
 <span class="n">display</span><span class="p">(</span><span class="n">mzi_sdict</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -446,49 +476,20 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
  (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
  (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
- (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
- (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128)}
-</pre></div>
-</div>
-</div>
-</div>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyzed</span> <span class="o">=</span> <span class="n">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
-<span class="n">mzi_sdict_klu</span> <span class="o">=</span> <span class="n">sdict</span><span class="p">(</span><span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">))</span>
-<span class="n">display</span><span class="p">(</span><span class="n">mzi_sdict_klu</span><span class="p">)</span>
-</pre></div>
-</div>
-</div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
- (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
- (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
- (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128)}
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -537,11 +538,11 @@ document.write(`
       </div>
     </a>
     <a class="right-next"
-       href="08a_backends_default.html"
+       href="08b_backends_klu.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Backend - default</p>
+        <p class="prev-next-title">Backend - KLU</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>

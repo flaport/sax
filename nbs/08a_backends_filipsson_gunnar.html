@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
-    <title>Backend - default &#8212; sax</title>
+    <title>Backend - Filipsson Gunnar &#8212; sax</title>
   
   
   
@@ -62,13 +62,11 @@ const thebe_selector_input = "pre"
 const thebe_selector_output = ".output, .cell_output"
 </script>
     <script async="async" src="../_static/sphinx-thebe.js"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'nbs/08a_backends_default';</script>
-    <link rel="canonical" href="https://flaport.github.io/sax/nbs/08a_backends_default.html" />
+    <script>DOCUMENTATION_OPTIONS.pagename = 'nbs/08a_backends_filipsson_gunnar';</script>
+    <link rel="canonical" href="https://flaport.github.io/sax/nbs/08a_backends_filipsson_gunnar.html" />
     <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
-    <link rel="next" title="Backend - KLU" href="08b_backends_klu.html" />
-    <link rel="prev" title="Backend" href="08_backends.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -179,9 +177,8 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="07_circuit.html">Circuit</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
-<ul class="current nav bd-sidenav">
+<ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="08_backends.html">Backend</a></li>
-<li class="toctree-l1 current active"><a class="current reference internal" href="#">Backend - default</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08b_backends_klu.html">Backend - KLU</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08c_backends_additive.html">Backend - additive</a></li>
 </ul>
@@ -261,7 +258,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="../_sources/nbs/08a_backends_default.ipynb" target="_blank"
+      <li><a href="../_sources/nbs/08a_backends_filipsson_gunnar.ipynb" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -343,7 +340,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>Backend - default</h1>
+    <h1>Backend - Filipsson Gunnar</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -370,10 +367,10 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article" role="main">
                   
-  <section class="tex2jax_ignore mathjax_ignore" id="backend-default">
-<h1>Backend - default<a class="headerlink" href="#backend-default" title="Permalink to this heading">#</a></h1>
+  <section class="tex2jax_ignore mathjax_ignore" id="backend-filipsson-gunnar">
+<h1>Backend - Filipsson Gunnar<a class="headerlink" href="#backend-filipsson-gunnar" title="Permalink to this heading">#</a></h1>
 <blockquote>
-<div><p>Default SAX Backend</p>
+<div><p>Filipsson Gunnar Backend</p>
 </div></blockquote>
 <div class="cell tag_hide-input docutils container">
 <details class="hide above-input">
@@ -386,7 +383,7 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">types</span> <span class="kn">import</span> <span class="n">SimpleNamespace</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="k">try</span><span class="p">:</span>
     <span class="kn">import</span> <span class="nn">jax</span>
@@ -401,7 +398,7 @@ document.write(`
     <span class="n">jax</span> <span class="o">=</span> <span class="n">SimpleNamespace</span><span class="p">(</span><span class="n">jit</span><span class="o">=</span><span class="n">jit</span><span class="p">)</span>
     <span class="n">JAX_AVAILABLE</span> <span class="o">=</span> <span class="kc">False</span>
     
-<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">SDict</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">SDense</span><span class="p">,</span> <span class="n">sdict</span>
+<span class="kn">from</span> <span class="nn">sax.typing_</span> <span class="kn">import</span> <span class="n">SDense</span><span class="p">,</span> <span class="n">SDict</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">sdict</span>
 </pre></div>
 </div>
 </div>
@@ -417,8 +414,8 @@ document.write(`
 <section id="circuit-analyzation">
 <h2>Circuit Analyzation<a class="headerlink" href="#circuit-analyzation" title="Permalink to this heading">#</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="sax.backends.default.analyze_circuit">
-<span class="sig-prename descclassname"><span class="pre">sax.backends.default.</span></span><span class="sig-name descname"><span class="pre">analyze_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="headerlink" href="#sax.backends.default.analyze_circuit" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="sax.backends.filipsson_gunnar.analyze_circuit_fg">
+<span class="sig-prename descclassname"><span class="pre">sax.backends.filipsson_gunnar.</span></span><span class="sig-name descname"><span class="pre">analyze_circuit_fg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Any</span></span></span><a class="headerlink" href="#sax.backends.filipsson_gunnar.analyze_circuit_fg" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 <div class="cell tag_hide-input docutils container">
@@ -428,7 +425,7 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">analyze_circuit_fg</span><span class="p">(</span><span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="n">ports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="c1"># skip analysis for now</span>
     <span class="k">return</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span>
 </pre></div>
@@ -440,8 +437,8 @@ document.write(`
 <section id="circuit-evaluation">
 <h2>Circuit Evaluation<a class="headerlink" href="#circuit-evaluation" title="Permalink to this heading">#</a></h2>
 <dl class="py function">
-<dt class="sig sig-object py" id="sax.backends.default.evaluate_circuit">
-<span class="sig-prename descclassname"><span class="pre">sax.backends.default.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SDict</span></span></span><a class="headerlink" href="#sax.backends.default.evaluate_circuit" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="sax.backends.filipsson_gunnar.evaluate_circuit_fg">
+<span class="sig-prename descclassname"><span class="pre">sax.backends.filipsson_gunnar.</span></span><span class="sig-name descname"><span class="pre">evaluate_circuit_fg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Any</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">SType</span><span class="p"><span class="pre">]</span></span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SDict</span></span></span><a class="headerlink" href="#sax.backends.filipsson_gunnar.evaluate_circuit_fg" title="Permalink to this definition">#</a></dt>
 <dd><p>evaluate a circuit for the given sdicts.</p>
 </dd></dl>
 
@@ -452,8 +449,8 @@ document.write(`
 <span class="expanded">Hide code cell source</span>
 </summary>
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_circuit</span><span class="p">(</span>
-    <span class="n">analyzed</span><span class="p">,</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">evaluate_circuit_fg</span><span class="p">(</span>
+    <span class="n">analyzed</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
     <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SType</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;evaluate a circuit for the given sdicts.&quot;&quot;&quot;</span>
@@ -595,8 +592,8 @@ document.write(`
     <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">mzi_sdict</span><span class="p">:</span> <span class="n">SDict</span> <span class="o">=</span> <span class="n">evaluate_circuit</span><span class="p">(</span>
-    <span class="n">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">),</span>
+<span class="n">mzi_sdict</span><span class="p">:</span> <span class="n">SDict</span> <span class="o">=</span> <span class="n">evaluate_circuit_fg</span><span class="p">(</span>
+    <span class="n">analyze_circuit_fg</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">),</span>
     <span class="n">instances</span><span class="p">,</span>
 <span class="p">)</span>
 
@@ -613,14 +610,14 @@ document.write(`
  (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
  (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
  (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128)}
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -629,7 +626,7 @@ document.write(`
 <section id="algorithm-walkthrough">
 <h2>Algorithm Walkthrough<a class="headerlink" href="#algorithm-walkthrough" title="Permalink to this heading">#</a></h2>
 <blockquote>
-<div><p>Note: This algorithm gets pretty slow for large circuits. I’d be <span class="xref myst">very interested in any improvements</span> that can be made here, especially because - as opposed to the currently faster <span class="xref myst">KLU backend</span> - the algorithm discussed here is jittable, differentiable and can be used on GPUs.</p>
+<div><p>Note: This algorithm gets pretty slow for large circuits. I’d be <span class="xref myst">very interested in any improvements</span> that can be made here, especially because - as opposed to the currently faster <a class="reference internal" href="08b_backends_klu.html"><span class="doc std std-doc">KLU backend</span></a> - the algorithm discussed here is jittable, differentiable and can be used on GPUs.</p>
 </div></blockquote>
 <p>Let’s walk through all the steps of this algorithm. We’ll do this for a simple MZI circuit, given by two directional couplers characterised by <code class="docutils literal notranslate"><span class="pre">dc_sdense</span></code> with a phase shifting waveguide in between <code class="docutils literal notranslate"><span class="pre">wg_sdict</span></code>:</p>
 <div class="cell docutils container">
@@ -809,13 +806,13 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,out0&#39;,
- &#39;dc1,out1&#39;,
  &#39;dc1,in0&#39;,
+ &#39;dc1,out1&#39;,
  &#39;dc1,in1&#39;,
  &#39;dc2,in0&#39;,
  &#39;dc2,in1&#39;,
- &#39;dc2,out0&#39;,
- &#39;dc2,out1&#39;)
+ &#39;dc2,out1&#39;,
+ &#39;dc2,out0&#39;)
 </pre></div>
 </div>
 </div>
@@ -890,14 +887,14 @@ document.write(`
  (&#39;dc2,out0&#39;, &#39;dc2,in1&#39;): Array(0.+0.70710678j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): Array(0.+0.70710678j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc2,in1&#39;): Array(0.70710678+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.5+0.j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.5j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.5j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.5+0.j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.5+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.5+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.5j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.5j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(0.+0.5j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.5+0.j, dtype=complex128)}
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.5+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.5+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.5j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -930,14 +927,14 @@ document.write(`
  (&#39;dc2,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.70710678j, dtype=complex128),
  (&#39;dc2,out0&#39;, &#39;dc2,in0&#39;): Array(0.70710678+0.j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): Array(0.+0.70710678j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.5+0.j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.5j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.5j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.5+0.j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.5+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.5+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.5j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.5j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(0.+0.5j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.5+0.j, dtype=complex128)}
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.5+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.5+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.5j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -977,22 +974,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(0.25-0.433015j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1010,22 +1007,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
- (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
  (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
  (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1089,24 +1086,6 @@ document.write(`
   
     <div class="footer-article-item"><!-- Previous / next buttons -->
 <div class="prev-next-area">
-    <a class="left-prev"
-       href="08_backends.html"
-       title="previous page">
-      <i class="fa-solid fa-angle-left"></i>
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">Backend</p>
-      </div>
-    </a>
-    <a class="right-next"
-       href="08b_backends_klu.html"
-       title="next page">
-      <div class="prev-next-info">
-        <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">Backend - KLU</p>
-      </div>
-      <i class="fa-solid fa-angle-right"></i>
-    </a>
 </div></div>
   
 </div>
