@@ -346,21 +346,9 @@ document.write(`
 <span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">clean_string</span><span class="p">,</span> <span class="n">hash_dict</span>
 
 <span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">pydantic.v1</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">BaseModel</span><span class="p">,</span>
-        <span class="n">Extra</span><span class="p">,</span>
-        <span class="n">Field</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-        <span class="n">ValidationError</span><span class="p">,</span>
-        <span class="n">validator</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">pydantic.v1</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Extra</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">validator</span>
 <span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="p">(</span>
-        <span class="n">BaseModel</span><span class="p">,</span>
-        <span class="n">Extra</span><span class="p">,</span>
-        <span class="n">Field</span><span class="p">,</span>  <span class="c1"># type: ignore</span>
-        <span class="n">ValidationError</span><span class="p">,</span>
-        <span class="n">validator</span><span class="p">,</span>
-    <span class="p">)</span>
+    <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">Extra</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">ValidationError</span><span class="p">,</span> <span class="n">validator</span>
 
 
 <div class="viewcode-block" id="netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.netlist">[docs]</a><span class="k">def</span> <span class="nf">netlist</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlist</span><span class="p">:</span>

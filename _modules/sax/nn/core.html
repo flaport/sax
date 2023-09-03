@@ -335,8 +335,9 @@ document.write(`
 
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">denormalize</span><span class="p">,</span> <span class="n">normalize</span>
+
 <span class="kn">from</span> <span class="nn">..saxtypes</span> <span class="kn">import</span> <span class="n">Array</span><span class="p">,</span> <span class="n">ComplexArrayND</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">denormalize</span><span class="p">,</span> <span class="n">normalize</span>
 
 
 <div class="viewcode-block" id="preprocess"><a class="viewcode-back" href="../../../sax.nn.core.html#sax.nn.core.preprocess">[docs]</a><span class="k">def</span> <span class="nf">preprocess</span><span class="p">(</span><span class="o">*</span><span class="n">params</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>

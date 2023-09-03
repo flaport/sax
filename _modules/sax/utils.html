@@ -471,9 +471,9 @@ document.write(`
 
 <div class="viewcode-block" id="get_ports"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_ports">[docs]</a><span class="k">def</span> <span class="nf">get_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;get port names of a model or an stype</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. note ::</span>
-<span class="sd">        </span>
+
 <span class="sd">        if a `Model` function is given in stead of an `SDict`, the function will be traced by JAX to obtain the port combinations of the resulting `SType`. Although this tracing of the function is &#39;cheap&#39; in comparison to evaluating the model/circuit. It is not for free!  Use this function sparingly on your large `Model` or `circuit`!</span>
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">is_model</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
@@ -542,21 +542,21 @@ document.write(`
     <span class="n">wl</span><span class="p">:</span> <span class="n">FloatArrayND</span><span class="p">,</span> <span class="n">wls</span><span class="p">:</span> <span class="n">FloatArrayND</span><span class="p">,</span> <span class="n">phis</span><span class="p">:</span> <span class="n">FloatArrayND</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatArrayND</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Grouped phase interpolation</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. note ::</span>
-<span class="sd">    </span>
-<span class="sd">        Grouped interpolation is useful to interpolate phase values where each datapoint </span>
-<span class="sd">        is doubled (very close together) to give an indication of the phase </span>
+
+<span class="sd">        Grouped interpolation is useful to interpolate phase values where each datapoint</span>
+<span class="sd">        is doubled (very close together) to give an indication of the phase</span>
 <span class="sd">        variation at that point.</span>
 
 <span class="sd">    .. warning ::</span>
-<span class="sd">    </span>
-<span class="sd">        this interpolation is only accurate in the range </span>
-<span class="sd">        `[wls[0], wls[-2])` (`wls[-2]` not included). Any extrapolation </span>
+
+<span class="sd">        this interpolation is only accurate in the range</span>
+<span class="sd">        `[wls[0], wls[-2])` (`wls[-2]` not included). Any extrapolation</span>
 <span class="sd">        outside these bounds can yield unexpected results!</span>
-<span class="sd">        </span>
+
 <span class="sd">    .. plot ::</span>
-<span class="sd">    </span>
+
 <span class="sd">        import sax</span>
 <span class="sd">        import numpy as np</span>
 <span class="sd">        import matplotlib.pyplot as plt</span>
@@ -564,7 +564,7 @@ document.write(`
 <span class="sd">        phis = np.array([5.17317336, 5.1219654, 4.71259842, 4.66252492, 5.65699608, 5.60817922, 2.03697377, 1.98936119, 6.010146, 5.96358061, 4.96336733, 4.91777933, 5.13912198, 5.09451137, 0.22347545, 0.17979684, 2.74501894, 2.70224092, 0.10403192, 0.06214664, 4.83328794, 4.79225525])</span>
 <span class="sd">        wl = np.linspace(wls.min(), wls.max(), 10000)</span>
 <span class="sd">        phi = np.array(sax.grouped_interp(wl, wls, phis))</span>
-<span class="sd">        </span>
+
 <span class="sd">        _, ax = plt.subplots(2, 1, sharex=True, figsize=(14, 6))</span>
 <span class="sd">        plt.sca(ax[0])</span>
 <span class="sd">        plt.plot(1e3*wls, np.arange(wls.shape[0]), marker=&quot;o&quot;, ls=&quot;none&quot;)</span>
@@ -577,7 +577,7 @@ document.write(`
 <span class="sd">        plt.xlabel(&quot;λ [nm]&quot;)</span>
 <span class="sd">        plt.ylabel(&quot;φ&quot;)</span>
 <span class="sd">        plt.show()</span>
-<span class="sd">        </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
 
     <span class="nd">@partial</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
@@ -820,15 +820,15 @@ document.write(`
 
 <div class="viewcode-block" id="update_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.update_settings">[docs]</a><span class="k">def</span> <span class="nf">update_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">,</span> <span class="o">*</span><span class="n">compnames</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;update a nested settings dictionary</span>
-<span class="sd">    </span>
+
 <span class="sd">    .. note ::</span>
-<span class="sd">    </span>
-<span class="sd">        1. Even though it&#39;s possible to update parameter dictionaries in place, </span>
-<span class="sd">        this function is convenient to apply certain parameters (e.g. wavelength </span>
-<span class="sd">        &#39;wl&#39; or temperature &#39;T&#39;) globally. </span>
-<span class="sd">        2. This operation never updates the given settings dictionary inplace. </span>
+
+<span class="sd">        1. Even though it&#39;s possible to update parameter dictionaries in place,</span>
+<span class="sd">        this function is convenient to apply certain parameters (e.g. wavelength</span>
+<span class="sd">        &#39;wl&#39; or temperature &#39;T&#39;) globally.</span>
+<span class="sd">        2. This operation never updates the given settings dictionary inplace.</span>
 <span class="sd">        3. Any non-float keyword arguments will be silently ignored.</span>
-<span class="sd">    </span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">_settings</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">compnames</span><span class="p">:</span>

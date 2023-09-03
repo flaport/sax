@@ -370,7 +370,7 @@ document.write(`
 <span class="sd">&quot;&quot;&quot; A combination of two port names (str, str) &quot;&quot;&quot;</span>
 
 <span class="n">SDict</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="n">PortCombination</span><span class="p">,</span> <span class="n">ComplexArrayND</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot; A mapping from a port combination to an S-parameter or an array of S-parameters </span>
+<span class="sd">&quot;&quot;&quot; A mapping from a port combination to an S-parameter or an array of S-parameters</span>
 
 <span class="sd">Example:</span>
 
@@ -397,7 +397,7 @@ document.write(`
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">SCoo</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">IntArray1D</span><span class="p">,</span> <span class="n">IntArray1D</span><span class="p">,</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">PortMap</span><span class="p">]</span>
-<span class="sd">&quot;&quot;&quot; A sparse S-matrix in COO format (recommended for internal library use only) </span>
+<span class="sd">&quot;&quot;&quot; A sparse S-matrix in COO format (recommended for internal library use only)</span>
 
 <span class="sd">An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map. The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix. The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!</span>
 
@@ -410,11 +410,11 @@ document.write(`
 <span class="sd">    Sx = jnp.array([3.0, 4.0, 1.0])</span>
 <span class="sd">    port_map = {&quot;in0&quot;: 0, &quot;in1&quot;: 2, &quot;out0&quot;: 1}</span>
 <span class="sd">    scoo: sax.SCoo = (Si, Sj, Sx, port_map)</span>
-<span class="sd">    </span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">Settings</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="n">FloatArrayND</span><span class="p">,</span> <span class="n">ComplexArrayND</span><span class="p">]]</span>
-<span class="sd">&quot;&quot;&quot; A (possibly recursive) mapping from a setting name to a float or complex value or array </span>
+<span class="sd">&quot;&quot;&quot; A (possibly recursive) mapping from a setting name to a float or complex value or array</span>
 
 <span class="sd">Example:</span>
 
@@ -426,7 +426,7 @@ document.write(`
 <span class="sd">        &quot;top&quot;: {&quot;neff&quot;: 3.4},  # settings for the top waveguide</span>
 <span class="sd">        &quot;rgt&quot;: {&quot;coupling&quot;: 0.3},  # settings for the right coupler</span>
 <span class="sd">    }</span>
-<span class="sd">    </span>
+
 <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="n">SType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">SDict</span><span class="p">,</span> <span class="n">SCoo</span><span class="p">,</span> <span class="n">SDense</span><span class="p">]</span>
@@ -437,6 +437,7 @@ document.write(`
 
 <span class="n">ModelFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Model</span><span class="p">]</span>
 <span class="sd">&quot;&quot;&quot; A keyword-only function producing a Model &quot;&quot;&quot;</span>
+
 
 <div class="viewcode-block" id="is_float"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_float">[docs]</a><span class="k">def</span> <span class="nf">is_float</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is a `Float`&quot;&quot;&quot;</span>

@@ -362,7 +362,7 @@ document.write(`
     <span class="n">sorted_connections</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">_connections_sort_key</span><span class="p">)</span>
     <span class="n">all_connected_instances</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">}</span>
 
-    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sorted_connections</span><span class="p">:</span> <span class="c1"># noqa: E741</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sorted_connections</span><span class="p">:</span>  <span class="c1"># noqa: E741</span>
         <span class="n">name1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
         <span class="n">name2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
 
@@ -405,7 +405,7 @@ document.write(`
     <span class="k">return</span> <span class="p">(</span><span class="nb">min</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">),</span> <span class="nb">max</span><span class="p">(</span><span class="n">name1</span><span class="p">,</span> <span class="n">name2</span><span class="p">))</span>
 
 
-<span class="k">def</span> <span class="nf">_interconnect_ports</span><span class="p">(</span><span class="n">block_diag</span><span class="p">,</span> <span class="n">current_ports</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span> <span class="c1"># noqa: E741</span>
+<span class="k">def</span> <span class="nf">_interconnect_ports</span><span class="p">(</span><span class="n">block_diag</span><span class="p">,</span> <span class="n">current_ports</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">):</span>  <span class="c1"># noqa: E741</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;interconnect two ports in a given model</span>
 
 <span class="sd">    &gt; Note: the interconnect algorithm is based on equation 6 of &#39;Filipsson, Gunnar.</span>
