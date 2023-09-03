@@ -1,8 +1,11 @@
 from __future__ import annotations
 
 import os
-import typing
 import sys
+import typing
+from modified_nb_copy import docs_copy_dir
+
+docs_copy_dir("examples")
 
 # Dynamic Config
 REPO_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

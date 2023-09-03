@@ -2,13 +2,11 @@ import glob
 import json
 import os
 import secrets
-import shutil
-import subprocess
-import sys
+from os.path import abspath as _a
+from os.path import dirname as _d
 from typing import Dict, Union
 
-from fastcore.imports import IN_IPYTHON
-
+ROOT = _d(_d(_d(_a(__file__))))
 
 MAGIC_COMMENTS = {
     "default_exp": "remove-cell",
@@ -21,12 +19,6 @@ MAGIC_COMMENTS = {
     "collapse_input": "hide-input",
     "collapse_output": "hide-output",
 }
-
-
-if IN_IPYTHON:
-    ROOT = os.path.abspath("..")
-else:
-    ROOT = os.path.abspath(".")
 
 
 def load_nb(path: str) -> Dict:
@@ -44,7 +36,7 @@ def load_nb(path: str) -> Dict:
 
 
 def repository_path(*path_parts: str, not_exist_ok: bool = False) -> str:
-    """Get and validate a path in the modelbuild repository
+    """Get and validate a path in the repository
 
     Args:
         *path_parts: the path parts that will be joined together
@@ -69,7 +61,7 @@ def repository_path(*path_parts: str, not_exist_ok: bool = False) -> str:
 
 
 def docs_path(*path_parts: str, not_exist_ok: bool = False) -> str:
-    return repository_path("docs", *path_parts, not_exist_ok=not_exist_ok)
+    return repository_path("docs", "source", *path_parts, not_exist_ok=not_exist_ok)
 
 
 def save_nb(nb: Dict, path: str) -> str:
@@ -95,7 +87,7 @@ def strip_metadata(nb: Union[Dict, str]) -> Union[Dict, str]:
         path = nb
         nb = load_nb(nb)
     for cell in nb["cells"]:
-        if not "metadata" in cell:
+        if "metadata" not in cell:
             continue
         cell["metadata"] = {}
     if path:
@@ -167,7 +159,7 @@ def docs_copy_nb(relpath, docsrelpath=None):
         if len(cell_tags) > 0:
             cell["metadata"]["tags"] = cell_tags
 
-        if not "remove-cell" in cell_tags:
+        if "remove-cell" not in cell_tags:
             for function_name in iter_function_names(source):
                 extra_cell = {
                     "cell_type": "markdown",
@@ -193,71 +185,9 @@ def list_notebooks(dir):
     return glob.glob(os.path.join(dir, "**/*.ipynb"), recursive=True)
 
 
-def list_zips(dir):
-    return glob.glob(os.path.join(dir, "**/*.zip"), recursive=True)
-
-
 def docs_copy_dir(relpath):
     main_src = repository_path(relpath)
     for src in list_notebooks(main_src):
         rel = os.path.relpath(src, repository_path())
         docs_copy_nb(rel)
-    for src in list_zips(main_src):
-        rel = os.path.relpath(src, repository_path())
-        dst = docs_path("_build", "html", rel, not_exist_ok=True)
-        os.makedirs(os.path.dirname(dst), exist_ok=True)
-        shutil.copy2(src, dst)
 
-
-def docs_copy_simulations():
-    with_results, without_results = {}, {}
-    for fn in os.listdir(simulations_path()):
-        sim, ext = os.path.splitext(fn)
-        if ext != ".ipynb":
-            continue
-        try:
-            with_results[sim] = get_nominal_result(sim)
-        except FileNotFoundError:
-            without_results[sim] = {
-                "hash": None,
-                "params": get_default_params(simulations_path(f"{sim}.ipynb")),
-            }
-        except ValueError:
-            without_results[sim] = {
-                "hash": None,
-                "params": get_default_params(simulations_path(f"{sim}.ipynb")),
-            }
-            # raise
-
-    for k, r in with_results.items():
-        docs_copy_nb(
-            f"results/{k}/{r['hash']}/_simulated.ipynb", f"simulations/{k}.ipynb"
-        )
-
-    for k, r in without_results.items():
-        docs_copy_nb(f"simulations/{k}.ipynb", f"simulations/{k}.ipynb")
-
-    shutil.copytree(
-        simulations_path("img"),
-        docs_path("_build", "html", "simulations", "img", not_exist_ok=True),
-        dirs_exist_ok=True,
-    )
-    return with_results, without_results
-
-
-def get_toc_part(toc, caption):
-    parts = [p for p in toc["parts"] if caption == p["caption"]]
-    try:
-        return parts[0]
-    except IndexError:
-        raise ValueError(f"No TOC part with caption {caption!r} found.")
-
-
-def make_docs():
-    docs_copy_nb("index.ipynb")
-    docs_copy_dir("internals")
-    docs_copy_dir("examples")
-    os.chdir(docs_path())
-    subprocess.check_call(
-        [sys.executable.replace("python", "jupyter-book"), "build", "."]
-    )
