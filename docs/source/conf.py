@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import os
-import shutil
 import typing
 import sys
 
@@ -9,23 +8,7 @@ import sys
 REPO_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO_PATH)
 import sax  # noqa
-from sax.typing_ import *  # noqa
 
-EXSRC = os.path.join(REPO_PATH, "examples")
-EXDST = os.path.join(REPO_PATH, "docs", "source", "examples")
-os.makedirs(EXDST, exist_ok=True)
-
-src = {fn: os.path.join(EXSRC, fn) for fn in os.listdir(EXSRC)}
-dst = {fn: os.path.join(EXDST, fn) for fn in os.listdir(EXDST)}
-for k in list(dst.keys()):
-    if k not in src:
-        del dst[k]
-for k in src:
-    if k not in dst and os.path.isfile(src[k]):
-        shutil.copy2(os.path.join(EXSRC, k), os.path.join(EXDST, k))
-
-
-# Static Config
 project = "sax"
 copyright = "2023, Apache2"
 author = "Floris Laporte"
