@@ -59,6 +59,7 @@ dev = [
   "myst-nb",
   "nbstripout",
   "nlopt",
+  "papermill",
   "pre-commit",
   "pytest",
   "sphinx",
