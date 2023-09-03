@@ -62,9 +62,9 @@ dev = [
   "papermill",
   "pre-commit",
   "pytest",
-  "sphinx",
-  "sphinx-book-theme",
-  "sphinx-copybutton",
+  "sphinx==5.3.0",
+  "sphinx-book-theme==1.0.1",
+  "sphinx-copybutton==0.5.2",
   "tmm",
 # "meep",
 ]
