@@ -16,96 +16,77 @@ try:
 except ImportError:
     FrozenDict = dict
 
-from . import patched as patched
-
-from . import saxtypes as saxtypes
-
-from .saxtypes import (
-    Array as Array,
-    ArrayLike as ArrayLike,
-    Float as Float,
-    Int as Int,
-    Complex as Complex,
-    IntArray1D as IntArray1D,
-    FloatArray1D as FloatArray1D,
-    ComplexArray1D as ComplexArray1D,
-    IntArrayND as IntArrayND,
-    FloatArrayND as FloatArrayND,
-    ComplexArrayND as ComplexArrayND,
-    Settings as Settings,
-    PortMap as PortMap,
-    PortCombination as PortCombination,
-    SDict as SDict,
-    SCoo as SCoo,
-    SDense as SDense,
-    SType as SType,
-    Model as Model,
-    ModelFactory as ModelFactory,
-    Models as Models,
-    is_complex as is_complex,
-    is_complex_float as is_complex_float,
-    is_float as is_float,
-    is_mixedmode as is_mixedmode,
-    is_model as is_model,
-    is_model_factory as is_model_factory,
-    is_multimode as is_multimode,
-    is_scoo as is_scoo,
-    is_sdense as is_sdense,
-    is_sdict as is_sdict,
-    is_singlemode as is_singlemode,
-    modelfactory as modelfactory,
-    scoo as scoo,
-    sdense as sdense,
-    sdict as sdict,
-    validate_model as validate_model,
-)
-
-
-from . import utils as utils
-from .utils import (
-    block_diag as block_diag,
-    clean_string as clean_string,
-    copy_settings as copy_settings,
-    flatten_dict as flatten_dict,
-    get_inputs_outputs as get_inputs_outputs,
-    get_port_combinations as get_port_combinations,
-    get_ports as get_ports,
-    get_settings as get_settings,
-    grouped_interp as grouped_interp,
-    merge_dicts as merge_dicts,
-    mode_combinations as mode_combinations,
-    reciprocal as reciprocal,
-    rename_params as rename_params,
-    rename_ports as rename_ports,
-    try_float as try_float,
-    unflatten_dict as unflatten_dict,
-    update_settings as update_settings,
-    validate_multimode as validate_multimode,
-    validate_not_mixedmode as validate_not_mixedmode,
-    validate_sdict as validate_sdict,
-    validate_settings as validate_settings,
-)
-
-
-from .multimode import (
-    multimode as multimode,
-    singlemode as singlemode,
-)
-
-
+from . import backends as backends
 from . import models as models
-from .models import get_models as get_models, passthru as passthru
-
-
-from .netlist import netlist as netlist
-from .netlist import load_netlist as load_netlist
-from .netlist import load_recursive_netlist as load_recursive_netlist
-from .netlist import get_netlist_instances_by_prefix as get_netlist_instances_by_prefix
-from .netlist import get_component_instances as get_component_instances
-
-
+from . import patched as patched
+from . import saxtypes as saxtypes
+from . import utils as utils
 from .circuit import circuit as circuit
 from .circuit import get_required_circuit_models as get_required_circuit_models
-
-
-from . import backends as backends
+from .models import get_models as get_models
+from .models import passthru as passthru
+from .multimode import multimode as multimode
+from .multimode import singlemode as singlemode
+from .netlist import get_component_instances as get_component_instances
+from .netlist import get_netlist_instances_by_prefix as get_netlist_instances_by_prefix
+from .netlist import load_netlist as load_netlist
+from .netlist import load_recursive_netlist as load_recursive_netlist
+from .netlist import netlist as netlist
+from .saxtypes import Array as Array
+from .saxtypes import ArrayLike as ArrayLike
+from .saxtypes import Complex as Complex
+from .saxtypes import ComplexArray1D as ComplexArray1D
+from .saxtypes import ComplexArrayND as ComplexArrayND
+from .saxtypes import Float as Float
+from .saxtypes import FloatArray1D as FloatArray1D
+from .saxtypes import FloatArrayND as FloatArrayND
+from .saxtypes import Int as Int
+from .saxtypes import IntArray1D as IntArray1D
+from .saxtypes import IntArrayND as IntArrayND
+from .saxtypes import Model as Model
+from .saxtypes import ModelFactory as ModelFactory
+from .saxtypes import Models as Models
+from .saxtypes import PortCombination as PortCombination
+from .saxtypes import PortMap as PortMap
+from .saxtypes import SCoo as SCoo
+from .saxtypes import SDense as SDense
+from .saxtypes import SDict as SDict
+from .saxtypes import Settings as Settings
+from .saxtypes import SType as SType
+from .saxtypes import is_complex as is_complex
+from .saxtypes import is_complex_float as is_complex_float
+from .saxtypes import is_float as is_float
+from .saxtypes import is_mixedmode as is_mixedmode
+from .saxtypes import is_model as is_model
+from .saxtypes import is_model_factory as is_model_factory
+from .saxtypes import is_multimode as is_multimode
+from .saxtypes import is_scoo as is_scoo
+from .saxtypes import is_sdense as is_sdense
+from .saxtypes import is_sdict as is_sdict
+from .saxtypes import is_singlemode as is_singlemode
+from .saxtypes import modelfactory as modelfactory
+from .saxtypes import scoo as scoo
+from .saxtypes import sdense as sdense
+from .saxtypes import sdict as sdict
+from .saxtypes import validate_model as validate_model
+from .utils import block_diag as block_diag
+from .utils import clean_string as clean_string
+from .utils import copy_settings as copy_settings
+from .utils import flatten_dict as flatten_dict
+from .utils import get_inputs_outputs as get_inputs_outputs
+from .utils import get_port_combinations as get_port_combinations
+from .utils import get_ports as get_ports
+from .utils import get_settings as get_settings
+from .utils import grouped_interp as grouped_interp
+from .utils import merge_dicts as merge_dicts
+from .utils import mode_combinations as mode_combinations
+from .utils import reciprocal as reciprocal
+from .utils import rename_params as rename_params
+from .utils import rename_ports as rename_ports
+from .utils import try_float as try_float
+from .utils import unflatten_dict as unflatten_dict
+from .utils import update_settings as update_settings
+from .utils import validate_multimode as validate_multimode
+from .utils import validate_not_mixedmode as validate_not_mixedmode
+from .utils import validate_sdict as validate_sdict
+from .utils import validate_settings as validate_settings

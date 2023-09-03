@@ -11,10 +11,16 @@ from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Unio
 import black
 import networkx as nx
 import numpy as np
+
 from .backends import circuit_backends
-from .netlist import Netlist, RecursiveNetlist
-from .netlist_cleaning import remove_unused_instances
-from .saxtypes import Model, Settings, SType, sdict, sdense, scoo
+from .netlist import (
+    Netlist,
+    NetlistDict,
+    RecursiveNetlist,
+    RecursiveNetlistDict,
+    remove_unused_instances,
+)
+from .saxtypes import Model, Settings, SType, scoo, sdense, sdict
 from .utils import (
     _replace_kwargs,
     get_ports,
@@ -23,14 +29,64 @@ from .utils import (
     update_settings,
 )
 
-
 try:
     from pydantic.v1 import ValidationError  # type: ignore
 except ImportError:
     from pydantic import ValidationError  # type: ignore
 
 
-def create_dag(
+class CircuitInfo(NamedTuple):
+    """Information about the circuit function you created."""
+
+    dag: nx.DiGraph
+    models: Dict[str, Model]
+
+
+def circuit(
+    netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
+    models: Optional[Dict[str, Model]] = None,
+    backend: str = "default",
+    return_type: str = "sdict",
+) -> Tuple[Model, CircuitInfo]:
+    """create a circuit function for a given netlist"""
+    netlist = _ensure_recursive_netlist_dict(netlist)
+
+    # TODO: do the following two steps *after* recursive netlist parsing.
+    netlist = remove_unused_instances(netlist)
+    netlist, instance_models = _extract_instance_models(netlist)
+
+    recnet: RecursiveNetlist = _validate_net(netlist)  # type: ignore
+    dependency_dag: nx.DiGraph = _validate_dag(_create_dag(recnet, models))
+    models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
+    backend = _validate_circuit_backend(backend)
+
+    circuit = None
+    new_models = {}
+    current_models = {}
+    model_names = list(nx.topological_sort(dependency_dag))[::-1]
+    for model_name in model_names:
+        if model_name in models:
+            new_models[model_name] = models[model_name]
+            continue
+
+        flatnet = recnet.__root__[model_name]
+        current_models.update(new_models)
+        new_models = {}
+
+        current_models[model_name] = circuit = _flat_circuit(
+            flatnet.instances,
+            flatnet.connections,
+            flatnet.ports,
+            current_models,
+            backend,
+        )
+
+    assert circuit is not None
+    circuit = _enforce_return_type(circuit, return_type)
+    return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
+
+
+def _create_dag(
     netlist: RecursiveNetlist,
     models: Optional[Dict[str, Any]] = None,
 ):
@@ -62,7 +118,7 @@ def create_dag(
     return g
 
 
-def draw_dag(dag, with_labels=True, **kwargs):
+def _draw_dag(dag, with_labels=True, **kwargs):
     _patch_path()
     if shutil.which("dot"):
         return nx.draw(
@@ -104,18 +160,18 @@ def _my_dag_pos(dag):
     return pos
 
 
-def find_root(g):
+def _find_root(g):
     nodes = [n for n, d in g.in_degree() if d == 0]
     return nodes
 
 
-def find_leaves(g):
+def _find_leaves(g):
     nodes = [n for n, d in g.out_degree() if d == 0]
     return nodes
 
 
 def _validate_models(models, dag):
-    required_models = find_leaves(dag)
+    required_models = _find_leaves(dag)
     missing_models = [m for m in required_models if m not in models]
     if missing_models:
         model_diff = {
@@ -227,63 +283,6 @@ def _get_multimode_ports(ports, inst_port_mode):
     return mm_ports
 
 
-class CircuitInfo(NamedTuple):
-    dag: nx.DiGraph
-    models: Dict[str, Model]
-
-
-class NetlistDict(TypedDict):
-    instances: Dict
-    connections: Dict[str, str]
-    ports: Dict[str, str]
-
-
-RecursiveNetlistDict = Dict[str, NetlistDict]
-
-
-def circuit(
-    netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
-    models: Optional[Dict[str, Model]] = None,
-    backend: str = "default",
-    return_type: str = "sdict",
-) -> Tuple[Model, CircuitInfo]:
-    netlist = _ensure_recursive_netlist_dict(netlist)
-
-    # TODO: do the following two steps *after* recursive netlist parsing.
-    netlist = remove_unused_instances(netlist)
-    netlist, instance_models = _extract_instance_models(netlist)
-
-    recnet: RecursiveNetlist = _validate_net(netlist)  # type: ignore
-    dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))
-    models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
-    backend = _validate_circuit_backend(backend)
-
-    circuit = None
-    new_models = {}
-    current_models = {}
-    model_names = list(nx.topological_sort(dependency_dag))[::-1]
-    for model_name in model_names:
-        if model_name in models:
-            new_models[model_name] = models[model_name]
-            continue
-
-        flatnet = recnet.__root__[model_name]
-        current_models.update(new_models)
-        new_models = {}
-
-        current_models[model_name] = circuit = _flat_circuit(
-            flatnet.instances,
-            flatnet.connections,
-            flatnet.ports,
-            current_models,
-            backend,
-        )
-
-    assert circuit is not None
-    circuit = _enforce_return_type(circuit, return_type)
-    return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
-
-
 def _enforce_return_type(model, return_type):
     stype_func = {
         "default": lambda x: x,
@@ -355,7 +354,7 @@ def _validate_net(netlist: Union[Netlist, RecursiveNetlist]) -> RecursiveNetlist
 
 
 def _validate_dag(dag):
-    nodes = find_root(dag)
+    nodes = _find_root(dag)
     if len(nodes) > 1:
         raise ValueError(f"Multiple top_levels found in netlist: {nodes}")
     if len(nodes) < 1:
@@ -369,6 +368,7 @@ def get_required_circuit_models(
     netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,
 ) -> List:
+    """Figure out which models are needed for a given netlist"""
     if models is None:
         models = {}
     assert isinstance(models, dict)

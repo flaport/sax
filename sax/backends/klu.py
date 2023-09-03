@@ -14,39 +14,12 @@ solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
 mul_coo = jax.vmap(klujax.coo_mul_vec, (None, None, 0, 0), 0)
 
 
-def get_instance_ports(connections: Dict[str, str], ports: Dict[str, str]):
-    instance_ports = {}
-    for connection in connections.items():
-        for ip in connection:
-            i, p = ip.split(",")
-            if i not in instance_ports:
-                instance_ports[i] = set()
-            instance_ports[i].add(p)
-    for ip in ports.values():
-        i, p = ip.split(",")
-        if i not in instance_ports:
-            instance_ports[i] = set()
-        instance_ports[i].add(p)
-    return {k: natsorted(v) for k, v in instance_ports.items()}
-
-
-def get_dummy_instances(connections, ports):
-    instance_ports = get_instance_ports(connections, ports)
-    dummy_instances = {}
-    for name, ports in instance_ports.items():
-        num_ports = len(ports)
-        pm = {p: i for i, p in enumerate(ports)}
-        S = jnp.ones((num_ports, num_ports), dtype=complex)
-        dummy_instances[name] = (S, pm)
-    return dummy_instances
-
-
 def analyze_circuit_klu(
     connections: Dict[str, str],
     ports: Dict[str, str],
 ) -> Any:
     connections = {**connections, **{v: k for k, v in connections.items()}}
-    instances = get_dummy_instances(connections, ports)
+    instances = _get_dummy_instances(connections, ports)
     inverse_ports = {v: k for k, v in ports.items()}
     port_map = {k: i for i, k in enumerate(ports)}
 
@@ -148,3 +121,30 @@ def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
     S = CextT_S_inv_I_CS_Cext.reshape(*batch_shape, n, n)
 
     return S, {p: i for i, p in enumerate(port_map)}
+
+
+def _get_instance_ports(connections: Dict[str, str], ports: Dict[str, str]):
+    instance_ports = {}
+    for connection in connections.items():
+        for ip in connection:
+            i, p = ip.split(",")
+            if i not in instance_ports:
+                instance_ports[i] = set()
+            instance_ports[i].add(p)
+    for ip in ports.values():
+        i, p = ip.split(",")
+        if i not in instance_ports:
+            instance_ports[i] = set()
+        instance_ports[i].add(p)
+    return {k: natsorted(v) for k, v in instance_ports.items()}
+
+
+def _get_dummy_instances(connections, ports):
+    instance_ports = _get_instance_ports(connections, ports)
+    dummy_instances = {}
+    for name, ports in instance_ports.items():
+        num_ports = len(ports)
+        pm = {p: i for i, p in enumerate(ports)}
+        S = jnp.ones((num_ports, num_ports), dtype=complex)
+        dummy_instances[name] = (S, pm)
+    return dummy_instances

@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from functools import wraps
 from typing import Dict, Tuple, Union, cast, overload
+
 import jax.numpy as jnp
 
 from .saxtypes import (
@@ -12,13 +13,13 @@ from .saxtypes import (
     SDense,
     SDict,
     SType,
+    _consolidate_sdense,
     is_model,
     is_multimode,
     is_scoo,
     is_sdense,
     is_sdict,
     is_singlemode,
-    _consolidate_sdense,
 )
 from .utils import (
     block_diag,
@@ -26,8 +27,6 @@ from .utils import (
     validate_multimode,
     validate_not_mixedmode,
 )
-
-
 
 
 @overload

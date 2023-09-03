@@ -10,7 +10,37 @@ from ..saxtypes import SDict, sdict
 import jax.numpy as jnp
 
 
-def split_port(port: str) -> Tuple[str, str]:
+def analyze_circuit_additive(
+    connections: Dict[str, str],
+    ports: Dict[str, str],
+) -> Any:
+    return connections, ports
+
+
+def evaluate_circuit_additive(
+    analyzed: Any,
+    instances: Dict[str, SDict],
+) -> SDict:
+    """evaluate a circuit for the given sdicts."""
+    connections, ports = analyzed
+    edges = _graph_edges(instances, connections, ports)
+
+    graph = nx.Graph()
+    graph.add_edges_from(edges)
+    _prune_internal_output_nodes(graph)
+
+    sdict = {}
+    for source in ports:
+        for target in ports:
+            paths = _get_possible_paths(graph, source=("", source), target=("", target))
+            if not paths:
+                continue
+            sdict[source, target] = _path_lengths(graph, paths)
+
+    return sdict
+
+
+def _split_port(port: str) -> Tuple[str, str]:
     try:
         instance, port = port.split(",")
     except ValueError:
@@ -19,17 +49,17 @@ def split_port(port: str) -> Tuple[str, str]:
     return instance, port
 
 
-def graph_edges(
+def _graph_edges(
     instances: Dict[str, SDict],
     connections: Dict[str, str],
     ports: Dict[str, str],
 ):
     zero = jnp.array([0.0], dtype=float)
     edges = {}
-    edges.update({split_port(k): split_port(v) for k, v in connections.items()})
-    edges.update({split_port(v): split_port(k) for k, v in connections.items()})
-    edges.update({split_port(k): split_port(v) for k, v in ports.items()})
-    edges.update({split_port(v): split_port(k) for k, v in ports.items()})
+    edges.update({_split_port(k): _split_port(v) for k, v in connections.items()})
+    edges.update({_split_port(v): _split_port(k) for k, v in connections.items()})
+    edges.update({_split_port(k): _split_port(v) for k, v in ports.items()})
+    edges.update({_split_port(v): _split_port(k) for k, v in ports.items()})
     edges = [(n1, n2, {"type": "C", "length": zero}) for n1, n2 in edges.items()]
 
     _instances = {
@@ -52,7 +82,7 @@ def graph_edges(
     return edges
 
 
-def prune_internal_output_nodes(graph):
+def _prune_internal_output_nodes(graph):
     broken = True
     while broken:
         broken = False
@@ -69,7 +99,7 @@ def prune_internal_output_nodes(graph):
     return graph
 
 
-def get_possible_paths(graph, source, target):
+def _get_possible_paths(graph, source, target):
     paths = []
     default_props = {"type": "C", "length": 0.0}
     for path in nx.all_simple_edge_paths(graph, source, target):
@@ -85,7 +115,7 @@ def get_possible_paths(graph, source, target):
     return paths
 
 
-def path_lengths(graph, paths):
+def _path_lengths(graph, paths):
     lengths = []
     for path in paths:
         length = zero = jnp.array([0.0], dtype=float)
@@ -95,33 +125,3 @@ def path_lengths(graph, paths):
             length = (length[None, :] + edge_data.get("length", zero)[:, None]).ravel()
         lengths.append(length)
     return lengths
-
-
-def analyze_circuit_additive(
-    connections: Dict[str, str],
-    ports: Dict[str, str],
-) -> Any:
-    return connections, ports
-
-
-def evaluate_circuit_additive(
-    analyzed: Any,
-    instances: Dict[str, SDict],
-) -> SDict:
-    """evaluate a circuit for the given sdicts."""
-    connections, ports = analyzed
-    edges = graph_edges(instances, connections, ports)
-
-    graph = nx.Graph()
-    graph.add_edges_from(edges)
-    prune_internal_output_nodes(graph)
-
-    sdict = {}
-    for source in ports:
-        for target in ports:
-            paths = get_possible_paths(graph, source=("", source), target=("", target))
-            if not paths:
-                continue
-            sdict[source, target] = path_lengths(graph, paths)
-
-    return sdict

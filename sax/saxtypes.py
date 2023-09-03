@@ -17,21 +17,54 @@ from jaxtyping import Int as Int
 from natsort import natsorted
 
 IntArray1D = Int[Array, " dim"]
+""" One dimensional integer array """
+
 FloatArray1D = Complex[Array, " dim"]
+""" One dimensional float array """
+
 ComplexArray1D = Complex[Array, " dim"]
+""" One dimensional complex array """
+
 IntArrayND = Int[Array, "..."]
+""" N-dimensional integer array """
+
 FloatArrayND = Complex[Array, "..."]
+""" N-dimensional float array """
+
 ComplexArrayND = Complex[Array, "..."]
-Settings = Dict[str, Union["Settings", FloatArrayND, ComplexArrayND]]
+""" N-dimensional complex array """
+
 PortMap = Dict[str, int]
+""" A mapping from a port name (str) to a port index (int) """
+
 PortCombination = Tuple[str, str]
+""" A combination of two port names (str, str) """
+
 SDict = Dict[PortCombination, ComplexArrayND]
-SCoo = Tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
+""" A mapping from a port combination to an S-parameter or an array of S-parameters """
+
 SDense = Tuple[ComplexArrayND, PortMap]
+""" A dense S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array
+combined with a port map. If (N+2)-D array the S-matrix dimensions are the last two."""
+
+SCoo = Tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
+""" A sparse S-matrix in COO format (recommended for internal library use only) """
+
+Settings = Dict[str, Union["Settings", FloatArrayND, ComplexArrayND]]
+""" A (possibly recursive) mapping from a setting name to a
+float or complex value or array """
+
 SType = Union[SDict, SCoo, SDense]
+""" An SDict, SDense or SCOO """
+
 Model = Callable[..., SType]
+""" A function producing an SType """
+
 ModelFactory = Callable[..., Model]
+""" A function producing a Model """
+
 Models = Dict[str, Model]
+""" A mapping from a model name to a model """
 
 
 def is_float(x: Any) -> bool:

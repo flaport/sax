@@ -105,7 +105,19 @@ nbsphinx_execute = "never"
 nb_execution_mode = "off"
 
 autodoc_type_aliases = {
-    k: k
-    for k, v in vars(sax.saxtypes).items()
-    if isinstance(v, typing._BaseGenericAlias)  # type: ignore
+    "IntArray1D": "IntArray1D",
+    "FloatArray1D": "FloatArray1D",
+    "ComplexArray1D": "ComplexArray1D",
+    "IntArrayND": "IntArrayND",
+    "FloatArrayND": "FloatArrayND",
+    "ComplexArrayND": "ComplexArrayND",
+    "PortMap": "PortMap",
+    "PortCombination": "PortCombination",
+    "SDict": "SDict",
+    "SDense": "SDense",
+    "SCoo": "SCoo",
+    "Settings": "Settings",
+    "SType": "SType",
+    "Model": "Model",
+    "ModelFactory": "ModelFactory",
 }

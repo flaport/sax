@@ -447,9 +447,7 @@ def rename_ports(
         raise ValueError("Cannot rename ports for type {type(S)}")
 
 
-def update_settings(
-    settings: Settings, *compnames: str, **kwargs: Any
-) -> Settings:
+def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Settings:
     """update a nested settings dictionary"""
     _settings = {}
     if not compnames:

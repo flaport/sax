@@ -5,11 +5,11 @@ from __future__ import annotations
 from functools import lru_cache as cache
 from typing import Optional, Tuple
 
-from .saxtypes import Model, SCoo, SDict, FloatArrayND
-from .utils import get_inputs_outputs, reciprocal
-
 import jax
 import jax.numpy as jnp
+
+from .saxtypes import FloatArrayND, Model, SCoo, SDict
+from .utils import get_inputs_outputs, reciprocal
 
 
 def straight(
@@ -192,7 +192,7 @@ def copier(
             S = S.at[num_inputs:, :num_inputs].set(1)
         else:
             # reciprocal only works if num_inputs == num_outputs!
-            r = jnp.arange(num_inputs, dtype=int) # == range(num_outputs)
+            r = jnp.arange(num_inputs, dtype=int)  # == range(num_outputs)
             S = S.at[num_inputs + r, r].set(1)
 
     # let's convert it in SCOO format:

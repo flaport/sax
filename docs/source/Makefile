@@ -1,2 +1,2 @@
 apidoc:
-	sphinx-apidoc ../../sax -o . -e
+	sphinx-apidoc ../../sax -o . -e && rm modules.rst

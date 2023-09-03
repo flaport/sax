@@ -6,9 +6,9 @@ import re
 from textwrap import dedent
 
 from fastcore.basics import patch_to
-from .saxtypes import is_complex_float, is_float
-
 from flax.core import FrozenDict
+
+from .saxtypes import is_complex_float, is_float
 
 
 @patch_to(FrozenDict)

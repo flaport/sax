@@ -20,7 +20,6 @@ Submodules
    sax.models
    sax.multimode
    sax.netlist
-   sax.netlist_cleaning
    sax.patched
    sax.saxtypes
    sax.utils
