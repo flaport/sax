@@ -2,24 +2,11 @@
 
 from __future__ import annotations
 
-import warnings
-from types import SimpleNamespace
 from typing import Any, Dict
 
-try:
-    import jax
+import jax
 
-    JAX_AVAILABLE = True
-except ImportError:
-
-    def jit(func, *args, **kwargs):
-        warnings.warn("[NO JAX] skipping jit! Please install JAX!")
-        return func
-
-    jax = SimpleNamespace(jit=jit)
-    JAX_AVAILABLE = False
-
-from ..typing_ import SDense, SDict, SType, sdict
+from ..saxtypes import SDict, SType, sdict
 
 
 def analyze_circuit_fg(connections: Dict[str, str], ports: Dict[str, str]) -> Any:
@@ -46,7 +33,7 @@ def evaluate_circuit_fg(
     sorted_connections = sorted(connections.items(), key=_connections_sort_key)
     all_connected_instances = {k: {k} for k in instances}
 
-    for k, l in sorted_connections:
+    for k, l in sorted_connections: # noqa: E741
         name1, _ = k.split(",")
         name2, _ = l.split(",")
 
@@ -89,7 +76,7 @@ def _connections_sort_key(connection):
     return (min(name1, name2), max(name1, name2))
 
 
-def _interconnect_ports(block_diag, current_ports, k, l):
+def _interconnect_ports(block_diag, current_ports, k, l): # noqa: E741
     """interconnect two ports in a given model
 
     > Note: the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.

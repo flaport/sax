@@ -16,21 +16,32 @@ try:
 except ImportError:
     FrozenDict = dict
 
+from . import patched as patched
 
-from sax import typing_ as typing
+from . import saxtypes as saxtypes
 
-from .typing_ import (
+from .saxtypes import (
     Array as Array,
-    ComplexFloat as ComplexFloat,
+    ArrayLike as ArrayLike,
     Float as Float,
+    Int as Int,
+    Complex as Complex,
+    IntArray1D as IntArray1D,
+    FloatArray1D as FloatArray1D,
+    ComplexArray1D as ComplexArray1D,
+    IntArrayND as IntArrayND,
+    FloatArrayND as FloatArrayND,
+    ComplexArrayND as ComplexArrayND,
+    Settings as Settings,
+    PortMap as PortMap,
+    PortCombination as PortCombination,
+    SDict as SDict,
+    SCoo as SCoo,
+    SDense as SDense,
+    SType as SType,
     Model as Model,
     ModelFactory as ModelFactory,
     Models as Models,
-    SCoo as SCoo,
-    SDense as SDense,
-    SDict as SDict,
-    Settings as Settings,
-    SType as SType,
     is_complex as is_complex,
     is_complex_float as is_complex_float,
     is_float as is_float,
@@ -50,7 +61,7 @@ from .typing_ import (
 )
 
 
-from sax import utils as utils
+from . import utils as utils
 from .utils import (
     block_diag as block_diag,
     clean_string as clean_string,
@@ -76,14 +87,13 @@ from .utils import (
 )
 
 
-from sax import multimode as multimode
 from .multimode import (
     multimode as multimode,
     singlemode as singlemode,
 )
 
 
-from sax import models as models
+from . import models as models
 from .models import get_models as get_models, passthru as passthru
 
 
@@ -98,7 +108,4 @@ from .circuit import circuit as circuit
 from .circuit import get_required_circuit_models as get_required_circuit_models
 
 
-from sax import backends as backends
-
-
-from sax import patched as _patched
+from . import backends as backends

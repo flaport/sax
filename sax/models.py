@@ -3,33 +3,18 @@
 from __future__ import annotations
 
 from functools import lru_cache as cache
-from types import SimpleNamespace
 from typing import Optional, Tuple
 
-from .typing_ import Model, SCoo, SDict
+from .saxtypes import Model, SCoo, SDict, FloatArrayND
 from .utils import get_inputs_outputs, reciprocal
 
-try:
-    import jax
-    import jax.numpy as jnp
-
-    JAX_AVAILABLE = True
-except ImportError:
-    import warnings
-    import numpy as jnp
-
-    def jit(func, *args, **kwargs):
-        warnings.warn("[NO JAX] skipping jit! Please install JAX!")
-        return func
-
-    jax = SimpleNamespace(jit=jit)
-
-    JAX_AVAILABLE = False
+import jax
+import jax.numpy as jnp
 
 
 def straight(
     *,
-    wl: float = 1.55,
+    wl: FloatArrayND | float = 1.55,
     wl0: float = 1.55,
     neff: float = 2.34,
     ng: float = 3.4,
@@ -39,8 +24,8 @@ def straight(
     """a simple straight waveguide model"""
     dwl = wl - wl0
     dneff_dwl = (ng - neff) / wl0
-    neff = neff - dwl * dneff_dwl
-    phase = 2 * jnp.pi * neff * length / wl
+    _neff = neff - dwl * dneff_dwl
+    phase = 2 * jnp.pi * _neff * length / wl
     amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
     transmission = amplitude * jnp.exp(1j * phase)
     sdict = reciprocal(
@@ -101,9 +86,11 @@ def _validate_ports(
     if diagonal:
         if num_inputs != num_outputs:
             raise ValueError(
-                "Can only have a diagonal passthru if number of input ports equals the number of output ports!"
+                "Can only have a diagonal passthru if number "
+                "of input ports equals the number of output ports!"
             )
-    return input_ports, output_ports, num_inputs, num_outputs
+
+    return tuple(input_ports), tuple(output_ports), num_inputs, num_outputs
 
 
 @cache
@@ -126,33 +113,21 @@ def unitary(
     S = jnp.zeros((2 * N, 2 * N), dtype=float)
 
     if not diagonal:
-        if JAX_AVAILABLE:
-            S = S.at[:N, N:].set(1)
-        else:
-            S[:N, N:] = 1
+        S = S.at[:N, N:].set(1)
     else:
         r = jnp.arange(
             N, dtype=int
         )  # reciprocal only works if num_inputs == num_outputs!
-        if JAX_AVAILABLE:
-            S = S.at[r, N + r].set(1)
-        else:
-            S[r, N + r] = 1
+        S = S.at[r, N + r].set(1)
 
     if reciprocal:
         if not diagonal:
-            if JAX_AVAILABLE:
-                S = S.at[N:, :N].set(1)
-            else:
-                S[N:, :N] = 1
+            S = S.at[N:, :N].set(1)
         else:
             r = jnp.arange(
                 N, dtype=int
             )  # reciprocal only works if num_inputs == num_outputs!
-            if JAX_AVAILABLE:
-                S = S.at[N + r, r].set(1)
-            else:
-                S[N + r, r] = 1
+            S = S.at[N + r, r].set(1)
 
     # Now we need to normalize the squared S-matrix
     U, s, V = jnp.linalg.svd(S, full_matrices=False)
@@ -187,24 +162,6 @@ def unitary(
 
 
 @cache
-def passthru(
-    num_links: Optional[int] = None,
-    ports: Optional[Tuple[str, ...]] = None,
-    *,
-    jit=True,
-    reciprocal=True,
-) -> Model:
-    passthru = unitary(
-        num_links, num_links, ports, jit=jit, reciprocal=reciprocal, diagonal=True
-    )
-    passthru.__name__ = f"passthru_{num_links}_{num_links}"
-    passthru.__qualname__ = f"passthru_{num_links}_{num_links}"
-    if jit:
-        return jax.jit(passthru)
-    return passthru
-
-
-@cache
 def copier(
     num_inputs: Optional[int] = None,
     num_outputs: Optional[int] = None,
@@ -223,33 +180,20 @@ def copier(
     S = jnp.zeros((num_inputs + num_outputs, num_inputs + num_outputs), dtype=float)
 
     if not diagonal:
-        if JAX_AVAILABLE:
-            S = S.at[:num_inputs, num_inputs:].set(1)
-        else:
-            S[:num_inputs, num_inputs:] = 1
+        S = S.at[:num_inputs, num_inputs:].set(1)
     else:
         r = jnp.arange(
             num_inputs, dtype=int
         )  # == range(num_outputs) # reciprocal only works if num_inputs == num_outputs!
-        if JAX_AVAILABLE:
-            S = S.at[r, num_inputs + r].set(1)
-        else:
-            S[r, num_inputs + r] = 1
+        S = S.at[r, num_inputs + r].set(1)
 
     if reciprocal:
         if not diagonal:
-            if JAX_AVAILABLE:
-                S = S.at[num_inputs:, :num_inputs].set(1)
-            else:
-                S[num_inputs:, :num_inputs] = 1
+            S = S.at[num_inputs:, :num_inputs].set(1)
         else:
-            r = jnp.arange(
-                num_inputs, dtype=int
-            )  # == range(num_outputs) # reciprocal only works if num_inputs == num_outputs!
-            if JAX_AVAILABLE:
-                S = S.at[num_inputs + r, r].set(1)
-            else:
-                S[num_inputs + r, r] = 1
+            # reciprocal only works if num_inputs == num_outputs!
+            r = jnp.arange(num_inputs, dtype=int) # == range(num_outputs)
+            S = S.at[num_inputs + r, r].set(1)
 
     # let's convert it in SCOO format:
     Si, Sj = jnp.where(S > 1e-6)

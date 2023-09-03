@@ -7,10 +7,10 @@ from typing import Callable, Dict, Optional, Tuple, Union
 import jax
 import jax.numpy as jnp
 from .utils import denormalize, normalize
-from ..typing_ import Array, ComplexFloat
+from ..saxtypes import Array, ComplexArrayND
 
 
-def preprocess(*params: ComplexFloat) -> ComplexFloat:
+def preprocess(*params: ComplexArrayND) -> ComplexArrayND:
     """preprocess parameters
 
     > Note: (1) all arguments are first casted into the same shape. (2) then pairs
@@ -31,12 +31,12 @@ def preprocess(*params: ComplexFloat) -> ComplexFloat:
 
 def dense(
     weights: Dict[str, Array],
-    *params: ComplexFloat,
+    *params: ComplexArrayND,
     x_norm: Tuple[float, float] = (0.0, 1.0),
     y_norm: Tuple[float, float] = (0.0, 1.0),
     preprocess: Callable = preprocess,
     activation: Callable = jax.nn.leaky_relu,
-) -> ComplexFloat:
+) -> ComplexArrayND:
     """simple dense neural network"""
     x_mean, x_std = x_norm
     y_mean, y_std = y_norm
@@ -54,12 +54,13 @@ def generate_dense_weights(
     input_names: Optional[Tuple[str, ...]] = None,
     output_names: Optional[Tuple[str, ...]] = None,
     preprocess=preprocess,
-) -> Dict[str, ComplexFloat]:
+) -> Dict[str, ComplexArrayND]:
     """Generate the weights for a dense neural network"""
 
     if isinstance(key, int):
-        key = jax.random.PRNGKey(key)
-    assert isinstance(key, jnp.ndarray)
+        random_key = jax.random.PRNGKey(key)
+    else:
+        random_key = key
 
     sizes = tuple(s for s in sizes)
     if input_names:
@@ -69,7 +70,7 @@ def generate_dense_weights(
     if output_names:
         sizes = sizes + (len(output_names),)
 
-    keys = jax.random.split(key, 2 * len(sizes))
+    keys = jax.random.split(random_key, 2 * len(sizes))
     rand = jax.nn.initializers.lecun_normal()
     weights = {}
     for i, (m, n) in enumerate(zip(sizes[:-1], sizes[1:])):

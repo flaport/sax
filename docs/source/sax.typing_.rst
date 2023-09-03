@@ -1,7 +1,7 @@
 sax.typing\_ module
 ===================
 
-.. automodule:: sax.typing_
+.. automodule:: sax.saxtypes
    :members:
    :undoc-members:
    :show-inheritance:

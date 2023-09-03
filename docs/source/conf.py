@@ -100,6 +100,6 @@ nb_execution_mode = "off"
 
 autodoc_type_aliases = {
     k: k
-    for k, v in vars(sax.typing_).items()
+    for k, v in vars(sax.saxtypes).items()
     if isinstance(v, typing._BaseGenericAlias)  # type: ignore
 }

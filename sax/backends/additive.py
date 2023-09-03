@@ -5,16 +5,9 @@ from __future__ import annotations
 from typing import Any, Dict, Tuple
 
 import networkx as nx
-from ..typing_ import SDict, SType, sdict
+from ..saxtypes import SDict, sdict
 
-try:
-    import jax.numpy as jnp
-
-    JAX_AVAILABLE = True
-except ImportError:
-    import numpy as jnp
-
-    JAX_AVAILABLE = False
+import jax.numpy as jnp
 
 
 def split_port(port: str) -> Tuple[str, str]:
@@ -27,7 +20,9 @@ def split_port(port: str) -> Tuple[str, str]:
 
 
 def graph_edges(
-    instances: Dict[str, SType], connections: Dict[str, str], ports: Dict[str, str]
+    instances: Dict[str, SDict],
+    connections: Dict[str, str],
+    ports: Dict[str, str],
 ):
     zero = jnp.array([0.0], dtype=float)
     edges = {}

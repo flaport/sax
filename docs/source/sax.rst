@@ -22,7 +22,7 @@ Submodules
    sax.netlist
    sax.netlist_cleaning
    sax.patched
-   sax.typing_
+   sax.saxtypes
    sax.utils
 
 Module contents

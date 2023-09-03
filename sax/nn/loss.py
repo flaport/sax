@@ -2,23 +2,25 @@
 
 from __future__ import annotations
 
-from typing import Dict
+from typing import Dict, cast
 
 import jax.numpy as jnp
-from ..typing_ import ComplexFloat
+from ..saxtypes import ComplexArrayND
 
 
-def mse(x: ComplexFloat, y: ComplexFloat) -> float:
+def mse(x: ComplexArrayND, y: ComplexArrayND) -> float:
     """mean squared error"""
-    return ((x - y) ** 2).mean()
+    return cast(float, (abs(x - y) ** 2).mean())
 
 
-def huber_loss(x: ComplexFloat, y: ComplexFloat, delta: float = 0.5) -> float:
+def huber_loss(x: ComplexArrayND, y: ComplexArrayND, delta: float = 0.5) -> float:
     """huber loss"""
-    return ((delta**2) * ((1.0 + ((x - y) / delta) ** 2) ** 0.5 - 1.0)).mean()
+    return cast(
+        float, ((delta**2) * ((1.0 + (abs(x - y) / delta) ** 2) ** 0.5 - 1.0)).mean()
+    )
 
 
-def l2_reg(weights: Dict[str, ComplexFloat]) -> float:
+def l2_reg(weights: Dict[str, ComplexArrayND]) -> float:
     """L2 regularization loss"""
     numel = 0
     loss = 0.0

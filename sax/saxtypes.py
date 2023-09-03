@@ -7,52 +7,30 @@ import inspect
 from collections.abc import Callable as CallableABC
 from typing import Any, Callable, Dict, Tuple, Union, cast, overload
 
+import jax.numpy as jnp
 import numpy as np
+from jaxtyping import Array as Array
+from jaxtyping import ArrayLike as ArrayLike
+from jaxtyping import Complex as Complex
+from jaxtyping import Float as Float
+from jaxtyping import Int as Int
 from natsort import natsorted
 
-try:
-    import jax.numpy as jnp
-
-    JAX_AVAILABLE = True
-except ImportError:
-    import numpy as jnp
-
-    JAX_AVAILABLE = False
-
-
-Array = Union[jnp.ndarray, np.ndarray]
-
-
-Int = Union[int, Array]
-
-
-Float = Union[float, Array]
-
-
-ComplexFloat = Union[complex, Float]
-
-
-Settings = Union[Dict[str, ComplexFloat], Dict[str, "Settings"]]
-
-
-SDict = Dict[Tuple[str, str], ComplexFloat]
-
-
-SCoo = Tuple[Array, Array, ComplexFloat, Dict[str, int]]
-
-
-SDense = Tuple[Array, Dict[str, int]]
-
-
+IntArray1D = Int[Array, " dim"]
+FloatArray1D = Complex[Array, " dim"]
+ComplexArray1D = Complex[Array, " dim"]
+IntArrayND = Int[Array, "..."]
+FloatArrayND = Complex[Array, "..."]
+ComplexArrayND = Complex[Array, "..."]
+Settings = Dict[str, Union["Settings", FloatArrayND, ComplexArrayND]]
+PortMap = Dict[str, int]
+PortCombination = Tuple[str, str]
+SDict = Dict[PortCombination, ComplexArrayND]
+SCoo = Tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
+SDense = Tuple[ComplexArrayND, PortMap]
 SType = Union[SDict, SCoo, SDense]
-
-
 Model = Callable[..., SType]
-
-
 ModelFactory = Callable[..., Model]
-
-
 Models = Dict[str, Model]
 
 
@@ -89,7 +67,7 @@ def is_sdict(x: Any) -> bool:
 
 
 def is_scoo(x: Any) -> bool:
-    """check if an object is an `SCoo` (a SAX sparse S-matrix representation in COO-format)"""
+    """check if an object is an `SCoo` (a SAX sparse S representation in COO-format)"""
     return isinstance(x, (tuple, list)) and len(x) == 4
 
 
@@ -145,8 +123,10 @@ def validate_model(model: Callable):
             positional_arguments.append(param.name)
     if positional_arguments:
         raise ValueError(
-            f"model '{model}' takes positional arguments {', '.join(positional_arguments)} "
-            "and hence is not a valid SAX Model! A SAX model should ONLY take keyword arguments (or no arguments at all)."
+            f"model '{model}' takes positional "
+            f"arguments {', '.join(positional_arguments)} "
+            "and hence is not a valid SAX Model! "
+            "A SAX model should ONLY take keyword arguments (or no arguments at all)."
         )
 
 
@@ -222,13 +202,18 @@ def sdict(S: Union[Model, SType]) -> Union[Model, SType]:
     return x_dict
 
 
-def _scoo_to_sdict(Si: Array, Sj: Array, Sx: Array, ports_map: Dict[str, int]) -> SDict:
+def _scoo_to_sdict(
+    Si: IntArray1D,
+    Sj: IntArray1D,
+    Sx: ComplexArrayND,
+    ports_map: Dict[str, int],
+) -> SDict:
     sdict = {}
     inverse_ports_map = {int(i): p for p, i in ports_map.items()}
     for i, (si, sj) in enumerate(zip(Si, Sj)):
-        sdict[
-            inverse_ports_map.get(int(si), ""), inverse_ports_map.get(int(sj), "")
-        ] = Sx[..., i]
+        input_port = inverse_ports_map.get(int(si), "")
+        output_port = inverse_ports_map.get(int(sj), "")
+        sdict[input_port, output_port] = Sx[..., i]
     sdict = {(p1, p2): v for (p1, p2), v in sdict.items() if p1 and p2}
     return sdict
 
@@ -339,10 +324,7 @@ def _scoo_to_sdense(
 ) -> SDense:
     n_col = len(ports_map)
     S = jnp.zeros((*Sx.shape[:-1], n_col, n_col), dtype=complex)
-    if JAX_AVAILABLE:
-        S = S.at[..., Si, Sj].add(Sx)
-    else:
-        S[..., Si, Sj] = Sx
+    S = S.at[..., Si, Sj].add(Sx)
     return S, ports_map
 
 

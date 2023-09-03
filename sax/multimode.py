@@ -4,8 +4,9 @@ from __future__ import annotations
 
 from functools import wraps
 from typing import Dict, Tuple, Union, cast, overload
+import jax.numpy as jnp
 
-from .typing_ import (
+from .saxtypes import (
     Model,
     SCoo,
     SDense,
@@ -26,14 +27,7 @@ from .utils import (
     validate_not_mixedmode,
 )
 
-try:
-    import jax.numpy as jnp
 
-    JAX_AVAILABLE = True
-except ImportError:
-    import numpy as jnp
-
-    JAX_AVAILABLE = False
 
 
 @overload

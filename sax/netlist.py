@@ -210,15 +210,19 @@ def load_netlist(pic_path) -> Netlist:
 @lru_cache()
 def load_recursive_netlist(pic_path, ext=".yml"):
     folder_path = os.path.dirname(os.path.abspath(pic_path))
-    _clean_string = lambda path: clean_string(re.sub(ext, "", os.path.split(path)[-1]))
-    netlists = {
-        _clean_string(pic_path): None
-    }  # the circuit we're interested in should come first.
+
+    def _clean_string(path: str) -> str:
+        return clean_string(re.sub(ext, "", os.path.split(path)[-1]))
+
+    # the circuit we're interested in should come first:
+    netlists: Dict[str, Netlist] = {_clean_string(pic_path): Netlist()}
+
     for filename in os.listdir(folder_path):
         path = os.path.join(folder_path, filename)
         if not os.path.isfile(path) or not path.endswith(ext):
             continue
         netlists[_clean_string(path)] = load_netlist(path)
+
     return RecursiveNetlist.parse_obj(netlists)
 
 

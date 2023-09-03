@@ -10,10 +10,10 @@ from typing import Callable, Dict, List, Optional, Tuple
 import jax.numpy as jnp
 from .core import dense, preprocess
 from .utils import norm
-from ..typing_ import ComplexFloat
+from ..saxtypes import ComplexArrayND
 
 
-def load_nn_weights_json(path: str) -> Dict[str, ComplexFloat]:
+def load_nn_weights_json(path: str) -> Dict[str, ComplexArrayND]:
     """Load json weights from given path"""
     path = os.path.abspath(os.path.expanduser(path))
     weights = {}
@@ -26,7 +26,7 @@ def load_nn_weights_json(path: str) -> Dict[str, ComplexFloat]:
     return weights
 
 
-def save_nn_weights_json(weights: Dict[str, ComplexFloat], path: str):
+def save_nn_weights_json(weights: Dict[str, ComplexArrayND], path: str):
     """Save json weights to given path"""
     path = os.path.abspath(os.path.expanduser(path))
     os.makedirs(os.path.dirname(path), exist_ok=True)
@@ -113,7 +113,8 @@ def get_norm_path(
     """Create the SAX conventional path for the normalization constants"""
     if input_names and output_names:
         raise ValueError(
-            "To get the norm name, one can only specify `input_names` OR `output_names`."
+            "To get the norm name, one can only specify "
+            "`input_names` OR `output_names`."
         )
     if input_names:
         num_inputs = preprocess(*jnp.ones(len(input_names))).shape[0]
@@ -138,11 +139,15 @@ class _PartialDense:
         self.input_names = input_names
         self.output_names = output_names
 
-    def __call__(self, *params: ComplexFloat) -> ComplexFloat:
+    def __call__(self, *params: ComplexArrayND) -> ComplexArrayND:
         return dense(self.weights, *params, x_norm=self.x_norm, y_norm=self.y_norm)
 
     def __repr__(self):
-        return f"{self.__class__.__name__}{repr(self.input_names)}->{repr(self.output_names)}"
+        return (
+            f"{self.__class__.__name__}"
+            f"{repr(self.input_names)}"
+            f"->{repr(self.output_names)}"
+        )
 
 
 def load_nn_dense(

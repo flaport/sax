@@ -8,13 +8,9 @@ import jax
 import jax.numpy as jnp
 import klujax
 from natsort import natsorted
-from ..typing_ import SDense, SType, scoo, sdense
-
+from ..saxtypes import SDense, SType, scoo, sdense
 
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
-
-
-mul_coo = None
 mul_coo = jax.vmap(klujax.coo_mul_vec, (None, None, 0, 0), 0)
 
 
@@ -23,12 +19,12 @@ def get_instance_ports(connections: Dict[str, str], ports: Dict[str, str]):
     for connection in connections.items():
         for ip in connection:
             i, p = ip.split(",")
-            if not i in instance_ports:
+            if i not in instance_ports:
                 instance_ports[i] = set()
             instance_ports[i].add(p)
     for ip in ports.values():
         i, p = ip.split(",")
-        if not i in instance_ports:
+        if i not in instance_ports:
             instance_ports[i] = set()
         instance_ports[i].add(p)
     return {k: natsorted(v) for k, v in instance_ports.items()}
@@ -69,7 +65,9 @@ def analyze_circuit_klu(
     Si = jnp.concatenate(Si, -1)
     Sj = jnp.concatenate(Sj, -1)
 
-    Cmap = {int(instance_ports[k]): int(instance_ports[v]) for k, v in connections.items()}  # fmt: skip
+    Cmap = {
+        int(instance_ports[k]): int(instance_ports[v]) for k, v in connections.items()
+    }
     Ci = jnp.array(list(Cmap.keys()), dtype=jnp.int32)
     Cj = jnp.array(list(Cmap.values()), dtype=jnp.int32)
 
@@ -132,7 +130,9 @@ def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
             batch_shape = sx.shape[:-1]
         idx += len(ports_map)
 
-    Sx = jnp.concatenate([jnp.broadcast_to(sx, (*batch_shape, sx.shape[-1])) for sx in Sx], -1)  # fmt: skip
+    Sx = jnp.concatenate(
+        [jnp.broadcast_to(sx, (*batch_shape, sx.shape[-1])) for sx in Sx], -1
+    )
     CSx = Sx[..., mask]
     Ix = jnp.ones((*batch_shape, n_col))
     I_CSx = jnp.concatenate([-CSx, Ix], -1)

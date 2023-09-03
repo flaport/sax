@@ -12,10 +12,9 @@ import black
 import networkx as nx
 import numpy as np
 from .backends import circuit_backends
-from .multimode import multimode, singlemode
 from .netlist import Netlist, RecursiveNetlist
 from .netlist_cleaning import remove_unused_instances
-from .typing_ import Model, Settings, SType, sdict, sdense, scoo
+from .saxtypes import Model, Settings, SType, sdict, sdense, scoo
 from .utils import (
     _replace_kwargs,
     get_ports,
@@ -43,14 +42,14 @@ def create_dag(
     g = nx.DiGraph()
 
     for model_name, subnetlist in netlist.dict()["__root__"].items():
-        if not model_name in all_models:
+        if model_name not in all_models:
             all_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)
         if model_name in models:
             continue
         for instance in subnetlist["instances"].values():
             component = instance["component"]
-            if not component in all_models:
+            if component not in all_models:
                 all_models[component] = models.get(component, None)
                 g.add_node(component)
             g.add_edge(model_name, component)
@@ -93,7 +92,6 @@ def _my_dag_pos(dag):
 
     widths = {k: len(vs) for k, vs in in_degree.items()}
     width = max(widths.values())
-    height = max(widths) + 1
 
     horizontal_pos = {
         k: np.linspace(0, 1, w + 2)[1:-1] * width for k, w in widths.items()
@@ -126,8 +124,8 @@ def _validate_models(models, dag):
             "Required Models": required_models,
         }
         raise ValueError(
-            "Missing models. The following models are still missing to build the circuit:\n"
-            f"{black.format_str(repr(model_diff), mode=black.Mode())}"
+            "Missing models. The following models are still missing to build "
+            f"the circuit:\n{black.format_str(repr(model_diff), mode=black.Mode())}"
         )
     return {**models}  # shallow copy
 
@@ -154,12 +152,12 @@ def _flat_circuit(instances, connections, ports, models, backend):
     analyzed = analyze_fn(connections, ports)
 
     def _circuit(**settings: Settings) -> SType:
-        settings = merge_dicts(default_settings, settings)
-        settings = _forward_global_settings(inst2model, settings)
+        full_settings = merge_dicts(default_settings, settings)
+        full_settings = _forward_global_settings(inst2model, full_settings)
 
         instances: Dict[str, SType] = {}
         for inst_name, model in inst2model.items():
-            instances[inst_name] = model(**settings.get(inst_name, {}))
+            instances[inst_name] = model(**full_settings.get(inst_name, {}))
 
         S = evaluate_fn(analyzed, instances)
         return S
@@ -187,9 +185,9 @@ def _port_modes_dict(port_modes):
             port, mode = port_mode.split("@")
         else:
             port, mode = port_mode, None
-        if not port in result:
+        if port not in result:
             result[port] = set()
-        if not mode is None:
+        if mode is not None:
             result[port].add(mode)
     return result
 
@@ -255,7 +253,7 @@ def circuit(
     netlist = remove_unused_instances(netlist)
     netlist, instance_models = _extract_instance_models(netlist)
 
-    recnet: RecursiveNetlist = _validate_net(netlist)
+    recnet: RecursiveNetlist = _validate_net(netlist)  # type: ignore
     dependency_dag: nx.DiGraph = _validate_dag(create_dag(recnet, models))
     models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
     backend = _validate_circuit_backend(backend)
@@ -320,7 +318,8 @@ def _extract_instance_models(netlist):
                 settings = get_settings(inst)
                 if isinstance(inst, partial) and inst.args:
                     raise ValueError(
-                        "SAX circuits and netlists don't support partials with positional arguments."
+                        "SAX circuits and netlists don't support partials "
+                        "with positional arguments."
                     )
                 while isinstance(inst, partial):
                     inst = inst.func
@@ -360,38 +359,10 @@ def _validate_dag(dag):
     if len(nodes) > 1:
         raise ValueError(f"Multiple top_levels found in netlist: {nodes}")
     if len(nodes) < 1:
-        raise ValueError(f"Netlist does not contain any nodes.")
+        raise ValueError("Netlist does not contain any nodes.")
     if not dag.is_directed():
         raise ValueError("Netlist dependency cycles detected!")
     return dag
-
-
-def _make_singlemode_or_multimode(netlist, modes, models):
-    if len(modes) == 1:
-        connections, ports, models = _make_singlemode(netlist, modes[0], models)
-    else:
-        connections, ports, models = _make_multimode(netlist, modes, models)
-    return connections, ports, models
-
-
-def _make_singlemode(netlist, mode, models):
-    models = {k: singlemode(m, mode=mode) for k, m in models.items()}
-    return netlist.connections, netlist.ports, models
-
-
-def _make_multimode(netlist, modes, models):
-    models = {k: multimode(m, modes=modes) for k, m in models.items()}
-    connections = {
-        f"{p1}@{mode}": f"{p2}@{mode}"
-        for p1, p2 in netlist.connections.items()
-        for mode in modes
-    }
-    ports = {
-        f"{p1}@{mode}": f"{p2}@{mode}"
-        for p1, p2 in netlist.ports.items()
-        for mode in modes
-    }
-    return connections, ports, models
 
 
 def get_required_circuit_models(
@@ -404,22 +375,22 @@ def get_required_circuit_models(
     netlist = _ensure_recursive_netlist_dict(netlist)
     # TODO: do the following two steps *after* recursive netlist parsing.
     netlist = remove_unused_instances(netlist)
-    netlist, instance_models = _extract_instance_models(netlist)
-    recnet: RecursiveNetlist = _validate_net(netlist)
+    netlist, _ = _extract_instance_models(netlist)
+    recnet: RecursiveNetlist = _validate_net(netlist)  # type: ignore
 
     missing_models = {}
     missing_model_names = []
     g = nx.DiGraph()
 
     for model_name, subnetlist in recnet.dict()["__root__"].items():
-        if not model_name in missing_models:
+        if model_name not in missing_models:
             missing_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)
         if model_name in models:
             continue
         for instance in subnetlist["instances"].values():
             component = instance["component"]
-            if (not component in missing_models) and (not component in models):
+            if (component not in missing_models) and (component not in models):
                 missing_models[component] = models.get(component, None)
                 missing_model_names.append(component)
                 g.add_node(component)

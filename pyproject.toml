@@ -9,12 +9,12 @@ authors = [
 { name = "Floris Laporte", email = "floris.laporte@rockleyphotonics.com" },
 ]
 description = "Autograd and XLA for S-parameters"
+requires-python = ">=3.9.0"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -109,3 +109,5 @@ include = '\.pyi?$'
 [tool.pyright]
 reportPrivateImportUsage = false
 
+[tool.flake8]
+ignore = ['F722']
