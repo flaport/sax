@@ -1,5 +1,7 @@
 """ SAX Neural Network Module """
 
+from __future__ import annotations
+
 from .loss import huber_loss as huber_loss
 from .loss import l2_reg as l2_reg
 from .loss import mse as mse

@@ -1,5 +1,7 @@
 """ SAX Circuit Definition """
 
+from __future__ import annotations
+
 import os
 import shutil
 import sys
@@ -227,6 +229,20 @@ def _get_multimode_ports(ports, inst_port_mode):
     return mm_ports
 
 
+class CircuitInfo(NamedTuple):
+    dag: nx.DiGraph
+    models: Dict[str, Model]
+
+
+class NetlistDict(TypedDict):
+    instances: Dict
+    connections: Dict[str, str]
+    ports: Dict[str, str]
+
+
+RecursiveNetlistDict = Dict[str, NetlistDict]
+
+
 def circuit(
     netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,
@@ -268,20 +284,6 @@ def circuit(
     assert circuit is not None
     circuit = _enforce_return_type(circuit, return_type)
     return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
-
-
-class NetlistDict(TypedDict):
-    instances: Dict
-    connections: Dict[str, str]
-    ports: Dict[str, str]
-
-
-RecursiveNetlistDict = Dict[str, NetlistDict]
-
-
-class CircuitInfo(NamedTuple):
-    dag: nx.DiGraph
-    models: Dict[str, Model]
 
 
 def _enforce_return_type(model, return_type):

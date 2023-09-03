@@ -1,10 +1,15 @@
+from __future__ import annotations
+
 import os
 import shutil
+import typing
 import sys
 
 # Dynamic Config
 REPO_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO_PATH)
+import sax  # noqa
+from sax.typing_ import *  # noqa
 
 EXSRC = os.path.join(REPO_PATH, "examples")
 EXDST = os.path.join(REPO_PATH, "docs", "source", "examples")
@@ -111,3 +116,9 @@ myst_url_schemes = ("http", "https", "mailto")
 add_module_names = False
 nbsphinx_execute = "never"
 nb_execution_mode = "off"
+
+autodoc_type_aliases = {
+    k: k
+    for k, v in vars(sax.typing_).items()
+    if isinstance(v, typing._BaseGenericAlias)  # type: ignore
+}

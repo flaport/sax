@@ -1,5 +1,7 @@
 """ netlist cleaning utilities (remove unused instances) """
 
+from __future__ import annotations
+
 from natsort import natsorted
 import networkx as nx
 

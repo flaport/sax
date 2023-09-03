@@ -1,5 +1,7 @@
 """ Sax Neural Network Default Utilities """
 
+from __future__ import annotations
+
 from collections import namedtuple
 from typing import Tuple
 

@@ -1,5 +1,7 @@
 """ SAX: S + Autograd + XLA """
 
+from __future__ import annotations
+
 __author__ = "Floris Laporte"
 __version__ = "0.10.0"
 
@@ -16,6 +18,7 @@ except ImportError:
 
 
 from sax import typing_ as typing
+
 from .typing_ import (
     Array as Array,
     ComplexFloat as ComplexFloat,

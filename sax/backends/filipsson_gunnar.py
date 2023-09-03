@@ -1,5 +1,7 @@
 """ SAX Filipsson Gunnar Backend """
 
+from __future__ import annotations
+
 import warnings
 from types import SimpleNamespace
 from typing import Any, Dict

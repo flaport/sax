@@ -1,5 +1,7 @@
 """ SAX Neural Network I/O Utilities """
 
+from __future__ import annotations
+
 import json
 import os
 import re

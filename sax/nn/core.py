@@ -1,5 +1,7 @@
 """ SAX Neural Network Core Utils """
 
+from __future__ import annotations
+
 from typing import Callable, Dict, Optional, Tuple, Union
 
 import jax

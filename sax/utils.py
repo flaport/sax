@@ -1,5 +1,7 @@
 """ SAX General Utilities """
 
+from __future__ import annotations
+
 import inspect
 import re
 import warnings

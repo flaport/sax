@@ -1,5 +1,7 @@
 """ Patched Datastructures for SAX """
 
+from __future__ import annotations
+
 import re
 from textwrap import dedent
 

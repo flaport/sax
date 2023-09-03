@@ -1,5 +1,7 @@
 """ SAX Default Models """
 
+from __future__ import annotations
+
 from functools import lru_cache as cache
 from types import SimpleNamespace
 from typing import Optional, Tuple

@@ -1,5 +1,7 @@
 """ SAX Loss Functions """
 
+from __future__ import annotations
+
 from typing import Dict
 
 import jax.numpy as jnp

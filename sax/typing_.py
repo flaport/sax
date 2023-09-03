@@ -1,5 +1,7 @@
 """ SAX Types and type coercions """
 
+from __future__ import annotations
+
 import functools
 import inspect
 from collections.abc import Callable as CallableABC
