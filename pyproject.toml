@@ -79,9 +79,7 @@ namespaces = true
 
 [tool.setuptools.package-data]
 "*" = [
-  "settings.ini",
   "LICENSE",
-  "CONTRIBUTING.md",
   "README.md",
 ]
 
