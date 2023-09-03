@@ -1,0 +1,799 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sax.circuit &#8212; sax 0.10.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sax/circuit';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/01_quick_start.html">SAX Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/03_circuit_from_yaml.html">Circuit from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/04_multimode_simulations.html">Multimode simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/05_thinfilm.html">Thin film optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/06_additive_backend.html">Additive Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../internals/01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internals/03_backends.html">Backends</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../sax.html">sax package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.klu.html">sax.backends.klu module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.core.html">sax.nn.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.io.html">sax.nn.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.loss.html">sax.nn.loss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.utils.html">sax.nn.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.saxtypes.html">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.utils.html">sax.utils module</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2F_modules/sax/circuit.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for sax.circuit</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; SAX Circuit Definition &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">shutil</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">NamedTuple</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">Union</span>
+
+<span class="kn">import</span> <span class="nn">black</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="kn">from</span> <span class="nn">.backends</span> <span class="kn">import</span> <span class="n">circuit_backends</span>
+<span class="kn">from</span> <span class="nn">.netlist</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Netlist</span><span class="p">,</span>
+    <span class="n">NetlistDict</span><span class="p">,</span>
+    <span class="n">RecursiveNetlist</span><span class="p">,</span>
+    <span class="n">RecursiveNetlistDict</span><span class="p">,</span>
+    <span class="n">remove_unused_instances</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.saxtypes</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">Settings</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">scoo</span><span class="p">,</span> <span class="n">sdense</span><span class="p">,</span> <span class="n">sdict</span>
+<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">_replace_kwargs</span><span class="p">,</span>
+    <span class="n">get_ports</span><span class="p">,</span>
+    <span class="n">get_settings</span><span class="p">,</span>
+    <span class="n">merge_dicts</span><span class="p">,</span>
+    <span class="n">update_settings</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pydantic.v1</span> <span class="kn">import</span> <span class="n">ValidationError</span>  <span class="c1"># type: ignore</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">ValidationError</span>  <span class="c1"># type: ignore</span>
+
+
+<div class="viewcode-block" id="CircuitInfo"><a class="viewcode-back" href="../../sax.circuit.html#sax.circuit.CircuitInfo">[docs]</a><span class="k">class</span> <span class="nc">CircuitInfo</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Information about the circuit function you created.&quot;&quot;&quot;</span>
+
+    <span class="n">dag</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]</span></div>
+
+
+<div class="viewcode-block" id="circuit"><a class="viewcode-back" href="../../sax.circuit.html#sax.circuit.circuit">[docs]</a><span class="k">def</span> <span class="nf">circuit</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">RecursiveNetlistDict</span><span class="p">],</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+    <span class="n">backend</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;default&quot;</span><span class="p">,</span>
+    <span class="n">return_type</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;sdict&quot;</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">CircuitInfo</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;create a circuit function for a given netlist&quot;&quot;&quot;</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="n">_ensure_recursive_netlist_dict</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+
+    <span class="c1"># TODO: do the following two steps *after* recursive netlist parsing.</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="n">remove_unused_instances</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="n">netlist</span><span class="p">,</span> <span class="n">instance_models</span> <span class="o">=</span> <span class="n">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+
+    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">_validate_net</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+    <span class="n">dependency_dag</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span> <span class="o">=</span> <span class="n">_validate_dag</span><span class="p">(</span><span class="n">_create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">))</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="n">_validate_models</span><span class="p">({</span><span class="o">**</span><span class="p">(</span><span class="n">models</span> <span class="ow">or</span> <span class="p">{}),</span> <span class="o">**</span><span class="n">instance_models</span><span class="p">},</span> <span class="n">dependency_dag</span><span class="p">)</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">_validate_circuit_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
+
+    <span class="n">circuit</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">new_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">current_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">model_names</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">nx</span><span class="o">.</span><span class="n">topological_sort</span><span class="p">(</span><span class="n">dependency_dag</span><span class="p">))[::</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">model_names</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+            <span class="n">new_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+            <span class="k">continue</span>
+
+        <span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span>
+        <span class="n">current_models</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">new_models</span><span class="p">)</span>
+        <span class="n">new_models</span> <span class="o">=</span> <span class="p">{}</span>
+
+        <span class="n">current_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">circuit</span> <span class="o">=</span> <span class="n">_flat_circuit</span><span class="p">(</span>
+            <span class="n">flatnet</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span>
+            <span class="n">flatnet</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
+            <span class="n">flatnet</span><span class="o">.</span><span class="n">ports</span><span class="p">,</span>
+            <span class="n">current_models</span><span class="p">,</span>
+            <span class="n">backend</span><span class="p">,</span>
+        <span class="p">)</span>
+
+    <span class="k">assert</span> <span class="n">circuit</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span>
+    <span class="n">circuit</span> <span class="o">=</span> <span class="n">_enforce_return_type</span><span class="p">(</span><span class="n">circuit</span><span class="p">,</span> <span class="n">return_type</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">circuit</span><span class="p">,</span> <span class="n">CircuitInfo</span><span class="p">(</span><span class="n">dag</span><span class="o">=</span><span class="n">dependency_dag</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">current_models</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_create_dag</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">RecursiveNetlist</span><span class="p">,</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">):</span>
+    <span class="k">if</span> <span class="n">models</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+
+    <span class="n">all_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">subnetlist</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">dict</span><span class="p">()[</span><span class="s2">&quot;__root__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_models</span><span class="p">:</span>
+            <span class="n">all_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">subnetlist</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">subnetlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_models</span><span class="p">:</span>
+                <span class="n">all_models</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+
+    <span class="c1"># we only need the nodes that depend on the parent...</span>
+    <span class="n">parent_node</span> <span class="o">=</span> <span class="nb">next</span><span class="p">(</span><span class="nb">iter</span><span class="p">(</span><span class="n">netlist</span><span class="o">.</span><span class="n">__root__</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">parent_node</span><span class="p">,</span> <span class="o">*</span><span class="n">nx</span><span class="o">.</span><span class="n">descendants</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">parent_node</span><span class="p">)]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">induced_subgraph</span><span class="p">(</span><span class="n">g</span><span class="p">,</span> <span class="n">nodes</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">g</span>
+
+
+<span class="k">def</span> <span class="nf">_draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+    <span class="n">_patch_path</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">shutil</span><span class="o">.</span><span class="n">which</span><span class="p">(</span><span class="s2">&quot;dot&quot;</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span>
+            <span class="n">dag</span><span class="p">,</span>
+            <span class="n">nx</span><span class="o">.</span><span class="n">nx_pydot</span><span class="o">.</span><span class="n">pydot_layout</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">prog</span><span class="o">=</span><span class="s2">&quot;dot&quot;</span><span class="p">),</span>
+            <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span>
+            <span class="o">**</span><span class="n">kwargs</span><span class="p">,</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">nx</span><span class="o">.</span><span class="n">draw</span><span class="p">(</span><span class="n">dag</span><span class="p">,</span> <span class="n">_my_dag_pos</span><span class="p">(</span><span class="n">dag</span><span class="p">),</span> <span class="n">with_labels</span><span class="o">=</span><span class="n">with_labels</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_patch_path</span><span class="p">():</span>
+    <span class="n">os_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;PATH&quot;</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="p">)}</span>
+    <span class="n">sys_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="p">}</span>
+    <span class="n">other_paths</span> <span class="o">=</span> <span class="p">{</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">sys</span><span class="o">.</span><span class="n">executable</span><span class="p">):</span> <span class="kc">None</span><span class="p">}</span>
+    <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="p">[</span><span class="s2">&quot;PATH&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">pathsep</span><span class="o">.</span><span class="n">join</span><span class="p">({</span><span class="o">**</span><span class="n">os_paths</span><span class="p">,</span> <span class="o">**</span><span class="n">sys_paths</span><span class="p">,</span> <span class="o">**</span><span class="n">other_paths</span><span class="p">})</span>
+
+
+<span class="k">def</span> <span class="nf">_my_dag_pos</span><span class="p">(</span><span class="n">dag</span><span class="p">):</span>
+    <span class="c1"># inferior to pydot</span>
+    <span class="n">in_degree</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">dag</span><span class="o">.</span><span class="n">in_degree</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">v</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">in_degree</span><span class="p">:</span>
+            <span class="n">in_degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">[]</span>
+        <span class="n">in_degree</span><span class="p">[</span><span class="n">v</span><span class="p">]</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+
+    <span class="n">widths</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="nb">len</span><span class="p">(</span><span class="n">vs</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vs</span> <span class="ow">in</span> <span class="n">in_degree</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">width</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">widths</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+
+    <span class="n">horizontal_pos</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="n">w</span> <span class="o">+</span> <span class="mi">2</span><span class="p">)[</span><span class="mi">1</span><span class="p">:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span> <span class="o">*</span> <span class="n">width</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">widths</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+
+    <span class="n">pos</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">vs</span> <span class="ow">in</span> <span class="n">in_degree</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">x</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">horizontal_pos</span><span class="p">[</span><span class="n">k</span><span class="p">],</span> <span class="n">vs</span><span class="p">):</span>
+            <span class="n">pos</span><span class="p">[</span><span class="n">v</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">pos</span>
+
+
+<span class="k">def</span> <span class="nf">_find_root</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">in_degree</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">nodes</span>
+
+
+<span class="k">def</span> <span class="nf">_find_leaves</span><span class="p">(</span><span class="n">g</span><span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="p">[</span><span class="n">n</span> <span class="k">for</span> <span class="n">n</span><span class="p">,</span> <span class="n">d</span> <span class="ow">in</span> <span class="n">g</span><span class="o">.</span><span class="n">out_degree</span><span class="p">()</span> <span class="k">if</span> <span class="n">d</span> <span class="o">==</span> <span class="mi">0</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">nodes</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dag</span><span class="p">):</span>
+    <span class="n">required_models</span> <span class="o">=</span> <span class="n">_find_leaves</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+    <span class="n">missing_models</span> <span class="o">=</span> <span class="p">[</span><span class="n">m</span> <span class="k">for</span> <span class="n">m</span> <span class="ow">in</span> <span class="n">required_models</span> <span class="k">if</span> <span class="n">m</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">models</span><span class="p">]</span>
+    <span class="k">if</span> <span class="n">missing_models</span><span class="p">:</span>
+        <span class="n">model_diff</span> <span class="o">=</span> <span class="p">{</span>
+            <span class="s2">&quot;Missing Models&quot;</span><span class="p">:</span> <span class="n">missing_models</span><span class="p">,</span>
+            <span class="s2">&quot;Given Models&quot;</span><span class="p">:</span> <span class="nb">list</span><span class="p">(</span><span class="n">models</span><span class="p">),</span>
+            <span class="s2">&quot;Required Models&quot;</span><span class="p">:</span> <span class="n">required_models</span><span class="p">,</span>
+        <span class="p">}</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="s2">&quot;Missing models. The following models are still missing to build &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;the circuit:</span><span class="se">\n</span><span class="si">{</span><span class="n">black</span><span class="o">.</span><span class="n">format_str</span><span class="p">(</span><span class="nb">repr</span><span class="p">(</span><span class="n">model_diff</span><span class="p">),</span><span class="w"> </span><span class="n">mode</span><span class="o">=</span><span class="n">black</span><span class="o">.</span><span class="n">Mode</span><span class="p">())</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">}</span>  <span class="c1"># shallow copy</span>
+
+
+<span class="k">def</span> <span class="nf">_flat_circuit</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">backend</span><span class="p">):</span>
+    <span class="n">analyze_fn</span><span class="p">,</span> <span class="n">evaluate_fn</span> <span class="o">=</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="n">backend</span><span class="p">]</span>
+
+    <span class="n">inst2model</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="n">component</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">inst_port_mode</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">k</span><span class="p">:</span> <span class="n">_port_modes_dict</span><span class="p">(</span><span class="n">get_ports</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="n">component</span><span class="p">]))</span>
+        <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">connections</span> <span class="o">=</span> <span class="n">_get_multimode_connections</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">inst_port_mode</span><span class="p">)</span>
+    <span class="n">ports</span> <span class="o">=</span> <span class="n">_get_multimode_ports</span><span class="p">(</span><span class="n">ports</span><span class="p">,</span> <span class="n">inst_port_mode</span><span class="p">)</span>
+
+    <span class="n">model_settings</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inst2model</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">netlist_settings</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="n">name</span><span class="p">:</span> <span class="p">{</span>
+            <span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">settings</span> <span class="ow">or</span> <span class="p">{})</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">model_settings</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="p">}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="p">}</span>
+    <span class="n">default_settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">model_settings</span><span class="p">,</span> <span class="n">netlist_settings</span><span class="p">)</span>
+    <span class="n">analyzed</span> <span class="o">=</span> <span class="n">analyze_fn</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+
+    <span class="k">def</span> <span class="nf">_circuit</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
+        <span class="n">full_settings</span> <span class="o">=</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">default_settings</span><span class="p">,</span> <span class="n">settings</span><span class="p">)</span>
+        <span class="n">full_settings</span> <span class="o">=</span> <span class="n">_forward_global_settings</span><span class="p">(</span><span class="n">inst2model</span><span class="p">,</span> <span class="n">full_settings</span><span class="p">)</span>
+
+        <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SType</span><span class="p">]</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">inst_name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inst2model</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">instances</span><span class="p">[</span><span class="n">inst_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">full_settings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">inst_name</span><span class="p">,</span> <span class="p">{}))</span>
+
+        <span class="n">S</span> <span class="o">=</span> <span class="n">evaluate_fn</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">S</span>
+
+    <span class="n">_replace_kwargs</span><span class="p">(</span><span class="n">_circuit</span><span class="p">,</span> <span class="o">**</span><span class="n">default_settings</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">_circuit</span>
+
+
+<span class="k">def</span> <span class="nf">_forward_global_settings</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">settings</span><span class="p">):</span>
+    <span class="n">global_settings</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">settings</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="k">if</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="n">global_settings</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">settings</span><span class="o">.</span><span class="n">pop</span><span class="p">(</span><span class="n">k</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">global_settings</span><span class="p">:</span>
+        <span class="n">settings</span> <span class="o">=</span> <span class="n">update_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">,</span> <span class="o">**</span><span class="n">global_settings</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">settings</span>
+
+
+<span class="k">def</span> <span class="nf">_port_modes_dict</span><span class="p">(</span><span class="n">port_modes</span><span class="p">):</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">port_mode</span> <span class="ow">in</span> <span class="n">port_modes</span><span class="p">:</span>
+        <span class="k">if</span> <span class="s2">&quot;@&quot;</span> <span class="ow">in</span> <span class="n">port_mode</span><span class="p">:</span>
+            <span class="n">port</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">port_mode</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">port</span><span class="p">,</span> <span class="n">mode</span> <span class="o">=</span> <span class="n">port_mode</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="k">if</span> <span class="n">port</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">result</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">port</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+        <span class="k">if</span> <span class="n">mode</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+            <span class="n">result</span><span class="p">[</span><span class="n">port</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">mode</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span>
+
+
+<span class="k">def</span> <span class="nf">_get_multimode_connections</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">inst_port_mode</span><span class="p">):</span>
+    <span class="n">mm_connections</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">inst_port1</span><span class="p">,</span> <span class="n">inst_port2</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">inst1</span><span class="p">,</span> <span class="n">port1</span> <span class="o">=</span> <span class="n">inst_port1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">inst2</span><span class="p">,</span> <span class="n">port2</span> <span class="o">=</span> <span class="n">inst_port2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">modes1</span> <span class="o">=</span> <span class="n">inst_port_mode</span><span class="p">[</span><span class="n">inst1</span><span class="p">][</span><span class="n">port1</span><span class="p">]</span>
+        <span class="n">modes2</span> <span class="o">=</span> <span class="n">inst_port_mode</span><span class="p">[</span><span class="n">inst2</span><span class="p">][</span><span class="n">port2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">modes1</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">modes2</span><span class="p">:</span>
+            <span class="n">mm_connections</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inst1</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">port1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inst2</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">port2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">elif</span> <span class="p">(</span><span class="ow">not</span> <span class="n">modes1</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="ow">not</span> <span class="n">modes2</span><span class="p">):</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="s2">&quot;trying to connect a multimode model to single mode model.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="s2">&quot;Please update your models dictionary.</span><span class="se">\n</span><span class="s2">&quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Problematic connection: &#39;</span><span class="si">{</span><span class="n">inst_port1</span><span class="si">}</span><span class="s2">&#39;:&#39;</span><span class="si">{</span><span class="n">inst_port2</span><span class="si">}</span><span class="s2">&#39;&quot;</span>
+            <span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">common_modes</span> <span class="o">=</span> <span class="n">modes1</span><span class="o">.</span><span class="n">intersection</span><span class="p">(</span><span class="n">modes2</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">common_modes</span><span class="p">):</span>
+                <span class="n">mm_connections</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inst1</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">port1</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inst2</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">port2</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">mm_connections</span>
+
+
+<span class="k">def</span> <span class="nf">_get_multimode_ports</span><span class="p">(</span><span class="n">ports</span><span class="p">,</span> <span class="n">inst_port_mode</span><span class="p">):</span>
+    <span class="n">mm_ports</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">port</span><span class="p">,</span> <span class="n">inst_port2</span> <span class="ow">in</span> <span class="n">ports</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">inst2</span><span class="p">,</span> <span class="n">port2</span> <span class="o">=</span> <span class="n">inst_port2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">modes2</span> <span class="o">=</span> <span class="n">inst_port_mode</span><span class="p">[</span><span class="n">inst2</span><span class="p">][</span><span class="n">port2</span><span class="p">]</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">modes2</span><span class="p">:</span>
+            <span class="n">mm_ports</span><span class="p">[</span><span class="n">port</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inst2</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">port2</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="k">for</span> <span class="n">mode</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">modes2</span><span class="p">):</span>
+                <span class="n">mm_ports</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">port</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">inst2</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">port2</span><span class="si">}</span><span class="s2">@</span><span class="si">{</span><span class="n">mode</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="k">return</span> <span class="n">mm_ports</span>
+
+
+<span class="k">def</span> <span class="nf">_enforce_return_type</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">return_type</span><span class="p">):</span>
+    <span class="n">stype_func</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;default&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="s2">&quot;stype&quot;</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="n">x</span><span class="p">,</span>
+        <span class="s2">&quot;sdict&quot;</span><span class="p">:</span> <span class="n">sdict</span><span class="p">,</span>
+        <span class="s2">&quot;scoo&quot;</span><span class="p">:</span> <span class="n">scoo</span><span class="p">,</span>
+        <span class="s2">&quot;sdense&quot;</span><span class="p">:</span> <span class="n">sdense</span><span class="p">,</span>
+    <span class="p">}[</span><span class="n">return_type</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">stype_func</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+
+
+<span class="k">def</span> <span class="nf">_ensure_recursive_netlist_dict</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">netlist</span><span class="o">.</span><span class="n">dict</span><span class="p">()</span>
+    <span class="k">if</span> <span class="s2">&quot;__root__&quot;</span> <span class="ow">in</span> <span class="n">netlist</span><span class="p">:</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;__root__&quot;</span><span class="p">]</span>
+    <span class="k">if</span> <span class="s2">&quot;instances&quot;</span> <span class="ow">in</span> <span class="n">netlist</span><span class="p">:</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;top_level&quot;</span><span class="p">:</span> <span class="n">netlist</span><span class="p">}</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">netlist</span><span class="p">}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">v</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">netlist</span>
+
+
+<span class="k">def</span> <span class="nf">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
+    <span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">netname</span><span class="p">,</span> <span class="n">net</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">net</span><span class="p">}</span>
+        <span class="n">net</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">net</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]}</span>
+        <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">net</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="k">if</span> <span class="nb">callable</span><span class="p">(</span><span class="n">inst</span><span class="p">):</span>
+                <span class="n">settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">inst</span><span class="p">)</span>
+                <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">partial</span><span class="p">)</span> <span class="ow">and</span> <span class="n">inst</span><span class="o">.</span><span class="n">args</span><span class="p">:</span>
+                    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                        <span class="s2">&quot;SAX circuits and netlists don&#39;t support partials &quot;</span>
+                        <span class="s2">&quot;with positional arguments.&quot;</span>
+                    <span class="p">)</span>
+                <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">inst</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
+                    <span class="n">inst</span> <span class="o">=</span> <span class="n">inst</span><span class="o">.</span><span class="n">func</span>
+                <span class="n">models</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="vm">__name__</span><span class="p">]</span> <span class="o">=</span> <span class="n">inst</span>
+                <span class="n">net</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">][</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span>
+                    <span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="n">inst</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span>
+                    <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="n">settings</span><span class="p">,</span>
+                <span class="p">}</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="n">netname</span><span class="p">]</span> <span class="o">=</span> <span class="n">net</span>
+    <span class="k">return</span> <span class="n">netlist</span><span class="p">,</span> <span class="n">models</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_circuit_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">):</span>
+    <span class="n">backend</span> <span class="o">=</span> <span class="n">backend</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span>
+    <span class="c1"># assert valid circuit_backend</span>
+    <span class="k">if</span> <span class="n">backend</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">circuit_backends</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">KeyError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;circuit backend </span><span class="si">{</span><span class="n">backend</span><span class="si">}</span><span class="s2"> not found. Allowed circuit backends: &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">circuit_backends</span><span class="o">.</span><span class="n">keys</span><span class="p">())</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">return</span> <span class="n">backend</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_net</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlist</span><span class="p">:</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
+        <span class="k">try</span><span class="p">:</span>
+            <span class="n">netlist</span> <span class="o">=</span> <span class="n">Netlist</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+        <span class="k">except</span> <span class="n">ValidationError</span><span class="p">:</span>
+            <span class="n">netlist</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">Netlist</span><span class="p">):</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="p">(</span><span class="n">__root__</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;top_level&quot;</span><span class="p">:</span> <span class="n">netlist</span><span class="p">})</span>
+    <span class="k">return</span> <span class="n">netlist</span>
+
+
+<span class="k">def</span> <span class="nf">_validate_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">):</span>
+    <span class="n">nodes</span> <span class="o">=</span> <span class="n">_find_root</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Multiple top_levels found in netlist: </span><span class="si">{</span><span class="n">nodes</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">nodes</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Netlist does not contain any nodes.&quot;</span><span class="p">)</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">dag</span><span class="o">.</span><span class="n">is_directed</span><span class="p">():</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Netlist dependency cycles detected!&quot;</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">dag</span>
+
+
+<div class="viewcode-block" id="get_required_circuit_models"><a class="viewcode-back" href="../../sax.circuit.html#sax.circuit.get_required_circuit_models">[docs]</a><span class="k">def</span> <span class="nf">get_required_circuit_models</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Netlist</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">RecursiveNetlistDict</span><span class="p">],</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Optional</span><span class="p">[</span><span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">]]</span> <span class="o">=</span> <span class="kc">None</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">List</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Figure out which models are needed for a given netlist&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="n">models</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="n">_ensure_recursive_netlist_dict</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="c1"># TODO: do the following two steps *after* recursive netlist parsing.</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="n">remove_unused_instances</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="n">netlist</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">_validate_net</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+    <span class="n">missing_models</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">missing_model_names</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="n">g</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">()</span>
+
+    <span class="k">for</span> <span class="n">model_name</span><span class="p">,</span> <span class="n">subnetlist</span> <span class="ow">in</span> <span class="n">recnet</span><span class="o">.</span><span class="n">dict</span><span class="p">()[</span><span class="s2">&quot;__root__&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">missing_models</span><span class="p">:</span>
+            <span class="n">missing_models</span><span class="p">[</span><span class="n">model_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">subnetlist</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">model_name</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
+            <span class="k">continue</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">subnetlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+            <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
+            <span class="k">if</span> <span class="p">(</span><span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">missing_models</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">models</span><span class="p">):</span>
+                <span class="n">missing_models</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
+                <span class="n">missing_model_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+                <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
+            <span class="n">g</span><span class="o">.</span><span class="n">add_edge</span><span class="p">(</span><span class="n">model_name</span><span class="p">,</span> <span class="n">component</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">missing_model_names</span></div>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Floris Laporte
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023, Apache2.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

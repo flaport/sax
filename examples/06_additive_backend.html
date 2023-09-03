@@ -7,9 +7,12 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta content="metadata description" lang="en" name="description" xml:lang="en" />
+<meta content="Sphinx, MyST" name="keywords" />
+<meta content="en_US" property="og:locale" />
 
-    <title>Additive Backend &#8212; sax</title>
+    <title>Additive Backend &#8212; sax 0.10.0 documentation</title>
   
   
   
@@ -31,12 +34,11 @@
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
@@ -47,24 +49,11 @@
     <script src="../_static/underscore.js"></script>
     <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="../_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="../_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="../_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'examples/06_additive_backend';</script>
-    <link rel="canonical" href="https://flaport.github.io/sax/examples/06_additive_backend.html" />
-    <link rel="shortcut icon" href="../_static/favicon.ico"/>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
     <link rel="next" title="Layout Aware Monte Carlo with GDSFactory" href="07_layout_aware.html" />
@@ -103,8 +92,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -151,15 +140,11 @@ const thebe_selector_output = ".output, .cell_output"
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="../index.html">
-                    SAX
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_quick_start.html">SAX Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
@@ -169,29 +154,37 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1 current active"><a class="current reference internal" href="#">Additive Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Core Lib</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../internals/00_typing.html">Typing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/02_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/04_multimode.html">Multimode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/05_models.html">Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/06a_netlist.html">Netlist</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/07_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/03_backends.html">Backends</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../internals/08_backends.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/08a_backends_filipsson_gunnar.html">Backend - Filipsson Gunnar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/08b_backends_klu.html">Backend - KLU</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/08c_backends_additive.html">Backend - additive</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sax.html">sax package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Networks</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="../internals/09_nn.html">Neural Networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09a_nn_loss.html">Loss</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09b_nn_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09c_nn_core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="../internals/09d_nn_io.html">IO</a></li>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.core.html">sax.nn.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.io.html">sax.nn.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.loss.html">sax.nn.loss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.utils.html">sax.nn.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.saxtypes.html">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.utils.html">sax.utils module</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -235,18 +228,116 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="article-header-buttons">
 
 
-<a href="https://github.com/flaport/sax" target="_blank"
-   class="btn btn-sm btn-source-repository-button"
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/flaport/sax/HEAD/v2/gh/flaport/sax/main?urlpath=lab/tree/examples/06_additive_backend.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/flaport/sax/blob/main/examples/06_additive_backend.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
-   data-bs-placement="bottom" data-bs-toggle="tooltip"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
 <span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-
+<span class="btn__text-container">Repository</span>
 </a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/edit/main/examples/06_additive_backend.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fexamples/06_additive_backend.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
 
 
 
@@ -449,41 +540,10 @@ document.write(`
 </pre></div>
 </div>
 </div>
-<div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;in0&#39;, &#39;out1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;in1&#39;, &#39;out0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;in1&#39;, &#39;out1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out0&#39;, &#39;in0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out0&#39;, &#39;in1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out1&#39;, &#39;in0&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)],
- (&#39;out1&#39;, &#39;in1&#39;): [Array([200.], dtype=float64), Array([600.], dtype=float64)]}
-</pre></div>
-</div>
-</div>
 </div>
 </section>
 </section>
 
-    <script type="text/x-thebe-config">
-    {
-        requestKernel: true,
-        binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
-            ref: "master",
-        },
-        codeMirrorConfig: {
-            theme: "abcdef",
-            mode: "sax"
-        },
-        kernelOptions: {
-            name: "sax",
-            path: "./examples"
-        },
-        predefinedOutput: true
-    }
-    </script>
-    <script>kernelName = 'sax'</script>
 
                 </article>
               
@@ -557,7 +617,7 @@ By Floris Laporte
     
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023, Apache2.
       <br/>
     
   </p>

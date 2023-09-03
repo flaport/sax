@@ -1,0 +1,915 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+
+    <title>sax.saxtypes module &#8212; sax 0.10.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
+    <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
+    <script src="_static/jquery.js"></script>
+    <script src="_static/underscore.js"></script>
+    <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
+    <script src="_static/clipboard.min.js"></script>
+    <script src="_static/copybutton.js"></script>
+    <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'sax.saxtypes';</script>
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="sax.utils module" href="sax.utils.html" />
+    <link rel="prev" title="sax.patched module" href="sax.patched.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="examples/01_quick_start.html">SAX Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/03_circuit_from_yaml.html">Circuit from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/04_multimode_simulations.html">Multimode simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/05_thinfilm.html">Thin film optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/06_additive_backend.html">Additive Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="internals/01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/03_backends.html">Backends</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active has-children"><a class="reference internal" href="sax.html">sax package</a><input checked="" class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul class="current">
+<li class="toctree-l2 has-children"><a class="reference internal" href="sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.klu.html">sax.backends.klu module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.core.html">sax.nn.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.io.html">sax.nn.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.loss.html">sax.nn.loss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.utils.html">sax.nn.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.utils.html">sax.utils module</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/edit/main/docs/sax.saxtypes.rst" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fsax.saxtypes.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="_sources/sax.saxtypes.rst" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.rst</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>sax.saxtypes module</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.IntArray1D"><code class="docutils literal notranslate"><span class="pre">IntArray1D</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.FloatArray1D"><code class="docutils literal notranslate"><span class="pre">FloatArray1D</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.ComplexArray1D"><code class="docutils literal notranslate"><span class="pre">ComplexArray1D</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.IntArrayND"><code class="docutils literal notranslate"><span class="pre">IntArrayND</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.FloatArrayND"><code class="docutils literal notranslate"><span class="pre">FloatArrayND</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.ComplexArrayND"><code class="docutils literal notranslate"><span class="pre">ComplexArrayND</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.PortMap"><code class="docutils literal notranslate"><span class="pre">PortMap</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.PortCombination"><code class="docutils literal notranslate"><span class="pre">PortCombination</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SDict"><code class="docutils literal notranslate"><span class="pre">SDict</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SDense"><code class="docutils literal notranslate"><span class="pre">SDense</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SCoo"><code class="docutils literal notranslate"><span class="pre">SCoo</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.Settings"><code class="docutils literal notranslate"><span class="pre">Settings</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SType"><code class="docutils literal notranslate"><span class="pre">SType</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.ModelFactory"><code class="docutils literal notranslate"><span class="pre">ModelFactory</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_float"><code class="docutils literal notranslate"><span class="pre">is_float()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_complex"><code class="docutils literal notranslate"><span class="pre">is_complex()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_complex_float"><code class="docutils literal notranslate"><span class="pre">is_complex_float()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_sdict"><code class="docutils literal notranslate"><span class="pre">is_sdict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_scoo"><code class="docutils literal notranslate"><span class="pre">is_scoo()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_sdense"><code class="docutils literal notranslate"><span class="pre">is_sdense()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_model"><code class="docutils literal notranslate"><span class="pre">is_model()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_model_factory"><code class="docutils literal notranslate"><span class="pre">is_model_factory()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.validate_model"><code class="docutils literal notranslate"><span class="pre">validate_model()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_stype"><code class="docutils literal notranslate"><span class="pre">is_stype()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_singlemode"><code class="docutils literal notranslate"><span class="pre">is_singlemode()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_multimode"><code class="docutils literal notranslate"><span class="pre">is_multimode()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_mixedmode"><code class="docutils literal notranslate"><span class="pre">is_mixedmode()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.sdict"><code class="docutils literal notranslate"><span class="pre">sdict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.scoo"><code class="docutils literal notranslate"><span class="pre">scoo()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.sdense"><code class="docutils literal notranslate"><span class="pre">sdense()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.modelfactory"><code class="docutils literal notranslate"><span class="pre">modelfactory()</span></code></a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section id="module-sax.saxtypes">
+<span id="sax-saxtypes-module"></span><h1>sax.saxtypes module<a class="headerlink" href="#module-sax.saxtypes" title="Permalink to this heading">#</a></h1>
+<p>SAX Types and type coercions</p>
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.saxtypes.IntArray1D">
+<span class="sig-name descname"><span class="pre">IntArray1D</span></span><a class="headerlink" href="#sax.saxtypes.IntArray1D" title="Permalink to this definition">#</a></dt>
+<dd><p>One dimensional integer array</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.saxtypes.FloatArray1D">
+<span class="sig-name descname"><span class="pre">FloatArray1D</span></span><a class="headerlink" href="#sax.saxtypes.FloatArray1D" title="Permalink to this definition">#</a></dt>
+<dd><p>One dimensional float array</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.saxtypes.ComplexArray1D">
+<span class="sig-name descname"><span class="pre">ComplexArray1D</span></span><a class="headerlink" href="#sax.saxtypes.ComplexArray1D" title="Permalink to this definition">#</a></dt>
+<dd><p>One dimensional complex array</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.saxtypes.IntArrayND">
+<span class="sig-name descname"><span class="pre">IntArrayND</span></span><a class="headerlink" href="#sax.saxtypes.IntArrayND" title="Permalink to this definition">#</a></dt>
+<dd><p>N-dimensional integer array</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.saxtypes.FloatArrayND">
+<span class="sig-name descname"><span class="pre">FloatArrayND</span></span><a class="headerlink" href="#sax.saxtypes.FloatArrayND" title="Permalink to this definition">#</a></dt>
+<dd><p>N-dimensional float array</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.saxtypes.ComplexArrayND">
+<span class="sig-name descname"><span class="pre">ComplexArrayND</span></span><a class="headerlink" href="#sax.saxtypes.ComplexArrayND" title="Permalink to this definition">#</a></dt>
+<dd><p>N-dimensional complex array</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.PortMap">
+<span class="sig-name descname"><span class="pre">PortMap</span></span><a class="headerlink" href="#sax.saxtypes.PortMap" title="Permalink to this definition">#</a></dt>
+<dd><p>A mapping from a port name (str) to a port index (int)</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.PortCombination">
+<span class="sig-name descname"><span class="pre">PortCombination</span></span><a class="headerlink" href="#sax.saxtypes.PortCombination" title="Permalink to this definition">#</a></dt>
+<dd><p>A combination of two port names (str, str)</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.SDict">
+<span class="sig-name descname"><span class="pre">SDict</span></span><a class="headerlink" href="#sax.saxtypes.SDict" title="Permalink to this definition">#</a></dt>
+<dd><p>A mapping from a port combination to an S-parameter or an array of S-parameters</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">sdict</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mf">3.0</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.SDense">
+<span class="sig-name descname"><span class="pre">SDense</span></span><a class="headerlink" href="#sax.saxtypes.SDense" title="Permalink to this definition">#</a></dt>
+<dd><p>A dense S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array
+combined with a port map. If (N+2)-D array the S-matrix dimensions are the last two.</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Sd</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">9</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+<span class="n">port_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">sdense</span> <span class="o">=</span> <span class="n">Sd</span><span class="p">,</span> <span class="n">port_map</span>
+</pre></div>
+</div>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.SCoo">
+<span class="sig-name descname"><span class="pre">SCoo</span></span><a class="headerlink" href="#sax.saxtypes.SCoo" title="Permalink to this definition">#</a></dt>
+<dd><p>A sparse S-matrix in COO format (recommended for internal library use only)</p>
+<p>An <cite>SCoo</cite> is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map. The three arrays represent the input port indices [<cite>int</cite>], output port indices [<cite>int</cite>] and the S-matrix values [<cite>ComplexFloat</cite>] of the sparse matrix. The port map maps a port name [<cite>str</cite>] to a port index [<cite>int</cite>]. Only these four arrays <strong>together</strong> and in this specific <strong>order</strong> are considered a valid <cite>SCoo</cite> representation!</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">Si</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">3</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">Sj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+<span class="n">Sx</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">3.0</span><span class="p">,</span> <span class="mf">4.0</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">])</span>
+<span class="n">port_map</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">}</span>
+<span class="n">scoo</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SCoo</span> <span class="o">=</span> <span class="p">(</span><span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">port_map</span><span class="p">)</span>
+</pre></div>
+</div>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.Settings">
+<span class="sig-name descname"><span class="pre">Settings</span></span><a class="headerlink" href="#sax.saxtypes.Settings" title="Permalink to this definition">#</a></dt>
+<dd><p>A (possibly recursive) mapping from a setting name to a float or complex value or array</p>
+<p>Example:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">mzi_settings</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">Settings</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;wl&quot;</span><span class="p">:</span> <span class="mf">1.5</span><span class="p">,</span>  <span class="c1"># global settings</span>
+    <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;coupling&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">},</span>  <span class="c1"># settings for the left coupler</span>
+    <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;neff&quot;</span><span class="p">:</span> <span class="mf">3.4</span><span class="p">},</span>  <span class="c1"># settings for the top waveguide</span>
+    <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;coupling&quot;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span>  <span class="c1"># settings for the right coupler</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<a class="reference internal" href="#sax.saxtypes.Settings" title="sax.saxtypes.Settings"><code class="xref py py-class docutils literal notranslate"><span class="pre">Settings</span></code></a>, <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>]]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.SType">
+<span class="sig-name descname"><span class="pre">SType</span></span><a class="headerlink" href="#sax.saxtypes.SType" title="Permalink to this definition">#</a></dt>
+<dd><p>An SDict, SDense or SCOO</p>
+<p>alias of <code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.Model">
+<span class="sig-name descname"><span class="pre">Model</span></span><a class="headerlink" href="#sax.saxtypes.Model" title="Permalink to this definition">#</a></dt>
+<dd><p>A keyword-only function producing an SType</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code>[[…], <code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]]</p>
+</dd></dl>
+
+<dl class="py data">
+<dt class="sig sig-object py" id="sax.saxtypes.ModelFactory">
+<span class="sig-name descname"><span class="pre">ModelFactory</span></span><a class="headerlink" href="#sax.saxtypes.ModelFactory" title="Permalink to this definition">#</a></dt>
+<dd><p>A keyword-only function producing a Model</p>
+<p>alias of <code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code>[[…], <code class="xref py py-class docutils literal notranslate"><span class="pre">Callable</span></code>[[…], <code class="xref py py-obj docutils literal notranslate"><span class="pre">Union</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Int[Array,</span> <span class="pre">'</span> <span class="pre">dim']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]], <code class="xref py py-class docutils literal notranslate"><span class="pre">Tuple</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">']</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">Dict</span></code>[<code class="xref py py-class docutils literal notranslate"><span class="pre">str</span></code>, <code class="xref py py-class docutils literal notranslate"><span class="pre">int</span></code>]]]]]</p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_float">
+<span class="sig-name descname"><span class="pre">is_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_float" title="Permalink to this definition">#</a></dt>
+<dd><p>Check if an object is a <cite>Float</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_complex">
+<span class="sig-name descname"><span class="pre">is_complex</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_complex"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_complex" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an object is a <cite>ComplexFloat</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_complex_float">
+<span class="sig-name descname"><span class="pre">is_complex_float</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_complex_float"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_complex_float" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an object is either a <cite>ComplexFloat</cite> or a <cite>Float</cite></p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_sdict">
+<span class="sig-name descname"><span class="pre">is_sdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_sdict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_sdict" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an object is an <cite>SDict</cite> (a SAX S-dictionary)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_scoo">
+<span class="sig-name descname"><span class="pre">is_scoo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_scoo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_scoo" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an object is an <cite>SCoo</cite> (a SAX sparse S representation in COO-format)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_sdense">
+<span class="sig-name descname"><span class="pre">is_sdense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_sdense"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_sdense" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an object is an <cite>SDense</cite> (a SAX dense S-matrix representation)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>x</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_model">
+<span class="sig-name descname"><span class="pre">is_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_model" title="Permalink to this definition">#</a></dt>
+<dd><p>check if a callable is a <cite>Model</cite> (a callable returning an <cite>SType</cite>)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_model_factory">
+<span class="sig-name descname"><span class="pre">is_model_factory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_model_factory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_model_factory" title="Permalink to this definition">#</a></dt>
+<dd><p>check if a callable is a model function.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.validate_model">
+<span class="sig-name descname"><span class="pre">validate_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">model</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#validate_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.validate_model" title="Permalink to this definition">#</a></dt>
+<dd><p>Validate the parameters of a model</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>model</strong> (<em>Callable</em>) – </p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_stype">
+<span class="sig-name descname"><span class="pre">is_stype</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stype</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_stype"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_stype" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an object is an SDict, SCoo or SDense</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>stype</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_singlemode">
+<span class="sig-name descname"><span class="pre">is_singlemode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_singlemode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_singlemode" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an stype is single mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>S</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_multimode">
+<span class="sig-name descname"><span class="pre">is_multimode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_multimode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_multimode" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an stype is single mode</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>S</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.is_mixedmode">
+<span class="sig-name descname"><span class="pre">is_mixedmode</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#is_mixedmode"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.is_mixedmode" title="Permalink to this definition">#</a></dt>
+<dd><p>check if an stype is neither single mode nor multimode (hence invalid)</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>S</strong> (<em>Any</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>bool</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.sdict">
+<span class="sig-name descname"><span class="pre">sdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Model</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Model</span></span></span><a class="reference internal" href="_modules/sax/saxtypes.html#sdict"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.sdict" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">sdict</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SDict</span></span></span></dt>
+<dd><p>Convert an <cite>SCoo</cite> or <cite>SDense</cite> to <cite>SDict</cite></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.scoo">
+<span class="sig-name descname"><span class="pre">scoo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/sax/saxtypes.html#scoo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.scoo" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">scoo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SCoo</span></span></span></dt>
+<dd><p>Convert an <cite>SDict</cite> or <cite>SDense</cite> to <cite>SCoo</cite></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.sdense">
+<span class="sig-name descname"><span class="pre">sdense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">Callable</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">Callable</span></span></span><a class="reference internal" href="_modules/sax/saxtypes.html#sdense"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.sdense" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py">
+<span class="sig-name descname"><span class="pre">sdense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">S</span></span><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="n"><span class="pre">SType</span></span></em><span class="sig-paren">)</span> <span class="sig-return"><span class="sig-return-icon">&#x2192;</span> <span class="sig-return-typehint"><span class="pre">SDense</span></span></span></dt>
+<dd><p>Convert an <cite>SDict</cite> or <cite>SCoo</cite> to <cite>SDense</cite></p>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.saxtypes.modelfactory">
+<span class="sig-name descname"><span class="pre">modelfactory</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">func</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/saxtypes.html#modelfactory"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.saxtypes.modelfactory" title="Permalink to this definition">#</a></dt>
+<dd><p>Decorator that marks a function as <cite>ModelFactory</cite></p>
+</dd></dl>
+
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="sax.patched.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">sax.patched module</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="sax.utils.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">sax.utils module</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.IntArray1D"><code class="docutils literal notranslate"><span class="pre">IntArray1D</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.FloatArray1D"><code class="docutils literal notranslate"><span class="pre">FloatArray1D</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.ComplexArray1D"><code class="docutils literal notranslate"><span class="pre">ComplexArray1D</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.IntArrayND"><code class="docutils literal notranslate"><span class="pre">IntArrayND</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.FloatArrayND"><code class="docutils literal notranslate"><span class="pre">FloatArrayND</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.ComplexArrayND"><code class="docutils literal notranslate"><span class="pre">ComplexArrayND</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.PortMap"><code class="docutils literal notranslate"><span class="pre">PortMap</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.PortCombination"><code class="docutils literal notranslate"><span class="pre">PortCombination</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SDict"><code class="docutils literal notranslate"><span class="pre">SDict</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SDense"><code class="docutils literal notranslate"><span class="pre">SDense</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SCoo"><code class="docutils literal notranslate"><span class="pre">SCoo</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.Settings"><code class="docutils literal notranslate"><span class="pre">Settings</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.SType"><code class="docutils literal notranslate"><span class="pre">SType</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.ModelFactory"><code class="docutils literal notranslate"><span class="pre">ModelFactory</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_float"><code class="docutils literal notranslate"><span class="pre">is_float()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_complex"><code class="docutils literal notranslate"><span class="pre">is_complex()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_complex_float"><code class="docutils literal notranslate"><span class="pre">is_complex_float()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_sdict"><code class="docutils literal notranslate"><span class="pre">is_sdict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_scoo"><code class="docutils literal notranslate"><span class="pre">is_scoo()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_sdense"><code class="docutils literal notranslate"><span class="pre">is_sdense()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_model"><code class="docutils literal notranslate"><span class="pre">is_model()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_model_factory"><code class="docutils literal notranslate"><span class="pre">is_model_factory()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.validate_model"><code class="docutils literal notranslate"><span class="pre">validate_model()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_stype"><code class="docutils literal notranslate"><span class="pre">is_stype()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_singlemode"><code class="docutils literal notranslate"><span class="pre">is_singlemode()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_multimode"><code class="docutils literal notranslate"><span class="pre">is_multimode()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.is_mixedmode"><code class="docutils literal notranslate"><span class="pre">is_mixedmode()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.sdict"><code class="docutils literal notranslate"><span class="pre">sdict()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.scoo"><code class="docutils literal notranslate"><span class="pre">scoo()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.sdense"><code class="docutils literal notranslate"><span class="pre">sdense()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.saxtypes.modelfactory"><code class="docutils literal notranslate"><span class="pre">modelfactory()</span></code></a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Floris Laporte
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023, Apache2.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -7,9 +7,12 @@
 
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta content="metadata description" lang="en" name="description" xml:lang="en" />
+<meta content="Sphinx, MyST" name="keywords" />
+<meta content="en_US" property="og:locale" />
 
-    <title>SAX &#8212; sax</title>
+    <title>SAX &#8212; sax 0.10.0 documentation</title>
   
   
   
@@ -31,12 +34,11 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
@@ -47,24 +49,11 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'index';</script>
-    <link rel="canonical" href="https://flaport.github.io/sax/index.html" />
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
     <link rel="next" title="SAX Quick Start" href="examples/01_quick_start.html" />
@@ -102,8 +91,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -150,15 +139,11 @@ const thebe_selector_output = ".output, .cell_output"
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1 current active">
-                <a class="reference internal" href="#">
-                    SAX
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="examples/01_quick_start.html">SAX Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
@@ -168,29 +153,37 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="examples/06_additive_backend.html">Additive Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Core Lib</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="internals/00_typing.html">Typing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/02_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/04_multimode.html">Multimode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/05_models.html">Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/06a_netlist.html">Netlist</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/07_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/03_backends.html">Backends</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="internals/08_backends.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/08a_backends_filipsson_gunnar.html">Backend - Filipsson Gunnar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/08b_backends_klu.html">Backend - KLU</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/08c_backends_additive.html">Backend - additive</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="sax.html">sax package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Networks</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="internals/09_nn.html">Neural Networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09a_nn_loss.html">Loss</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09b_nn_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09c_nn_core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09d_nn_io.html">IO</a></li>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.core.html">sax.nn.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.io.html">sax.nn.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.loss.html">sax.nn.loss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.utils.html">sax.nn.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.saxtypes.html">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.utils.html">sax.utils module</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -234,18 +227,67 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="article-header-buttons">
 
 
-<a href="https://github.com/flaport/sax" target="_blank"
-   class="btn btn-sm btn-source-repository-button"
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
-   data-bs-placement="bottom" data-bs-toggle="tooltip"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
 <span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-
+<span class="btn__text-container">Repository</span>
 </a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/edit/main/docs/index.md" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Findex.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
 
 
 
@@ -260,7 +302,7 @@ const thebe_selector_output = ".output, .cell_output"
       
       
       
-      <li><a href="_sources/index.ipynb" target="_blank"
+      <li><a href="_sources/index.md" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -270,7 +312,7 @@ const thebe_selector_output = ".output, .cell_output"
 <span class="btn__icon-container">
   <i class="fas fa-file"></i>
   </span>
-<span class="btn__text-container">.ipynb</span>
+<span class="btn__text-container">.md</span>
 </a>
 </li>
       
@@ -352,14 +394,17 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">SAX</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a><ul class="nav section-nav flex-column">
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a></li>
+</ul>
+
             </nav>
         </div>
     </div>
@@ -375,7 +420,7 @@ document.write(`
 <blockquote>
 <div><p>S + Autograd + XLA</p>
 </div></blockquote>
-<p><img alt="" src="docs/images/sax.svg" /></p>
+<p><img alt="SAX LOGO" src="_static/img/logo.svg" /></p>
 <p>Autograd and XLA for S-parameters - a scatter parameter circuit simulator and
 optimizer for the frequency domain based on <a class="reference external" href="https://github.com/google/jax">JAX</a>.</p>
 <p>The simulator was developed for simulating Photonic Integrated Circuits but in fact is
@@ -387,22 +432,16 @@ get started with SAX as you only need functions and standard python dictionaries
 dive in…</p>
 <section id="quick-start">
 <h2>Quick Start<a class="headerlink" href="#quick-start" title="Permalink to this heading">#</a></h2>
-<p><a class="reference external" href="https://flaport.github.io/sax/quick_start">Full Quick Start page</a> -
+<p><a class="reference external" href="https://flaport.github.io/sax/examples/01_quick_start.html">Full Quick Start page</a> -
 <a class="reference external" href="https://flaport.github.io/sax">Documentation</a>.</p>
 <p>Let’s first import the SAX library, along with JAX and the JAX-version of numpy:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sax</span>
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 </pre></div>
 </div>
-</div>
-</div>
 <p>Define a model function for your component. A SAX model is just a function that returns
 an ‘S-dictionary’. For example a directional coupler:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">coupler</span><span class="p">(</span><span class="n">coupling</span><span class="o">=</span><span class="mf">0.5</span><span class="p">):</span>
     <span class="n">kappa</span> <span class="o">=</span> <span class="n">coupling</span><span class="o">**</span><span class="mf">0.5</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span><span class="o">-</span><span class="n">coupling</span><span class="p">)</span><span class="o">**</span><span class="mf">0.5</span>
@@ -417,11 +456,17 @@ an ‘S-dictionary’. For example a directional coupler:</p>
 <span class="n">coupler</span><span class="p">(</span><span class="n">coupling</span><span class="o">=</span><span class="mf">0.3</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): 0.8366600265340756,
+ (&#39;in0&#39;, &#39;out1&#39;): 0.5477225575051661j,
+ (&#39;in1&#39;, &#39;out0&#39;): 0.5477225575051661j,
+ (&#39;in1&#39;, &#39;out1&#39;): 0.8366600265340756,
+ (&#39;out0&#39;, &#39;in0&#39;): 0.8366600265340756,
+ (&#39;out1&#39;, &#39;in0&#39;): 0.5477225575051661j,
+ (&#39;out0&#39;, &#39;in1&#39;): 0.5477225575051661j,
+ (&#39;out1&#39;, &#39;in1&#39;): 0.8366600265340756}
+</pre></div>
 </div>
 <p>Or a waveguide:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">waveguide</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">wl0</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">neff</span><span class="o">=</span><span class="mf">2.34</span><span class="p">,</span> <span class="n">ng</span><span class="o">=</span><span class="mf">3.4</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">):</span>
     <span class="n">dwl</span> <span class="o">=</span> <span class="n">wl</span> <span class="o">-</span> <span class="n">wl0</span>
     <span class="n">dneff_dwl</span> <span class="o">=</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>
@@ -435,11 +480,10 @@ an ‘S-dictionary’. For example a directional coupler:</p>
 <span class="n">waveguide</span><span class="p">(</span><span class="n">length</span><span class="o">=</span><span class="mf">100.0</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;out0&#39;): 0.97953-0.2013j, (&#39;out0&#39;, &#39;in0&#39;): 0.97953-0.2013j}
+</pre></div>
 </div>
 <p>These component models can then be combined into a circuit:</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
     <span class="n">netlist</span><span class="o">=</span><span class="p">{</span>
         <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span>
@@ -464,11 +508,10 @@ an ‘S-dictionary’. For example a directional coupler:</p>
 <span class="nb">type</span><span class="p">(</span><span class="n">mzi</span><span class="p">)</span>
 </pre></div>
 </div>
-</div>
+<div class="highlight-none notranslate"><div class="highlight"><pre><span></span>function
+</pre></div>
 </div>
 <p>As you can see, the mzi we just created is just another component model function! To simulate it, call the mzi function with the (possibly nested) settings of its subcomponents. Global settings can be added to the ‘root’ of the circuit call and will be distributed over all subcomponents which have a parameter with the same name (e.g. ‘wl’):</p>
-<div class="cell docutils container">
-<div class="cell_input docutils container">
 <div class="highlight-python notranslate"><div class="highlight"><pre><span></span><span class="n">wl</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.53</span><span class="p">,</span> <span class="mf">1.57</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span>
 <span class="n">result</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="n">wl</span><span class="p">,</span> <span class="n">lft</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;coupling&#39;</span><span class="p">:</span> <span class="mf">0.3</span><span class="p">},</span> <span class="n">top</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;length&#39;</span><span class="p">:</span> <span class="mf">200.0</span><span class="p">},</span> <span class="n">rgt</span><span class="o">=</span><span class="p">{</span><span class="s1">&#39;coupling&#39;</span><span class="p">:</span> <span class="mf">0.8</span><span class="p">})</span>
 
@@ -481,59 +524,239 @@ an ‘S-dictionary’. For example a directional coupler:</p>
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
-</div>
-</div>
+<p><img alt="output" src="_static/img/output_10_0.png" /></p>
 <p>Those are the basics. For more info, check out the <strong>full</strong>
-<a class="reference external" href="https://flaport.github.io/sax/quick_start">SAX Quick Start page</a> or the rest of the <a class="reference external" href="https://flaport.github.io/sax">Documentation</a>.</p>
+<a class="reference external" href="https://flaport.github.io/sax/examples/01_quick_start.html">SAX Quick Start page</a> or the rest of the <a class="reference external" href="https://flaport.github.io/sax">Documentation</a>.</p>
 </section>
 <section id="installation">
 <h2>Installation<a class="headerlink" href="#installation" title="Permalink to this heading">#</a></h2>
-<section id="dependencies">
-<h3>Dependencies<a class="headerlink" href="#dependencies" title="Permalink to this heading">#</a></h3>
-<ul class="simple">
-<li><p><a class="reference external" href="https://github.com/google/jax">JAX &amp; JAXLIB</a>. Please read the JAX install instructions <a class="reference external" href="https://github.com/google/jax/#installation">here</a>.</p></li>
-</ul>
-</section>
-<section id="id1">
-<h3>Installation<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
-<div class="highlight-default notranslate"><div class="highlight"><pre><span></span><span class="n">pip</span> <span class="n">install</span> <span class="n">sax</span>
+<p>You can install SAX with pip:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span>sax
+</pre></div>
+</div>
+<p>If you want to be able to run all the example notebooks, you’ll need python&gt;=3.10 and
+you should install the development version of SAX:</p>
+<div class="highlight-sh notranslate"><div class="highlight"><pre><span></span>pip<span class="w"> </span>install<span class="w"> </span><span class="s1">&#39;sax[dev]&#39;</span>
 </pre></div>
 </div>
 </section>
-</section>
 <section id="license">
 <h2>License<a class="headerlink" href="#license" title="Permalink to this heading">#</a></h2>
-<p>Copyright © 2021, Floris Laporte, <span class="xref myst">Apache-2.0 License</span></p>
+<p>Copyright © 2023, Floris Laporte, <a class="reference external" href="https://github.com/flaport/sax/blob/master/LICENSE">Apache-2.0 License</a></p>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="current reference internal" href="#">SAX</a></li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="examples/01_quick_start.html">SAX Quick Start</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#environment-variables">Environment variables</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#imports">Imports</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#scatter-dictionaries">Scatter <em>dictionaries</em></a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#parametrized-models">Parametrized Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#circuit-models">Circuit Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#simulating-the-parametrized-mzi">Simulating the parametrized MZI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#optimization">Optimization</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/01_quick_start.html#mzi-chain">MZI Chain</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/02_all_pass_filter.html#schematic">Schematic</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/02_all_pass_filter.html#simulation-design-parameters">Simulation &amp; Design Parameters</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/02_all_pass_filter.html#frequency-domain-analytically">Frequency Domain Analytically</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/02_all_pass_filter.html#scatter-dictionaries">Scatter Dictionaries</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/03_circuit_from_yaml.html">Circuit from YAML</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/03_circuit_from_yaml.html#mzi">MZI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/04_multimode_simulations.html">Multimode simulations</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/04_multimode_simulations.html#ports-and-modes-per-port">Ports and modes per port</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/04_multimode_simulations.html#multimode-waveguide">Multimode waveguide</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/04_multimode_simulations.html#multimode-coupler">Multimode Coupler</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/04_multimode_simulations.html#multimode-mzi">Multimode MZI</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/05_thinfilm.html">Thin film optimization</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/05_thinfilm.html#dielectric-mirror-fabry-perot">Dielectric mirror Fabry-Pérot</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/05_thinfilm.html#general-fabry-perot-etalon">General Fabry-Pérot étalon</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/05_thinfilm.html#wavelength-dependent-fabry-perot-etalon">Wavelength-dependent Fabry-Pérot étalon</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/06_additive_backend.html">Additive Backend</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/06_additive_backend.html#parametrized-models">Parametrized Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/06_additive_backend.html#circuit-with-additive-backend">Circuit with additive backend</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="examples/07_layout_aware.html#simple-mzi-layout">Simple MZI Layout</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/07_layout_aware.html#simulate-mzi">Simulate MZI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/07_layout_aware.html#waveguide-model">Waveguide Model</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/07_layout_aware.html#simulate-mzi-again">Simulate MZI again</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/07_layout_aware.html#optimize-mzi">Optimize MZI</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/07_layout_aware.html#layout-aware-monte-carlo">Layout-aware Monte Carlo</a></li>
+<li class="toctree-l2"><a class="reference internal" href="examples/07_layout_aware.html#compact-mzi">Compact MZI</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="internals/01_models.html">Models and Model Factories</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internals/01_models.html#simple-models">Simple Models</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals/01_models.html#model-factories">Model Factories</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals/01_models.html#all-models">All Models</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/03_backends.html">Backends</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="internals/03_backends.html#introduction">Introduction</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals/03_backends.html#example">Example</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals/03_backends.html#filipsson-gunnar-backend">Filipsson-Gunnar Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals/03_backends.html#klu-backend">KLU Backend</a></li>
+<li class="toctree-l2"><a class="reference internal" href="internals/03_backends.html#additive-backend">Additive Backend</a></li>
+</ul>
+</li>
+</ul>
+</div>
+<div class="toctree-wrapper compound">
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="sax.html">sax package</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sax.html#subpackages">Subpackages</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.html">sax.backends package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.backends.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.backends.html#module-sax.backends">Module contents</a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.html">sax.nn package</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.nn.html#submodules">Submodules</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.nn.html#module-sax.nn">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sax.html#submodules">Submodules</a><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.circuit.html">sax.circuit module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.circuit.html#sax.circuit.CircuitInfo"><code class="docutils literal notranslate"><span class="pre">CircuitInfo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.circuit.html#sax.circuit.circuit"><code class="docutils literal notranslate"><span class="pre">circuit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.circuit.html#sax.circuit.get_required_circuit_models"><code class="docutils literal notranslate"><span class="pre">get_required_circuit_models()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sax.models.html">sax.models module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.models.html#sax.models.straight"><code class="docutils literal notranslate"><span class="pre">straight()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.models.html#sax.models.coupler"><code class="docutils literal notranslate"><span class="pre">coupler()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.models.html#sax.models.unitary"><code class="docutils literal notranslate"><span class="pre">unitary()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.models.html#sax.models.copier"><code class="docutils literal notranslate"><span class="pre">copier()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.models.html#sax.models.passthru"><code class="docutils literal notranslate"><span class="pre">passthru()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.models.html#sax.models.get_models"><code class="docutils literal notranslate"><span class="pre">get_models()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sax.multimode.html">sax.multimode module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.multimode.html#sax.multimode.multimode"><code class="docutils literal notranslate"><span class="pre">multimode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.multimode.html#sax.multimode.singlemode"><code class="docutils literal notranslate"><span class="pre">singlemode()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sax.netlist.html">sax.netlist module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.netlist"><code class="docutils literal notranslate"><span class="pre">netlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Component"><code class="docutils literal notranslate"><span class="pre">Component</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.PortEnum"><code class="docutils literal notranslate"><span class="pre">PortEnum</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Placement"><code class="docutils literal notranslate"><span class="pre">Placement</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Netlist"><code class="docutils literal notranslate"><span class="pre">Netlist</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.RecursiveNetlist"><code class="docutils literal notranslate"><span class="pre">RecursiveNetlist</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict"><code class="docutils literal notranslate"><span class="pre">NetlistDict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.load_netlist"><code class="docutils literal notranslate"><span class="pre">load_netlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.load_recursive_netlist"><code class="docutils literal notranslate"><span class="pre">load_recursive_netlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.get_netlist_instances_by_prefix"><code class="docutils literal notranslate"><span class="pre">get_netlist_instances_by_prefix()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.get_component_instances"><code class="docutils literal notranslate"><span class="pre">get_component_instances()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.remove_unused_instances"><code class="docutils literal notranslate"><span class="pre">remove_unused_instances()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.saxtypes.html">sax.saxtypes module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.IntArray1D"><code class="docutils literal notranslate"><span class="pre">IntArray1D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.FloatArray1D"><code class="docutils literal notranslate"><span class="pre">FloatArray1D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.ComplexArray1D"><code class="docutils literal notranslate"><span class="pre">ComplexArray1D</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.IntArrayND"><code class="docutils literal notranslate"><span class="pre">IntArrayND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.FloatArrayND"><code class="docutils literal notranslate"><span class="pre">FloatArrayND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.ComplexArrayND"><code class="docutils literal notranslate"><span class="pre">ComplexArrayND</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.PortMap"><code class="docutils literal notranslate"><span class="pre">PortMap</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.PortCombination"><code class="docutils literal notranslate"><span class="pre">PortCombination</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.SDict"><code class="docutils literal notranslate"><span class="pre">SDict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.SDense"><code class="docutils literal notranslate"><span class="pre">SDense</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.SCoo"><code class="docutils literal notranslate"><span class="pre">SCoo</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.Settings"><code class="docutils literal notranslate"><span class="pre">Settings</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.SType"><code class="docutils literal notranslate"><span class="pre">SType</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.Model"><code class="docutils literal notranslate"><span class="pre">Model</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.ModelFactory"><code class="docutils literal notranslate"><span class="pre">ModelFactory</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_float"><code class="docutils literal notranslate"><span class="pre">is_float()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_complex"><code class="docutils literal notranslate"><span class="pre">is_complex()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_complex_float"><code class="docutils literal notranslate"><span class="pre">is_complex_float()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_sdict"><code class="docutils literal notranslate"><span class="pre">is_sdict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_scoo"><code class="docutils literal notranslate"><span class="pre">is_scoo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_sdense"><code class="docutils literal notranslate"><span class="pre">is_sdense()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_model"><code class="docutils literal notranslate"><span class="pre">is_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_model_factory"><code class="docutils literal notranslate"><span class="pre">is_model_factory()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.validate_model"><code class="docutils literal notranslate"><span class="pre">validate_model()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_stype"><code class="docutils literal notranslate"><span class="pre">is_stype()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_singlemode"><code class="docutils literal notranslate"><span class="pre">is_singlemode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_multimode"><code class="docutils literal notranslate"><span class="pre">is_multimode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.is_mixedmode"><code class="docutils literal notranslate"><span class="pre">is_mixedmode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.sdict"><code class="docutils literal notranslate"><span class="pre">sdict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.scoo"><code class="docutils literal notranslate"><span class="pre">scoo()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.sdense"><code class="docutils literal notranslate"><span class="pre">sdense()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.saxtypes.html#sax.saxtypes.modelfactory"><code class="docutils literal notranslate"><span class="pre">modelfactory()</span></code></a></li>
+</ul>
+</li>
+<li class="toctree-l3"><a class="reference internal" href="sax.utils.html">sax.utils module</a><ul>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.block_diag"><code class="docutils literal notranslate"><span class="pre">block_diag()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.clean_string"><code class="docutils literal notranslate"><span class="pre">clean_string()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.copy_settings"><code class="docutils literal notranslate"><span class="pre">copy_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.validate_settings"><code class="docutils literal notranslate"><span class="pre">validate_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.try_float"><code class="docutils literal notranslate"><span class="pre">try_float()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.flatten_dict"><code class="docutils literal notranslate"><span class="pre">flatten_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.unflatten_dict"><code class="docutils literal notranslate"><span class="pre">unflatten_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.get_ports"><code class="docutils literal notranslate"><span class="pre">get_ports()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.get_port_combinations"><code class="docutils literal notranslate"><span class="pre">get_port_combinations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.get_settings"><code class="docutils literal notranslate"><span class="pre">get_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.grouped_interp"><code class="docutils literal notranslate"><span class="pre">grouped_interp()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.merge_dicts"><code class="docutils literal notranslate"><span class="pre">merge_dicts()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.mode_combinations"><code class="docutils literal notranslate"><span class="pre">mode_combinations()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.reciprocal"><code class="docutils literal notranslate"><span class="pre">reciprocal()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.rename_params"><code class="docutils literal notranslate"><span class="pre">rename_params()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.rename_ports"><code class="docutils literal notranslate"><span class="pre">rename_ports()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.update_settings"><code class="docutils literal notranslate"><span class="pre">update_settings()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.validate_not_mixedmode"><code class="docutils literal notranslate"><span class="pre">validate_not_mixedmode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.validate_multimode"><code class="docutils literal notranslate"><span class="pre">validate_multimode()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.validate_sdict"><code class="docutils literal notranslate"><span class="pre">validate_sdict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.get_inputs_outputs"><code class="docutils literal notranslate"><span class="pre">get_inputs_outputs()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.hash_dict"><code class="docutils literal notranslate"><span class="pre">hash_dict()</span></code></a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sax.html#module-sax">Module contents</a></li>
+</ul>
+</li>
+</ul>
+</div>
 </section>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
-<div class="toctree-wrapper compound">
-</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="other">
+<h1>Other<a class="headerlink" href="#other" title="Permalink to this heading">#</a></h1>
+<ul class="simple">
+<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
+<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
+<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
+</ul>
 </section>
 
-    <script type="text/x-thebe-config">
-    {
-        requestKernel: true,
-        binderOptions: {
-            repo: "binder-examples/jupyter-stacks-datascience",
-            ref: "master",
-        },
-        codeMirrorConfig: {
-            theme: "abcdef",
-            mode: "sax"
-        },
-        kernelOptions: {
-            name: "sax",
-            path: "./."
-        },
-        predefinedOutput: true
-    }
-    </script>
-    <script>kernelName = 'sax'</script>
 
                 </article>
               
@@ -573,14 +796,17 @@ an ‘S-dictionary’. For example a directional coupler:</p>
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">SAX</a><ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#quick-start">Quick Start</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a><ul class="nav section-nav flex-column">
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#dependencies">Dependencies</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#installation">Installation</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a><ul class="nav section-nav flex-column">
 </ul>
 </li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#license">License</a></li>
 </ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a></li>
+</ul>
+
   </nav></div>
 
 </div></div>
@@ -603,7 +829,7 @@ By Floris Laporte
     
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023, Apache2.
       <br/>
     
   </p>

@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Index &#8212; sax</title>
+    <title>Index &#8212; sax 0.10.0 documentation</title>
   
   
   
@@ -30,12 +30,11 @@
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
-    <link rel="stylesheet" type="text/css" href="_static/togglebutton.css" />
-    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
     <link rel="stylesheet" type="text/css" href="_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
-    <link rel="stylesheet" type="text/css" href="_static/sphinx-thebe.css" />
-    <link rel="stylesheet" type="text/css" href="_static/css/custom.css" />
-    <link rel="stylesheet" type="text/css" href="_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+    <link rel="stylesheet" type="text/css" href="_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
   <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
@@ -46,24 +45,11 @@
     <script src="_static/underscore.js"></script>
     <script src="_static/_sphinx_javascript_frameworks_compat.js"></script>
     <script src="_static/doctools.js"></script>
+    <script src="_static/sphinx_highlight.js"></script>
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>let toggleHintShow = 'Click to show';</script>
-    <script>let toggleHintHide = 'Click to hide';</script>
-    <script>let toggleOpenOnPrint = 'true';</script>
-    <script src="_static/togglebutton.js"></script>
-    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
-    <script src="_static/design-tabs.js"></script>
-    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
-const thebe_selector = ".thebe,.cell"
-const thebe_selector_input = "pre"
-const thebe_selector_output = ".output, .cell_output"
-</script>
-    <script async="async" src="_static/sphinx-thebe.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'genindex';</script>
-    <link rel="canonical" href="https://flaport.github.io/sax/genindex.html" />
-    <link rel="shortcut icon" href="_static/favicon.ico"/>
     <link rel="index" title="Index" href="#" />
     <link rel="search" title="Search" href="search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -100,8 +86,8 @@ const thebe_selector_output = ".output, .cell_output"
          class="form-control"
          name="q"
          id="search-input"
-         placeholder="Search this book..."
-         aria-label="Search this book..."
+         placeholder="Search..."
+         aria-label="Search..."
          autocomplete="off"
          autocorrect="off"
          autocapitalize="off"
@@ -148,15 +134,11 @@ const thebe_selector_output = ".output, .cell_output"
 </a></div>
         <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
     <div class="bd-toc-item navbar-nav active">
-        
-        <ul class="nav bd-sidenav bd-sidenav__home-link">
-            <li class="toctree-l1">
-                <a class="reference internal" href="index.html">
-                    SAX
-                </a>
-            </li>
-        </ul>
-        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="index.html">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
 <ul class="nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="examples/01_quick_start.html">SAX Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
@@ -166,29 +148,37 @@ const thebe_selector_output = ".output, .cell_output"
 <li class="toctree-l1"><a class="reference internal" href="examples/06_additive_backend.html">Additive Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Core Lib</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="internals/00_typing.html">Typing</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/02_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/04_multimode.html">Multimode</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/05_models.html">Models</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/06a_netlist.html">Netlist</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/07_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="internals/03_backends.html">Backends</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Backends</span></p>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="internals/08_backends.html">Backend</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/08a_backends_filipsson_gunnar.html">Backend - Filipsson Gunnar</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/08b_backends_klu.html">Backend - KLU</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/08c_backends_additive.html">Backend - additive</a></li>
+<li class="toctree-l1 has-children"><a class="reference internal" href="sax.html">sax package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
-<p aria-level="2" class="caption" role="heading"><span class="caption-text">Neural Networks</span></p>
-<ul class="nav bd-sidenav">
-<li class="toctree-l1"><a class="reference internal" href="internals/09_nn.html">Neural Networks</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09a_nn_loss.html">Loss</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09b_nn_utils.html">Utils</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09c_nn_core.html">Core</a></li>
-<li class="toctree-l1"><a class="reference internal" href="internals/09d_nn_io.html">IO</a></li>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.core.html">sax.nn.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.io.html">sax.nn.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.loss.html">sax.nn.loss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="sax.nn.utils.html">sax.nn.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.saxtypes.html">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="sax.utils.html">sax.utils module</a></li>
+</ul>
+</li>
 </ul>
 
     </div>
@@ -232,18 +222,50 @@ const thebe_selector_output = ".output, .cell_output"
 <div class="article-header-buttons">
 
 
-<a href="https://github.com/flaport/sax" target="_blank"
-   class="btn btn-sm btn-source-repository-button"
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
    title="Source repository"
-   data-bs-placement="bottom" data-bs-toggle="tooltip"
+   data-bs-placement="left" data-bs-toggle="tooltip"
 >
   
 
 <span class="btn__icon-container">
   <i class="fab fa-github"></i>
   </span>
-
+<span class="btn__text-container">Repository</span>
 </a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fgenindex.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
 
 
 
@@ -317,6 +339,7 @@ document.write(`
  | <a href="#G"><strong>G</strong></a>
  | <a href="#H"><strong>H</strong></a>
  | <a href="#I"><strong>I</strong></a>
+ | <a href="#J"><strong>J</strong></a>
  | <a href="#L"><strong>L</strong></a>
  | <a href="#M"><strong>M</strong></a>
  | <a href="#N"><strong>N</strong></a>
@@ -326,28 +349,54 @@ document.write(`
  | <a href="#T"><strong>T</strong></a>
  | <a href="#U"><strong>U</strong></a>
  | <a href="#V"><strong>V</strong></a>
+ | <a href="#X"><strong>X</strong></a>
+ | <a href="#Y"><strong>Y</strong></a>
  
 </div>
 <h2 id="A">A</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/08_backends.html#sax.backends.__init__.analyze_circuit">analyze_circuit() (in module sax.backends.__init__)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Component.Config.allow_mutation">allow_mutation (Component.Config attribute)</a>
+
+      <ul>
+        <li><a href="sax.netlist.html#sax.netlist.Netlist.Config.allow_mutation">(Netlist.Config attribute)</a>
 </li>
-      <li><a href="internals/08c_backends_additive.html#sax.backends.additive.analyze_circuit_additive">analyze_circuit_additive() (in module sax.backends.additive)</a>
+        <li><a href="sax.netlist.html#sax.netlist.Placement.Config.allow_mutation">(Placement.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.RecursiveNetlist.Config.allow_mutation">(RecursiveNetlist.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.Route.Config.allow_mutation">(Route.Config attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="internals/03_backends.html#sax.backends.analyze_circuit">analyze_circuit() (in module sax.backends)</a>, <a href="sax.backends.html#sax.backends.analyze_circuit">[1]</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/08a_backends_filipsson_gunnar.html#sax.backends.filipsson_gunnar.analyze_circuit_fg">analyze_circuit_fg() (in module sax.backends.filipsson_gunnar)</a>
+      <li><a href="internals/03_backends.html#sax.backends.analyze_circuit_additive">analyze_circuit_additive() (in module sax.backends)</a>
+
+      <ul>
+        <li><a href="sax.backends.additive.html#sax.backends.additive.analyze_circuit_additive">(in module sax.backends.additive)</a>
 </li>
-      <li><a href="internals/08b_backends_klu.html#sax.backends.klu.analyze_circuit_klu">analyze_circuit_klu() (in module sax.backends.klu)</a>
+      </ul></li>
+      <li><a href="internals/03_backends.html#sax.backends.analyze_circuit_fg">analyze_circuit_fg() (in module sax.backends)</a>
+
+      <ul>
+        <li><a href="sax.backends.filipsson_gunnar.html#sax.backends.filipsson_gunnar.analyze_circuit_fg">(in module sax.backends.filipsson_gunnar)</a>
 </li>
+      </ul></li>
+      <li><a href="internals/03_backends.html#sax.backends.analyze_circuit_klu">analyze_circuit_klu() (in module sax.backends)</a>
+
+      <ul>
+        <li><a href="sax.backends.klu.html#sax.backends.klu.analyze_circuit_klu">(in module sax.backends.klu)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="B">B</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/02_utils.html#sax.utils.block_diag">block_diag() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.block_diag">block_diag() (in module sax.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -355,21 +404,53 @@ document.write(`
 <h2 id="C">C</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09b_nn_utils.html#sax.nn.utils.cartesian_product">cartesian_product() (in module sax.nn.utils)</a>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.cartesian_product">cartesian_product() (in module sax.nn.utils)</a>
 </li>
-      <li><a href="internals/07_circuit.html#sax.circuit.circuit">circuit() (in module sax.circuit)</a>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.cc">cc (PortEnum attribute)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.clean_string">clean_string() (in module sax.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.ce">ce (PortEnum attribute)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.center">center (PortEnum attribute)</a>
+</li>
+      <li><a href="sax.circuit.html#sax.circuit.circuit">circuit() (in module sax.circuit)</a>
+</li>
+      <li><a href="sax.circuit.html#sax.circuit.CircuitInfo">CircuitInfo (class in sax.circuit)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.clean_connection_string">clean_connection_string() (Netlist class method)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.clean_instance_string">clean_instance_string() (Netlist static method)</a>
+</li>
+      <li><a href="sax.utils.html#sax.utils.clean_string">clean_string() (in module sax.utils)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.coerce_different_type_instance_into_component_model">coerce_different_type_instance_into_component_model() (Netlist class method)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.ComplexArray1D">ComplexArray1D (in module sax.saxtypes)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/05_models.html#sax.models.copier">copier() (in module sax.models)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.ComplexArrayND">ComplexArrayND (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.copy_settings">copy_settings() (in module sax.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Component">Component (class in sax.netlist)</a>
 </li>
-      <li><a href="internals/05_models.html#sax.models.coupler">coupler() (in module sax.models)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Component.component">component (Component attribute)</a>
 </li>
-      <li><a href="internals/07_circuit.html#sax.circuit.create_dag">create_dag() (in module sax.circuit)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Component.Config">Component.Config (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.connections">connections (Netlist attribute)</a>
+
+      <ul>
+        <li><a href="sax.netlist.html#sax.netlist.NetlistDict.connections">(NetlistDict attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="internals/03_backends.html#klujax.coo_mul_vec">coo_mul_vec() (in module klujax)</a>
+</li>
+      <li><a href="sax.models.html#sax.models.copier">copier() (in module sax.models)</a>
+</li>
+      <li><a href="sax.utils.html#sax.utils.copy_settings">copy_settings() (in module sax.utils)</a>
+</li>
+      <li><a href="sax.models.html#sax.models.coupler">coupler() (in module sax.models)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.cw">cw (PortEnum attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -377,21 +458,17 @@ document.write(`
 <h2 id="D">D</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09b_nn_utils.html#sax.nn.utils.denormalize">denormalize() (in module sax.nn.utils)</a>
+      <li><a href="sax.circuit.html#sax.circuit.CircuitInfo.dag">dag (CircuitInfo attribute)</a>
 </li>
-      <li><a href="internals/09c_nn_core.html#sax.nn.core.dense">dense() (in module sax.nn.core)</a>
-</li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.docs_copy_dir">docs_copy_dir() (in module sax.make_docs)</a>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.denormalize">denormalize() (in module sax.nn.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.docs_copy_nb">docs_copy_nb() (in module sax.make_docs)</a>
+      <li><a href="sax.nn.core.html#sax.nn.core.dense">dense() (in module sax.nn.core)</a>
 </li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.docs_copy_simulations">docs_copy_simulations() (in module sax.make_docs)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.dx">dx (Placement attribute)</a>
 </li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.docs_path">docs_path() (in module sax.make_docs)</a>
-</li>
-      <li><a href="internals/07_circuit.html#sax.circuit.draw_dag">draw_dag() (in module sax.circuit)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.dy">dy (Placement attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -399,77 +476,101 @@ document.write(`
 <h2 id="E">E</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/08_backends.html#sax.backends.__init__.evaluate_circuit">evaluate_circuit() (in module sax.backends.__init__)</a>
+      <li><a href="internals/03_backends.html#sax.backends.evaluate_circuit">evaluate_circuit() (in module sax.backends)</a>, <a href="sax.backends.html#sax.backends.evaluate_circuit">[1]</a>
 </li>
-      <li><a href="internals/08c_backends_additive.html#sax.backends.additive.evaluate_circuit_additive">evaluate_circuit_additive() (in module sax.backends.additive)</a>
+      <li><a href="internals/03_backends.html#sax.backends.evaluate_circuit_additive">evaluate_circuit_additive() (in module sax.backends)</a>
+
+      <ul>
+        <li><a href="sax.backends.additive.html#sax.backends.additive.evaluate_circuit_additive">(in module sax.backends.additive)</a>
 </li>
+      </ul></li>
+      <li><a href="internals/03_backends.html#sax.backends.evaluate_circuit_fg">evaluate_circuit_fg() (in module sax.backends)</a>
+
+      <ul>
+        <li><a href="sax.backends.filipsson_gunnar.html#sax.backends.filipsson_gunnar.evaluate_circuit_fg">(in module sax.backends.filipsson_gunnar)</a>
+</li>
+      </ul></li>
+      <li><a href="internals/03_backends.html#sax.backends.evaluate_circuit_klu">evaluate_circuit_klu() (in module sax.backends)</a>
+
+      <ul>
+        <li><a href="sax.backends.klu.html#sax.backends.klu.evaluate_circuit_klu">(in module sax.backends.klu)</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/08a_backends_filipsson_gunnar.html#sax.backends.filipsson_gunnar.evaluate_circuit_fg">evaluate_circuit_fg() (in module sax.backends.filipsson_gunnar)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Component.Config.extra">extra (Component.Config attribute)</a>
+
+      <ul>
+        <li><a href="sax.netlist.html#sax.netlist.Netlist.Config.extra">(Netlist.Config attribute)</a>
 </li>
-      <li><a href="internals/08b_backends_klu.html#sax.backends.klu.evaluate_circuit_klu">evaluate_circuit_klu() (in module sax.backends.klu)</a>
+        <li><a href="sax.netlist.html#sax.netlist.Placement.Config.extra">(Placement.Config attribute)</a>
 </li>
+        <li><a href="sax.netlist.html#sax.netlist.RecursiveNetlist.Config.extra">(RecursiveNetlist.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.Route.Config.extra">(Route.Config attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="F">F</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/07_circuit.html#sax.circuit.find_leaves">find_leaves() (in module sax.circuit)</a>
+      <li><a href="sax.utils.html#sax.utils.flatten_dict">flatten_dict() (in module sax.utils)</a>
 </li>
-  </ul></td>
-  <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/07_circuit.html#sax.circuit.find_root">find_root() (in module sax.circuit)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.FloatArray1D">FloatArray1D (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.flatten_dict">flatten_dict() (in module sax.utils)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.FloatArrayND">FloatArrayND (in module sax.saxtypes)</a>
 </li>
+      <li><a href="sax.netlist.html#sax.netlist.Component.Config.frozen">frozen (Component.Config attribute)</a>
+
+      <ul>
+        <li><a href="sax.netlist.html#sax.netlist.Netlist.Config.frozen">(Netlist.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.Placement.Config.frozen">(Placement.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.RecursiveNetlist.Config.frozen">(RecursiveNetlist.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.Route.Config.frozen">(Route.Config attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="G">G</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09c_nn_core.html#sax.nn.core.generate_dense_weights">generate_dense_weights() (in module sax.nn.core)</a>
+      <li><a href="sax.nn.core.html#sax.nn.core.generate_dense_weights">generate_dense_weights() (in module sax.nn.core)</a>
 </li>
-      <li><a href="internals/09d_nn_io.html#sax.nn.io.get_available_sizes">get_available_sizes() (in module sax.nn.io)</a>
+      <li><a href="sax.nn.io.html#sax.nn.io.get_available_sizes">get_available_sizes() (in module sax.nn.io)</a>
 </li>
-      <li><a href="internals/06a_netlist.html#sax.netlist.get_component_instances">get_component_instances() (in module sax.netlist)</a>, <a href="internals/06a_netlist.html#sax.netlist.get_component_instances">[1]</a>
+      <li><a href="sax.netlist.html#sax.netlist.get_component_instances">get_component_instances() (in module sax.netlist)</a>
 </li>
-      <li><a href="internals/09d_nn_io.html#sax.nn.io.get_dense_weights_path">get_dense_weights_path() (in module sax.nn.io)</a>
+      <li><a href="sax.nn.io.html#sax.nn.io.get_dense_weights_path">get_dense_weights_path() (in module sax.nn.io)</a>
 </li>
-      <li><a href="internals/09b_nn_utils.html#sax.nn.utils.get_df_columns">get_df_columns() (in module sax.nn.utils)</a>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.get_df_columns">get_df_columns() (in module sax.nn.utils)</a>
 </li>
-      <li><a href="internals/08b_backends_klu.html#sax.backends.klu.get_dummy_instances">get_dummy_instances() (in module sax.backends.klu)</a>
+      <li><a href="sax.utils.html#sax.utils.get_inputs_outputs">get_inputs_outputs() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.get_inputs_outputs">get_inputs_outputs() (in module sax.utils)</a>
-</li>
-      <li><a href="internals/08b_backends_klu.html#sax.backends.klu.get_instance_ports">get_instance_ports() (in module sax.backends.klu)</a>
-</li>
-      <li><a href="internals/05_models.html#sax.models.get_models">get_models() (in module sax.models)</a>
-</li>
-      <li><a href="internals/06a_netlist.html#sax.netlist.get_netlist_instances_by_prefix">get_netlist_instances_by_prefix() (in module sax.netlist)</a>, <a href="internals/06a_netlist.html#sax.netlist.get_netlist_instances_by_prefix">[1]</a>
+      <li><a href="sax.models.html#sax.models.get_models">get_models() (in module sax.models)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09d_nn_io.html#sax.nn.io.get_norm_path">get_norm_path() (in module sax.nn.io)</a>
+      <li><a href="sax.netlist.html#sax.netlist.get_netlist_instances_by_prefix">get_netlist_instances_by_prefix() (in module sax.netlist)</a>
 </li>
-      <li><a href="internals/09b_nn_utils.html#sax.nn.utils.get_normalization">get_normalization() (in module sax.nn.utils)</a>
+      <li><a href="sax.nn.io.html#sax.nn.io.get_norm_path">get_norm_path() (in module sax.nn.io)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.get_port_combinations">get_port_combinations() (in module sax.utils)</a>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.get_normalization">get_normalization() (in module sax.nn.utils)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.get_ports">get_ports() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.get_port_combinations">get_port_combinations() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/08c_backends_additive.html#sax.backends.additive.get_possible_paths">get_possible_paths() (in module sax.backends.additive)</a>
+      <li><a href="sax.utils.html#sax.utils.get_ports">get_ports() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/07_circuit.html#sax.circuit.get_required_circuit_models">get_required_circuit_models() (in module sax.circuit)</a>
+      <li><a href="sax.circuit.html#sax.circuit.get_required_circuit_models">get_required_circuit_models() (in module sax.circuit)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.get_settings">get_settings() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.get_settings">get_settings() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.get_toc_part">get_toc_part() (in module sax.make_docs)</a>
-</li>
-      <li><a href="internals/08c_backends_additive.html#sax.backends.additive.graph_edges">graph_edges() (in module sax.backends.additive)</a>
-</li>
-      <li><a href="internals/02_utils.html#sax.utils.grouped_interp">grouped_interp() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.grouped_interp">grouped_interp() (in module sax.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -477,11 +578,11 @@ document.write(`
 <h2 id="H">H</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/02_utils.html#sax.utils.hash_dict">hash_dict() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.hash_dict">hash_dict() (in module sax.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09a_nn_loss.html#sax.nn.loss.huber_loss">huber_loss() (in module sax.nn.loss)</a>
+      <li><a href="sax.nn.loss.html#sax.nn.loss.huber_loss">huber_loss() (in module sax.nn.loss)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -489,55 +590,77 @@ document.write(`
 <h2 id="I">I</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/00_typing.html#sax.typing_.is_complex">is_complex() (in module sax.typing_)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.instances">instances (Netlist attribute)</a>
+
+      <ul>
+        <li><a href="sax.netlist.html#sax.netlist.NetlistDict.instances">(NetlistDict attribute)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_complex_float">is_complex_float() (in module sax.typing_)</a>
+      </ul></li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.IntArray1D">IntArray1D (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_float">is_float() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.IntArrayND">IntArrayND (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_mixedmode">is_mixedmode() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_complex">is_complex() (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_model">is_model() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_complex_float">is_complex_float() (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_model_factory">is_model_factory() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_float">is_float() (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_mixedmode">is_mixedmode() (in module sax.saxtypes)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/00_typing.html#sax.typing_.is_multimode">is_multimode() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_model">is_model() (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_scoo">is_scoo() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_model_factory">is_model_factory() (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_sdense">is_sdense() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_multimode">is_multimode() (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_sdict">is_sdict() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_scoo">is_scoo() (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_singlemode">is_singlemode() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_sdense">is_sdense() (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.is_stype">is_stype() (in module sax.typing_)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_sdict">is_sdict() (in module sax.saxtypes)</a>
 </li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_singlemode">is_singlemode() (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.is_stype">is_stype() (in module sax.saxtypes)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="J">J</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sax.netlist.html#sax.netlist.Component.Config.json_encoders">json_encoders (Component.Config attribute)</a>
+
+      <ul>
+        <li><a href="sax.netlist.html#sax.netlist.Netlist.Config.json_encoders">(Netlist.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.Placement.Config.json_encoders">(Placement.Config attribute)</a>
+</li>
+        <li><a href="sax.netlist.html#sax.netlist.Route.Config.json_encoders">(Route.Config attribute)</a>
+</li>
+      </ul></li>
   </ul></td>
 </tr></table>
 
 <h2 id="L">L</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09a_nn_loss.html#sax.nn.loss.l2_reg">l2_reg() (in module sax.nn.loss)</a>
+      <li><a href="sax.nn.loss.html#sax.nn.loss.l2_reg">l2_reg() (in module sax.nn.loss)</a>
 </li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.list_notebooks">list_notebooks() (in module sax.make_docs)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Route.links">links (Route attribute)</a>
 </li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.list_zips">list_zips() (in module sax.make_docs)</a>
-</li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.load_nb">load_nb() (in module sax.make_docs)</a>
+      <li><a href="sax.netlist.html#sax.netlist.load_netlist">load_netlist() (in module sax.netlist)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/06a_netlist.html#sax.netlist.load_netlist">load_netlist() (in module sax.netlist)</a>
+      <li><a href="sax.nn.io.html#sax.nn.io.load_nn_dense">load_nn_dense() (in module sax.nn.io)</a>
 </li>
-      <li><a href="internals/09d_nn_io.html#sax.nn.io.load_nn_dense">load_nn_dense() (in module sax.nn.io)</a>
+      <li><a href="sax.nn.io.html#sax.nn.io.load_nn_weights_json">load_nn_weights_json() (in module sax.nn.io)</a>
 </li>
-      <li><a href="internals/09d_nn_io.html#sax.nn.io.load_nn_weights_json">load_nn_weights_json() (in module sax.nn.io)</a>
-</li>
-      <li><a href="internals/06a_netlist.html#sax.netlist.load_recursive_netlist">load_recursive_netlist() (in module sax.netlist)</a>
+      <li><a href="sax.netlist.html#sax.netlist.load_recursive_netlist">load_recursive_netlist() (in module sax.netlist)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -545,19 +668,66 @@ document.write(`
 <h2 id="M">M</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.make_docs">make_docs() (in module sax.make_docs)</a>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.norm.mean">mean (norm attribute)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.merge_dicts">merge_dicts() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.merge_dicts">merge_dicts() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.mode_combinations">mode_combinations() (in module sax.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.mirror">mirror (Placement attribute)</a>
 </li>
+      <li><a href="sax.utils.html#sax.utils.mode_combinations">mode_combinations() (in module sax.utils)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.Model">Model (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.ModelFactory">ModelFactory (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.modelfactory">modelfactory() (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.circuit.html#sax.circuit.CircuitInfo.models">models (CircuitInfo attribute)</a>
+</li>
+      <li>
+    module
+
+      <ul>
+        <li><a href="sax.html#module-sax">sax</a>
+</li>
+        <li><a href="sax.backends.html#module-sax.backends">sax.backends</a>
+</li>
+        <li><a href="sax.backends.additive.html#module-sax.backends.additive">sax.backends.additive</a>
+</li>
+        <li><a href="sax.backends.filipsson_gunnar.html#module-sax.backends.filipsson_gunnar">sax.backends.filipsson_gunnar</a>
+</li>
+        <li><a href="sax.backends.klu.html#module-sax.backends.klu">sax.backends.klu</a>
+</li>
+        <li><a href="sax.circuit.html#module-sax.circuit">sax.circuit</a>
+</li>
+        <li><a href="sax.models.html#module-sax.models">sax.models</a>
+</li>
+        <li><a href="sax.multimode.html#module-sax.multimode">sax.multimode</a>
+</li>
+        <li><a href="sax.netlist.html#module-sax.netlist">sax.netlist</a>
+</li>
+        <li><a href="sax.nn.html#module-sax.nn">sax.nn</a>
+</li>
+        <li><a href="sax.nn.core.html#module-sax.nn.core">sax.nn.core</a>
+</li>
+        <li><a href="sax.nn.io.html#module-sax.nn.io">sax.nn.io</a>
+</li>
+        <li><a href="sax.nn.loss.html#module-sax.nn.loss">sax.nn.loss</a>
+</li>
+        <li><a href="sax.nn.utils.html#module-sax.nn.utils">sax.nn.utils</a>
+</li>
+        <li><a href="sax.patched.html#module-sax.patched">sax.patched</a>
+</li>
+        <li><a href="sax.saxtypes.html#module-sax.saxtypes">sax.saxtypes</a>
+</li>
+        <li><a href="sax.utils.html#module-sax.utils">sax.utils</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/00_typing.html#sax.typing_.modelfactory">modelfactory() (in module sax.typing_)</a>
+      <li><a href="sax.nn.loss.html#sax.nn.loss.mse">mse() (in module sax.nn.loss)</a>
 </li>
-      <li><a href="internals/09a_nn_loss.html#sax.nn.loss.mse">mse() (in module sax.nn.loss)</a>
-</li>
-      <li><a href="internals/04_multimode.html#sax.multimode.multimode">multimode() (in module sax.multimode)</a>
+      <li><a href="sax.multimode.html#sax.multimode.multimode">multimode() (in module sax.multimode)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -565,11 +735,25 @@ document.write(`
 <h2 id="N">N</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/06a_netlist.html#sax.netlist.netlist">netlist() (in module sax.netlist)</a>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.nc">nc (PortEnum attribute)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.ne">ne (PortEnum attribute)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist">Netlist (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.netlist">netlist() (in module sax.netlist)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09b_nn_utils.html#sax.nn.utils.normalize">normalize() (in module sax.nn.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.Config">Netlist.Config (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.NetlistDict">NetlistDict (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.norm">norm (class in sax.nn.utils)</a>
+</li>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.normalize">normalize() (in module sax.nn.utils)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.nw">nw (PortEnum attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -577,15 +761,31 @@ document.write(`
 <h2 id="P">P</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/05_models.html#sax.models.passthru">passthru() (in module sax.models)</a>, <a href="internals/05_models.html#sax.models.passthru">[1]</a>
+      <li><a href="sax.models.html#sax.models.passthru">passthru() (in module sax.models)</a>
 </li>
-      <li><a href="internals/08c_backends_additive.html#sax.backends.additive.path_lengths">path_lengths() (in module sax.backends.additive)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Placement">Placement (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.Config">Placement.Config (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.placements">placements (Netlist attribute)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.port">port (Placement attribute)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/09c_nn_core.html#sax.nn.core.preprocess">preprocess() (in module sax.nn.core)</a>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.PortCombination">PortCombination (in module sax.saxtypes)</a>
 </li>
-      <li><a href="internals/08c_backends_additive.html#sax.backends.additive.prune_internal_output_nodes">prune_internal_output_nodes() (in module sax.backends.additive)</a>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum">PortEnum (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.PortMap">PortMap (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.ports">ports (Netlist attribute)</a>
+
+      <ul>
+        <li><a href="sax.netlist.html#sax.netlist.NetlistDict.ports">(NetlistDict attribute)</a>
+</li>
+      </ul></li>
+      <li><a href="sax.nn.core.html#sax.nn.core.preprocess">preprocess() (in module sax.nn.core)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -593,17 +793,27 @@ document.write(`
 <h2 id="R">R</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/02_utils.html#sax.utils.reciprocal">reciprocal() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.reciprocal">reciprocal() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/06b_netlist_cleaning.html#sax.netlist_cleaning.remove_unused_instances">remove_unused_instances() (in module sax.netlist_cleaning)</a>
+      <li><a href="sax.netlist.html#sax.netlist.RecursiveNetlist">RecursiveNetlist (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.RecursiveNetlist.Config">RecursiveNetlist.Config (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.remove_unused_instances">remove_unused_instances() (in module sax.netlist)</a>
+</li>
+      <li><a href="sax.utils.html#sax.utils.rename_params">rename_params() (in module sax.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/02_utils.html#sax.utils.rename_params">rename_params() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.rename_ports">rename_ports() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.rename_ports">rename_ports() (in module sax.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.rotation">rotation (Placement attribute)</a>
 </li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.repository_path">repository_path() (in module sax.make_docs)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Route">Route (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Route.Config">Route.Config (class in sax.netlist)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Route.routing_strategy">routing_strategy (Route attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -611,25 +821,162 @@ document.write(`
 <h2 id="S">S</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.save_nb">save_nb() (in module sax.make_docs)</a>
+      <li><a href="sax.nn.io.html#sax.nn.io.save_nn_weights_json">save_nn_weights_json() (in module sax.nn.io)</a>
 </li>
-      <li><a href="internals/09d_nn_io.html#sax.nn.io.save_nn_weights_json">save_nn_weights_json() (in module sax.nn.io)</a>
+      <li>
+    sax
+
+      <ul>
+        <li><a href="sax.html#module-sax">module</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.scoo">scoo() (in module sax.typing_)</a>
+      </ul></li>
+      <li>
+    sax.backends
+
+      <ul>
+        <li><a href="sax.backends.html#module-sax.backends">module</a>
 </li>
-      <li><a href="internals/00_typing.html#sax.typing_.sdense">sdense() (in module sax.typing_)</a>
+      </ul></li>
+      <li>
+    sax.backends.additive
+
+      <ul>
+        <li><a href="sax.backends.additive.html#module-sax.backends.additive">module</a>
 </li>
+      </ul></li>
+      <li>
+    sax.backends.filipsson_gunnar
+
+      <ul>
+        <li><a href="sax.backends.filipsson_gunnar.html#module-sax.backends.filipsson_gunnar">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.backends.klu
+
+      <ul>
+        <li><a href="sax.backends.klu.html#module-sax.backends.klu">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.circuit
+
+      <ul>
+        <li><a href="sax.circuit.html#module-sax.circuit">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.models
+
+      <ul>
+        <li><a href="sax.models.html#module-sax.models">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.multimode
+
+      <ul>
+        <li><a href="sax.multimode.html#module-sax.multimode">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.netlist
+
+      <ul>
+        <li><a href="sax.netlist.html#module-sax.netlist">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.nn
+
+      <ul>
+        <li><a href="sax.nn.html#module-sax.nn">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.nn.core
+
+      <ul>
+        <li><a href="sax.nn.core.html#module-sax.nn.core">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.nn.io
+
+      <ul>
+        <li><a href="sax.nn.io.html#module-sax.nn.io">module</a>
+</li>
+      </ul></li>
+      <li>
+    sax.nn.loss
+
+      <ul>
+        <li><a href="sax.nn.loss.html#module-sax.nn.loss">module</a>
+</li>
+      </ul></li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/00_typing.html#sax.typing_.sdict">sdict() (in module sax.typing_)</a>
+      <li>
+    sax.nn.utils
+
+      <ul>
+        <li><a href="sax.nn.utils.html#module-sax.nn.utils">module</a>
 </li>
-      <li><a href="internals/04_multimode.html#sax.multimode.singlemode">singlemode() (in module sax.multimode)</a>
+      </ul></li>
+      <li>
+    sax.patched
+
+      <ul>
+        <li><a href="sax.patched.html#module-sax.patched">module</a>
 </li>
-      <li><a href="internals/08c_backends_additive.html#sax.backends.additive.split_port">split_port() (in module sax.backends.additive)</a>
+      </ul></li>
+      <li>
+    sax.saxtypes
+
+      <ul>
+        <li><a href="sax.saxtypes.html#module-sax.saxtypes">module</a>
 </li>
-      <li><a href="internals/05_models.html#sax.models.straight">straight() (in module sax.models)</a>
+      </ul></li>
+      <li>
+    sax.utils
+
+      <ul>
+        <li><a href="sax.utils.html#module-sax.utils">module</a>
 </li>
-      <li><a href="internals/98_make_docs.html#sax.make_docs.strip_metadata">strip_metadata() (in module sax.make_docs)</a>
+      </ul></li>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.sc">sc (PortEnum attribute)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.SCoo">SCoo (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.scoo">scoo() (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.SDense">SDense (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.sdense">sdense() (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.SDict">SDict (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.sdict">sdict() (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.se">se (PortEnum attribute)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Component.settings">settings (Component attribute)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.Settings">Settings (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Route.settings">settings (Route attribute)</a>
+</li>
+      <li><a href="sax.multimode.html#sax.multimode.singlemode">singlemode() (in module sax.multimode)</a>
+</li>
+      <li><a href="internals/03_backends.html#klujax.solve">solve() (in module klujax)</a>
+</li>
+      <li><a href="sax.nn.utils.html#sax.nn.utils.norm.std">std (norm attribute)</a>
+</li>
+      <li><a href="sax.models.html#sax.models.straight">straight() (in module sax.models)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.SType">SType (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.PortEnum.sw">sw (PortEnum attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -637,7 +984,7 @@ document.write(`
 <h2 id="T">T</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/02_utils.html#sax.utils.try_float">try_float() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.try_float">try_float() (in module sax.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -645,13 +992,13 @@ document.write(`
 <h2 id="U">U</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/02_utils.html#sax.utils.unflatten_dict">unflatten_dict() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.unflatten_dict">unflatten_dict() (in module sax.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/05_models.html#sax.models.unitary">unitary() (in module sax.models)</a>
+      <li><a href="sax.models.html#sax.models.unitary">unitary() (in module sax.models)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.update_settings">update_settings() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.update_settings">update_settings() (in module sax.utils)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -659,17 +1006,55 @@ document.write(`
 <h2 id="V">V</h2>
 <table style="width: 100%" class="indextable genindextable"><tr>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/00_typing.html#sax.typing_.validate_model">validate_model() (in module sax.typing_)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Component.validate_component_name">validate_component_name() (Component class method)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.validate_multimode">validate_multimode() (in module sax.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.validate_connection_names">validate_connection_names() (Netlist class method)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.validate_instance_names">validate_instance_names() (Netlist class method)</a>
+</li>
+      <li><a href="sax.saxtypes.html#sax.saxtypes.validate_model">validate_model() (in module sax.saxtypes)</a>
+</li>
+      <li><a href="sax.utils.html#sax.utils.validate_multimode">validate_multimode() (in module sax.utils)</a>
 </li>
   </ul></td>
   <td style="width: 33%; vertical-align: top;"><ul>
-      <li><a href="internals/02_utils.html#sax.utils.validate_not_mixedmode">validate_not_mixedmode() (in module sax.utils)</a>
+      <li><a href="sax.utils.html#sax.utils.validate_not_mixedmode">validate_not_mixedmode() (in module sax.utils)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.validate_sdict">validate_sdict() (in module sax.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.validate_placement_names">validate_placement_names() (Netlist class method)</a>
 </li>
-      <li><a href="internals/02_utils.html#sax.utils.validate_settings">validate_settings() (in module sax.utils)</a>
+      <li><a href="sax.netlist.html#sax.netlist.Netlist.validate_port_names">validate_port_names() (Netlist class method)</a>
+</li>
+      <li><a href="sax.utils.html#sax.utils.validate_sdict">validate_sdict() (in module sax.utils)</a>
+</li>
+      <li><a href="sax.utils.html#sax.utils.validate_settings">validate_settings() (in module sax.utils)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="X">X</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.x">x (Placement attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.xmax">xmax (Placement attribute)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.xmin">xmin (Placement attribute)</a>
+</li>
+  </ul></td>
+</tr></table>
+
+<h2 id="Y">Y</h2>
+<table style="width: 100%" class="indextable genindextable"><tr>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.y">y (Placement attribute)</a>
+</li>
+  </ul></td>
+  <td style="width: 33%; vertical-align: top;"><ul>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.ymax">ymax (Placement attribute)</a>
+</li>
+      <li><a href="sax.netlist.html#sax.netlist.Placement.ymin">ymin (Placement attribute)</a>
 </li>
   </ul></td>
 </tr></table>
@@ -715,7 +1100,7 @@ By Floris Laporte
     
   <p class="copyright">
     
-      © Copyright 2022.
+      © Copyright 2023, Apache2.
       <br/>
     
   </p>

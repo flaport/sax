@@ -1,0 +1,1666 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta content="metadata description" lang="en" name="description" xml:lang="en" />
+<meta content="Sphinx, MyST" name="keywords" />
+<meta content="en_US" property="og:locale" />
+
+    <title>Backends &#8212; sax 0.10.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'internals/03_backends';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="sax package" href="../sax.html" />
+    <link rel="prev" title="Circuit" href="02_circuit.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../examples/01_quick_start.html">SAX Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/03_circuit_from_yaml.html">Circuit from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/04_multimode_simulations.html">Multimode simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/05_thinfilm.html">Thin film optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/06_additive_backend.html">Additive Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_circuit.html">Circuit</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Backends</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sax.html">sax package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.core.html">sax.nn.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.io.html">sax.nn.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.loss.html">sax.nn.loss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.nn.utils.html">sax.nn.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.saxtypes.html">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.utils.html">sax.utils module</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/flaport/sax/HEAD/v2/gh/flaport/sax/main?urlpath=lab/tree/examples/03_backends.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/flaport/sax/blob/main/examples/03_backends.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/edit/main/examples/03_backends.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Finternals/03_backends.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/internals/03_backends.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Backends</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit"><code class="docutils literal notranslate"><span class="pre">analyze_circuit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filipsson-gunnar-backend">Filipsson-Gunnar Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_fg"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_fg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_fg"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_fg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-walkthrough">Algorithm Walkthrough</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-improvements">Algorithm Improvements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#klu-backend">KLU Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_klu"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_klu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_klu"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_klu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-background">Theoretical Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.solve"><code class="docutils literal notranslate"><span class="pre">solve()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.coo_mul_vec"><code class="docutils literal notranslate"><span class="pre">coo_mul_vec()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Algorithm Walkthrough</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Algorithm Improvements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-backend">Additive Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_additive"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_additive()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_additive"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_additive()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Example</a></li>
+</ul>
+</li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="backends">
+<h1>Backends<a class="headerlink" href="#backends" title="Permalink to this heading">#</a></h1>
+<blockquote>
+<div><p>SAX Backends</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">klujax</span>
+<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
+<span class="kn">import</span> <span class="nn">sax</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="introduction">
+<h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
+<p>SAX allows to easily interchange the backend of a circuit. A SAX backend consists of a static analysis step and an evaluation step:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit">
+<span class="sig-name descname"><span class="pre">analyze_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends.html#analyze_circuit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit">
+<span class="sig-name descname"><span class="pre">evaluate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends.html#evaluate_circuit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SType</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SType</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be needed to be recalculated when any parameters of the circuit change. See <span class="xref myst">KLU backend</span> for a non-trivial implementation of the circuit analyzation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">evaluate_circuit</span></code> step evaluates the circuit for given <code class="docutils literal notranslate"><span class="pre">SType</span></code> instances.</p>
+</section>
+<section id="example">
+<h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wg_sdict</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.86603</span><span class="n">j</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.86603</span><span class="n">j</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">τ</span><span class="p">,</span> <span class="n">κ</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="n">dc_sdense</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDense</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">],</span> 
+               <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">],</span> 
+               <span class="p">[</span><span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
+               <span class="p">[</span><span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>
+    <span class="p">{</span><span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">analyzed</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+<span class="n">mzi_sdict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span><span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">))</span>
+<span class="n">mzi_sdict</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="filipsson-gunnar-backend">
+<h2>Filipsson-Gunnar Backend<a class="headerlink" href="#filipsson-gunnar-backend" title="Permalink to this heading">#</a></h2>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since The KLU Backend (see below) is Superior to the Filipsson-Gunnar backend, SAX will default (since v0.10.0) to the KLU backend if <code class="docutils literal notranslate"><span class="pre">klujax</span></code> is installed.name1</p>
+</div>
+<p>The Filipsson-Gunnar backend is based on the following paper:</p>
+<blockquote>
+<div><p>Filipsson, Gunnar. “<em>A new general computer algorithm for S-matrix calculation of interconnected multiports.</em>” 11th European Microwave Conference. IEEE, 1981.</p>
+</div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit_fg">
+<span class="sig-name descname"><span class="pre">analyze_circuit_fg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/filipsson_gunnar.html#analyze_circuit_fg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit_fg" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit_fg">
+<span class="sig-name descname"><span class="pre">evaluate_circuit_fg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/filipsson_gunnar.html#evaluate_circuit_fg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit_fg" title="Permalink to this definition">#</a></dt>
+<dd><p>evaluate a circuit for the given sdicts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SType</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SDict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="algorithm-walkthrough">
+<h3>Algorithm Walkthrough<a class="headerlink" href="#algorithm-walkthrough" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>This algorithm gets pretty slow for large circuits. I’d be <span class="xref myst">very interested in any improvements</span> that can be made here, especially because - as opposed to the currently faster <span class="xref myst">KLU backend</span> - the algorithm discussed here is jittable, differentiable and can be used on GPUs.</p>
+</div>
+<p>Let’s walk through all the steps of this algorithm. We’ll do this for a simple MZI circuit, given by two directional couplers characterised by <code class="docutils literal notranslate"><span class="pre">dc_sdense</span></code> with a phase shifting waveguide in between <code class="docutils literal notranslate"><span class="pre">wg_sdict</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>as a first step, we construct the <code class="docutils literal notranslate"><span class="pre">reversed_ports</span></code>, it’s actually easier to work with <code class="docutils literal notranslate"><span class="pre">reversed_ports</span></code> (we chose the opposite convention in the netlist definition to adhere to the GDSFactory netlist convention):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">reversed_ports</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ports</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The first real step of the algorithm is to create the ‘block diagonal sdict`:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">block_diag</span> <span class="o">=</span> <span class="p">{}</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">S</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">block_diag</span><span class="o">.</span><span class="n">update</span><span class="p">(</span>
+        <span class="p">{(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">),</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span><span class="n">S</span><span class="p">)</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>we can optionally filter out zeros from the resulting block_diag representation. Just note that this will make the resuling function unjittable (the resulting ‘shape’ (i.e. keys) of the dictionary would depend on the data itself, which is not allowed in JAX jit). We’re doing it here to avoid printing zeros but <strong>internally this is not done by default</strong>.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">block_diag</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_diag</span><span class="p">))</span>
+<span class="n">block_diag</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>next, we sort the connections such that similar components are grouped together:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sax.backends.filipsson_gunnar</span> <span class="kn">import</span> <span class="n">_connections_sort_key</span>
+<span class="n">sorted_connections</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">_connections_sort_key</span><span class="p">)</span>
+<span class="n">sorted_connections</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we iterate over the sorted connections and connect components as they come in. Connected components take over the name of the first component in the connection, but we keep a set of components belonging to that key in <code class="docutils literal notranslate"><span class="pre">all_connected_instances</span></code>.</p>
+<p>This is how this <code class="docutils literal notranslate"><span class="pre">all_connected_instances</span></code> dictionary looks initially.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">all_connected_instances</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="p">{</span><span class="n">k</span><span class="p">}</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">instances</span><span class="p">}</span>
+<span class="n">all_connected_instances</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Normally we would loop over every connection in <code class="docutils literal notranslate"><span class="pre">sorted_connections</span></code> now, but let’s just go through it once at first:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for k, l in sorted_connections:</span>
+<span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sorted_connections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">k</span><span class="p">,</span> <span class="n">l</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code> are the S-matrix indices we’re trying to connect. Note that in our sparse <code class="docutils literal notranslate"><span class="pre">SDict</span></code> notation these S-matrix indices are in fact equivalent with the port names <code class="docutils literal notranslate"><span class="pre">('dc1,out1',</span> <span class="pre">'dc2,in1')</span></code>!</p>
+<p>first we split the connection string into an instance name and a port name (we don’t use the port name yet):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">name1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+<span class="n">name2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We then obtain the new set of connected instances.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">connected_instances</span> <span class="o">=</span> <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name1</span><span class="p">]</span> <span class="o">|</span> <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name2</span><span class="p">]</span>
+<span class="n">connected_instances</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We then iterate over each of the components in this set and make sure each of the component names in that set maps to that set (yes, I know… confusing). We do this to be able to keep track with which components each of the components in the circuit is currently already connected to.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">connected_instances</span><span class="p">:</span>
+    <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">connected_instances</span>
+    
+<span class="n">all_connected_instances</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>now we need to obtain all the ports of the currently connected instances.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">current_ports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+    <span class="n">p</span>
+    <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">connected_instances</span>
+    <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">instance</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">current_ports</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now the <span class="xref myst">Gunnar Algorithm</span> is used. Given a (block-diagonal) ‘S-matrix’ <code class="docutils literal notranslate"><span class="pre">block_diag</span></code> and a ‘connection matrix’ <code class="docutils literal notranslate"><span class="pre">current_ports</span></code> we can interconnect port <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code> as follows:</p>
+<blockquote>
+<div><p>Note: some creative freedom is used here. In SAX, the matrices we’re talking about are in fact represented by a sparse dictionary (an <code class="docutils literal notranslate"><span class="pre">SDict</span></code>), i.e. similar to a COO sparse matrix for which the indices are the port names.</p>
+</div></blockquote>
+<p>Just as before, we’re filtering the zeros from the sparse representation (remember, internally this is <strong>not done by default</strong>).</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">block_diag</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">}</span>
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_diag</span><span class="p">))</span>
+<span class="n">block_diag</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is the resulting block-diagonal matrix after interconnecting two ports (i.e. basically saying that those two ports are the same port). Because these ports are now connected we should actually remove them from the S-matrix representation (they are integrated into the S-parameters of the other connections):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">block_diag</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+    <span class="n">is_connected</span> <span class="o">=</span> <span class="n">i</span> <span class="o">==</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">l</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">l</span>
+    <span class="n">is_in_output_ports</span> <span class="o">=</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">reversed_ports</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">reversed_ports</span>
+    <span class="k">if</span> <span class="n">is_connected</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_in_output_ports</span><span class="p">:</span>
+        <span class="k">del</span> <span class="n">block_diag</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>  <span class="c1"># we&#39;re no longer interested in these port combinations</span>
+        
+<span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_diag</span><span class="p">))</span>
+<span class="n">block_diag</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Note that this deletion of values <strong>does NOT</strong> make this operation un-jittable. The deletion depends on the ports of the dictionary (i.e. on the dictionary ‘shape’), not on the values.</p>
+<p>We now basically have to do those steps again for all other connections:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sax.backends.filipsson_gunnar</span> <span class="kn">import</span> <span class="n">_interconnect_ports</span>
+<span class="c1">#for k, l in sorted_connections: </span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sorted_connections</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span> <span class="c1"># we just did the first iteration of this loop above...</span>
+    <span class="n">name1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="n">name2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+    <span class="n">connected_instances</span> <span class="o">=</span> <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name1</span><span class="p">]</span> <span class="o">|</span> <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name2</span><span class="p">]</span>
+    <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">connected_instances</span><span class="p">:</span>
+        <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">connected_instances</span>
+    <span class="n">current_ports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
+        <span class="n">p</span>
+        <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">connected_instances</span>
+        <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">set</span><span class="p">([</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="p">]</span> <span class="o">+</span> <span class="p">[</span><span class="n">p</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="p">])</span>
+        <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">instance</span><span class="si">}</span><span class="s2">,&quot;</span><span class="p">)</span>
+    <span class="p">)</span>
+    <span class="n">block_diag</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">_interconnect_ports</span><span class="p">(</span><span class="n">block_diag</span><span class="p">,</span> <span class="n">current_ports</span><span class="p">,</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span><span class="p">))</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">block_diag</span><span class="o">.</span><span class="n">keys</span><span class="p">()):</span>
+        <span class="n">is_connected</span> <span class="o">=</span> <span class="n">i</span> <span class="o">==</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">l</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">l</span>
+        <span class="n">is_in_output_ports</span> <span class="o">=</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">reversed_ports</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">reversed_ports</span>
+        <span class="k">if</span> <span class="n">is_connected</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_in_output_ports</span><span class="p">:</span>
+            <span class="k">del</span> <span class="n">block_diag</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>  <span class="c1"># we&#39;re no longer interested in these port combinations</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is the final MZI matrix we’re getting:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">block_diag</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>All that’s left is to rename these internal ports of the format <code class="docutils literal notranslate"><span class="pre">{instance},{port}</span></code> into output ports of the resulting circuit:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">circuit_sdict</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="n">reversed_ports</span><span class="p">[</span><span class="n">i</span><span class="p">],</span> <span class="n">reversed_ports</span><span class="p">[</span><span class="n">j</span><span class="p">]):</span> <span class="n">v</span>
+    <span class="k">for</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">),</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+    <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">reversed_ports</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">reversed_ports</span>
+<span class="p">}</span>
+<span class="n">circuit_sdict</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And that’s it. We evaluated the <code class="docutils literal notranslate"><span class="pre">SDict</span></code> of the full circuit.</p>
+</section>
+<section id="algorithm-improvements">
+<h3>Algorithm Improvements<a class="headerlink" href="#algorithm-improvements" title="Permalink to this heading">#</a></h3>
+<p>The Filipsson-Gunar algorithm is</p>
+<ul class="simple">
+<li><p>pretty fast for small circuits 🙂</p></li>
+<li><p>jittable 🙂</p></li>
+<li><p>differentiable 🙂</p></li>
+<li><p>GPU-compatible 🙂</p></li>
+</ul>
+<p>This algorithm is however:</p>
+<ul class="simple">
+<li><p><strong>really slow</strong> for large circuits 😥</p></li>
+<li><p><strong>pretty slow</strong> to jit the resulting circuit function 😥</p></li>
+<li><p><strong>pretty slow</strong> to differentiate the resulting circuit function 😥</p></li>
+</ul>
+<p>There are probably still plenty of improvements possible for this algorithm:</p>
+<ul class="simple">
+<li><p><strong>¿</strong> Network analysis (ft. NetworkX ?) to obtain which ports of the block diagonal representation are relevant to obtain the output connection <strong>?</strong></p></li>
+<li><p><strong>¿</strong> Smarter ordering of connections to always have the minimum amount of ports in the intermediate block-diagonal representation <strong>?</strong></p></li>
+<li><p><strong>¿</strong> Using <code class="docutils literal notranslate"><span class="pre">jax.lax.scan</span></code> in stead of python native for-loops in <code class="docutils literal notranslate"><span class="pre">_interconnect_ports</span></code> <strong>?</strong></p></li>
+<li><p><strong>¿</strong> … <strong>?</strong></p></li>
+</ul>
+<p>Bottom line is… Do you know how to improve this algorithm or how to implement the above suggestions? Please open a Merge Request!</p>
+</section>
+</section>
+<section id="klu-backend">
+<h2>KLU Backend<a class="headerlink" href="#klu-backend" title="Permalink to this heading">#</a></h2>
+<p>The KLU backend is using <code class="docutils literal notranslate"><span class="pre">klujax</span></code>, which uses the <a class="reference external" href="https://github.com/DrTimothyAldenDavis/SuiteSparse">SuiteSparse</a> C++ libraries for sparse matrix evaluations to evaluate the circuit insanely fast on a CPU. The specific algorith being used in question is the KLU algorithm:</p>
+<blockquote>
+<div><p>Ekanathan Palamadai Natariajan. “<em>KLU - A high performance sparse linear solver for circuit simulation problems.</em>”</p>
+</div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit_klu">
+<span class="sig-name descname"><span class="pre">analyze_circuit_klu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/klu.html#analyze_circuit_klu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit_klu" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit_klu">
+<span class="sig-name descname"><span class="pre">evaluate_circuit_klu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/klu.html#evaluate_circuit_klu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit_klu" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SType</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SDense</p>
+</dd>
+</dl>
+</dd></dl>
+
+<section id="theoretical-background">
+<h3>Theoretical Background<a class="headerlink" href="#theoretical-background" title="Permalink to this heading">#</a></h3>
+<p>The core of the KLU algorithm is supported by <code class="docutils literal notranslate"><span class="pre">klujax</span></code>, which internally uses the Suitesparse libraries to solve the sparse system <code class="docutils literal notranslate"><span class="pre">Ax</span> <span class="pre">=</span> <span class="pre">b</span></code>, in which A is a sparse matrix.</p>
+<p>Now it only comes down to shoehorn our circuit evaluation into a sparse linear system of equations <span class="math notranslate nohighlight">\(Ax=b\)</span> where we need to solve for <span class="math notranslate nohighlight">\(x\)</span> using <code class="docutils literal notranslate"><span class="pre">klujax</span></code>.
+Consider the block diagonal matrix <span class="math notranslate nohighlight">\(S_{bd}\)</span> of all components in the circuit acting on the fields <span class="math notranslate nohighlight">\(x_{in}\)</span> at each of the individual ports of each of the component integrated in <span class="math notranslate nohighlight">\(S^{bd}\)</span>. The output fields <span class="math notranslate nohighlight">\(x^{out}\)</span> at each of those ports is then given by:</p>
+<div class="math notranslate nohighlight">
+\[
+x^{out} = S_{bd} x^{in}
+\]</div>
+<p>However, <span class="math notranslate nohighlight">\(S_{bd}\)</span> is not the S-matrix of the circuit as it does not encode any connectivity <em>between</em> the components. Connecting two component ports basically comes down to enforcing equality between the output fields at one port of a component with the input fields at another port of another (or maybe even the same) component. This equality can be enforced by creating an internal connection matrix, connecting all internal ports of the circuit:</p>
+<div class="math notranslate nohighlight">
+\[
+x^{in} = C_{int} x^{out}
+\]</div>
+<p>We can thus write the following combined equation:</p>
+<div class="math notranslate nohighlight">
+\[
+x^{in} = C_{int} S_{bd} x^{in}
+\]</div>
+<p>But this is not the complete story… Some component ports will <em>not</em> be <em>interconnected</em> with other ports: they will become the new <em>external ports</em> (or output ports) of the combined circuit. We can include those external ports into the above equation as follows:</p>
+<div class="math notranslate nohighlight">
+\[\begin{split}
+\begin{pmatrix} x^{in} \\ x^{out}_{ext} \end{pmatrix} = \begin{pmatrix} C_{int} &amp; C_{ext} \\ C_{ext}^T &amp; 0 \end{pmatrix} \begin{pmatrix} S_{bd} x^{in} \\ x_{ext}^{in} \end{pmatrix} 
+\end{split}\]</div>
+<p>Note that <span class="math notranslate nohighlight">\(C_{ext}\)</span> is obviously <strong>not</strong> a square matrix. Eliminating <span class="math notranslate nohighlight">\(x^{in}\)</span> from the equation above finally yields:</p>
+<div class="math notranslate nohighlight">
+\[
+x^{out}_{ext} = C^T_{ext} S_{bd} (\mathbb{1} - C_{int}S_{bd})^{-1} C_{ext}x_{ext}^{in}
+\]</div>
+<p>We basically found a representation of the circuit S-matrix:</p>
+<div class="math notranslate nohighlight">
+\[
+S = C^T_{ext} S_{bd} (\mathbb{1} - C_{int}S_{bd})^{-1} C_{ext}
+\]</div>
+<p>Obviously, we won’t want to calculate the inverse <span class="math notranslate nohighlight">\((\mathbb{1} - C_{int}S_{bd})^{-1}\)</span>, which is the inverse of a very sparse matrix (a connection matrix only has a single 1 per line), which very often is not even sparse itself. In stead we’ll use the <code class="docutils literal notranslate"><span class="pre">solve_klu</span></code> function:</p>
+<div class="math notranslate nohighlight">
+\[
+S = C^T_{ext} S_{bd} \texttt{solve}\_\texttt{klu}\left((\mathbb{1} - C_{int}S_{bd}), C_{ext}\right)
+\]</div>
+<p>Moreover, <span class="math notranslate nohighlight">\(C_{ext}^TS_{bd}\)</span> is also a sparse matrix, therefore we’ll also need a <code class="docutils literal notranslate"><span class="pre">mul_coo</span></code> routine:</p>
+<div class="math notranslate nohighlight">
+\[
+S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{klu}\left((\mathbb{1} - C_{int}S_{bd}),~C_{ext}\right)\right)
+\]</div>
+</section>
+<section id="sparse-helper-functions">
+<h3>Sparse Helper Functions<a class="headerlink" href="#sparse-helper-functions" title="Permalink to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="klujax.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/klujax.html#solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#klujax.solve" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="klujax.coo_mul_vec">
+<span class="sig-name descname"><span class="pre">coo_mul_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/klujax.html#coo_mul_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#klujax.coo_mul_vec" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<p><code class="docutils literal notranslate"><span class="pre">klujax.solve</span></code> solves the sparse system of equations <code class="docutils literal notranslate"><span class="pre">Ax=b</span></code> for <code class="docutils literal notranslate"><span class="pre">x</span></code>. Where <code class="docutils literal notranslate"><span class="pre">A</span></code> is represented by in <a class="reference external" href="https://en.wikipedia.org/wiki/Sparse_matrix#Coordinate_list_(COO)">COO-format</a> as (<code class="docutils literal notranslate"><span class="pre">Ai</span></code>, <code class="docutils literal notranslate"><span class="pre">Aj</span></code>, <code class="docutils literal notranslate"><span class="pre">Ax</span></code>).</p>
+<blockquote>
+<div><p>Example</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Ai</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="n">Aj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">klujax</span><span class="o">.</span><span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This result is indeed correct:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="nd">@x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, to use this function effectively, we probably need an extra dimension for <code class="docutils literal notranslate"><span class="pre">Ax</span></code>. Indeed, we would like to solve this equation for multiple wavelengths (or more general, for multiple circuit configurations) at once. For this we can use <code class="docutils literal notranslate"><span class="pre">jax.vmap</span></code> to expose <code class="docutils literal notranslate"><span class="pre">klujax.solve</span></code> to more dimensions for <code class="docutils literal notranslate"><span class="pre">Ax</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">solve_klu</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">solve</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now redefine <code class="docutils literal notranslate"><span class="pre">Ax</span></code> and see what it gives:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Ai</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">])</span>
+<span class="n">Aj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">])</span>
+<span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">5</span><span class="p">]])</span>
+<span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">5</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">6</span><span class="p">,</span> <span class="mi">1</span><span class="p">])</span>
+<span class="n">x</span> <span class="o">=</span> <span class="n">solve_klu</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="n">x</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This result is indeed correct:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">at</span><span class="p">[:,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
+<span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ijk,ik-&gt;ij&quot;</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Additionally, we need a way to multiply a sparse COO-matrix with a dense vector. This can be done with <code class="docutils literal notranslate"><span class="pre">klujax.coo_mul_vec</span></code>:</p>
+<p>However, it’s useful to allow a batch dimension, this time <em>both</em> in <code class="docutils literal notranslate"><span class="pre">Ax</span></code> and in <code class="docutils literal notranslate"><span class="pre">b</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mul_coo</span> <span class="o">=</span> <span class="kc">None</span> 
+<span class="n">mul_coo</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">coo_mul_vec</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s confirm this does the right thing:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">mul_coo</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+<span class="n">result</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id1">
+<h3>Example<a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wg_sdict</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.86603</span><span class="n">j</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.86603</span><span class="n">j</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="n">τ</span><span class="p">,</span> <span class="n">κ</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="n">dc_sdense</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDense</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">],</span> 
+               <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">],</span> 
+               <span class="p">[</span><span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
+               <span class="p">[</span><span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>
+    <span class="p">{</span><span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
+<span class="p">)</span>
+
+<span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+    <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">preprocessed</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit_klu</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+<span class="n">S</span><span class="p">,</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit_klu</span><span class="p">(</span><span class="n">preprocessed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">pm</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>the KLU backend yields <code class="docutils literal notranslate"><span class="pre">SDense</span></code> results by default:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi_sdense</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">pm</span><span class="p">)</span>
+<span class="n">mzi_sdense</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>An <code class="docutils literal notranslate"><span class="pre">SDense</span></code> is returned for perfomance reasons. By returning an <code class="docutils literal notranslate"><span class="pre">SDense</span></code> by default we prevent any internal <code class="docutils literal notranslate"><span class="pre">SDict</span> <span class="pre">-&gt;</span> <span class="pre">SDense</span></code> conversions in deeply hierarchical circuits. It’s however very easy to convert <code class="docutils literal notranslate"><span class="pre">SDense</span></code> to <code class="docutils literal notranslate"><span class="pre">SDict</span></code> as a final step. To do this, wrap the result (or the function generating the result) with <code class="docutils literal notranslate"><span class="pre">sdict</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span><span class="n">mzi_sdense</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id2">
+<h3>Algorithm Walkthrough<a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h3>
+<p>Let’s first enforce <span class="math notranslate nohighlight">\(C^T = C\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">connections</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">connections</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">()}}</span>
+<span class="n">connections</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll also need the reversed ports:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inverse_ports</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ports</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="n">inverse_ports</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>An the port indices</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ports</span><span class="p">)}</span>
+<span class="n">port_map</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Let’s now create the COO-representation of our block diagonal S-matrix <span class="math notranslate nohighlight">\(S_{bd}\)</span>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="p">,</span> <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">instance_ports</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">{}</span>
+<span class="n">batch_shape</span> <span class="o">=</span> <span class="p">()</span>
+<span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">si</span><span class="p">,</span> <span class="n">sj</span><span class="p">,</span> <span class="n">sx</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">scoo</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+    <span class="n">Si</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">si</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
+    <span class="n">Sj</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sj</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
+    <span class="n">Sx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch_shape</span><span class="p">):</span>
+        <span class="n">batch_shape</span> <span class="o">=</span> <span class="n">sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
+    <span class="n">instance_ports</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ports_map</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
+    <span class="n">idx</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ports_map</span><span class="p">)</span>
+<span class="n">Si</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">Si</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Sj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">Sj</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Sx</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="k">for</span> <span class="n">sx</span> <span class="ow">in</span> <span class="n">Sx</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="n">Si</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Sj</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Sx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>note that we also kept track of the <code class="docutils literal notranslate"><span class="pre">batch_shape</span></code>, i.e. the number of independent simulations (usually number of wavelengths). In the example being used here we don’t have a batch dimension (all elements of the <code class="docutils literal notranslate"><span class="pre">SDict</span></code> are <code class="docutils literal notranslate"><span class="pre">0D</span></code>):</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_shape</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll also keep track of the number of columns</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_col</span> <span class="o">=</span> <span class="n">idx</span>
+<span class="n">n_col</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And we’ll need to solve the circuit for each output port, i.e. we need to solve <code class="docutils literal notranslate"><span class="pre">n_rhs</span></code> number of equations:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_rhs</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">port_map</span><span class="p">)</span>
+<span class="n">n_rhs</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can represent the internal connection matrix <span class="math notranslate nohighlight">\(C_{int}\)</span> as a mapping between port indices:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cmap</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">instance_ports</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span> <span class="nb">int</span><span class="p">(</span><span class="n">instance_ports</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="n">Cmap</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Therefore, the COO-representation of this connection matrix can be obtained as follows (note that an array of values Cx is not necessary, all non-zero elements in a connection matrix are 1)</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Ci</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">Cmap</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="n">Cj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">Cmap</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Ci</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Cj</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can represent the external connection matrix <span class="math notranslate nohighlight">\(C_{ext}\)</span> as a map between internal port indices and external port indices:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cextmap</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">instance_ports</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span> <span class="nb">int</span><span class="p">(</span><span class="n">port_map</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inverse_ports</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="n">Cextmap</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Just as for the internal matrix we can represent this external connection matrix in COO-format:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cexti</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">Cextmap</span><span class="o">.</span><span class="n">keys</span><span class="p">()),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">Cextj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="nb">list</span><span class="p">(</span><span class="n">Cextmap</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Cexti</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">Cextj</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>However, we actually need it as a dense representation:</p>
+<blockquote>
+<div><p>help needed: can we find a way later on to keep this sparse?</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cext</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">Cexti</span><span class="p">,</span> <span class="n">Cextj</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
+<span class="n">Cext</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’ll now calculate the row index <code class="docutils literal notranslate"><span class="pre">CSi</span></code> of <span class="math notranslate nohighlight">\(C_{int}S_{bd}\)</span> in COO-format:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: make this block jittable...</span>
+<span class="n">Ix</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">n_col</span><span class="p">))</span>
+<span class="n">Ii</span> <span class="o">=</span> <span class="n">Ij</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_col</span><span class="p">)</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">Cj</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">CSi</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">Ci</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">CSi</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p><code class="docutils literal notranslate"><span class="pre">CSi</span></code>: possible jittable alternative? how do we remove the zeros?</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CSi_</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Cj</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Ci</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># not used</span>
+<span class="n">CSi_</span> <span class="c1"># not used</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The column index <code class="docutils literal notranslate"><span class="pre">CSj</span></code> of <span class="math notranslate nohighlight">\(C_{int}S_{bd}\)</span> can more easily be obtained:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mask</span> <span class="o">=</span> <span class="p">(</span><span class="n">Cj</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">any</span><span class="p">(</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">CSj</span> <span class="o">=</span> <span class="n">Sj</span><span class="p">[</span><span class="n">mask</span><span class="p">]</span>
+<span class="n">CSj</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finally, the values <code class="docutils literal notranslate"><span class="pre">CSx</span></code> of <span class="math notranslate nohighlight">\(C_{int}S_{bd}\)</span> can be obtained as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CSx</span> <span class="o">=</span> <span class="n">Sx</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span>
+<span class="n">CSx</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Now we calculate <span class="math notranslate nohighlight">\(\mathbb{1} - C_{int}S_{bd}\)</span> in an <em>uncoalesced</em> way (we might have duplicate indices on the diagonal):</p>
+<blockquote>
+<div><p><strong>uncoalesced</strong>: having duplicate index combinations (i, j) in the representation possibly with different corresponding values. This is usually not a problem as in linear operations these values will end up to be summed, usually the behavior you want:</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">I_CSi</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">CSi</span><span class="p">,</span> <span class="n">Ii</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">I_CSj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">CSj</span><span class="p">,</span> <span class="n">Ij</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">I_CSx</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="o">-</span><span class="n">CSx</span><span class="p">,</span> <span class="n">Ix</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">I_CSi</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">I_CSj</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">I_CSx</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">Cext</span><span class="o">.</span><span class="n">shape</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>The batch shape dimension can generally speaking be anything (in the example here 0D). We need to do the necessary reshapings to make the batch shape 1D:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_lhs</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">n_lhs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Sx</span> <span class="o">=</span> <span class="n">Sx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Sx</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">I_CSx</span> <span class="o">=</span> <span class="n">I_CSx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">I_CSx</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We’re finally ready to do the most important part of the calculation, which we conveniently leave to <code class="docutils literal notranslate"><span class="pre">klujax</span></code> and <code class="docutils literal notranslate"><span class="pre">SuiteSparse</span></code>:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">inv_I_CS_Cext</span> <span class="o">=</span> <span class="n">solve_klu</span><span class="p">(</span><span class="n">I_CSi</span><span class="p">,</span> <span class="n">I_CSj</span><span class="p">,</span> <span class="n">I_CSx</span><span class="p">,</span> <span class="n">Cext</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>one more sparse multiplication:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">S_inv_I_CS_Cext</span> <span class="o">=</span> <span class="n">mul_coo</span><span class="p">(</span><span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">inv_I_CS_Cext</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And one more <span class="math notranslate nohighlight">\(C_{ext}\)</span> multiplication which we do by clever indexing:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CextT_S_inv_I_CS_Cext</span> <span class="o">=</span> <span class="n">S_inv_I_CS_Cext</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Cexti</span><span class="p">,</span> <span class="p">:][</span><span class="o">...</span><span class="p">,</span> <span class="p">:,</span> <span class="n">Cextj</span><span class="p">]</span>
+<span class="n">CextT_S_inv_I_CS_Cext</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>That’s it! We found the S-matrix of the circuit. We just need to reshape the batch dimension back into the matrix:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">_</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">CextT_S_inv_I_CS_Cext</span><span class="o">.</span><span class="n">shape</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">CextT_S_inv_I_CS_Cext</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">n</span><span class="p">,</span> <span class="n">n</span><span class="p">)</span>
+<span class="n">S</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>Oh and to complete the <code class="docutils literal notranslate"><span class="pre">SDense</span></code> representation we need to specify the port map as well:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">port_map</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="id3">
+<h3>Algorithm Improvements<a class="headerlink" href="#id3" title="Permalink to this heading">#</a></h3>
+<p>This algorithm is</p>
+<ul class="simple">
+<li><p>very fast for large circuits 🙂</p></li>
+<li><p>jittable 🙂</p></li>
+<li><p>differentiable 🙂</p></li>
+</ul>
+<p>This algorithm is however:</p>
+<ul class="simple">
+<li><p><strong>not</strong> GPU-compatible 🙂</p></li>
+</ul>
+<p>There are probably still plenty of improvements possible for this algorithm:</p>
+<ul class="simple">
+<li><p><strong>¿</strong> make it GPU compatible (requires making suitesparse GPU compatible… probably not gonna happen)<strong>?</strong></p></li>
+</ul>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Since The KLU Backend is Superior to the Filipsson-Gunnar backend, SAX will default (since v0.10.0) to the KLU backend if <code class="docutils literal notranslate"><span class="pre">klujax</span></code> is installed.name1</p>
+</div>
+</section>
+</section>
+<section id="additive-backend">
+<h2>Additive Backend<a class="headerlink" href="#additive-backend" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit_additive">
+<span class="sig-name descname"><span class="pre">analyze_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/additive.html#analyze_circuit_additive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit_additive" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit_additive">
+<span class="sig-name descname"><span class="pre">evaluate_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/additive.html#evaluate_circuit_additive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit_additive" title="Permalink to this definition">#</a></dt>
+<dd><p>evaluate a circuit for the given sdicts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SDict</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SDict</p>
+</dd>
+</dl>
+</dd></dl>
+
+<p>Sometimes we would like to calculate circuit path lengths or time delays within a circuit. We could obviously simulate these things with a time domain simulator, but in many cases a simple additive backend (as opposed to the default multiplicative backend) can suffice.</p>
+<section id="id4">
+<h3>Example<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>in stead of S-parameters the stypes need to contain <em>additive</em> parameters, such as length or time delay.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wg_sdict</span> <span class="o">=</span> <span class="p">{</span>
+    
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">]),</span> <span class="c1"># assume for now there are three possible paths between these two ports.</span>
+    <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">]),</span> <span class="c1"># assume for now there are three possible paths between these two ports.</span>
+<span class="p">}</span>
+
+<span class="n">dc_sdict</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]),</span> <span class="c1"># assume for now there are two possible paths between these two ports.</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="mf">15.0</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mf">15.0</span><span class="p">,</span>
+    <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]),</span> <span class="c1"># assume for now there are two possible paths between these two ports.</span>
+<span class="p">}</span>
+
+<span class="n">instances</span><span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdict</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">connections</span><span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">ports</span><span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>it is recommended to <strong>not</strong> use an <code class="docutils literal notranslate"><span class="pre">SDense</span></code> representation for the additive backend. Very often an <code class="docutils literal notranslate"><span class="pre">SDense</span></code> representation will introduce <strong>zeros</strong> which will be interpreted as an <strong>existing connection with zero length</strong>. Conversely, in a sparse representation like <code class="docutils literal notranslate"><span class="pre">SDict</span></code> or <code class="docutils literal notranslate"><span class="pre">SCoo</span></code>, non-existing elements will be just that: they will not be present in the internal graph.</p>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">additive</span><span class="o">.</span><span class="n">_graph_edges</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+<span class="n">edges</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We made a difference here between edges of ‘S’-type (connections through the S-matrix) and edges of ‘C’-type (connections through the connection matrix). Connections of ‘C’-type obviously always have length zero as they signify per definition the equality of two ports.</p>
+<p>We can create a NetworkX graph from these edges:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
+<span class="n">graph</span><span class="o">.</span><span class="n">add_edges_from</span><span class="p">(</span><span class="n">edges</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_kamada_kawai</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">graph</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">additive</span><span class="o">.</span><span class="n">_prune_internal_output_nodes</span><span class="p">(</span><span class="n">graph</span><span class="p">)</span>
+<span class="n">nx</span><span class="o">.</span><span class="n">draw_kamada_kawai</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>We can now get a list of all possible paths in the network. Note that these paths <strong>must</strong> alternate between an S-edge and a C-edge:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">paths</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">additive</span><span class="o">.</span><span class="n">_get_possible_paths</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">))</span>
+<span class="n">paths</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>And the path lengths of those paths can be calculated as follows:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">additive</span><span class="o">.</span><span class="n">_path_lengths</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">paths</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p>This is all brought together in the additive KLU backend:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit_additive</span><span class="p">(</span>
+    <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit_additive</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">),</span> <span class="n">instances</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+</section>
+
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="02_circuit.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Circuit</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../sax.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">sax package</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit"><code class="docutils literal notranslate"><span class="pre">analyze_circuit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filipsson-gunnar-backend">Filipsson-Gunnar Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_fg"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_fg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_fg"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_fg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-walkthrough">Algorithm Walkthrough</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-improvements">Algorithm Improvements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#klu-backend">KLU Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_klu"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_klu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_klu"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_klu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-background">Theoretical Background</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.solve"><code class="docutils literal notranslate"><span class="pre">solve()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.coo_mul_vec"><code class="docutils literal notranslate"><span class="pre">coo_mul_vec()</span></code></a></li>
+</ul>
+</li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Algorithm Walkthrough</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Algorithm Improvements</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-backend">Additive Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_additive"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_additive()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_additive"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_additive()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Example</a></li>
+</ul>
+</li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Floris Laporte
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023, Apache2.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

@@ -1,0 +1,818 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>sax.saxtypes &#8212; sax 0.10.0 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/_static/css/custom.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/sphinx_highlight.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sax/saxtypes';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../../index.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../index.html">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../examples/01_quick_start.html">SAX Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/03_circuit_from_yaml.html">Circuit from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/04_multimode_simulations.html">Multimode simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/05_thinfilm.html">Thin film optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/06_additive_backend.html">Additive Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../../internals/01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../../internals/03_backends.html">Backends</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../sax.html">sax package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.klu.html">sax.backends.klu module</a></li>
+</ul>
+</li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.core.html">sax.nn.core module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.io.html">sax.nn.io module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.loss.html">sax.nn.loss module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.nn.utils.html">sax.nn.utils module</a></li>
+</ul>
+</li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.patched.html">sax.patched module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.saxtypes.html">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../../sax.utils.html">sax.utils module</a></li>
+</ul>
+</li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2F_modules/sax/saxtypes.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1></h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <h1>Source code for sax.saxtypes</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; SAX Types and type coercions &quot;&quot;&quot;</span>
+
+<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+
+<span class="kn">import</span> <span class="nn">functools</span>
+<span class="kn">import</span> <span class="nn">inspect</span>
+<span class="kn">from</span> <span class="nn">collections.abc</span> <span class="kn">import</span> <span class="n">Callable</span> <span class="k">as</span> <span class="n">CallableABC</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">overload</span>
+
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Array</span> <span class="k">as</span> <span class="n">Array</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">ArrayLike</span> <span class="k">as</span> <span class="n">ArrayLike</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Complex</span> <span class="k">as</span> <span class="n">Complex</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Float</span> <span class="k">as</span> <span class="n">Float</span>
+<span class="kn">from</span> <span class="nn">jaxtyping</span> <span class="kn">import</span> <span class="n">Int</span> <span class="k">as</span> <span class="n">Int</span>
+<span class="kn">from</span> <span class="nn">natsort</span> <span class="kn">import</span> <span class="n">natsorted</span>
+
+<span class="n">IntArray1D</span> <span class="o">=</span> <span class="n">Int</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; dim&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; One dimensional integer array &quot;&quot;&quot;</span>
+
+<span class="n">FloatArray1D</span> <span class="o">=</span> <span class="n">Complex</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; dim&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; One dimensional float array &quot;&quot;&quot;</span>
+
+<span class="n">ComplexArray1D</span> <span class="o">=</span> <span class="n">Complex</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot; dim&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; One dimensional complex array &quot;&quot;&quot;</span>
+
+<span class="n">IntArrayND</span> <span class="o">=</span> <span class="n">Int</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; N-dimensional integer array &quot;&quot;&quot;</span>
+
+<span class="n">FloatArrayND</span> <span class="o">=</span> <span class="n">Complex</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; N-dimensional float array &quot;&quot;&quot;</span>
+
+<span class="n">ComplexArrayND</span> <span class="o">=</span> <span class="n">Complex</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="s2">&quot;...&quot;</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; N-dimensional complex array &quot;&quot;&quot;</span>
+
+<span class="n">PortMap</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; A mapping from a port name (str) to a port index (int) &quot;&quot;&quot;</span>
+
+<span class="n">PortCombination</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; A combination of two port names (str, str) &quot;&quot;&quot;</span>
+
+<span class="n">SDict</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="n">PortCombination</span><span class="p">,</span> <span class="n">ComplexArrayND</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; A mapping from a port combination to an S-parameter or an array of S-parameters </span>
+
+<span class="sd">Example:</span>
+
+<span class="sd">.. code-block::</span>
+
+<span class="sd">    sdict: sax.SDict = {</span>
+<span class="sd">        (&quot;in0&quot;, &quot;out0&quot;): 3.0,</span>
+<span class="sd">    }</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">SDense</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">PortMap</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; A dense S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array</span>
+<span class="sd">combined with a port map. If (N+2)-D array the S-matrix dimensions are the last two.</span>
+
+<span class="sd">Example:</span>
+
+<span class="sd">.. code-block::</span>
+
+<span class="sd">    Sd = jnp.arange(9, dtype=float).reshape(3, 3)</span>
+<span class="sd">    port_map = {&quot;in0&quot;: 0, &quot;in1&quot;: 2, &quot;out0&quot;: 1}</span>
+<span class="sd">    sdense = Sd, port_map</span>
+
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">SCoo</span> <span class="o">=</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">IntArray1D</span><span class="p">,</span> <span class="n">IntArray1D</span><span class="p">,</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">PortMap</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; A sparse S-matrix in COO format (recommended for internal library use only) </span>
+
+<span class="sd">An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map. The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix. The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!</span>
+
+<span class="sd">Example:</span>
+
+<span class="sd">.. code-block::</span>
+
+<span class="sd">    Si = jnp.arange(3, dtype=int)</span>
+<span class="sd">    Sj = jnp.array([0, 1, 0], dtype=int)</span>
+<span class="sd">    Sx = jnp.array([3.0, 4.0, 1.0])</span>
+<span class="sd">    port_map = {&quot;in0&quot;: 0, &quot;in1&quot;: 2, &quot;out0&quot;: 1}</span>
+<span class="sd">    scoo: sax.SCoo = (Si, Sj, Sx, port_map)</span>
+<span class="sd">    </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">Settings</span> <span class="o">=</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Union</span><span class="p">[</span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span> <span class="n">FloatArrayND</span><span class="p">,</span> <span class="n">ComplexArrayND</span><span class="p">]]</span>
+<span class="sd">&quot;&quot;&quot; A (possibly recursive) mapping from a setting name to a float or complex value or array </span>
+
+<span class="sd">Example:</span>
+
+<span class="sd">.. code-block::</span>
+
+<span class="sd">    mzi_settings: sax.Settings = {</span>
+<span class="sd">        &quot;wl&quot;: 1.5,  # global settings</span>
+<span class="sd">        &quot;lft&quot;: {&quot;coupling&quot;: 0.5},  # settings for the left coupler</span>
+<span class="sd">        &quot;top&quot;: {&quot;neff&quot;: 3.4},  # settings for the top waveguide</span>
+<span class="sd">        &quot;rgt&quot;: {&quot;coupling&quot;: 0.3},  # settings for the right coupler</span>
+<span class="sd">    }</span>
+<span class="sd">    </span>
+<span class="sd">&quot;&quot;&quot;</span>
+
+<span class="n">SType</span> <span class="o">=</span> <span class="n">Union</span><span class="p">[</span><span class="n">SDict</span><span class="p">,</span> <span class="n">SCoo</span><span class="p">,</span> <span class="n">SDense</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; An SDict, SDense or SCOO &quot;&quot;&quot;</span>
+
+<span class="n">Model</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">SType</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; A keyword-only function producing an SType &quot;&quot;&quot;</span>
+
+<span class="n">ModelFactory</span> <span class="o">=</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Model</span><span class="p">]</span>
+<span class="sd">&quot;&quot;&quot; A keyword-only function producing a Model &quot;&quot;&quot;</span>
+
+<div class="viewcode-block" id="is_float"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_float">[docs]</a><span class="k">def</span> <span class="nf">is_float</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Check if an object is a `Float`&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">float</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">float128</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float16</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float32</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_complex"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_complex">[docs]</a><span class="k">def</span> <span class="nf">is_complex</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an object is a `ComplexFloat`&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">complex</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">):</span>
+        <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="is_complex_float"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_complex_float">[docs]</a><span class="k">def</span> <span class="nf">is_complex_float</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an object is either a `ComplexFloat` or a `Float`&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">is_float</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_complex</span><span class="p">(</span><span class="n">x</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_sdict"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_sdict">[docs]</a><span class="k">def</span> <span class="nf">is_sdict</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an object is an `SDict` (a SAX S-dictionary)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_scoo"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_scoo">[docs]</a><span class="k">def</span> <span class="nf">is_scoo</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an object is an `SCoo` (a SAX sparse S representation in COO-format)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">4</span></div>
+
+
+<div class="viewcode-block" id="is_sdense"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_sdense">[docs]</a><span class="k">def</span> <span class="nf">is_sdense</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an object is an `SDense` (a SAX dense S-matrix representation)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="nb">tuple</span><span class="p">,</span> <span class="nb">list</span><span class="p">))</span> <span class="ow">and</span> <span class="nb">len</span><span class="p">(</span><span class="n">x</span><span class="p">)</span> <span class="o">==</span> <span class="mi">2</span></div>
+
+
+<div class="viewcode-block" id="is_model"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_model">[docs]</a><span class="k">def</span> <span class="nf">is_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if a callable is a `Model` (a callable returning an `SType`)&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">except</span> <span class="ne">ValueError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">sig</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="k">return</span> <span class="kc">False</span>  <span class="c1"># a proper SAX model does not have any positional arguments.</span>
+    <span class="k">if</span> <span class="n">_is_callable_annotation</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">return_annotation</span><span class="p">):</span>  <span class="c1"># model factory</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="k">return</span> <span class="kc">True</span></div>
+
+
+<span class="k">def</span> <span class="nf">_is_callable_annotation</span><span class="p">(</span><span class="n">annotation</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an annotation is `Callable`-like&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">annotation</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+        <span class="c1"># happens when</span>
+        <span class="c1"># was imported at the top of the file...</span>
+        <span class="k">return</span> <span class="n">annotation</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;Callable&quot;</span><span class="p">)</span> <span class="ow">or</span> <span class="n">annotation</span><span class="o">.</span><span class="n">endswith</span><span class="p">(</span><span class="s2">&quot;Model&quot;</span><span class="p">)</span>
+        <span class="c1"># TODO: this is not a very robust check...</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">annotation</span><span class="o">.</span><span class="n">__origin__</span> <span class="o">==</span> <span class="n">CallableABC</span>
+    <span class="k">except</span> <span class="ne">AttributeError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+
+<div class="viewcode-block" id="is_model_factory"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_model_factory">[docs]</a><span class="k">def</span> <span class="nf">is_model_factory</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if a callable is a model function.&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">model</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_is_callable_annotation</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">return_annotation</span><span class="p">):</span>  <span class="c1"># model factory</span>
+        <span class="k">return</span> <span class="kc">True</span>
+    <span class="k">return</span> <span class="kc">False</span></div>
+
+
+<div class="viewcode-block" id="validate_model"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.validate_model">[docs]</a><span class="k">def</span> <span class="nf">validate_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Callable</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the parameters of a model&quot;&quot;&quot;</span>
+    <span class="n">positional_arguments</span> <span class="o">=</span> <span class="p">[]</span>
+    <span class="k">for</span> <span class="n">param</span> <span class="ow">in</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">model</span><span class="p">)</span><span class="o">.</span><span class="n">parameters</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">param</span><span class="o">.</span><span class="n">default</span> <span class="ow">is</span> <span class="n">inspect</span><span class="o">.</span><span class="n">Parameter</span><span class="o">.</span><span class="n">empty</span><span class="p">:</span>
+            <span class="n">positional_arguments</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">param</span><span class="o">.</span><span class="n">name</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">positional_arguments</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;model &#39;</span><span class="si">{</span><span class="n">model</span><span class="si">}</span><span class="s2">&#39; takes positional &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;arguments </span><span class="si">{</span><span class="s1">&#39;, &#39;</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">positional_arguments</span><span class="p">)</span><span class="si">}</span><span class="s2"> &quot;</span>
+            <span class="s2">&quot;and hence is not a valid SAX Model! &quot;</span>
+            <span class="s2">&quot;A SAX model should ONLY take keyword arguments (or no arguments at all).&quot;</span>
+        <span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_stype"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_stype">[docs]</a><span class="k">def</span> <span class="nf">is_stype</span><span class="p">(</span><span class="n">stype</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an object is an SDict, SCoo or SDense&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">is_sdict</span><span class="p">(</span><span class="n">stype</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_scoo</span><span class="p">(</span><span class="n">stype</span><span class="p">)</span> <span class="ow">or</span> <span class="n">is_sdense</span><span class="p">(</span><span class="n">stype</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_singlemode"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_singlemode">[docs]</a><span class="k">def</span> <span class="nf">is_singlemode</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an stype is single mode&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_stype</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+    <span class="n">ports</span> <span class="o">=</span> <span class="n">_get_ports</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="nb">any</span><span class="p">((</span><span class="s2">&quot;@&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ports</span><span class="p">)</span></div>
+
+
+<span class="k">def</span> <span class="nf">_get_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">is_sdict</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">SDict</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+        <span class="n">ports_set</span> <span class="o">=</span> <span class="p">{</span><span class="n">p1</span> <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">S</span><span class="p">}</span> <span class="o">|</span> <span class="p">{</span><span class="n">p2</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">S</span><span class="p">}</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">natsorted</span><span class="p">(</span><span class="n">ports_set</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="o">*</span><span class="n">_</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">S</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ports_map</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">natsorted</span><span class="p">(</span><span class="n">ports_map</span><span class="o">.</span><span class="n">keys</span><span class="p">()))</span>
+
+
+<div class="viewcode-block" id="is_multimode"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_multimode">[docs]</a><span class="k">def</span> <span class="nf">is_multimode</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an stype is single mode&quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="n">is_stype</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="k">return</span> <span class="kc">False</span>
+
+    <span class="n">ports</span> <span class="o">=</span> <span class="n">_get_ports</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
+    <span class="k">return</span> <span class="nb">all</span><span class="p">((</span><span class="s2">&quot;@&quot;</span> <span class="ow">in</span> <span class="n">p</span><span class="p">)</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ports</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="is_mixedmode"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.is_mixedmode">[docs]</a><span class="k">def</span> <span class="nf">is_mixedmode</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">bool</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;check if an stype is neither single mode nor multimode (hence invalid)&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="ow">not</span> <span class="n">is_singlemode</span><span class="p">(</span><span class="n">S</span><span class="p">)</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_multimode</span><span class="p">(</span><span class="n">S</span><span class="p">)</span></div>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">sdict</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">sdict</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<div class="viewcode-block" id="sdict"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.sdict">[docs]</a><span class="k">def</span> <span class="nf">sdict</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">SType</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an `SCoo` or `SDense` to `SDict`&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">is_model</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">sdict</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">elif</span> <span class="n">is_scoo</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">x_dict</span> <span class="o">=</span> <span class="n">_scoo_to_sdict</span><span class="p">(</span><span class="o">*</span><span class="n">cast</span><span class="p">(</span><span class="n">SCoo</span><span class="p">,</span> <span class="n">S</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">is_sdense</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">x_dict</span> <span class="o">=</span> <span class="n">_sdense_to_sdict</span><span class="p">(</span><span class="o">*</span><span class="n">cast</span><span class="p">(</span><span class="n">SDense</span><span class="p">,</span> <span class="n">S</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">is_sdict</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">x_dict</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">SDict</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not convert arguments to sdict.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">x_dict</span></div>
+
+
+<span class="k">def</span> <span class="nf">_scoo_to_sdict</span><span class="p">(</span>
+    <span class="n">Si</span><span class="p">:</span> <span class="n">IntArray1D</span><span class="p">,</span>
+    <span class="n">Sj</span><span class="p">:</span> <span class="n">IntArray1D</span><span class="p">,</span>
+    <span class="n">Sx</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span>
+    <span class="n">ports_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
+    <span class="n">sdict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="n">inverse_ports_map</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">i</span><span class="p">):</span> <span class="n">p</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ports_map</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="p">(</span><span class="n">si</span><span class="p">,</span> <span class="n">sj</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="nb">zip</span><span class="p">(</span><span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">)):</span>
+        <span class="n">input_port</span> <span class="o">=</span> <span class="n">inverse_ports_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">si</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">output_port</span> <span class="o">=</span> <span class="n">inverse_ports_map</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="nb">int</span><span class="p">(</span><span class="n">sj</span><span class="p">),</span> <span class="s2">&quot;&quot;</span><span class="p">)</span>
+        <span class="n">sdict</span><span class="p">[</span><span class="n">input_port</span><span class="p">,</span> <span class="n">output_port</span><span class="p">]</span> <span class="o">=</span> <span class="n">Sx</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">]</span>
+    <span class="n">sdict</span> <span class="o">=</span> <span class="p">{(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">),</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">sdict</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">p1</span> <span class="ow">and</span> <span class="n">p2</span><span class="p">}</span>
+    <span class="k">return</span> <span class="n">sdict</span>
+
+
+<span class="k">def</span> <span class="nf">_sdense_to_sdict</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">ports_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
+    <span class="n">sdict</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ports_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">for</span> <span class="n">p2</span><span class="p">,</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">ports_map</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+            <span class="n">sdict</span><span class="p">[</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">]</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>
+    <span class="k">return</span> <span class="n">sdict</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">scoo</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">scoo</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SCoo</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<div class="viewcode-block" id="scoo"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.scoo">[docs]</a><span class="k">def</span> <span class="nf">scoo</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">SCoo</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an `SDict` or `SDense` to `SCoo`&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">is_model</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">scoo</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">elif</span> <span class="n">is_scoo</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">SCoo</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">is_sdense</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">_sdense_to_scoo</span><span class="p">(</span><span class="o">*</span><span class="n">cast</span><span class="p">(</span><span class="n">SDense</span><span class="p">,</span> <span class="n">S</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">is_sdict</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">_sdict_to_scoo</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">SDict</span><span class="p">,</span> <span class="n">S</span><span class="p">))</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not convert arguments to scoo.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">S</span></div>
+
+
+<span class="k">def</span> <span class="nf">_consolidate_sdense</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">pm</span><span class="p">):</span>
+    <span class="n">idxs</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">pm</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">idxs</span><span class="p">,</span> <span class="p">:][</span><span class="o">...</span><span class="p">,</span> <span class="p">:,</span> <span class="n">idxs</span><span class="p">]</span>
+    <span class="n">pm</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">pm</span><span class="p">)}</span>
+    <span class="k">return</span> <span class="n">S</span><span class="p">,</span> <span class="n">pm</span>
+
+
+<span class="k">def</span> <span class="nf">_sdense_to_scoo</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">ports_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SCoo</span><span class="p">:</span>
+    <span class="n">S</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">_consolidate_sdense</span><span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">ports_map</span><span class="p">)</span>
+    <span class="n">Sj</span><span class="p">,</span> <span class="n">Si</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">meshgrid</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]),</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">return</span> <span class="n">Si</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">Sj</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">S</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">S</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">ports_map</span>
+
+
+<span class="k">def</span> <span class="nf">_sdict_to_scoo</span><span class="p">(</span><span class="n">sdict</span><span class="p">:</span> <span class="n">SDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SCoo</span><span class="p">:</span>
+    <span class="n">all_ports</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">sdict</span><span class="p">:</span>
+        <span class="n">all_ports</span><span class="p">[</span><span class="n">p1</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="n">all_ports</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span> <span class="o">=</span> <span class="kc">None</span>
+    <span class="n">ports_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">all_ports</span><span class="p">)}</span>
+    <span class="n">Sx</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="o">*</span><span class="n">sdict</span><span class="o">.</span><span class="n">values</span><span class="p">()),</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="n">Si</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ports_map</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">sdict</span><span class="p">])</span>
+    <span class="n">Sj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="n">ports_map</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">sdict</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">ports_map</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">sdense</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Callable</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span> <span class="nf">sdense</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDense</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<div class="viewcode-block" id="sdense"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.sdense">[docs]</a><span class="k">def</span> <span class="nf">sdense</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Callable</span><span class="p">,</span> <span class="n">SDense</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Convert an `SDict` or `SCoo` to `SDense`&quot;&quot;&quot;</span>
+
+    <span class="k">if</span> <span class="n">is_model</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">model</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+
+        <span class="nd">@functools</span><span class="o">.</span><span class="n">wraps</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
+        <span class="k">def</span> <span class="nf">wrapper</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">):</span>
+            <span class="k">return</span> <span class="n">sdense</span><span class="p">(</span><span class="n">model</span><span class="p">(</span><span class="o">**</span><span class="n">kwargs</span><span class="p">))</span>
+
+        <span class="k">return</span> <span class="n">wrapper</span>
+
+    <span class="k">if</span> <span class="n">is_sdict</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">_sdict_to_sdense</span><span class="p">(</span><span class="n">cast</span><span class="p">(</span><span class="n">SDict</span><span class="p">,</span> <span class="n">S</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">is_scoo</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">_scoo_to_sdense</span><span class="p">(</span><span class="o">*</span><span class="n">cast</span><span class="p">(</span><span class="n">SCoo</span><span class="p">,</span> <span class="n">S</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">is_sdense</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
+        <span class="n">S</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">SDense</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Could not convert arguments to sdense.&quot;</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">S</span></div>
+
+
+<span class="k">def</span> <span class="nf">_scoo_to_sdense</span><span class="p">(</span>
+    <span class="n">Si</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Sj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Sx</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">ports_map</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">int</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDense</span><span class="p">:</span>
+    <span class="n">n_col</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ports_map</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="o">*</span><span class="n">Sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_col</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
+    <span class="n">S</span> <span class="o">=</span> <span class="n">S</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">]</span><span class="o">.</span><span class="n">add</span><span class="p">(</span><span class="n">Sx</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">S</span><span class="p">,</span> <span class="n">ports_map</span>
+
+
+<span class="k">def</span> <span class="nf">_sdict_to_sdense</span><span class="p">(</span><span class="n">sdict</span><span class="p">:</span> <span class="n">SDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDense</span><span class="p">:</span>
+    <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">_sdict_to_scoo</span><span class="p">(</span><span class="n">sdict</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">_scoo_to_sdense</span><span class="p">(</span><span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">ports_map</span><span class="p">)</span>
+
+
+<div class="viewcode-block" id="modelfactory"><a class="viewcode-back" href="../../sax.saxtypes.html#sax.saxtypes.modelfactory">[docs]</a><span class="k">def</span> <span class="nf">modelfactory</span><span class="p">(</span><span class="n">func</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Decorator that marks a function as `ModelFactory`&quot;&quot;&quot;</span>
+    <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">_is_callable_annotation</span><span class="p">(</span><span class="n">sig</span><span class="o">.</span><span class="n">return_annotation</span><span class="p">):</span>  <span class="c1"># already model factory</span>
+        <span class="k">return</span> <span class="n">func</span>
+    <span class="n">func</span><span class="o">.</span><span class="n">__signature__</span> <span class="o">=</span> <span class="n">sig</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="n">return_annotation</span><span class="o">=</span><span class="n">Model</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">func</span></div>
+</pre></div>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Floris Laporte
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023, Apache2.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
