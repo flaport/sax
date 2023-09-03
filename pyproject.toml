@@ -47,6 +47,7 @@ dev = [
   "autograd",
   "autoimport",
   "black[jupyter]",
+  "bump2version",
   "flake8",
   "gdsfactory>=0.7.4",
   "gplugins",
@@ -62,9 +63,9 @@ dev = [
   "papermill",
   "pre-commit",
   "pytest",
-  "sphinx==5.3.0",
   "sphinx-book-theme==1.0.1",
   "sphinx-copybutton==0.5.2",
+  "sphinx==5.3.0",
   "tmm",
 # "meep",
 ]
