@@ -45,7 +45,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@master
       - name: Install Library
-        run: pip install '.[dev]'
+        run: pip install --upgrade pip && pip install --use-deprecated=legacy-resolver '.[dev]'
       - name: Test notebooks
         run: pytest
 
@@ -63,7 +63,7 @@ jobs:
       - name: Install Dependencies
         run: mamba install -y parallel gdspy gdstk pymeep=\*=mpi_mpich_\* ipykernel ipywidgets ipympl ipyevents
       - name: Install Library
-        run: pip install '.[dev]'
+        run: pip install --upgrade pip && pip install --use-deprecated=legacy-resolver '.[dev]'
       - name: Run source notebooks
         run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3
       - name: Expose 'internals' as artifact
@@ -91,7 +91,7 @@ jobs:
       - name: Install Dependencies
         run: mamba install -y make
       - name: Install Library
-        run: pip install '.[dev]'
+        run: pip install --upgrade pip && pip install --use-deprecated=legacy-resolver '.[dev]'
       - name: Download 'internals' artifact
         uses: actions/download-artifact@master
         with:
