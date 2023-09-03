@@ -3,14 +3,17 @@ from __future__ import annotations
 import os
 import sys
 import typing
-from modified_nb_copy import docs_copy_dir
+
+# Modified copy of notebooks
+sys.path.insert(0, os.path.dirname(__file__))
+from modified_nb_copy import docs_copy_dir  # noqa: E402
 
 docs_copy_dir("examples")
 
 # Dynamic Config
 REPO_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 sys.path.insert(0, REPO_PATH)
-import sax  # noqa
+import sax  # noqa: E402
 
 project = "sax"
 copyright = "2023, Apache2"
