@@ -4,11 +4,16 @@ import shutil
 from papermill.engines import papermill_engines
 from papermill.execute import raise_for_execution_errors
 from papermill.iorw import load_notebook_node
-from papermill.utils import nb_kernel_name
 
 TEST_DIR = os.path.dirname(os.path.abspath(__file__))
 NBS_DIR = os.path.join(TEST_DIR, "nbs")
 NBS_FAIL_DIR = os.path.join(NBS_DIR, "failed")
+
+def get_kernel():
+    kernel = os.environ.get("CONDA_DEFAULT_ENV", "base")
+    if kernel == "base":
+        kernel = "python3"
+    return kernel
 
 shutil.rmtree(NBS_FAIL_DIR, ignore_errors=True)
 os.mkdir(NBS_FAIL_DIR)
@@ -28,7 +33,7 @@ def test_nbs(path):
     nb = papermill_engines.execute_notebook_with_engine(
         engine_name=None,
         nb=nb,
-        kernel_name=nb_kernel_name(nb, None),
+        kernel_name=get_kernel(),
         input_path=path,
         output_path=None,
     )
