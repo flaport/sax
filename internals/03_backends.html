@@ -585,6 +585,26 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="filipsson-gunnar-backend">
@@ -688,6 +708,31 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,out0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc1,out1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,out0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,out1&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,out0&#39;, &#39;dc1,in0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,out1&#39;, &#39;dc1,in0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,out1&#39;, &#39;dc1,in1&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;wg,in0&#39;, &#39;wg,out0&#39;): (0.5+0.86603j),
+ (&#39;wg,out0&#39;, &#39;wg,in0&#39;): (0.5+0.86603j),
+ (&#39;dc2,in0&#39;, &#39;dc2,out0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,in1&#39;, &#39;dc2,out1&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,in0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,in1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,in1&#39;): Array(0.70710678+0.j, dtype=complex128)}
+</pre></div>
+</div>
+</div>
 </div>
 <p>next, we sort the connections such that similar components are grouped together:</p>
 <div class="cell docutils container">
@@ -695,6 +740,11 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sax.backends.filipsson_gunnar</span> <span class="kn">import</span> <span class="n">_connections_sort_key</span>
 <span class="n">sorted_connections</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">_connections_sort_key</span><span class="p">)</span>
 <span class="n">sorted_connections</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;dc1,out1&#39;, &#39;dc2,in1&#39;), (&#39;dc1,out0&#39;, &#39;wg,in0&#39;), (&#39;wg,out0&#39;, &#39;dc2,in0&#39;)]
 </pre></div>
 </div>
 </div>
@@ -708,6 +758,11 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;dc1&#39;: {&#39;dc1&#39;}, &#39;wg&#39;: {&#39;wg&#39;}, &#39;dc2&#39;: {&#39;dc2&#39;}}
+</pre></div>
+</div>
+</div>
 </div>
 <p>Normally we would loop over every connection in <code class="docutils literal notranslate"><span class="pre">sorted_connections</span></code> now, but let’s just go through it once at first:</p>
 <div class="cell docutils container">
@@ -715,6 +770,11 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># for k, l in sorted_connections:</span>
 <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="o">=</span> <span class="n">sorted_connections</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
 <span class="n">k</span><span class="p">,</span> <span class="n">l</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,out1&#39;, &#39;dc2,in1&#39;)
 </pre></div>
 </div>
 </div>
@@ -737,6 +797,11 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;dc1&#39;, &#39;dc2&#39;}
+</pre></div>
+</div>
+</div>
 </div>
 <p>We then iterate over each of the components in this set and make sure each of the component names in that set maps to that set (yes, I know… confusing). We do this to be able to keep track with which components each of the components in the circuit is currently already connected to.</p>
 <div class="cell docutils container">
@@ -745,6 +810,11 @@ document.write(`
     <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">connected_instances</span>
     
 <span class="n">all_connected_instances</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;dc1&#39;: {&#39;dc1&#39;, &#39;dc2&#39;}, &#39;wg&#39;: {&#39;wg&#39;}, &#39;dc2&#39;: {&#39;dc1&#39;, &#39;dc2&#39;}}
 </pre></div>
 </div>
 </div>
@@ -763,6 +833,18 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,out0&#39;,
+ &#39;dc1,out1&#39;,
+ &#39;dc1,in0&#39;,
+ &#39;dc1,in1&#39;,
+ &#39;dc2,out0&#39;,
+ &#39;dc2,in1&#39;,
+ &#39;dc2,out1&#39;,
+ &#39;dc2,in0&#39;)
+</pre></div>
+</div>
+</div>
 </div>
 <p>Now the <span class="xref myst">Gunnar Algorithm</span> is used. Given a (block-diagonal) ‘S-matrix’ <code class="docutils literal notranslate"><span class="pre">block_diag</span></code> and a ‘connection matrix’ <code class="docutils literal notranslate"><span class="pre">current_ports</span></code> we can interconnect port <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code> as follows:</p>
 <blockquote>
@@ -774,6 +856,31 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">block_diag</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">block_diag</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mf">1e-10</span><span class="p">}</span>
 <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_diag</span><span class="p">))</span>
 <span class="n">block_diag</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>18
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,out0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc1,out1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,out0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,out1&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,out0&#39;, &#39;dc1,in0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,out1&#39;, &#39;dc1,in0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,out1&#39;, &#39;dc1,in1&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;wg,in0&#39;, &#39;wg,out0&#39;): (0.5+0.86603j),
+ (&#39;wg,out0&#39;, &#39;wg,in0&#39;): (0.5+0.86603j),
+ (&#39;dc2,in0&#39;, &#39;dc2,out0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,in1&#39;, &#39;dc2,out0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,in1&#39;, &#39;dc2,out1&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,in0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,in1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,in1&#39;): Array(0.70710678+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -789,6 +896,23 @@ document.write(`
         
 <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_diag</span><span class="p">))</span>
 <span class="n">block_diag</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10
+</pre></div>
+</div>
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,out0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,out0&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc1,out0&#39;, &#39;dc1,in0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc1,out0&#39;, &#39;dc1,in1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;wg,in0&#39;, &#39;wg,out0&#39;): (0.5+0.86603j),
+ (&#39;wg,out0&#39;, &#39;wg,in0&#39;): (0.5+0.86603j),
+ (&#39;dc2,in0&#39;, &#39;dc2,out0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,in0&#39;, &#39;dc2,out1&#39;): Array(0.+0.70710678j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,in0&#39;): Array(0.70710678+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,in0&#39;): Array(0.+0.70710678j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -828,6 +952,26 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128)}
+</pre></div>
+</div>
+</div>
 </div>
 <p>All that’s left is to rename these internal ports of the format <code class="docutils literal notranslate"><span class="pre">{instance},{port}</span></code> into output ports of the resulting circuit:</p>
 <div class="cell docutils container">
@@ -838,6 +982,26 @@ document.write(`
     <span class="k">if</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">reversed_ports</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">reversed_ports</span>
 <span class="p">}</span>
 <span class="n">circuit_sdict</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -979,6 +1143,11 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([6. , 1. , 0.5, 0.5, 2. ], dtype=float64)
+</pre></div>
+</div>
+</div>
 </div>
 <p>This result is indeed correct:</p>
 <div class="cell docutils container">
@@ -986,6 +1155,16 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="nd">@x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[0. 5. 0. 0. 0.]
+ [0. 0. 0. 6. 0.]
+ [0. 0. 0. 0. 1.]
+ [1. 0. 0. 0. 0.]
+ [0. 0. 2. 0. 0.]]
+[5. 3. 2. 6. 1.]
 </pre></div>
 </div>
 </div>
@@ -1010,12 +1189,26 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([[6.        , 1.        , 0.5       , 0.5       , 2.        ],
+       [3.        , 1.        , 1.        , 0.75      , 0.66666667],
+       [1.5       , 5.        , 0.2       , 1.5       , 0.66666667]],      dtype=float64)
+</pre></div>
+</div>
+</div>
 </div>
 <p>This result is indeed correct:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">3</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">at</span><span class="p">[:,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
 <span class="n">jnp</span><span class="o">.</span><span class="n">einsum</span><span class="p">(</span><span class="s2">&quot;ijk,ik-&gt;ij&quot;</span><span class="p">,</span> <span class="n">A</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([[5., 3., 2., 6., 1.],
+       [5., 3., 2., 6., 1.],
+       [5., 3., 2., 6., 1.]], dtype=float64)
 </pre></div>
 </div>
 </div>
@@ -1035,6 +1228,13 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">result</span> <span class="o">=</span> <span class="n">mul_coo</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 <span class="n">result</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([[5., 3., 2., 6., 1.],
+       [5., 3., 2., 6., 1.],
+       [5., 3., 2., 6., 1.]], dtype=float64)
 </pre></div>
 </div>
 </div>
@@ -1081,6 +1281,19 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[ 0.      +0.j        0.      +0.j       -0.25    +0.433015j
+  -0.433015+0.75j    ]
+ [ 0.      +0.j        0.      +0.j       -0.433015+0.75j
+   0.25    -0.433015j]
+ [-0.25    +0.433015j -0.433015+0.75j      0.      +0.j
+   0.      +0.j      ]
+ [-0.433015+0.75j      0.25    -0.433015j  0.      +0.j
+   0.      +0.j      ]]
+{&#39;in0&#39;: 0, &#39;in1&#39;: 1, &#39;out0&#39;: 2, &#39;out1&#39;: 3}
+</pre></div>
+</div>
+</div>
 </div>
 <p>the KLU backend yields <code class="docutils literal notranslate"><span class="pre">SDense</span></code> results by default:</p>
 <div class="cell docutils container">
@@ -1090,11 +1303,44 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[ 0.      +0.j      ,  0.      +0.j      , -0.25    +0.433015j,
+         -0.433015+0.75j    ],
+        [ 0.      +0.j      ,  0.      +0.j      , -0.433015+0.75j    ,
+          0.25    -0.433015j],
+        [-0.25    +0.433015j, -0.433015+0.75j    ,  0.      +0.j      ,
+          0.      +0.j      ],
+        [-0.433015+0.75j    ,  0.25    -0.433015j,  0.      +0.j      ,
+          0.      +0.j      ]], dtype=complex128),
+ {&#39;in0&#39;: 0, &#39;in1&#39;: 1, &#39;out0&#39;: 2, &#39;out1&#39;: 3})
+</pre></div>
+</div>
+</div>
 </div>
 <p>An <code class="docutils literal notranslate"><span class="pre">SDense</span></code> is returned for perfomance reasons. By returning an <code class="docutils literal notranslate"><span class="pre">SDense</span></code> by default we prevent any internal <code class="docutils literal notranslate"><span class="pre">SDict</span> <span class="pre">-&gt;</span> <span class="pre">SDense</span></code> conversions in deeply hierarchical circuits. It’s however very easy to convert <code class="docutils literal notranslate"><span class="pre">SDense</span></code> to <code class="docutils literal notranslate"><span class="pre">SDict</span></code> as a final step. To do this, wrap the result (or the function generating the result) with <code class="docutils literal notranslate"><span class="pre">sdict</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span><span class="n">mzi_sdense</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(-0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.75j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1110,6 +1356,16 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;dc1,out0&#39;: &#39;wg,in0&#39;,
+ &#39;wg,out0&#39;: &#39;dc2,in0&#39;,
+ &#39;dc1,out1&#39;: &#39;dc2,in1&#39;,
+ &#39;wg,in0&#39;: &#39;dc1,out0&#39;,
+ &#39;dc2,in0&#39;: &#39;wg,out0&#39;,
+ &#39;dc2,in1&#39;: &#39;dc1,out1&#39;}
+</pre></div>
+</div>
+</div>
 </div>
 <p>We’ll also need the reversed ports:</p>
 <div class="cell docutils container">
@@ -1119,12 +1375,22 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;dc1,in0&#39;: &#39;in0&#39;, &#39;dc1,in1&#39;: &#39;in1&#39;, &#39;dc2,out0&#39;: &#39;out0&#39;, &#39;dc2,out1&#39;: &#39;out1&#39;}
+</pre></div>
+</div>
+</div>
 </div>
 <p>An the port indices</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">port_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ports</span><span class="p">)}</span>
 <span class="n">port_map</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;in0&#39;: 0, &#39;in1&#39;: 1, &#39;out0&#39;: 2, &#39;out1&#39;: 3}
 </pre></div>
 </div>
 </div>
@@ -1153,11 +1419,34 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0 0 0 0 1 1 1 1 2 2 2 2 3 3 3 3 4 5 6 6 6 6 7 7 7 7 8 8 8 8 9 9 9 9]
+[0 1 2 3 0 1 2 3 0 1 2 3 0 1 2 3 5 4 6 7 8 9 6 7 8 9 6 7 8 9 6 7 8 9]
+[0.        +0.j         0.        +0.j         0.70710678+0.j
+ 0.        +0.70710678j 0.        +0.j         0.        +0.j
+ 0.        +0.70710678j 0.70710678+0.j         0.70710678+0.j
+ 0.        +0.70710678j 0.        +0.j         0.        +0.j
+ 0.        +0.70710678j 0.70710678+0.j         0.        +0.j
+ 0.        +0.j         0.5       +0.86603j    0.5       +0.86603j
+ 0.        +0.j         0.        +0.j         0.70710678+0.j
+ 0.        +0.70710678j 0.        +0.j         0.        +0.j
+ 0.        +0.70710678j 0.70710678+0.j         0.70710678+0.j
+ 0.        +0.70710678j 0.        +0.j         0.        +0.j
+ 0.        +0.70710678j 0.70710678+0.j         0.        +0.j
+ 0.        +0.j        ]
+</pre></div>
+</div>
+</div>
 </div>
 <p>note that we also kept track of the <code class="docutils literal notranslate"><span class="pre">batch_shape</span></code>, i.e. the number of independent simulations (usually number of wavelengths). In the example being used here we don’t have a batch dimension (all elements of the <code class="docutils literal notranslate"><span class="pre">SDict</span></code> are <code class="docutils literal notranslate"><span class="pre">0D</span></code>):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">batch_shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>()
 </pre></div>
 </div>
 </div>
@@ -1170,6 +1459,11 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10
+</pre></div>
+</div>
+</div>
 </div>
 <p>And we’ll need to solve the circuit for each output port, i.e. we need to solve <code class="docutils literal notranslate"><span class="pre">n_rhs</span></code> number of equations:</p>
 <div class="cell docutils container">
@@ -1179,12 +1473,22 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>4
+</pre></div>
+</div>
+</div>
 </div>
 <p>We can represent the internal connection matrix <span class="math notranslate nohighlight">\(C_{int}\)</span> as a mapping between port indices:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cmap</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">instance_ports</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span> <span class="nb">int</span><span class="p">(</span><span class="n">instance_ports</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 <span class="n">Cmap</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{0: 4, 5: 8, 1: 9, 4: 0, 8: 5, 9: 1}
 </pre></div>
 </div>
 </div>
@@ -1199,12 +1503,23 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[0 5 1 4 8 9]
+[4 8 9 0 5 1]
+</pre></div>
+</div>
+</div>
 </div>
 <p>We can represent the external connection matrix <span class="math notranslate nohighlight">\(C_{ext}\)</span> as a map between internal port indices and external port indices:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cextmap</span> <span class="o">=</span> <span class="p">{</span><span class="nb">int</span><span class="p">(</span><span class="n">instance_ports</span><span class="p">[</span><span class="n">k</span><span class="p">]):</span> <span class="nb">int</span><span class="p">(</span><span class="n">port_map</span><span class="p">[</span><span class="n">v</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">inverse_ports</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 <span class="n">Cextmap</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{2: 0, 3: 1, 6: 2, 7: 3}
 </pre></div>
 </div>
 </div>
@@ -1219,6 +1534,12 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[2 3 6 7]
+[0 1 2 3]
+</pre></div>
+</div>
+</div>
 </div>
 <p>However, we actually need it as a dense representation:</p>
 <blockquote>
@@ -1228,6 +1549,20 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">Cext</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">Cexti</span><span class="p">,</span> <span class="n">Cextj</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="mf">1.0</span><span class="p">)</span>
 <span class="n">Cext</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([[0.+0.j, 0.+0.j, 0.+0.j, 0.+0.j],
+       [0.+0.j, 0.+0.j, 0.+0.j, 0.+0.j],
+       [1.+0.j, 0.+0.j, 0.+0.j, 0.+0.j],
+       [0.+0.j, 1.+0.j, 0.+0.j, 0.+0.j],
+       [0.+0.j, 0.+0.j, 0.+0.j, 0.+0.j],
+       [0.+0.j, 0.+0.j, 0.+0.j, 0.+0.j],
+       [0.+0.j, 0.+0.j, 1.+0.j, 0.+0.j],
+       [0.+0.j, 0.+0.j, 0.+0.j, 1.+0.j],
+       [0.+0.j, 0.+0.j, 0.+0.j, 0.+0.j],
+       [0.+0.j, 0.+0.j, 0.+0.j, 0.+0.j]], dtype=complex128)
 </pre></div>
 </div>
 </div>
@@ -1244,6 +1579,11 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([4, 4, 4, 4, 9, 9, 9, 9, 0, 8, 5, 5, 5, 5, 1, 1, 1, 1], dtype=int32)
+</pre></div>
+</div>
+</div>
 </div>
 <blockquote>
 <div><p><code class="docutils literal notranslate"><span class="pre">CSi</span></code>: possible jittable alternative? how do we remove the zeros?</p>
@@ -1252,6 +1592,12 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CSi_</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Cj</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Ci</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># not used</span>
 <span class="n">CSi_</span> <span class="c1"># not used</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([4, 4, 4, 4, 9, 9, 9, 9, 0, 0, 0, 0, 0, 0, 0, 0, 0, 8, 0, 0, 0, 0,
+       0, 0, 0, 0, 5, 5, 5, 5, 1, 1, 1, 1], dtype=int64)
 </pre></div>
 </div>
 </div>
@@ -1265,12 +1611,30 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([0, 1, 2, 3, 0, 1, 2, 3, 5, 4, 6, 7, 8, 9, 6, 7, 8, 9], dtype=int64)
+</pre></div>
+</div>
+</div>
 </div>
 <p>Finally, the values <code class="docutils literal notranslate"><span class="pre">CSx</span></code> of <span class="math notranslate nohighlight">\(C_{int}S_{bd}\)</span> can be obtained as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CSx</span> <span class="o">=</span> <span class="n">Sx</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">mask</span><span class="p">]</span>
 <span class="n">CSx</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([0.        +0.j        , 0.        +0.j        ,
+       0.70710678+0.j        , 0.        +0.70710678j,
+       0.        +0.j        , 0.        +0.j        ,
+       0.        +0.70710678j, 0.70710678+0.j        ,
+       0.5       +0.86603j   , 0.5       +0.86603j   ,
+       0.70710678+0.j        , 0.        +0.70710678j,
+       0.        +0.j        , 0.        +0.j        ,
+       0.        +0.70710678j, 0.70710678+0.j        ,
+       0.        +0.j        , 0.        +0.j        ], dtype=complex128)
 </pre></div>
 </div>
 </div>
@@ -1290,11 +1654,32 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[4 4 4 4 9 9 9 9 0 8 5 5 5 5 1 1 1 1 0 1 2 3 4 5 6 7 8 9]
+[0 1 2 3 0 1 2 3 5 4 6 7 8 9 6 7 8 9 0 1 2 3 4 5 6 7 8 9]
+[-0.        -0.j         -0.        -0.j         -0.70710678-0.j
+ -0.        -0.70710678j -0.        -0.j         -0.        -0.j
+ -0.        -0.70710678j -0.70710678-0.j         -0.5       -0.86603j
+ -0.5       -0.86603j    -0.70710678-0.j         -0.        -0.70710678j
+ -0.        -0.j         -0.        -0.j         -0.        -0.70710678j
+ -0.70710678-0.j         -0.        -0.j         -0.        -0.j
+  1.        +0.j          1.        +0.j          1.        +0.j
+  1.        +0.j          1.        +0.j          1.        +0.j
+  1.        +0.j          1.        +0.j          1.        +0.j
+  1.        +0.j        ]
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">Cext</span><span class="o">.</span><span class="n">shape</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>10 4
 </pre></div>
 </div>
 </div>
@@ -1307,6 +1692,11 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>1
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1315,11 +1705,21 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, 34)
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">I_CSx</span> <span class="o">=</span> <span class="n">I_CSx</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">I_CSx</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(1, 28)
 </pre></div>
 </div>
 </div>
@@ -1348,6 +1748,18 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([[[ 0.      +0.j      ,  0.      +0.j      , -0.25    +0.433015j,
+         -0.433015+0.75j    ],
+        [ 0.      +0.j      ,  0.      +0.j      , -0.433015+0.75j    ,
+          0.25    -0.433015j],
+        [-0.25    +0.433015j, -0.433015+0.75j    ,  0.      +0.j      ,
+          0.      +0.j      ],
+        [-0.433015+0.75j    ,  0.25    -0.433015j,  0.      +0.j      ,
+          0.      +0.j      ]]], dtype=complex128)
+</pre></div>
+</div>
+</div>
 </div>
 <p>That’s it! We found the S-matrix of the circuit. We just need to reshape the batch dimension back into the matrix:</p>
 <div class="cell docutils container">
@@ -1358,11 +1770,28 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array([[ 0.      +0.j      ,  0.      +0.j      , -0.25    +0.433015j,
+        -0.433015+0.75j    ],
+       [ 0.      +0.j      ,  0.      +0.j      , -0.433015+0.75j    ,
+         0.25    -0.433015j],
+       [-0.25    +0.433015j, -0.433015+0.75j    ,  0.      +0.j      ,
+         0.      +0.j      ],
+       [-0.433015+0.75j    ,  0.25    -0.433015j,  0.      +0.j      ,
+         0.      +0.j      ]], dtype=complex128)
+</pre></div>
+</div>
+</div>
 </div>
 <p>Oh and to complete the <code class="docutils literal notranslate"><span class="pre">SDense</span></code> representation we need to specify the port map as well:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">port_map</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;in0&#39;: 0, &#39;in1&#39;: 1, &#39;out0&#39;: 2, &#39;out1&#39;: 3}
 </pre></div>
 </div>
 </div>
@@ -1478,6 +1907,82 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[((&#39;dc1&#39;, &#39;out0&#39;),
+  (&#39;wg&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;wg&#39;, &#39;out0&#39;),
+  (&#39;dc2&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out1&#39;),
+  (&#39;dc2&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;wg&#39;, &#39;in0&#39;),
+  (&#39;dc1&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in0&#39;),
+  (&#39;wg&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in1&#39;),
+  (&#39;dc1&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;&#39;, &#39;in0&#39;),
+  (&#39;dc1&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;&#39;, &#39;in1&#39;),
+  (&#39;dc1&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;&#39;, &#39;out0&#39;),
+  (&#39;dc2&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;&#39;, &#39;out1&#39;),
+  (&#39;dc2&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in0&#39;),
+  (&#39;&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in1&#39;),
+  (&#39;&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out0&#39;),
+  (&#39;&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out1&#39;),
+  (&#39;&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in0&#39;),
+  (&#39;dc1&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in0&#39;),
+  (&#39;dc1&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in1&#39;),
+  (&#39;dc1&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in1&#39;),
+  (&#39;dc1&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)}),
+ ((&#39;wg&#39;, &#39;in0&#39;),
+  (&#39;wg&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([100., 200., 300.], dtype=float64)}),
+ ((&#39;wg&#39;, &#39;out0&#39;),
+  (&#39;wg&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([100., 200., 300.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in0&#39;),
+  (&#39;dc2&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in0&#39;),
+  (&#39;dc2&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in1&#39;),
+  (&#39;dc2&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in1&#39;),
+  (&#39;dc2&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)})]
+</pre></div>
+</div>
+</div>
 </div>
 <p>We made a difference here between edges of ‘S’-type (connections through the S-matrix) and edges of ‘C’-type (connections through the connection matrix). Connections of ‘C’-type obviously always have length zero as they signify per definition the equality of two ports.</p>
 <p>We can create a NetworkX graph from these edges:</p>
@@ -1489,6 +1994,9 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" src="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" />
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1497,12 +2005,31 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<img alt="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" src="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" />
+</div>
 </div>
 <p>We can now get a list of all possible paths in the network. Note that these paths <strong>must</strong> alternate between an S-edge and a C-edge:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">paths</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">additive</span><span class="o">.</span><span class="n">_get_possible_paths</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">),</span> <span class="p">(</span><span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">))</span>
 <span class="n">paths</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[[((&#39;&#39;, &#39;in0&#39;), (&#39;dc1&#39;, &#39;in0&#39;)),
+  ((&#39;dc1&#39;, &#39;in0&#39;), (&#39;dc1&#39;, &#39;out0&#39;)),
+  ((&#39;dc1&#39;, &#39;out0&#39;), (&#39;wg&#39;, &#39;in0&#39;)),
+  ((&#39;wg&#39;, &#39;in0&#39;), (&#39;wg&#39;, &#39;out0&#39;)),
+  ((&#39;wg&#39;, &#39;out0&#39;), (&#39;dc2&#39;, &#39;in0&#39;)),
+  ((&#39;dc2&#39;, &#39;in0&#39;), (&#39;dc2&#39;, &#39;out0&#39;)),
+  ((&#39;dc2&#39;, &#39;out0&#39;), (&#39;&#39;, &#39;out0&#39;))],
+ [((&#39;&#39;, &#39;in0&#39;), (&#39;dc1&#39;, &#39;in0&#39;)),
+  ((&#39;dc1&#39;, &#39;in0&#39;), (&#39;dc1&#39;, &#39;out1&#39;)),
+  ((&#39;dc1&#39;, &#39;out1&#39;), (&#39;dc2&#39;, &#39;in1&#39;)),
+  ((&#39;dc2&#39;, &#39;in1&#39;), (&#39;dc2&#39;, &#39;out0&#39;)),
+  ((&#39;dc2&#39;, &#39;out0&#39;), (&#39;&#39;, &#39;out0&#39;))]]
 </pre></div>
 </div>
 </div>
@@ -1514,6 +2041,13 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Array([120., 130., 220., 230., 320., 330., 130., 140., 230., 240., 330.,
+        340.], dtype=float64),
+ Array([30.], dtype=float64)]
+</pre></div>
+</div>
+</div>
 </div>
 <p>This is all brought together in the additive KLU backend:</p>
 <div class="cell docutils container">
@@ -1521,6 +2055,28 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit_additive</span><span class="p">(</span>
     <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit_additive</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">),</span> <span class="n">instances</span>
 <span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;,
+  &#39;out0&#39;): [Array([120., 130., 220., 230., 320., 330., 130., 140., 230., 240., 330.,
+         340.], dtype=float64), Array([30.], dtype=float64)],
+ (&#39;in0&#39;, &#39;out1&#39;): [Array([125., 135., 225., 235., 325., 335.], dtype=float64),
+  Array([25., 35.], dtype=float64)],
+ (&#39;in1&#39;, &#39;out0&#39;): [Array([125., 225., 325., 135., 235., 335.], dtype=float64),
+  Array([25., 35.], dtype=float64)],
+ (&#39;in1&#39;, &#39;out1&#39;): [Array([130., 230., 330.], dtype=float64),
+  Array([20., 30., 30., 40.], dtype=float64)],
+ (&#39;out0&#39;,
+  &#39;in0&#39;): [Array([120., 130., 220., 230., 320., 330., 130., 140., 230., 240., 330.,
+         340.], dtype=float64), Array([30.], dtype=float64)],
+ (&#39;out0&#39;, &#39;in1&#39;): [Array([125., 135., 225., 235., 325., 335.], dtype=float64),
+  Array([25., 35.], dtype=float64)],
+ (&#39;out1&#39;, &#39;in0&#39;): [Array([125., 225., 325., 135., 235., 335.], dtype=float64),
+  Array([25., 35.], dtype=float64)],
+ (&#39;out1&#39;, &#39;in1&#39;): [Array([130., 230., 330.], dtype=float64),
+  Array([20., 30., 30., 40.], dtype=float64)]}
 </pre></div>
 </div>
 </div>

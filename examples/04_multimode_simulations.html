@@ -489,6 +489,20 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;in0@TE&#39;, &#39;in0@TE&#39;),
+ (&#39;in0@TE&#39;, &#39;in0@TM&#39;),
+ (&#39;in0@TE&#39;, &#39;out0@TE&#39;),
+ (&#39;in0@TE&#39;, &#39;out0@TM&#39;),
+ (&#39;in0@TM&#39;, &#39;in0@TM&#39;),
+ (&#39;in0@TM&#39;, &#39;out0@TE&#39;),
+ (&#39;in0@TM&#39;, &#39;out0@TM&#39;),
+ (&#39;out0@TE&#39;, &#39;out0@TE&#39;),
+ (&#39;out0@TE&#39;, &#39;out0@TM&#39;),
+ (&#39;out0@TM&#39;, &#39;out0@TM&#39;)]
+</pre></div>
+</div>
+</div>
 </div>
 <p>If we would disregard any backreflection, this can be further simplified:</p>
 <div class="cell docutils container">
@@ -500,6 +514,14 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;in0@TE&#39;, &#39;out0@TE&#39;),
+ (&#39;in0@TE&#39;, &#39;out0@TM&#39;),
+ (&#39;in0@TM&#39;, &#39;out0@TE&#39;),
+ (&#39;in0@TM&#39;, &#39;out0@TM&#39;)]
+</pre></div>
+</div>
+</div>
 </div>
 <p>Sometimes cross-polarization terms can also be ignored:</p>
 <div class="cell docutils container">
@@ -508,6 +530,16 @@ document.write(`
     <span class="p">(</span><span class="n">p1</span><span class="p">,</span> <span class="n">p2</span><span class="p">)</span> <span class="k">for</span> <span class="n">p1</span><span class="p">,</span> <span class="n">p2</span> <span class="ow">in</span> <span class="n">portmodes</span> <span class="k">if</span> <span class="n">p1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="o">==</span> <span class="n">p2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span>
 <span class="p">]</span>
 <span class="n">portmodes_without_crosspolarization</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[(&#39;in0@TE&#39;, &#39;in0@TE&#39;),
+ (&#39;in0@TE&#39;, &#39;out0@TE&#39;),
+ (&#39;in0@TM&#39;, &#39;in0@TM&#39;),
+ (&#39;in0@TM&#39;, &#39;out0@TM&#39;),
+ (&#39;out0@TE&#39;, &#39;out0@TE&#39;),
+ (&#39;out0@TM&#39;, &#39;out0@TM&#39;)]
 </pre></div>
 </div>
 </div>
@@ -546,6 +578,26 @@ document.write(`
 
 
 <span class="n">waveguide</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0@TE&#39;,
+  &#39;out0@TE&#39;): Array(0.77972527+0.5427048j, dtype=complex128, weak_type=True),
+ (&#39;in0@TE&#39;,
+  &#39;out0@TM&#39;): Array(0.04103817+0.02856341j, dtype=complex128, weak_type=True),
+ (&#39;in0@TM&#39;,
+  &#39;out0@TM&#39;): Array(0.69764893+0.48557798j, dtype=complex128, weak_type=True),
+ (&#39;in0@TM&#39;,
+  &#39;out0@TE&#39;): Array(0.04103817+0.02856341j, dtype=complex128, weak_type=True),
+ (&#39;out0@TE&#39;,
+  &#39;in0@TE&#39;): Array(0.77972527+0.5427048j, dtype=complex128, weak_type=True),
+ (&#39;out0@TM&#39;,
+  &#39;in0@TE&#39;): Array(0.04103817+0.02856341j, dtype=complex128, weak_type=True),
+ (&#39;out0@TM&#39;,
+  &#39;in0@TM&#39;): Array(0.69764893+0.48557798j, dtype=complex128, weak_type=True),
+ (&#39;out0@TE&#39;,
+  &#39;in0@TM&#39;): Array(0.04103817+0.02856341j, dtype=complex128, weak_type=True)}
 </pre></div>
 </div>
 </div>
@@ -620,12 +672,100 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0@TE&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TE&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TE&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TE&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TE&#39;, &#39;out0@TE&#39;): Array(-0.24856154+0.09205708j, dtype=complex128),
+ (&#39;in0@TE&#39;, &#39;out0@TM&#39;): Array(-0.08070811+0.029891j, dtype=complex128),
+ (&#39;in0@TE&#39;, &#39;out1@TE&#39;): Array(0.7922229-0.29340714j, dtype=complex128),
+ (&#39;in0@TE&#39;, &#39;out1@TM&#39;): Array(0.25723534-0.09526951j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;out0@TE&#39;): Array(-0.08070811+0.029891j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;out0@TM&#39;): Array(-0.22385744+0.08290769j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;out1@TE&#39;): Array(0.25723534-0.09526951j, dtype=complex128),
+ (&#39;in0@TM&#39;, &#39;out1@TM&#39;): Array(0.71348524-0.26424592j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;out0@TE&#39;): Array(0.7922229-0.29340714j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;out0@TM&#39;): Array(0.25723534-0.09526951j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;out1@TE&#39;): Array(0.24856154-0.09205708j, dtype=complex128),
+ (&#39;in1@TE&#39;, &#39;out1@TM&#39;): Array(0.08070811-0.029891j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;out0@TE&#39;): Array(0.25723534-0.09526951j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;out0@TM&#39;): Array(0.71348524-0.26424592j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;out1@TE&#39;): Array(0.08070811-0.029891j, dtype=complex128),
+ (&#39;in1@TM&#39;, &#39;out1@TM&#39;): Array(0.22385744-0.08290769j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;out0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;out0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;out1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TE&#39;, &#39;out1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;out0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;out0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;out1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0@TM&#39;, &#39;out1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;out0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;out0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;out1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TE&#39;, &#39;out1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;in0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;in0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;in1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;in1@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;out0@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;out0@TM&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;out1@TE&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1@TM&#39;, &#39;out1@TM&#39;): Array(0.+0.j, dtype=complex128)}
+</pre></div>
+</div>
+</div>
 </div>
 <p>we can convert this model back to a singlemode <code class="docutils literal notranslate"><span class="pre">SDict</span></code> as follows:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi_te</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">singlemode</span><span class="p">(</span><span class="n">mzi</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;TE&quot;</span><span class="p">)</span>
 <span class="n">mzi_te</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(-0.24856154+0.09205708j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(0.7922229-0.29340714j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(0.7922229-0.29340714j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(0.24856154-0.09205708j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>

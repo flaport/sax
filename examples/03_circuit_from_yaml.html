@@ -518,6 +518,22 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;instances&#39;: {&#39;lft&#39;: {&#39;component&#39;: &#39;coupler&#39;, &#39;settings&#39;: {&#39;coupling&#39;: 0.5}},
+  &#39;rgt&#39;: {&#39;component&#39;: &#39;coupler&#39;, &#39;settings&#39;: {&#39;coupling&#39;: 0.5}},
+  &#39;top&#39;: {&#39;component&#39;: &#39;straight&#39;, &#39;settings&#39;: {&#39;length&#39;: 25.0}},
+  &#39;btm&#39;: {&#39;component&#39;: &#39;straight&#39;, &#39;settings&#39;: {&#39;length&#39;: 15.0}}},
+ &#39;connections&#39;: {&#39;lft,out0&#39;: &#39;btm,in0&#39;,
+  &#39;btm,out0&#39;: &#39;rgt,in0&#39;,
+  &#39;lft,out1&#39;: &#39;top,in0&#39;,
+  &#39;top,out0&#39;: &#39;rgt,in1&#39;},
+ &#39;ports&#39;: {&#39;in0&#39;: &#39;lft,in0&#39;,
+  &#39;in1&#39;: &#39;lft,in1&#39;,
+  &#39;out0&#39;: &#39;rgt,out0&#39;,
+  &#39;out1&#39;: &#39;rgt,out1&#39;}}
+</pre></div>
+</div>
+</div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -540,6 +556,9 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/b54c3c05f24f0f009a7c7b775b5893b6dd68efc544318ca43630920039d90b58.png" src="../_images/b54c3c05f24f0f009a7c7b775b5893b6dd68efc544318ca43630920039d90b58.png" />
 </div>
 </div>
 <p>That was easy! However, during the above YAML conversion, only models available in <code class="docutils literal notranslate"><span class="pre">sax.models</span></code> were used. What if we want to map the YAML component names to custom models? Let’s say we want to use a dispersionless waveguide for the above model for example:</p>
@@ -575,6 +594,9 @@ document.write(`
 <span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
 </pre></div>
 </div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/bb398e7a3975bc6a2b1a966fd9fd7be982d98b70b9748c609e7eee42f1c4414b.png" src="../_images/bb398e7a3975bc6a2b1a966fd9fd7be982d98b70b9748c609e7eee42f1c4414b.png" />
 </div>
 </div>
 </section>
