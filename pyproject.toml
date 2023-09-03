@@ -111,3 +111,6 @@ reportPrivateImportUsage = false
 
 [tool.flake8]
 ignore = ['F722']
+
+[tool.coverage.run]
+omit = "sax/nn/*"
