@@ -62,7 +62,7 @@ html_theme_options = {
     "use_repository_button": True,
     "launch_buttons": {
         "notebook_interface": "jupyterlab",
-        "binderhub_url": "https://mybinder.org/v2/gh/flaport/sax/HEAD",
+        "binderhub_url": "https://mybinder.org",
         "colab_url": "https://colab.research.google.com",
     },
 }
