@@ -1,4 +1,4 @@
-sax.typing\_ module
+sax.saxtypes module
 ===================
 
 .. automodule:: sax.saxtypes
