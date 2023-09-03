@@ -21,8 +21,8 @@ examples/07_layout_aware.ipynb
 ```
 
 ```{toctree}
-:caption: 'Api Docs'
-:maxdepth: 2
+:caption: 'API Docs'
+:maxdepth: 4
 
 sax
 ```

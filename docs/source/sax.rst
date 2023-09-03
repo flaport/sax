@@ -13,69 +13,17 @@ Subpackages
 Submodules
 ----------
 
-sax.circuit module
-------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: sax.circuit
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.models module
------------------
-
-.. automodule:: sax.models
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.multimode module
---------------------
-
-.. automodule:: sax.multimode
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.netlist module
-------------------
-
-.. automodule:: sax.netlist
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.netlist\_cleaning module
-----------------------------
-
-.. automodule:: sax.netlist_cleaning
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.patched module
-------------------
-
-.. automodule:: sax.patched
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.typing\_ module
--------------------
-
-.. automodule:: sax.typing_
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.utils module
-----------------
-
-.. automodule:: sax.utils
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   sax.circuit
+   sax.models
+   sax.multimode
+   sax.netlist
+   sax.netlist_cleaning
+   sax.patched
+   sax.typing_
+   sax.utils
 
 Module contents
 ---------------

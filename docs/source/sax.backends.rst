@@ -4,29 +4,12 @@ sax.backends package
 Submodules
 ----------
 
-sax.backends.additive module
-----------------------------
+.. toctree::
+   :maxdepth: 4
 
-.. automodule:: sax.backends.additive
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.backends.filipsson\_gunnar module
--------------------------------------
-
-.. automodule:: sax.backends.filipsson_gunnar
-   :members:
-   :undoc-members:
-   :show-inheritance:
-
-sax.backends.klu module
------------------------
-
-.. automodule:: sax.backends.klu
-   :members:
-   :undoc-members:
-   :show-inheritance:
+   sax.backends.additive
+   sax.backends.filipsson_gunnar
+   sax.backends.klu
 
 Module contents
 ---------------
