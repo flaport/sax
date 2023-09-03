@@ -124,32 +124,18 @@ Those are the basics. For more info, check out the **full**
 
 ## Installation
 
-On Linux, the recommended way to install SAX is as follows:
+You can install SAX with pip:
 
 ```sh
-pip install sax[jax]
+pip install sax
 ```
 
-On Windows, the recommended way to install SAX is by first setting the `PIP_FIND_LINKS`
-environment variable such that the JAX dependency can be installed from a 3rd party
-repository:
+If you want to be able to run all the example notebooks, you should install the
+development version of SAX:
 
 ```sh
-set PIP_FIND_LINKS="https://whls.blob.core.windows.net/unstable/index.html"
-pip install sax[jax]
+pip install 'sax[dev]'
 ```
-
-If for whatever reason you don't want the JAX dependency, a JAX-less SAX can also be
-installed (Note that this is a _minimal_ version of SAX... things might not work as
-expected. Use on your own risk!):
-
-```sh
-pip install sax[nojax]
-```
-
-If you want a specific version of JAX, for example if you want a GPU-enabled version of
-JAX, please read the offical JAX install instructions
-[here](https://github.com/google/jax/#installation).
 
 ## License
 
