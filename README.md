@@ -2,7 +2,7 @@
 
 > S + Autograd + XLA
 
-![](docs/logo.svg)
+![SAX LOGO](docs/source/_static/img/logo.svg)
 
 Autograd and XLA for S-parameters - a scatter parameter circuit simulator and
 optimizer for the frequency domain based on [JAX](https://github.com/google/jax).
@@ -117,40 +117,26 @@ plt.figlegend(ncol=2, loc="upper center")
 plt.show()
 ```
 
-![png](docs/output_10_0.png)
+![output](docs/source/_static/img/output_10_0.png)
 
 Those are the basics. For more info, check out the **full**
 [SAX Quick Start page](https://flaport.github.io/sax/examples/01_quick_start.html) or the rest of the [Documentation](https://flaport.github.io/sax).
 
 ## Installation
 
-On Linux, the recommended way to install SAX is as follows:
+You can install SAX with pip:
 
 ```sh
-pip install sax[jax]
+pip install sax
 ```
 
-On Windows, the recommended way to install SAX is by first setting the `PIP_FIND_LINKS`
-environment variable such that the JAX dependency can be installed from a 3rd party
-repository:
-
-```cmd
-set PIP_FIND_LINKS="https://whls.blob.core.windows.net/unstable/index.html"
-pip install sax[jax]
-```
-
-If for whatever reason you don't want the JAX dependency, a JAX-less SAX can also be
-installed (Note that this is a _minimal_ version of SAX... things might not work as
-expected. Use on your own risk!):
+If you want to be able to run all the example notebooks, you'll need python>=3.10 and
+you should install the development version of SAX:
 
 ```sh
-pip install sax[nojax]
+pip install 'sax[dev]'
 ```
-
-If you want a specific version of JAX, for example if you want a GPU-enabled version of
-JAX, please read the offical JAX install instructions
-[here](https://github.com/google/jax/#installation).
 
 ## License
 
-Copyright © 2021, Floris Laporte, [Apache-2.0 License](https://github.com/flaport/sax/blob/master/LICENSE)
+Copyright © 2023, Floris Laporte, [Apache-2.0 License](https://github.com/flaport/sax/blob/master/LICENSE)

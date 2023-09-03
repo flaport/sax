@@ -9,12 +9,12 @@ authors = [
 { name = "Floris Laporte", email = "floris.laporte@rockleyphotonics.com" },
 ]
 description = "Autograd and XLA for S-parameters"
+requires-python = ">=3.9.0"
 classifiers = [
   "Development Status :: 3 - Alpha",
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.8",
   "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
@@ -26,64 +26,47 @@ classifiers = [
 dependencies = [
   "black",
   "fastcore",
-  "h5py",
+  "flax",
+  "jax",
+  "jaxlib",
+  "jaxtyping",
+  "klujax",
+  "matplotlib",
   "natsort",
   "networkx",
   "numpy",
   "orjson",
   "pydantic",
   "pyyaml",
-  "tables",
   "tqdm",
 ]
 
 [project.optional-dependencies]
-nojax = ["sax"]
-jax = ["sax", "jax", "flax", "jaxlib"]
-klu = ["sax[jax]", "klujax"]
-full = [
-  "sax[jax,klu]",
-  "bokeh",
-  "gdsfactory>=6",
-  "graphviz",
-  "ipykernel",
-  "ipympl",
-  "ipywidgets",
-  "jupyterlab",
-  "matplotlib",
-  "meep",
-  "pandas",
-  "pydot",
-  "scipy",
-  "shapely",
-]
 dev = [
-  "sax[full]",
-  "bump2version",
-  "datamodel-code-generator",
-  "flax",
+  "autodoc-pydantic",
+  "autograd",
+  "autoimport",
+  "black[jupyter]",
+  "flake8",
+  "gdsfactory",
+  "gplugins",
+  "ipyevents",
   "ipykernel",
   "ipympl",
   "ipywidgets",
   "isort",
-  "jax",
-  "jaxlib",
-  "jupyter-book",
-  "jupyterlab",
-  "line_profiler",
-  "matplotlib",
-  "nbdev<2",
+  "jedi",
+  "myst-nb",
   "nbstripout",
-  "pandas",
+  "nlopt",
   "papermill",
   "pre-commit",
-  "pyright",
   "pytest",
-  "pyyaml",
-  "scipy",
+  "sphinx",
+  "sphinx-book-theme",
+  "sphinx-copybutton",
   "tmm",
-  "tqdm",
-  "twine",
+# "meep",
 ]
 
 [tool.setuptools.packages.find]
@@ -109,3 +92,8 @@ include = '\.pyi?$'
 [tool.pyright]
 reportPrivateImportUsage = false
 
+[tool.flake8]
+ignore = ['F722']
+
+[tool.coverage.run]
+omit = "sax/nn/*"

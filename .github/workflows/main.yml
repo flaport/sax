@@ -22,11 +22,8 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Install dependencies
-        run: mamba install -c fastai -c conda-forge nbdev\<2 nbstripout
+        run: mamba install nbstripout
       - name: Clean notebooks
-        run: nbdev_clean_nbs
-      - name: Strip notebook outputs
         run: find . -name "*.ipynb" | xargs nbstripout
       - name: Check if git status is clean
         run: |
@@ -37,27 +34,6 @@ jobs:
               false;
           fi
 
-  diff:
-    runs-on: ubuntu-latest
-    container:
-      image: condaforge/mambaforge
-      volumes:
-        - ${{ github.workspace }}:/github/workspace
-    steps:
-      - name: Checkout
-        uses: actions/checkout@master
-      - name: Install dependencies
-        run: mamba install -c fastai -c conda-forge nbdev\<2
-      - name: Check for no diff between notebooks and library
-        run: |
-          if [ ! -z "$(nbdev_diff_nbs)" ]; then
-              echo "Python library does not match backing notebooks (diff between notebooks and library detected). "
-              echo "You probably forgot to re-generate the library before pushing."
-              echo "Please make sure all pre-commit hooks are properly installed to prevent this issue."
-              false;
-          fi
-
-
   test:
     runs-on: ubuntu-latest
     container:
@@ -67,23 +43,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Install dependencies
-        run: |
-          sed -i "s/- sax==/#- sax==/g" environment.yml && \
-          pip install klujax>=0.1.4 && \
-          mamba env update -n base -f environment.yml && \
-          mamba install -y parallel gdspy pymeep=\*=mpi_mpich_\* && \
-          pip install datamodel_code_generator jax jaxlib klujax && \
-          pip install pydantic\>2 pydantic-settings && \
-          pip install --upgrade gdsfactory[cad]\>=7.4.2 gplugins kweb nlopt autograd future && \
-          pip install --upgrade --force-reinstall --no-deps .
+      - name: Install Library
+        run: pip install '.[dev]'
       - name: Test notebooks
-        run: nbdev_test_nbs | tee nbdev_test_nbs.log
-      - name: Expose 'nbdev_test_nbs.log' as artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: nbdev_test_nbs.log
-          path: /github/workspace/nbdev_test_nbs.log
+        run: pytest
 
   run:
     runs-on: ubuntu-latest
@@ -96,18 +59,12 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Install dependencies
-        run: |
-          sed -i "s/- sax==/#- sax==/g" environment.yml && \
-          pip install klujax>=0.1.4 && \
-          mamba env update -n base -f environment.yml && \
-          mamba install -y parallel gdspy pymeep=\*=mpi_mpich_\* && \
-          pip install datamodel_code_generator jax jaxlib klujax && \
-          pip install pydantic\>2 pydantic-settings && \
-          pip install --upgrade gdsfactory[cad]\>=7.4.2 gplugins kweb nlopt autograd future && \
-          pip install --upgrade --force-reinstall --no-deps .
+      - name: Install Dependencies
+        run: mamba install -y parallel gdspy gdstk pymeep=\*=mpi_mpich_\* ipykernel ipywidgets ipympl ipyevents
+      - name: Install Library
+        run: pip install '.[dev]'
       - name: Run source notebooks
-        run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3 || true
+        run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3
       - name: Expose 'internals' as artifact
         uses: actions/upload-artifact@master
         with:
@@ -118,11 +75,6 @@ jobs:
         with:
           name: examples
           path: /github/workspace/examples
-      - name: Expose 'index.ipynb' as artifact
-        uses: actions/upload-artifact@master
-        with:
-          name: index.ipynb
-          path: /github/workspace/index.ipynb
 
   docs:
     runs-on: ubuntu-latest
@@ -135,10 +87,10 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@master
-      - name: Install dependencies
-        run: |
-          mamba install -c fastai -c conda-forge nbdev\<2 nbstripout && \
-          pip install -e .[dev]
+      - name: Install Dependencies
+        run: mamba install -y make
+      - name: Install Library
+        run: pip install '.[dev]'
       - name: Download 'internals' artifact
         uses: actions/download-artifact@master
         with:
@@ -149,20 +101,13 @@ jobs:
         with:
           name: examples
           path: ./examples
-#     - name: Download 'index.ipynb' artifact
-#       uses: actions/download-artifact@master
-#       with:
-#         name: index.ipynb
-#         path: ./index.ipynb
       - name: Build docs
-        run: python -m sax.make_docs && touch /github/workspace/docs/_build/html/.nojekyll
-      - name: Patch binder links
-        run: find docs/_build/html -name "*.html" | xargs sed -i 's|urlpath=tree/docs|urlpath=tree|g'
+        run: cd docs && make html
       - name: Store artifacts
         uses: actions/upload-artifact@master
         with:
           name: docs
-          path: /github/workspace/docs/_build/html
+          path: /github/workspace/docs/build/html
 
   pages:
     runs-on: ubuntu-latest
@@ -175,9 +120,9 @@ jobs:
         uses: actions/download-artifact@master
         with:
           name: docs
-          path: docs/_build/_html
+          path: docs/build/html
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@4.1.7
         with:
           branch: pages
-          folder: docs/_build/_html
+          folder: docs/build/html
