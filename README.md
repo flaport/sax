@@ -134,7 +134,7 @@ On Windows, the recommended way to install SAX is by first setting the `PIP_FIND
 environment variable such that the JAX dependency can be installed from a 3rd party
 repository:
 
-```cmd
+```sh
 set PIP_FIND_LINKS="https://whls.blob.core.windows.net/unstable/index.html"
 pip install sax[jax]
 ```

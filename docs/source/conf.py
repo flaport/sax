@@ -63,7 +63,6 @@ html_theme = "sphinx_book_theme"
 html_static_path = ["_static"]
 html_logo = "_static/img/logo.png"
 html_theme_options = {
-    "logo_only": True,
     "path_to_docs": "docs",
     "repository_branch": "main",
     "repository_url": "https://github.com/flaport/sax",
@@ -71,7 +70,6 @@ html_theme_options = {
     "use_edit_page_button": True,
     "use_issues_button": True,
     "use_repository_button": True,
-    "display_version": True,
     "launch_buttons": {
         "notebook_interface": "jupyterlab",
         "binderhub_url": "https://mybinder.org/v2/gh/flaport/sax/HEAD",
