@@ -190,4 +190,3 @@ def docs_copy_dir(relpath):
     for src in list_notebooks(main_src):
         rel = os.path.relpath(src, repository_path())
         docs_copy_nb(rel)
-
