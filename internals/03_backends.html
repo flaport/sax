@@ -654,7 +654,7 @@ document.write(`
 <h3>Algorithm Walkthrough<a class="headerlink" href="#algorithm-walkthrough" title="Permalink to this heading">#</a></h3>
 <div class="admonition note">
 <p class="admonition-title">Note</p>
-<p>This algorithm gets pretty slow for large circuits. I’d be <span class="xref myst">very interested in any improvements</span> that can be made here, especially because - as opposed to the currently faster <span class="xref myst">KLU backend</span> - the algorithm discussed here is jittable, differentiable and can be used on GPUs.</p>
+<p>This algorithm gets pretty slow for large circuits. Since SAX v0.10.0 we will default to the superior KLU backend as the KLU backend is now also jittable.</p>
 </div>
 <p>Let’s walk through all the steps of this algorithm. We’ll do this for a simple MZI circuit, given by two directional couplers characterised by <code class="docutils literal notranslate"><span class="pre">dc_sdense</span></code> with a phase shifting waveguide in between <code class="docutils literal notranslate"><span class="pre">wg_sdict</span></code>:</p>
 <div class="cell docutils container">
@@ -834,14 +834,14 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc2,in1&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,out1&#39;,
+ &#39;dc1,in0&#39;,
+ &#39;dc1,in1&#39;,
+ &#39;dc1,out0&#39;,
  &#39;dc2,in0&#39;,
  &#39;dc2,out1&#39;,
- &#39;dc2,out0&#39;,
- &#39;dc1,out0&#39;,
- &#39;dc1,out1&#39;,
- &#39;dc1,in1&#39;,
- &#39;dc1,in0&#39;)
+ &#39;dc2,in1&#39;,
+ &#39;dc2,out0&#39;)
 </pre></div>
 </div>
 </div>
@@ -953,22 +953,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -986,22 +986,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1098,22 +1098,22 @@ x^{in} = C_{int} S_{bd} x^{in}
 <p>Note that <span class="math notranslate nohighlight">\(C_{ext}\)</span> is obviously <strong>not</strong> a square matrix. Eliminating <span class="math notranslate nohighlight">\(x^{in}\)</span> from the equation above finally yields:</p>
 <div class="math notranslate nohighlight">
 \[
-x^{out}_{ext} = C^T_{ext} S_{bd} (\mathbb{1} - C_{int}S_{bd})^{-1} C_{ext}x_{ext}^{in}
+x^{out}_{ext} = C^T_{ext} S_{bd} (I - C_{int}S_{bd})^{-1} C_{ext}x_{ext}^{in}
 \]</div>
 <p>We basically found a representation of the circuit S-matrix:</p>
 <div class="math notranslate nohighlight">
 \[
-S = C^T_{ext} S_{bd} (\mathbb{1} - C_{int}S_{bd})^{-1} C_{ext}
+S = C^T_{ext} S_{bd} (I - C_{int}S_{bd})^{-1} C_{ext}
 \]</div>
-<p>Obviously, we won’t want to calculate the inverse <span class="math notranslate nohighlight">\((\mathbb{1} - C_{int}S_{bd})^{-1}\)</span>, which is the inverse of a very sparse matrix (a connection matrix only has a single 1 per line), which very often is not even sparse itself. In stead we’ll use the <code class="docutils literal notranslate"><span class="pre">solve_klu</span></code> function:</p>
+<p>Obviously, we won’t want to calculate the inverse <span class="math notranslate nohighlight">\((I - C_{int}S_{bd})^{-1}\)</span>, which is the inverse of a very sparse matrix (a connection matrix only has a single 1 per line), which very often is not even sparse itself. In stead we’ll use the <code class="docutils literal notranslate"><span class="pre">solve_klu</span></code> function:</p>
 <div class="math notranslate nohighlight">
 \[
-S = C^T_{ext} S_{bd} \texttt{solve}\_\texttt{klu}\left((\mathbb{1} - C_{int}S_{bd}), C_{ext}\right)
+S = C^T_{ext} S_{bd} \texttt{solve}\_\texttt{klu}\left((I - C_{int}S_{bd}), C_{ext}\right)
 \]</div>
 <p>Moreover, <span class="math notranslate nohighlight">\(C_{ext}^TS_{bd}\)</span> is also a sparse matrix, therefore we’ll also need a <code class="docutils literal notranslate"><span class="pre">mul_coo</span></code> routine:</p>
 <div class="math notranslate nohighlight">
 \[
-S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{klu}\left((\mathbb{1} - C_{int}S_{bd}),~C_{ext}\right)\right)
+S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{klu}\left((I - C_{int}S_{bd}),~C_{ext}\right)\right)
 \]</div>
 </section>
 <section id="sparse-helper-functions">
@@ -1639,7 +1639,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 </div>
-<p>Now we calculate <span class="math notranslate nohighlight">\(\mathbb{1} - C_{int}S_{bd}\)</span> in an <em>uncoalesced</em> way (we might have duplicate indices on the diagonal):</p>
+<p>Now we calculate <span class="math notranslate nohighlight">\(I - C_{int}S_{bd}\)</span> in an <em>uncoalesced</em> way (we might have duplicate indices on the diagonal):</p>
 <blockquote>
 <div><p><strong>uncoalesced</strong>: having duplicate index combinations (i, j) in the representation possibly with different corresponding values. This is usually not a problem as in linear operations these values will end up to be summed, usually the behavior you want:</p>
 </div></blockquote>
