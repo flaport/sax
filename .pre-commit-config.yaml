@@ -1,9 +1,21 @@
 repos:
-  - repo: local
-    hooks:
-      - id: nbstripout
-        name: nbstripout
-        entry: nbstripout
-        language: python
-        pass_filenames: true
-        types: [jupyter]
+- repo: local
+  hooks:
+  - id: nbstripout
+    name: nbstripout
+    entry: nbstripout
+    language: python
+    pass_filenames: true
+    types: [jupyter]
+  - id: formatnbs
+    name: formatnbs
+    entry: black
+    language: python
+    pass_filenames: true
+    types: [jupyter]
+  - id: format
+    name: format (autoimport + isort + black)
+    entry: python .format.py
+    language: python
+    pass_filenames: true
+    types: [python]
