@@ -48,6 +48,11 @@ jobs:
         run: pip install --upgrade pip && pip install --use-deprecated=legacy-resolver '.[dev]'
       - name: Test notebooks
         run: pytest
+      - name: Expose 'tests' as artifact
+        uses: actions/upload-artifact@master
+        with:
+          name: tests
+          path: /github/workspace/tests
 
   run:
     runs-on: ubuntu-latest
