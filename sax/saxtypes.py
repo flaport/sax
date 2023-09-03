@@ -41,7 +41,7 @@ PortCombination = Tuple[str, str]
 """ A combination of two port names (str, str) """
 
 SDict = Dict[PortCombination, ComplexArrayND]
-""" A mapping from a port combination to an S-parameter or an array of S-parameters 
+""" A mapping from a port combination to an S-parameter or an array of S-parameters
 
 Example:
 
@@ -68,7 +68,7 @@ Example:
 """
 
 SCoo = Tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
-""" A sparse S-matrix in COO format (recommended for internal library use only) 
+""" A sparse S-matrix in COO format (recommended for internal library use only)
 
 An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map. The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix. The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!
 
@@ -81,11 +81,11 @@ Example:
     Sx = jnp.array([3.0, 4.0, 1.0])
     port_map = {"in0": 0, "in1": 2, "out0": 1}
     scoo: sax.SCoo = (Si, Sj, Sx, port_map)
-    
+
 """
 
 Settings = Dict[str, Union["Settings", FloatArrayND, ComplexArrayND]]
-""" A (possibly recursive) mapping from a setting name to a float or complex value or array 
+""" A (possibly recursive) mapping from a setting name to a float or complex value or array
 
 Example:
 
@@ -97,7 +97,7 @@ Example:
         "top": {"neff": 3.4},  # settings for the top waveguide
         "rgt": {"coupling": 0.3},  # settings for the right coupler
     }
-    
+
 """
 
 SType = Union[SDict, SCoo, SDense]
@@ -108,6 +108,7 @@ Model = Callable[..., SType]
 
 ModelFactory = Callable[..., Model]
 """ A keyword-only function producing a Model """
+
 
 def is_float(x: Any) -> bool:
     """Check if an object is a `Float`"""

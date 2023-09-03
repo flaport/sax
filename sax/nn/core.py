@@ -6,8 +6,9 @@ from typing import Callable, Dict, Optional, Tuple, Union
 
 import jax
 import jax.numpy as jnp
-from .utils import denormalize, normalize
+
 from ..saxtypes import Array, ComplexArrayND
+from .utils import denormalize, normalize
 
 
 def preprocess(*params: ComplexArrayND) -> ComplexArrayND:

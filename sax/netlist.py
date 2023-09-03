@@ -17,21 +17,9 @@ from natsort import natsorted
 from .utils import clean_string, hash_dict
 
 try:
-    from pydantic.v1 import (
-        BaseModel,
-        Extra,
-        Field,  # type: ignore
-        ValidationError,
-        validator,
-    )
+    from pydantic.v1 import BaseModel, Extra, Field, ValidationError, validator
 except ImportError:
-    from pydantic import (
-        BaseModel,
-        Extra,
-        Field,  # type: ignore
-        ValidationError,
-        validator,
-    )
+    from pydantic import BaseModel, Extra, Field, ValidationError, validator
 
 
 def netlist(dic: Dict) -> RecursiveNetlist:

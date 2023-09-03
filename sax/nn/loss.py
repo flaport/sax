@@ -5,6 +5,7 @@ from __future__ import annotations
 from typing import Dict, cast
 
 import jax.numpy as jnp
+
 from ..saxtypes import ComplexArrayND
 
 

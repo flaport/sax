@@ -8,9 +8,10 @@ import re
 from typing import Callable, Dict, List, Optional, Tuple
 
 import jax.numpy as jnp
+
+from ..saxtypes import ComplexArrayND
 from .core import dense, preprocess
 from .utils import norm
-from ..saxtypes import ComplexArrayND
 
 
 def load_nn_weights_json(path: str) -> Dict[str, ComplexArrayND]:

@@ -8,6 +8,7 @@ import jax
 import jax.numpy as jnp
 import klujax
 from natsort import natsorted
+
 from ..saxtypes import SDense, SType, scoo, sdense
 
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)

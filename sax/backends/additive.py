@@ -4,10 +4,10 @@ from __future__ import annotations
 
 from typing import Any, Dict, Tuple
 
-import networkx as nx
-from ..saxtypes import SDict, sdict
-
 import jax.numpy as jnp
+import networkx as nx
+
+from ..saxtypes import SDict, sdict
 
 
 def analyze_circuit_additive(

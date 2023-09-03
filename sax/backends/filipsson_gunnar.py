@@ -33,7 +33,7 @@ def evaluate_circuit_fg(
     sorted_connections = sorted(connections.items(), key=_connections_sort_key)
     all_connected_instances = {k: {k} for k in instances}
 
-    for k, l in sorted_connections: # noqa: E741
+    for k, l in sorted_connections:  # noqa: E741
         name1, _ = k.split(",")
         name2, _ = l.split(",")
 
@@ -76,7 +76,7 @@ def _connections_sort_key(connection):
     return (min(name1, name2), max(name1, name2))
 
 
-def _interconnect_ports(block_diag, current_ports, k, l): # noqa: E741
+def _interconnect_ports(block_diag, current_ports, k, l):  # noqa: E741
     """interconnect two ports in a given model
 
     > Note: the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.

@@ -7,6 +7,7 @@ from typing import Tuple
 
 import jax.numpy as jnp
 import pandas as pd
+
 from ..saxtypes import ComplexArrayND
 
 
