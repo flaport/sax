@@ -141,7 +141,12 @@ def unflatten_dict(dic, sep=","):
 
 
 def get_ports(S: Union[Model, SType]) -> Tuple[str, ...]:
-    """get port names of a model or an stype"""
+    """get port names of a model or an stype
+    
+    .. note ::
+        
+        if a `Model` function is given in stead of an `SDict`, the function will be traced by JAX to obtain the port combinations of the resulting `SType`. Although this tracing of the function is 'cheap' in comparison to evaluating the model/circuit. It is not for free!  Use this function sparingly on your large `Model` or `circuit`!
+    """
     if is_model(S):
         return _get_ports_from_model(cast(Model, S))
     elif is_sdict(S):
@@ -207,7 +212,44 @@ def get_settings(model: Union[Model, ModelFactory]) -> Settings:
 def grouped_interp(
     wl: FloatArrayND, wls: FloatArrayND, phis: FloatArrayND
 ) -> FloatArrayND:
-    """Grouped phase interpolation"""
+    """Grouped phase interpolation
+    
+    .. note ::
+    
+        Grouped interpolation is useful to interpolate phase values where each datapoint 
+        is doubled (very close together) to give an indication of the phase 
+        variation at that point.
+
+    .. warning ::
+    
+        this interpolation is only accurate in the range 
+        `[wls[0], wls[-2])` (`wls[-2]` not included). Any extrapolation 
+        outside these bounds can yield unexpected results!
+        
+    .. plot ::
+    
+        import sax
+        import numpy as np
+        import matplotlib.pyplot as plt
+        wls = np.array([2.19999, 2.20001, 2.22499, 2.22501, 2.24999, 2.25001, 2.27499, 2.27501, 2.29999, 2.30001, 2.32499, 2.32501, 2.34999, 2.35001, 2.37499, 2.37501, 2.39999, 2.40001, 2.42499, 2.42501, 2.44999, 2.45001])
+        phis = np.array([5.17317336, 5.1219654, 4.71259842, 4.66252492, 5.65699608, 5.60817922, 2.03697377, 1.98936119, 6.010146, 5.96358061, 4.96336733, 4.91777933, 5.13912198, 5.09451137, 0.22347545, 0.17979684, 2.74501894, 2.70224092, 0.10403192, 0.06214664, 4.83328794, 4.79225525])
+        wl = np.linspace(wls.min(), wls.max(), 10000)
+        phi = np.array(sax.grouped_interp(wl, wls, phis))
+        
+        _, ax = plt.subplots(2, 1, sharex=True, figsize=(14, 6))
+        plt.sca(ax[0])
+        plt.plot(1e3*wls, np.arange(wls.shape[0]), marker="o", ls="none")
+        plt.grid(True)
+        plt.ylabel("index")
+        plt.sca(ax[1])
+        plt.grid(True)
+        plt.plot(1e3*wls, phis, marker="o", c="C1")
+        plt.plot(1e3*wl, phi, c="C2")
+        plt.xlabel("λ [nm]")
+        plt.ylabel("φ")
+        plt.show()
+        
+    """
 
     @partial(jax.vmap, in_axes=(0, None, None), out_axes=0)
     @jax.jit
@@ -448,7 +490,17 @@ def rename_ports(
 
 
 def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Settings:
-    """update a nested settings dictionary"""
+    """update a nested settings dictionary
+    
+    .. note ::
+    
+        1. Even though it's possible to update parameter dictionaries in place, 
+        this function is convenient to apply certain parameters (e.g. wavelength 
+        'wl' or temperature 'T') globally. 
+        2. This operation never updates the given settings dictionary inplace. 
+        3. Any non-float keyword arguments will be silently ignored.
+    
+    """
     _settings = {}
     if not compnames:
         for k, v in settings.items():

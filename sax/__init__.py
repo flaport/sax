@@ -32,6 +32,7 @@ from .netlist import get_netlist_instances_by_prefix as get_netlist_instances_by
 from .netlist import load_netlist as load_netlist
 from .netlist import load_recursive_netlist as load_recursive_netlist
 from .netlist import netlist as netlist
+from .netlist import RecursiveNetlist
 from .saxtypes import Array as Array
 from .saxtypes import ArrayLike as ArrayLike
 from .saxtypes import Complex as Complex
@@ -45,7 +46,6 @@ from .saxtypes import IntArray1D as IntArray1D
 from .saxtypes import IntArrayND as IntArrayND
 from .saxtypes import Model as Model
 from .saxtypes import ModelFactory as ModelFactory
-from .saxtypes import Models as Models
 from .saxtypes import PortCombination as PortCombination
 from .saxtypes import PortMap as PortMap
 from .saxtypes import SCoo as SCoo

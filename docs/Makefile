@@ -22,4 +22,5 @@ help:
 html:
 	@$(SPHINXBUILD) -M html "$(SOURCEDIR)" "$(BUILDDIR)" $(SPHINXOPTS) $(O)
 	find "$(BUILDDIR)" -name "*.html" | xargs sed -i 's|docs/examples|examples|g'
+	find "$(BUILDDIR)" -name "*.html" | xargs sed -i 's|docs/internals|examples|g'
 

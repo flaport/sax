@@ -9,6 +9,7 @@ sys.path.insert(0, os.path.dirname(__file__))
 from modified_nb_copy import docs_copy_dir  # noqa: E402
 
 docs_copy_dir("examples")
+docs_copy_dir("internals")
 
 # Dynamic Config
 REPO_PATH = os.path.dirname(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

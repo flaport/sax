@@ -41,31 +41,73 @@ PortCombination = Tuple[str, str]
 """ A combination of two port names (str, str) """
 
 SDict = Dict[PortCombination, ComplexArrayND]
-""" A mapping from a port combination to an S-parameter or an array of S-parameters """
+""" A mapping from a port combination to an S-parameter or an array of S-parameters 
+
+Example:
+
+.. code-block::
+
+    sdict: sax.SDict = {
+        ("in0", "out0"): 3.0,
+    }
+
+"""
 
 SDense = Tuple[ComplexArrayND, PortMap]
 """ A dense S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array
-combined with a port map. If (N+2)-D array the S-matrix dimensions are the last two."""
+combined with a port map. If (N+2)-D array the S-matrix dimensions are the last two.
+
+Example:
+
+.. code-block::
+
+    Sd = jnp.arange(9, dtype=float).reshape(3, 3)
+    port_map = {"in0": 0, "in1": 2, "out0": 1}
+    sdense = Sd, port_map
+
+"""
 
 SCoo = Tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
-""" A sparse S-matrix in COO format (recommended for internal library use only) """
+""" A sparse S-matrix in COO format (recommended for internal library use only) 
+
+An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map. The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix. The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!
+
+Example:
+
+.. code-block::
+
+    Si = jnp.arange(3, dtype=int)
+    Sj = jnp.array([0, 1, 0], dtype=int)
+    Sx = jnp.array([3.0, 4.0, 1.0])
+    port_map = {"in0": 0, "in1": 2, "out0": 1}
+    scoo: sax.SCoo = (Si, Sj, Sx, port_map)
+    
+"""
 
 Settings = Dict[str, Union["Settings", FloatArrayND, ComplexArrayND]]
-""" A (possibly recursive) mapping from a setting name to a
-float or complex value or array """
+""" A (possibly recursive) mapping from a setting name to a float or complex value or array 
+
+Example:
+
+.. code-block::
+
+    mzi_settings: sax.Settings = {
+        "wl": 1.5,  # global settings
+        "lft": {"coupling": 0.5},  # settings for the left coupler
+        "top": {"neff": 3.4},  # settings for the top waveguide
+        "rgt": {"coupling": 0.3},  # settings for the right coupler
+    }
+    
+"""
 
 SType = Union[SDict, SCoo, SDense]
 """ An SDict, SDense or SCOO """
 
 Model = Callable[..., SType]
-""" A function producing an SType """
+""" A keyword-only function producing an SType """
 
 ModelFactory = Callable[..., Model]
-""" A function producing a Model """
-
-Models = Dict[str, Model]
-""" A mapping from a model name to a model """
-
+""" A keyword-only function producing a Model """
 
 def is_float(x: Any) -> bool:
     """Check if an object is a `Float`"""

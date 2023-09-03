@@ -21,6 +21,17 @@ examples/07_layout_aware.ipynb
 ```
 
 ```{toctree}
+:caption: 'Library Internals'
+:maxdepth: 2
+
+internals/00_typing.ipynb
+internals/01_models.ipynb
+internals/02_circuit.ipynb
+internals/03_backends.ipynb
+```
+
+
+```{toctree}
 :caption: 'API Docs'
 :maxdepth: 4
 
