@@ -130,8 +130,8 @@ You can install SAX with pip:
 pip install sax
 ```
 
-If you want to be able to run all the example notebooks, you should install the
-development version of SAX:
+If you want to be able to run all the example notebooks, you'll need python>=3.10 and
+you should install the development version of SAX:
 
 ```sh
 pip install 'sax[dev]'
