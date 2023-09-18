@@ -1,21 +1,15 @@
 repos:
-- repo: local
+- repo: https://github.com/kynan/nbstripout
+  rev: 0.6.0
   hooks:
-  - id: nbstripout
-    name: nbstripout
-    entry: nbstripout
-    language: python
-    pass_filenames: true
-    types: [jupyter]
-  - id: formatnbs
-    name: formatnbs
-    entry: black
-    language: python
-    pass_filenames: true
-    types: [jupyter]
-  - id: format
-    name: format (autoimport + isort + black)
-    entry: python .format.py
-    language: python
-    pass_filenames: true
-    types: [python]
+    - id: nbstripout
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 23.9.1
+  hooks:
+    - id: black
+      language_version: python3.11
+- repo: https://github.com/psf/black-pre-commit-mirror
+  rev: 23.9.1
+  hooks:
+    - id: black-jupyter
+      language_version: python3.11

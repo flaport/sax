@@ -163,8 +163,8 @@ def get_ports(S: Union[Model, SType]) -> Tuple[str, ...]:
 
 @lru_cache(maxsize=4096)  # cache to prevent future tracing
 def _get_ports_from_model(model: Model) -> Tuple[str, ...]:
-    S: SType = jax.eval_shape(model)
-    return get_ports(S)
+    # S: SType = jax.eval_shape(model)
+    return get_ports(model())  # FIXME: this might be slow!
 
 
 def get_port_combinations(S: Union[Model, SType]) -> Tuple[Tuple[str, str], ...]:
