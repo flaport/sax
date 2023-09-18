@@ -19,7 +19,7 @@ import sax  # noqa: E402
 project = "sax"
 copyright = "2023, Apache2"
 author = "Floris Laporte"
-release = "0.10.1"
+release = "0.10.2"
 extensions = [
     "myst_nb",
     "matplotlib.sphinxext.plot_directive",
