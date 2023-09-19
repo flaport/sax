@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>Simulating an All-Pass Filter &#8212; sax 0.10.2 documentation</title>
+    <title>Simulating an All-Pass Filter &#8212; sax 0.10.3 documentation</title>
   
   
   
@@ -512,6 +512,12 @@ document.write(`
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1695153209.472935     597 tfrt_cpu_pjrt_client.cc:349] TfrtCpuClient created.
+</pre></div>
+</div>
+</div>
 </div>
 </section>
 <section id="frequency-domain-analytically">
@@ -551,15 +557,15 @@ o = \frac{t-10^{-\alpha L/20}\exp(2\pi j n_{\rm eff}(\lambda) L / \lambda)}{1-t1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 264 ms, sys: 3.92 ms, total: 268 ms
-Wall time: 267 ms
-CPU times: user 30.8 ms, sys: 0 ns, total: 30.8 ms
-Wall time: 30 ms
-CPU times: user 28 µs, sys: 0 ns, total: 28 µs
-Wall time: 30.8 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 370 ms, sys: 12.5 ms, total: 382 ms
+Wall time: 381 ms
+CPU times: user 39 ms, sys: 3.84 ms, total: 42.8 ms
+Wall time: 41.7 ms
+CPU times: user 45 µs, sys: 7 µs, total: 52 µs
+Wall time: 55.8 µs
 </pre></div>
 </div>
-<img alt="../_images/70d1ce0192464569d00b1df508eef918ac28b73c86976e61726f04db5eaf4816.png" src="../_images/70d1ce0192464569d00b1df508eef918ac28b73c86976e61726f04db5eaf4816.png" />
+<img alt="../_images/2defabf8031d134caeaadb5c2bb6d3e4032ea52cedd31c66b1bf0102af7b5908.png" src="../_images/2defabf8031d134caeaadb5c2bb6d3e4032ea52cedd31c66b1bf0102af7b5908.png" />
 </div>
 </div>
 </section>
@@ -617,15 +623,15 @@ Wall time: 30.8 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 622 ms, sys: 8.26 ms, total: 630 ms
-Wall time: 630 ms
-CPU times: user 285 µs, sys: 0 ns, total: 285 µs
-Wall time: 267 µs
-CPU times: user 20 µs, sys: 0 ns, total: 20 µs
-Wall time: 23.1 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 1.01 s, sys: 12.2 ms, total: 1.02 s
+Wall time: 1.02 s
+CPU times: user 357 µs, sys: 36 µs, total: 393 µs
+Wall time: 365 µs
+CPU times: user 29 µs, sys: 3 µs, total: 32 µs
+Wall time: 35 µs
 </pre></div>
 </div>
-<img alt="../_images/cf5c506c9bcc65d2ee29b5f8c19bb6ffb31175c435f0a512275742e1868dd0f6.png" src="../_images/cf5c506c9bcc65d2ee29b5f8c19bb6ffb31175c435f0a512275742e1868dd0f6.png" />
+<img alt="../_images/51586b83d08165b9705d60a9d1efecd156e567ccb2f5641636a4da04dca134b9.png" src="../_images/51586b83d08165b9705d60a9d1efecd156e567ccb2f5641636a4da04dca134b9.png" />
 </div>
 </div>
 </section>

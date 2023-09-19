@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>Circuit &#8212; sax 0.10.2 documentation</title>
+    <title>Circuit &#8212; sax 0.10.3 documentation</title>
   
   
   
@@ -519,17 +519,17 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-18 20:30:03.128</span> | <span class=" -Color -Color-Bold -Color-Bold-Yellow">WARNING </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">get_active_pdk</span>:<span class=" -Color -Color-Cyan">721</span> - <span class=" -Color -Color-Bold -Color-Bold-Yellow">No active PDK. Activating generic PDK.</span>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-19 19:58:58.500</span> | <span class=" -Color -Color-Bold -Color-Bold-Yellow">WARNING </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">get_active_pdk</span>:<span class=" -Color -Color-Cyan">721</span> - <span class=" -Color -Color-Bold -Color-Bold-Yellow">No active PDK. Activating generic PDK.</span>
 
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-18 20:30:03.340</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.technology.layer_views</span>:<span class=" -Color -Color-Cyan">__init__</span>:<span class=" -Color -Color-Cyan">790</span> - <span class=" -Color -Color-Bold">Importing LayerViews from YAML file: &#39;/opt/conda/lib/python3.10/site-packages/gdsfactory/generic_tech/layer_views.yaml&#39;.</span>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-19 19:58:58.767</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.technology.layer_views</span>:<span class=" -Color -Color-Cyan">__init__</span>:<span class=" -Color -Color-Cyan">790</span> - <span class=" -Color -Color-Bold">Importing LayerViews from YAML file: &#39;/opt/conda/lib/python3.10/site-packages/gdsfactory/generic_tech/layer_views.yaml&#39;.</span>
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-18 20:30:03.342</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">activate</span>:<span class=" -Color -Color-Cyan">334</span> - <span class=" -Color -Color-Bold">&#39;generic&#39; PDK is now active</span>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-19 19:58:58.770</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">activate</span>:<span class=" -Color -Color-Cyan">334</span> - <span class=" -Color -Color-Bold">&#39;generic&#39; PDK is now active</span>
 </pre></div>
 </div>
-<img alt="../_images/07d6228c8b258aacbfaa6798fe1fc66e186753ac7220da9ab9d3a89968dd4054.png" src="../_images/07d6228c8b258aacbfaa6798fe1fc66e186753ac7220da9ab9d3a89968dd4054.png" />
+<img alt="../_images/4ce82bb64281b0fd5341b38e9bf13aab6d194423b40bb502d6269cc9171be583.png" src="../_images/4ce82bb64281b0fd5341b38e9bf13aab6d194423b40bb502d6269cc9171be583.png" />
 </div>
 </div>
 <p>To be able to model this device we’ll need some SAX dummy models:</p>
@@ -707,7 +707,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/58ac2b1d512d2e1cec38329e54bd433bb68804a25d064e5f0f6473054c57bdf2.png" src="../_images/58ac2b1d512d2e1cec38329e54bd433bb68804a25d064e5f0f6473054c57bdf2.png" />
+<img alt="../_images/55182a9bb825a94633c8b1bb713f8cc6509452ccabcc2c471e562f895c5e4357.png" src="../_images/55182a9bb825a94633c8b1bb713f8cc6509452ccabcc2c471e562f895c5e4357.png" />
 </div>
 </div>
 <p>Note that the DAG depends on the models we supply. We could for example stub one of the sub-netlists by a pre-defined model:</p>
@@ -719,7 +719,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/3c04de43ab9d60db310047c4ee2a015adba49483fe0e618a842781e3498716fa.png" src="../_images/3c04de43ab9d60db310047c4ee2a015adba49483fe0e618a842781e3498716fa.png" />
+<img alt="../_images/eba4b47a2ab5d81ef8a12ddd9d5bd4529c14234273135ed9145d3f5979df01e4.png" src="../_images/eba4b47a2ab5d81ef8a12ddd9d5bd4529c14234273135ed9145d3f5979df01e4.png" />
 </div>
 </div>
 <p>This is useful if we for example pre-calculated a certain model.</p>
@@ -773,6 +773,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1695153540.673478    6264 tfrt_cpu_pjrt_client.cc:349] TfrtCpuClient created.
+</pre></div>
+</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0. +0.j, 0.9+0.j],
         [0.9+0.j, 0. +0.j]], dtype=complex128),
  {&#39;o1&#39;: 0, &#39;o2&#39;: 1})

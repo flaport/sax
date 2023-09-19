@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>Backends &#8212; sax 0.10.2 documentation</title>
+    <title>Backends &#8212; sax 0.10.3 documentation</title>
   
   
   
@@ -596,6 +596,10 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
+I0000 00:00:1695153505.561102    6129 tfrt_cpu_pjrt_client.cc:349] TfrtCpuClient created.
+</pre></div>
+</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;out0&#39;): Array(-0.25+0.433015j, dtype=complex128),
@@ -844,14 +848,14 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,in0&#39;,
- &#39;dc1,out1&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc2,in0&#39;,
+ &#39;dc2,out0&#39;,
+ &#39;dc2,out1&#39;,
+ &#39;dc2,in1&#39;,
  &#39;dc1,out0&#39;,
  &#39;dc1,in1&#39;,
- &#39;dc2,out0&#39;,
- &#39;dc2,in0&#39;,
- &#39;dc2,in1&#39;,
- &#39;dc2,out1&#39;)
+ &#39;dc1,out1&#39;,
+ &#39;dc1,in0&#39;)
 </pre></div>
 </div>
 </div>
@@ -963,22 +967,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -996,22 +1000,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -2005,7 +2009,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" src="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" />
+<img alt="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" src="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -2016,7 +2020,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" src="../_images/98076904bf729b2fdbb27c81972361044eeff5e948e4638007479b976dc7cf07.png" />
+<img alt="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" src="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" />
 </div>
 </div>
 <p>We can now get a list of all possible paths in the network. Note that these paths <strong>must</strong> alternate between an S-edge and a C-edge:</p>

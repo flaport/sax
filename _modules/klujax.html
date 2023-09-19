@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>klujax &#8212; sax 0.10.2 documentation</title>
+    <title>klujax &#8212; sax 0.10.3 documentation</title>
   
   
   
@@ -339,7 +339,7 @@ document.write(`
   <h1>Source code for klujax</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; klujax: a KLU solver for JAX &quot;&quot;&quot;</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.2.2&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.2.3&quot;</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Floris Laporte&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;solve&quot;</span><span class="p">,</span> <span class="s2">&quot;coo_mul_vec&quot;</span><span class="p">]</span>
 
@@ -396,7 +396,7 @@ document.write(`
     <span class="n">name</span> <span class="o">=</span> <span class="n">primitive</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
 
     <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">xla_client</span><span class="o">.</span><span class="n">register_cpu_custom_call_target</span><span class="p">(</span>
+        <span class="n">xla_client</span><span class="o">.</span><span class="n">register_custom_call_target</span><span class="p">(</span>
             <span class="n">name</span><span class="p">,</span>
             <span class="n">cpp_fun</span><span class="p">(),</span>
         <span class="p">)</span>
