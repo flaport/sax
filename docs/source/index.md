@@ -30,6 +30,8 @@ internals/02_circuit.ipynb
 internals/03_backends.ipynb
 ```
 
+```{include} ../../CHANGELOG.md
+```
 
 ```{toctree}
 :caption: 'API Docs'
