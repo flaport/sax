@@ -72,6 +72,7 @@ class Component(_BaseModel):
             raise ValueError(
                 f"Invalid component string. Should not contain ','. Got: {value}"
             )
+        value = value.split("$")[0]
         return clean_string(value)
 
 
