@@ -22,12 +22,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=927b94d3fcb96560df09" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=927b94d3fcb96560df09" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=927b94d3fcb96560df09" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=927b94d3fcb96560df09" rel="stylesheet" />
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=365ca57ee442770a23c6" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
@@ -41,9 +41,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=927b94d3fcb96560df09" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=927b94d3fcb96560df09" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=927b94d3fcb96560df09"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6" />
+  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=365ca57ee442770a23c6"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -138,13 +138,14 @@
   
   
   
+  
     
     
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.10.3 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.10.3 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -475,7 +476,7 @@ document.write(`
 <div class="admonition note">
 <p class="admonition-title">Note</p>
 <p>We are using gdsfactory to create our netlist because it allows us to see the circuit we want to simulate and because we’re striving to have a compatible netlist implementation in SAX.</p>
-<p>However… gdsfactory is not a dependency of SAX. You can also define your circuits by hand (see <a class="reference internal" href="../examples/01_quick_start.html"><span class="doc std std-doc">SAX Quick Start</span></a> or you can use another tool to programmatically construct your netlists.</p>
+<p>However… gdsfactory is not a dependency of SAX. You can also define your circuits by hand (see <a class="reference internal" href="../examples/01_quick_start.html"><span class="std std-doc">SAX Quick Start</span></a> or you can use another tool to programmatically construct your netlists.</p>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -519,17 +520,17 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-19 19:58:58.500</span> | <span class=" -Color -Color-Bold -Color-Bold-Yellow">WARNING </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">get_active_pdk</span>:<span class=" -Color -Color-Cyan">721</span> - <span class=" -Color -Color-Bold -Color-Bold-Yellow">No active PDK. Activating generic PDK.</span>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-11-15 02:11:48.176</span> | <span class=" -Color -Color-Bold -Color-Bold-Yellow">WARNING </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">get_active_pdk</span>:<span class=" -Color -Color-Cyan">734</span> - <span class=" -Color -Color-Bold -Color-Bold-Yellow">No active PDK. Activating generic PDK.</span>
 
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-19 19:58:58.767</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.technology.layer_views</span>:<span class=" -Color -Color-Cyan">__init__</span>:<span class=" -Color -Color-Cyan">790</span> - <span class=" -Color -Color-Bold">Importing LayerViews from YAML file: &#39;/opt/conda/lib/python3.10/site-packages/gdsfactory/generic_tech/layer_views.yaml&#39;.</span>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-11-15 02:11:48.407</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.technology.layer_views</span>:<span class=" -Color -Color-Cyan">__init__</span>:<span class=" -Color -Color-Cyan">790</span> - <span class=" -Color -Color-Bold">Importing LayerViews from YAML file: &#39;/opt/conda/lib/python3.10/site-packages/gdsfactory/generic_tech/layer_views.yaml&#39;.</span>
 </pre></div>
 </div>
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-09-19 19:58:58.770</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">activate</span>:<span class=" -Color -Color-Cyan">334</span> - <span class=" -Color -Color-Bold">&#39;generic&#39; PDK is now active</span>
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Green">2023-11-15 02:11:48.408</span> | <span class=" -Color -Color-Bold">INFO    </span> | <span class=" -Color -Color-Cyan">gdsfactory.pdk</span>:<span class=" -Color -Color-Cyan">activate</span>:<span class=" -Color -Color-Cyan">307</span> - <span class=" -Color -Color-Bold">&#39;generic&#39; PDK is now active</span>
 </pre></div>
 </div>
-<img alt="../_images/4ce82bb64281b0fd5341b38e9bf13aab6d194423b40bb502d6269cc9171be583.png" src="../_images/4ce82bb64281b0fd5341b38e9bf13aab6d194423b40bb502d6269cc9171be583.png" />
+<img alt="../_images/d7c545efdafb5e7c8c083e3b5ddc3143430dc00780556b49c7a91df297235e4b.png" src="../_images/d7c545efdafb5e7c8c083e3b5ddc3143430dc00780556b49c7a91df297235e4b.png" />
 </div>
 </div>
 <p>To be able to model this device we’ll need some SAX dummy models:</p>
@@ -773,10 +774,6 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>WARNING: All log messages before absl::InitializeLog() is called are written to STDERR
-I0000 00:00:1695153540.673478    6264 tfrt_cpu_pjrt_client.cc:349] TfrtCpuClient created.
-</pre></div>
-</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(Array([[0. +0.j, 0.9+0.j],
         [0.9+0.j, 0. +0.j]], dtype=complex128),
  {&#39;o1&#39;: 0, &#39;o2&#39;: 1})
@@ -958,8 +955,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=927b94d3fcb96560df09"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=927b94d3fcb96560df09"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=365ca57ee442770a23c6"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=365ca57ee442770a23c6"></script>
 
   <footer class="bd-footer">
   </footer>
