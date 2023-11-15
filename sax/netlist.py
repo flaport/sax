@@ -170,7 +170,9 @@ class Netlist(_BaseModel):
 
     @validator("placements")
     def validate_placement_names(cls, placements):
-        return {cls.clean_instance_string(k): v for k, v in placements.items()}
+        if placements is not None:
+            return {cls.clean_instance_string(k): v for k, v in placements.items()}
+        return {}
 
     @classmethod
     def clean_connection_string(cls, value):
