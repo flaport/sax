@@ -86,16 +86,22 @@ def validate_settings(settings: Settings) -> Settings:
         if isinstance(v, dict):
             _settings[k] = validate_settings(v)
         else:
-            _settings[k] = try_float(v)
+            _settings[k] = try_complex_float(v)
     return _settings
 
 
-def try_float(f: Any) -> Any:
+def try_complex_float(f: Any) -> Any:
     """try converting an object to float, return unchanged object on fail"""
-    try:
-        return jnp.asarray(f, dtype=float)
-    except (ValueError, TypeError):
-        return f
+    with warnings.catch_warnings():
+        warnings.filterwarnings(action="error", category=jnp.ComplexWarning)
+        try:
+            return jnp.asarray(f, dtype=float)
+        except jnp.ComplexWarning:  # type: ignore
+            return jnp.asarray(f, dtype=complex)
+        except (ValueError, TypeError):
+            return f
+        finally:
+            return f
 
 
 def flatten_dict(dic: Dict[str, Any], sep: str = ",") -> Dict[str, Any]:
@@ -508,9 +514,9 @@ def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Setti
                 _settings[k] = update_settings(v, **kwargs)
             else:
                 if k in kwargs:
-                    _settings[k] = try_float(kwargs[k])
+                    _settings[k] = try_complex_float(kwargs[k])
                 else:
-                    _settings[k] = try_float(v)
+                    _settings[k] = try_complex_float(v)
     else:
         for k, v in settings.items():
             if isinstance(v, dict):
@@ -519,7 +525,7 @@ def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Setti
                 else:
                     _settings[k] = v
             else:
-                _settings[k] = try_float(v)
+                _settings[k] = try_complex_float(v)
     return _settings
 
 

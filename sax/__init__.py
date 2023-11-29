@@ -83,7 +83,7 @@ from .utils import mode_combinations as mode_combinations
 from .utils import reciprocal as reciprocal
 from .utils import rename_params as rename_params
 from .utils import rename_ports as rename_ports
-from .utils import try_float as try_float
+from .utils import try_complex_float as try_complex_float
 from .utils import unflatten_dict as unflatten_dict
 from .utils import update_settings as update_settings
 from .utils import validate_multimode as validate_multimode
