@@ -190,10 +190,13 @@ def _flat_circuit(instances, connections, ports, models, backend):
     analyze_fn, evaluate_fn = circuit_backends[backend]
 
     inst2model = {k: models[inst.component] for k, inst in instances.items()}
-    inst_port_mode = {
-        k: _port_modes_dict(get_ports(models[inst.component]))
-        for k, inst in instances.items()
-    }
+    inst_port_mode = {}
+    for k, inst in instances.items():
+        try:
+            inst_port_mode[k] = _port_modes_dict(get_ports(models[inst.component]))
+        except ValueError:
+            print(inst.component)
+            raise
     connections = _get_multimode_connections(connections, inst_port_mode)
     ports = _get_multimode_ports(ports, inst_port_mode)
 
@@ -253,8 +256,14 @@ def _get_multimode_connections(connections, inst_port_mode):
     for inst_port1, inst_port2 in connections.items():
         inst1, port1 = inst_port1.split(",")
         inst2, port2 = inst_port2.split(",")
-        modes1 = inst_port_mode[inst1][port1]
-        modes2 = inst_port_mode[inst2][port2]
+        try:
+            modes1 = inst_port_mode[inst1][port1]
+        except KeyError:
+            raise RuntimeError(f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}.")
+        try:
+            modes2 = inst_port_mode[inst2][port2]
+        except KeyError:
+            raise RuntimeError(f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}.")
         if not modes1 and not modes2:
             mm_connections[f"{inst1},{port1}"] = f"{inst2},{port2}"
         elif (not modes1) or (not modes2):
@@ -274,7 +283,10 @@ def _get_multimode_ports(ports, inst_port_mode):
     mm_ports = {}
     for port, inst_port2 in ports.items():
         inst2, port2 = inst_port2.split(",")
-        modes2 = inst_port_mode[inst2][port2]
+        try:
+            modes2 = inst_port_mode[inst2][port2]
+        except KeyError:
+            raise RuntimeError(f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}")
         if not modes2:
             mm_ports[port] = f"{inst2},{port2}"
         else:
