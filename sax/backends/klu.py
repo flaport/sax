@@ -9,27 +9,37 @@ import jax.numpy as jnp
 import klujax
 from natsort import natsorted
 
-from ..saxtypes import SDense, SType, scoo, sdense
+from ..saxtypes import Model, SDense, SType, SCoo, scoo, sdense
+from ..netlist import Component
 
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
 mul_coo = jax.vmap(klujax.coo_mul_vec, (None, None, 0, 0), 0)
 
 
+def analyze_instances_klu(
+    instances: Dict[str, Component],
+    models: Dict[str, Model],
+) -> Dict[str, SCoo]:
+    model_names = set(str(i.component) for i in instances.values())
+    dummy_models = {k: scoo(models[k]()) for k in model_names}
+    dummy_instances = {k: dummy_models[str(i.component)] for k, i in instances.items()}
+    return dummy_instances
+
+
 def analyze_circuit_klu(
+    analyzed_instances: Dict[str, SCoo],
     connections: Dict[str, str],
     ports: Dict[str, str],
 ) -> Any:
     connections = {**connections, **{v: k for k, v in connections.items()}}
-    instances = _get_dummy_instances(connections, ports)
     inverse_ports = {v: k for k, v in ports.items()}
     port_map = {k: i for i, k in enumerate(ports)}
 
-    idx, Si, Sj, Sx, instance_ports = 0, [], [], [], {}
-    for name, instance in instances.items():
-        si, sj, sx, ports_map = scoo(instance)
+    idx, Si, Sj, instance_ports = 0, [], [], {}
+    for name, instance in analyzed_instances.items():
+        si, sj, _, ports_map = scoo(instance)
         Si.append(si + idx)
         Sj.append(sj + idx)
-        Sx.append(sx)
         instance_ports.update({f"{name},{p}": i + idx for p, i in ports_map.items()})
         idx += len(ports_map)
 
@@ -71,7 +81,7 @@ def analyze_circuit_klu(
         Cextj,
         I_CSi,
         I_CSj,
-        tuple((k, v[1]) for k, v in instances.items()),
+        tuple((k, v[1]) for k, v in analyzed_instances.items()),
         tuple(port_map),
     )
 
@@ -95,10 +105,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
     Sx = []
     batch_shape = ()
     for name, pm_ in dummy_pms:
-        S, pm = sdense(instances[name])
-        perm = [pm[k] for k in pm_]
-        S = S[..., perm, :][..., :, perm]
-        _, _, sx, ports_map = scoo((S, pm_))
+        _, _, sx, ports_map = scoo(instances[name])
         Sx.append(sx)
         if len(sx.shape[:-1]) > len(batch_shape):
             batch_shape = sx.shape[:-1]
@@ -141,11 +148,14 @@ def _get_instance_ports(connections: Dict[str, str], ports: Dict[str, str]):
 
 
 def _get_dummy_instances(connections, ports):
+    """no longer used. deprecated by analyze_instances_klu."""
     instance_ports = _get_instance_ports(connections, ports)
     dummy_instances = {}
     for name, ports in instance_ports.items():
         num_ports = len(ports)
         pm = {p: i for i, p in enumerate(ports)}
-        S = jnp.ones((num_ports, num_ports), dtype=complex)
-        dummy_instances[name] = (S, pm)
+        ij = jnp.mgrid[:num_ports, :num_ports]
+        i = ij[0].ravel()
+        j = ij[1].ravel()
+        dummy_instances[name] = (i, j, None, pm)
     return dummy_instances

@@ -187,16 +187,15 @@ def _validate_models(models, dag):
 
 
 def _flat_circuit(instances, connections, ports, models, backend):
-    analyze_fn, evaluate_fn = circuit_backends[backend]
-
-    inst2model = {k: models[inst.component] for k, inst in instances.items()}
+    analyze_insts_fn, analyze_fn, evaluate_fn = circuit_backends[backend]
+    dummy_instances = analyze_insts_fn(instances, models)
     inst_port_mode = {
-        k: _port_modes_dict(get_ports(models[inst.component]))
-        for k, inst in instances.items()
+        k: _port_modes_dict(get_ports(s)) for k, s in dummy_instances.items()
     }
     connections = _get_multimode_connections(connections, inst_port_mode)
     ports = _get_multimode_ports(ports, inst_port_mode)
 
+    inst2model = {k: models[inst.component] for k, inst in instances.items()}
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
     netlist_settings = {
         name: {
@@ -205,7 +204,7 @@ def _flat_circuit(instances, connections, ports, models, backend):
         for name, inst in instances.items()
     }
     default_settings = merge_dicts(model_settings, netlist_settings)
-    analyzed = analyze_fn(connections, ports)
+    analyzed = analyze_fn(dummy_instances, connections, ports)
 
     def _circuit(**settings: Settings) -> SType:
         full_settings = merge_dicts(default_settings, settings)

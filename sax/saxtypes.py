@@ -354,7 +354,7 @@ def _sdict_to_scoo(sdict: SDict) -> SCoo:
     for p1, p2 in sdict:
         all_ports[p1] = None
         all_ports[p2] = None
-    ports_map = {p: i for i, p in enumerate(all_ports)}
+    ports_map = {p: int(i) for i, p in enumerate(all_ports)}
     Sx = jnp.stack(jnp.broadcast_arrays(*sdict.values()), -1)
     Si = jnp.array([ports_map[p] for p, _ in sdict])
     Sj = jnp.array([ports_map[p] for _, p in sdict])

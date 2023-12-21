@@ -7,10 +7,22 @@ from typing import Any, Dict, Tuple
 import jax.numpy as jnp
 import networkx as nx
 
-from ..saxtypes import SDict, sdict
+from ..saxtypes import SDict, sdict, Model
+from ..netlist import Component
+
+
+def analyze_instances_additive(
+    instances: Dict[str, Component],
+    models: Dict[str, Model],
+) -> Dict[str, SDict]:
+    model_names = set(str(i.component) for i in instances.values())
+    dummy_models = {k: sdict(models[k]()) for k in model_names}
+    dummy_instances = {k: dummy_models[str(i.component)] for k, i in instances.items()}
+    return dummy_instances
 
 
 def analyze_circuit_additive(
+    analyzed_instances: Dict[str, SDict],
     connections: Dict[str, str],
     ports: Dict[str, str],
 ) -> Any:

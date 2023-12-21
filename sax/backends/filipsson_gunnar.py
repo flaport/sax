@@ -6,10 +6,25 @@ from typing import Any, Dict
 
 import jax
 
-from ..saxtypes import SDict, SType, sdict
+from ..saxtypes import SDict, SType, sdict, Model, SDict, sdict
+from ..netlist import Component
 
 
-def analyze_circuit_fg(connections: Dict[str, str], ports: Dict[str, str]) -> Any:
+def analyze_instances_fg(
+    instances: Dict[str, Component],
+    models: Dict[str, Model],
+) -> Dict[str, SDict]:
+    model_names = set(str(i.component) for i in instances.values())
+    dummy_models = {k: sdict(models[k]()) for k in model_names}
+    dummy_instances = {k: dummy_models[str(i.component)] for k, i in instances.items()}
+    return dummy_instances
+
+
+def analyze_circuit_fg(
+    analyzed_instances: Dict[str, SDict],
+    connections: Dict[str, str],
+    ports: Dict[str, str],
+) -> Any:
     # skip analysis for now
     return connections, ports
 
