@@ -47,6 +47,7 @@ def circuit(
     models: Optional[Dict[str, Model]] = None,
     backend: str = "default",
     return_type: str = "sdict",
+    ignore_missing_ports: bool = False,
 ) -> Tuple[Model, CircuitInfo]:
     """create a circuit function for a given netlist"""
     netlist = _ensure_recursive_netlist_dict(netlist)
@@ -79,6 +80,7 @@ def circuit(
             flatnet.ports,
             current_models,
             backend,
+            ignore_missing_ports=ignore_missing_ports,
         )
 
     assert circuit is not None
@@ -186,20 +188,16 @@ def _validate_models(models, dag):
     return {**models}  # shallow copy
 
 
-def _flat_circuit(instances, connections, ports, models, backend):
-    analyze_fn, evaluate_fn = circuit_backends[backend]
+def _flat_circuit(instances, connections, ports, models, backend, ignore_missing_ports=False):
+    analyze_insts_fn, analyze_fn, evaluate_fn = circuit_backends[backend]
+    dummy_instances = analyze_insts_fn(instances, models)
+    inst_port_mode = {
+        k: _port_modes_dict(get_ports(s)) for k, s in dummy_instances.items()
+    }
+    connections = _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports=ignore_missing_ports)
+    ports = _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=ignore_missing_ports)
 
     inst2model = {k: models[inst.component] for k, inst in instances.items()}
-    inst_port_mode = {}
-    for k, inst in instances.items():
-        try:
-            inst_port_mode[k] = _port_modes_dict(get_ports(models[inst.component]))
-        except ValueError:
-            print(inst.component)
-            raise
-    connections = _get_multimode_connections(connections, inst_port_mode)
-    ports = _get_multimode_ports(ports, inst_port_mode)
-
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
     netlist_settings = {
         name: {
@@ -208,7 +206,7 @@ def _flat_circuit(instances, connections, ports, models, backend):
         for name, inst in instances.items()
     }
     default_settings = merge_dicts(model_settings, netlist_settings)
-    analyzed = analyze_fn(connections, ports)
+    analyzed = analyze_fn(dummy_instances, connections, ports)
 
     def _circuit(**settings: Settings) -> SType:
         full_settings = merge_dicts(default_settings, settings)
@@ -251,7 +249,7 @@ def _port_modes_dict(port_modes):
     return result
 
 
-def _get_multimode_connections(connections, inst_port_mode):
+def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports=False):
     mm_connections = {}
     for inst_port1, inst_port2 in connections.items():
         inst1, port1 = inst_port1.split(",")
@@ -259,10 +257,14 @@ def _get_multimode_connections(connections, inst_port_mode):
         try:
             modes1 = inst_port_mode[inst1][port1]
         except KeyError:
+            if ignore_missing_ports:
+                continue
             raise RuntimeError(f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}.")
         try:
             modes2 = inst_port_mode[inst2][port2]
         except KeyError:
+            if ignore_missing_ports:
+                continue
             raise RuntimeError(f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}.")
         if not modes1 and not modes2:
             mm_connections[f"{inst1},{port1}"] = f"{inst2},{port2}"
@@ -279,13 +281,15 @@ def _get_multimode_connections(connections, inst_port_mode):
     return mm_connections
 
 
-def _get_multimode_ports(ports, inst_port_mode):
+def _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=False):
     mm_ports = {}
     for port, inst_port2 in ports.items():
         inst2, port2 = inst_port2.split(",")
         try:
             modes2 = inst_port_mode[inst2][port2]
         except KeyError:
+            if ignore_missing_ports:
+                continue
             raise RuntimeError(f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}")
         if not modes2:
             mm_ports[port] = f"{inst2},{port2}"
