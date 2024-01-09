@@ -361,3 +361,42 @@ def _remove_unused_instances_flat(flat_netlist: NetlistDict) -> NetlistDict:
             del flat_netlist["ports"][pname]
 
     return flat_netlist
+
+def flatten_netlist(recnet, sep="~"):
+    first_name = list(recnet.keys())[0]
+    net = _copy_netlist(recnet[first_name])
+    _flatten_netlist(recnet, net, sep)
+    return net
+
+def _copy_netlist(net):
+    net = {k: deepcopy(v) for k, v in net.items() if k in ['instances', 'connections', 'ports']}
+    return net
+
+def _flatten_netlist(recnet, net, sep):
+    for name, instance in list(net['instances'].items()):
+        component = instance['component']
+        if component not in recnet:
+            continue
+        del net['instances'][name]
+        child_net = _copy_net(recnet[component])
+        _flatten_netlist(recnet, child_net, sep)
+        for iname, iinstance in child_net['instances'].items():
+            net['instances'][f"{name}{sep}{iname}"] = iinstance
+        ports = {k: f"{name}{sep}{v}" for k, v in child_net['ports'].items()}
+        for ip1, ip2 in list(net['connections'].items()):
+            n1, p1 = ip1.split(',')
+            n2, p2 = ip2.split(',')
+            if n1 == name:
+                del net['connections'][ip1]
+                net['connections'][ports[p1]] = ip2
+            elif n2 == name:
+                net['connections'][ip1] = ports[p2]
+        for ip1, ip2 in child_net['connections'].items():
+            net['connections'][f"{name}{sep}{ip1}"] = f"{name}{sep}{ip2}"
+        for p, ip2 in net['ports'].items():
+            n2, p2 = ip2.split(',')
+            if n2 == name:
+                if p2 in ports:
+                    net['ports'][p] = ports[p2]
+                else:
+                    del net['ports'][p]

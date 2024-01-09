@@ -33,6 +33,7 @@ from .netlist import load_netlist as load_netlist
 from .netlist import load_recursive_netlist as load_recursive_netlist
 from .netlist import netlist as netlist
 from .netlist import RecursiveNetlist
+from .netlist import flatten_netlist
 from .saxtypes import Array as Array
 from .saxtypes import ArrayLike as ArrayLike
 from .saxtypes import Complex as Complex

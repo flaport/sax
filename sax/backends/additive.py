@@ -78,7 +78,9 @@ def _graph_edges(
         **{i1: None for (i1, _), (_, _), _ in edges},
         **{i2: None for (_, _), (i2, _), _ in edges},
     }
-    del _instances[""]  # external ports don't belong to an instance
+
+    if "" in _instances:
+        del _instances[""]  # external ports don't belong to an instance
 
     for instance in _instances:
         s = instances[instance]
