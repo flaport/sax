@@ -188,14 +188,20 @@ def _validate_models(models, dag):
     return {**models}  # shallow copy
 
 
-def _flat_circuit(instances, connections, ports, models, backend, ignore_missing_ports=False):
+def _flat_circuit(
+    instances, connections, ports, models, backend, ignore_missing_ports=False
+):
     analyze_insts_fn, analyze_fn, evaluate_fn = circuit_backends[backend]
     dummy_instances = analyze_insts_fn(instances, models)
     inst_port_mode = {
         k: _port_modes_dict(get_ports(s)) for k, s in dummy_instances.items()
     }
-    connections = _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports=ignore_missing_ports)
-    ports = _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=ignore_missing_ports)
+    connections = _get_multimode_connections(
+        connections, inst_port_mode, ignore_missing_ports=ignore_missing_ports
+    )
+    ports = _get_multimode_ports(
+        ports, inst_port_mode, ignore_missing_ports=ignore_missing_ports
+    )
 
     inst2model = {k: models[inst.component] for k, inst in instances.items()}
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
@@ -259,13 +265,17 @@ def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports
         except KeyError:
             if ignore_missing_ports:
                 continue
-            raise RuntimeError(f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}.")
+            raise RuntimeError(
+                f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}."
+            )
         try:
             modes2 = inst_port_mode[inst2][port2]
         except KeyError:
             if ignore_missing_ports:
                 continue
-            raise RuntimeError(f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}.")
+            raise RuntimeError(
+                f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}."
+            )
         if not modes1 and not modes2:
             mm_connections[f"{inst1},{port1}"] = f"{inst2},{port2}"
         elif (not modes1) or (not modes2):
@@ -290,7 +300,9 @@ def _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=False):
         except KeyError:
             if ignore_missing_ports:
                 continue
-            raise RuntimeError(f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}")
+            raise RuntimeError(
+                f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}"
+            )
         if not modes2:
             mm_ports[port] = f"{inst2},{port2}"
         else:

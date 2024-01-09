@@ -7,8 +7,8 @@ from typing import Any, Dict, Tuple
 import jax.numpy as jnp
 import networkx as nx
 
-from ..saxtypes import SDict, sdict, Model
 from ..netlist import Component
+from ..saxtypes import Model, SDict, sdict
 
 
 def analyze_instances_additive(

@@ -6,8 +6,8 @@ from typing import Any, Dict
 
 import jax
 
-from ..saxtypes import SDict, SType, sdict, Model, SDict, sdict
 from ..netlist import Component
+from ..saxtypes import Model, SDict, SType, sdict
 
 
 def analyze_instances_fg(

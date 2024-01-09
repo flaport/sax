@@ -9,8 +9,8 @@ import jax.numpy as jnp
 import klujax
 from natsort import natsorted
 
-from ..saxtypes import Model, SDense, SType, SCoo, scoo
 from ..netlist import Component
+from ..saxtypes import Model, SCoo, SDense, SType, scoo
 
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
 mul_coo = jax.vmap(klujax.coo_mul_vec, (None, None, 0, 0), 0)

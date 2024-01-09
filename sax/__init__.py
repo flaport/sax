@@ -27,13 +27,12 @@ from .models import get_models as get_models
 from .models import passthru as passthru
 from .multimode import multimode as multimode
 from .multimode import singlemode as singlemode
+from .netlist import RecursiveNetlist, flatten_netlist
 from .netlist import get_component_instances as get_component_instances
 from .netlist import get_netlist_instances_by_prefix as get_netlist_instances_by_prefix
 from .netlist import load_netlist as load_netlist
 from .netlist import load_recursive_netlist as load_recursive_netlist
 from .netlist import netlist as netlist
-from .netlist import RecursiveNetlist
-from .netlist import flatten_netlist
 from .saxtypes import Array as Array
 from .saxtypes import ArrayLike as ArrayLike
 from .saxtypes import Complex as Complex
