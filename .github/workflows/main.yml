@@ -70,7 +70,7 @@ jobs:
       - name: Install Library
         run: pip install --upgrade pip && pip install --use-deprecated=legacy-resolver '.[dev]'
       - name: Run source notebooks
-        run: find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3
+        run: find . -name "*.ipynb" -not -path "*/tests/*" -not -path "*/.ipynb_checkpoints/*" | xargs -I {} papermill {} {} -k python3
       - name: Expose 'internals' as artifact
         uses: actions/upload-artifact@master
         with:
