@@ -14,6 +14,11 @@ def analyze_instances_fg(
     instances: Dict[str, Component],
     models: Dict[str, Model],
 ) -> Dict[str, SDict]:
+    instances, instances_old = {}, instances
+    for k, v in instances_old.items():
+        if not isinstance(v, Component):
+            v = Component(**v)
+        instances[k] = v
     model_names = set(str(i.component) for i in instances.values())
     dummy_models = {k: sdict(models[k]()) for k in model_names}
     dummy_instances = {k: dummy_models[str(i.component)] for k, i in instances.items()}

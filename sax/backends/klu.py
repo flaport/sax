@@ -20,6 +20,11 @@ def analyze_instances_klu(
     instances: Dict[str, Component],
     models: Dict[str, Model],
 ) -> Dict[str, SCoo]:
+    instances, instances_old = {}, instances
+    for k, v in instances_old.items():
+        if not isinstance(v, Component):
+            v = Component(**v)
+        instances[k] = v
     model_names = set(str(i.component) for i in instances.values())
     dummy_models = {k: scoo(models[k]()) for k in model_names}
     dummy_instances = {k: dummy_models[str(i.component)] for k, i in instances.items()}

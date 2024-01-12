@@ -215,7 +215,8 @@ def _flat_circuit(
     analyzed = analyze_fn(dummy_instances, connections, ports)
 
     def _circuit(**settings: Settings) -> SType:
-        full_settings = _forward_global_settings(inst2model, default_settings)
+        full_settings = merge_dicts(default_settings, settings)
+        full_settings = _forward_global_settings(inst2model, full_settings)
         full_settings = merge_dicts(full_settings, settings)
 
         instances: Dict[str, SType] = {}
