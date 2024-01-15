@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>sax.backends package &#8212; sax 0.10.4 documentation</title>
+    <title>sax.backends package &#8212; sax 0.11.1 documentation</title>
   
   
   
@@ -19,15 +19,15 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
 
   
-  <link href="_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="_static/pygments.css" />
     <link rel="stylesheet" href="_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -38,9 +38,9 @@
     <link rel="stylesheet" type="text/css" href="_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
 
     <script data-url_root="./" id="documentation_options" src="_static/documentation_options.js"></script>
     <script src="_static/jquery.js"></script>
@@ -65,7 +65,7 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
 
@@ -108,12 +108,18 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <header>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
   
+  </header>
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -142,8 +148,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="sax 0.10.4 documentation - Home"/>
-    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="sax 0.10.4 documentation - Home"/>`);</script>
+    <img src="_static/logo.png" class="logo__image only-light" alt="sax 0.11.1 documentation - Home"/>
+    <script>document.write(`<img src="_static/logo.png" class="logo__image only-dark" alt="sax 0.11.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -408,6 +414,7 @@ document.write(`
                 <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-sax.backends">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_instances"><code class="docutils literal notranslate"><span class="pre">analyze_instances()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit"><code class="docutils literal notranslate"><span class="pre">analyze_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit()</span></code></a></li>
 </ul>
@@ -421,7 +428,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section id="sax-backends-package">
 <h1>sax.backends package<a class="headerlink" href="#sax-backends-package" title="Permalink to this heading">#</a></h1>
@@ -430,16 +437,19 @@ document.write(`
 <div class="toctree-wrapper compound">
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="sax.backends.additive.html">sax.backends.additive module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sax.backends.additive.html#sax.backends.additive.analyze_instances_additive"><code class="docutils literal notranslate"><span class="pre">analyze_instances_additive()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.backends.additive.html#sax.backends.additive.analyze_circuit_additive"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_additive()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.backends.additive.html#sax.backends.additive.evaluate_circuit_additive"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_additive()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sax.backends.filipsson_gunnar.html#sax.backends.filipsson_gunnar.analyze_instances_fg"><code class="docutils literal notranslate"><span class="pre">analyze_instances_fg()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.backends.filipsson_gunnar.html#sax.backends.filipsson_gunnar.analyze_circuit_fg"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_fg()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.backends.filipsson_gunnar.html#sax.backends.filipsson_gunnar.evaluate_circuit_fg"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_fg()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="sax.backends.klu.html">sax.backends.klu module</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="sax.backends.klu.html#sax.backends.klu.analyze_instances_klu"><code class="docutils literal notranslate"><span class="pre">analyze_instances_klu()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.backends.klu.html#sax.backends.klu.analyze_circuit_klu"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_klu()</span></code></a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.backends.klu.html#sax.backends.klu.evaluate_circuit_klu"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_klu()</span></code></a></li>
 </ul>
@@ -451,11 +461,28 @@ document.write(`
 <span id="module-contents"></span><h2>Module contents<a class="headerlink" href="#module-sax.backends" title="Permalink to this heading">#</a></h2>
 <p>SAX Backends</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="sax.backends.analyze_circuit">
-<span class="sig-name descname"><span class="pre">analyze_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/backends.html#analyze_circuit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="sax.backends.analyze_instances">
+<span class="sig-name descname"><span class="pre">analyze_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/backends.html#analyze_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_instances" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.Component" title="sax.netlist.Component"><em>Component</em></a><em>]</em>) – </p></li>
+<li><p><strong>models</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit">
+<span class="sig-name descname"><span class="pre">analyze_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/backends.html#analyze_circuit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed_instances</strong> (<em>Any</em>) – </p></li>
 <li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
 <li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
 </ul>
@@ -523,6 +550,7 @@ document.write(`
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
+
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
     <i class="fa-solid fa-list"></i> Contents
@@ -531,6 +559,7 @@ document.write(`
     <ul class="visible nav section-nav flex-column">
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-sax.backends">Module contents</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_instances"><code class="docutils literal notranslate"><span class="pre">analyze_instances()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit"><code class="docutils literal notranslate"><span class="pre">analyze_circuit()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit()</span></code></a></li>
 </ul>
@@ -583,8 +612,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
 
   <footer class="bd-footer">
   </footer>

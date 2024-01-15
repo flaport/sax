@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>Backends &#8212; sax 0.10.4 documentation</title>
+    <title>Backends &#8212; sax 0.11.1 documentation</title>
   
   
   
@@ -22,15 +22,15 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -41,9 +41,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -70,7 +70,7 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
 
@@ -113,12 +113,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <header>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
   
+  </header>
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -147,8 +155,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.10.4 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.10.4 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.11.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.11.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -488,7 +496,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="backends">
 <h1>Backends<a class="headerlink" href="#backends" title="Permalink to this heading">#</a></h1>
@@ -508,9 +516,17 @@ document.write(`
 </div>
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
-<p>SAX allows to easily interchange the backend of a circuit. A SAX backend consists of a static analysis step and an evaluation step:</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be needed to be recalculated when any parameters of the circuit change. See <a class="reference internal" href="#klu-backend"><span class="xref myst">KLU backend</span></a> for a non-trivial implementation of the circuit analyzation.</p>
-<p>The <code class="docutils literal notranslate"><span class="pre">evaluate_circuit</span></code> step evaluates the circuit for given <code class="docutils literal notranslate"><span class="pre">SType</span></code> instances.</p>
+<p>SAX allows to easily interchange the backend of a circuit. A SAX backend consists of two static analysis steps and an evaluation step:</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_instances</span></code> step analyzes the ‘shape’ of the instances by running each model with default parameters. By shape we mean which port-combinations are present in the sparse S-matrix.</p>
+<blockquote>
+<div><p>QUESTION: can we do this more efficiently in a functional way?</p>
+</div></blockquote>
+<p>After analyzing the instances, it is assumed that the shape of the instance won’t change any more. <strong>It is therefore important that you write your model functions in such a way that the port combinations present in your s-matrix <em>never</em> changes!</strong></p>
+<blockquote>
+<div><p>NOTE: we used to do this analysis step in <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> by just looking at the connections present. However, this inherently assumed dense connectivity within the model. This is pretty inefficient for large sparse models with many ports. Ideally, however, we should be able to analyze the shape of our instances without running their models with default parameters…</p>
+</div></blockquote>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be recalculated when any parameters of the circuit change. See <a class="reference internal" href="#klu-backend"><span class="xref myst">KLU backend</span></a> for a non-trivial implementation of the circuit analyzation.</p>
+<p>The <code class="docutils literal notranslate"><span class="pre">evaluate_circuit</span></code> step evaluates the circuit for given <code class="docutils literal notranslate"><span class="pre">SType</span></code> instances, given whatever analysis object was returned from the <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step and the instance <code class="docutils literal notranslate"><span class="pre">SType</span></code>s.</p>
 </section>
 <section id="example">
 <h2>Example<a class="headerlink" href="#example" title="Permalink to this heading">#</a></h2>
@@ -521,34 +537,40 @@ document.write(`
     <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.86603</span><span class="n">j</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">τ</span><span class="p">,</span> <span class="n">κ</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="n">τ</span><span class="p">,</span> <span class="n">κ</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span>
 <span class="n">dc_sdense</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDense</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">],</span> 
-               <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">],</span> 
-               <span class="p">[</span><span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
-               <span class="p">[</span><span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">],</span> <span class="p">[</span><span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>
     <span class="p">{</span><span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
 <span class="p">)</span>
 
-<span class="n">instances</span><span class="o">=</span><span class="p">{</span>
-    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
-    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
-    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;dc&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;wg&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;dc&quot;</span><span class="p">},</span>
 <span class="p">}</span>
-<span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+<span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+<span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
 <span class="p">}</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="p">}</span>
 
-<span class="n">analyzed</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
-<span class="n">mzi_sdict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span><span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit</span><span class="p">(</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">))</span>
+<span class="n">analyzed_instances</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_instances</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+<span class="n">analyzed_circuit</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit</span><span class="p">(</span><span class="n">analyzed_instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+<span class="n">mzi_sdict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span>
+    <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit</span><span class="p">(</span>
+        <span class="n">analyzed_circuit</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]]()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="p">)</span>
+<span class="p">)</span>
 <span class="n">mzi_sdict</span>
 </pre></div>
 </div>
@@ -594,17 +616,17 @@ document.write(`
 <p>Let’s walk through all the steps of this algorithm. We’ll do this for a simple MZI circuit, given by two directional couplers characterised by <code class="docutils literal notranslate"><span class="pre">dc_sdense</span></code> with a phase shifting waveguide in between <code class="docutils literal notranslate"><span class="pre">wg_sdict</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">instances</span><span class="o">=</span><span class="p">{</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">instances</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
     <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
     <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+<span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+<span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
@@ -673,6 +695,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sax.backends.filipsson_gunnar</span> <span class="kn">import</span> <span class="n">_connections_sort_key</span>
+
 <span class="n">sorted_connections</span> <span class="o">=</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">(),</span> <span class="n">key</span><span class="o">=</span><span class="n">_connections_sort_key</span><span class="p">)</span>
 <span class="n">sorted_connections</span>
 </pre></div>
@@ -743,7 +766,7 @@ document.write(`
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">connected_instances</span><span class="p">:</span>
     <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">connected_instances</span>
-    
+
 <span class="n">all_connected_instances</span>
 </pre></div>
 </div>
@@ -771,12 +794,12 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,in0&#39;,
  &#39;dc1,out1&#39;,
- &#39;dc1,out0&#39;,
  &#39;dc1,in1&#39;,
+ &#39;dc1,out0&#39;,
+ &#39;dc2,out1&#39;,
  &#39;dc2,in0&#39;,
- &#39;dc2,out0&#39;,
  &#39;dc2,in1&#39;,
- &#39;dc2,out1&#39;)
+ &#39;dc2,out0&#39;)
 </pre></div>
 </div>
 </div>
@@ -828,7 +851,7 @@ document.write(`
     <span class="n">is_in_output_ports</span> <span class="o">=</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">reversed_ports</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">reversed_ports</span>
     <span class="k">if</span> <span class="n">is_connected</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_in_output_ports</span><span class="p">:</span>
         <span class="k">del</span> <span class="n">block_diag</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>  <span class="c1"># we&#39;re no longer interested in these port combinations</span>
-        
+
 <span class="nb">print</span><span class="p">(</span><span class="nb">len</span><span class="p">(</span><span class="n">block_diag</span><span class="p">))</span>
 <span class="n">block_diag</span>
 </pre></div>
@@ -857,11 +880,16 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sax.backends.filipsson_gunnar</span> <span class="kn">import</span> <span class="n">_interconnect_ports</span>
-<span class="c1">#for k, l in sorted_connections: </span>
-<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sorted_connections</span><span class="p">[</span><span class="mi">1</span><span class="p">:]:</span> <span class="c1"># we just did the first iteration of this loop above...</span>
+
+<span class="c1"># for k, l in sorted_connections:</span>
+<span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">l</span> <span class="ow">in</span> <span class="n">sorted_connections</span><span class="p">[</span>
+    <span class="mi">1</span><span class="p">:</span>
+<span class="p">]:</span>  <span class="c1"># we just did the first iteration of this loop above...</span>
     <span class="n">name1</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">k</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="n">name2</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">l</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
-    <span class="n">connected_instances</span> <span class="o">=</span> <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name1</span><span class="p">]</span> <span class="o">|</span> <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name2</span><span class="p">]</span>
+    <span class="n">connected_instances</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name1</span><span class="p">]</span> <span class="o">|</span> <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name2</span><span class="p">]</span>
+    <span class="p">)</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">connected_instances</span><span class="p">:</span>
         <span class="n">all_connected_instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">connected_instances</span>
     <span class="n">current_ports</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span>
@@ -875,7 +903,9 @@ document.write(`
         <span class="n">is_connected</span> <span class="o">=</span> <span class="n">i</span> <span class="o">==</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">i</span> <span class="o">==</span> <span class="n">l</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">k</span> <span class="ow">or</span> <span class="n">j</span> <span class="o">==</span> <span class="n">l</span>
         <span class="n">is_in_output_ports</span> <span class="o">=</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">reversed_ports</span> <span class="ow">and</span> <span class="n">j</span> <span class="ow">in</span> <span class="n">reversed_ports</span>
         <span class="k">if</span> <span class="n">is_connected</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">is_in_output_ports</span><span class="p">:</span>
-            <span class="k">del</span> <span class="n">block_diag</span><span class="p">[</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">]</span>  <span class="c1"># we&#39;re no longer interested in these port combinations</span>
+            <span class="k">del</span> <span class="n">block_diag</span><span class="p">[</span>
+                <span class="n">i</span><span class="p">,</span> <span class="n">j</span>
+            <span class="p">]</span>  <span class="c1"># we&#39;re no longer interested in these port combinations</span>
 </pre></div>
 </div>
 </div>
@@ -890,20 +920,20 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -923,20 +953,20 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
  (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
  (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1047,7 +1077,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">A</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros</span><span class="p">((</span><span class="mi">5</span><span class="p">,</span> <span class="mi">5</span><span class="p">))</span><span class="o">.</span><span class="n">at</span><span class="p">[</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">]</span><span class="o">.</span><span class="n">set</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="p">)</span>
-<span class="nb">print</span><span class="p">(</span><span class="n">A</span><span class="nd">@x</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">A</span> <span class="o">@</span> <span class="n">x</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -1110,7 +1140,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <p>However, it’s useful to allow a batch dimension, this time <em>both</em> in <code class="docutils literal notranslate"><span class="pre">Ax</span></code> and in <code class="docutils literal notranslate"><span class="pre">b</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mul_coo</span> <span class="o">=</span> <span class="kc">None</span> 
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mul_coo</span> <span class="o">=</span> <span class="kc">None</span>
 <span class="n">mul_coo</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">coo_mul_vec</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
@@ -1142,33 +1172,42 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
     <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="mf">0.5</span> <span class="o">+</span> <span class="mf">0.86603</span><span class="n">j</span><span class="p">,</span>
 <span class="p">}</span>
 
-<span class="n">τ</span><span class="p">,</span> <span class="n">κ</span> <span class="o">=</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span> <span class="o">**</span> <span class="mf">0.5</span>
+<span class="n">τ</span><span class="p">,</span> <span class="n">κ</span> <span class="o">=</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span><span class="p">,</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="mf">0.5</span><span class="o">**</span><span class="mf">0.5</span>
 <span class="n">dc_sdense</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDense</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">],</span> 
-               <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">],</span> 
-               <span class="p">[</span><span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> 
-               <span class="p">[</span><span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">],</span> <span class="p">[</span><span class="n">τ</span><span class="p">,</span> <span class="n">κ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span> <span class="p">[</span><span class="n">κ</span><span class="p">,</span> <span class="n">τ</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">]]),</span>
     <span class="p">{</span><span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="mi">1</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="mi">3</span><span class="p">},</span>
 <span class="p">)</span>
 
-<span class="n">instances</span><span class="o">=</span><span class="p">{</span>
-    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
-    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
-    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;dc&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;wg&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;dc&quot;</span><span class="p">},</span>
 <span class="p">}</span>
-<span class="n">connections</span><span class="o">=</span><span class="p">{</span>
+<span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">ports</span><span class="o">=</span><span class="p">{</span>
+<span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">preprocessed</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit_klu</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
-<span class="n">S</span><span class="p">,</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit_klu</span><span class="p">(</span><span class="n">preprocessed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
+<span class="p">}</span>
+
+
+<span class="n">analyzed_instances</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_instances_klu</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+<span class="n">analyzed_circuit</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit_klu</span><span class="p">(</span>
+    <span class="n">analyzed_instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span>
+<span class="p">)</span>
+<span class="n">S</span><span class="p">,</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit_klu</span><span class="p">(</span>
+    <span class="n">analyzed_circuit</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]]()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+<span class="p">)</span>
+
 <span class="nb">print</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">pm</span><span class="p">)</span>
 </pre></div>
@@ -1294,7 +1333,8 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">idx</span><span class="p">,</span> <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">instance_ports</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">{}</span>
 <span class="n">batch_shape</span> <span class="o">=</span> <span class="p">()</span>
 <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-    <span class="n">si</span><span class="p">,</span> <span class="n">sj</span><span class="p">,</span> <span class="n">sx</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">scoo</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]]()</span>
+    <span class="n">si</span><span class="p">,</span> <span class="n">sj</span><span class="p">,</span> <span class="n">sx</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">scoo</span><span class="p">(</span><span class="n">s</span><span class="p">)</span>
     <span class="n">Si</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">si</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
     <span class="n">Sj</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sj</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
     <span class="n">Sx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span>
@@ -1304,7 +1344,9 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
     <span class="n">idx</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ports_map</span><span class="p">)</span>
 <span class="n">Si</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">Si</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
 <span class="n">Sj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span><span class="n">Sj</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-<span class="n">Sx</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">([</span><span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="k">for</span> <span class="n">sx</span> <span class="ow">in</span> <span class="n">Sx</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">Sx</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+    <span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">sx</span><span class="p">,</span> <span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span> <span class="k">for</span> <span class="n">sx</span> <span class="ow">in</span> <span class="n">Sx</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span>
+<span class="p">)</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">Si</span><span class="p">)</span>
 <span class="nb">print</span><span class="p">(</span><span class="n">Sj</span><span class="p">)</span>
@@ -1466,7 +1508,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># TODO: make this block jittable...</span>
 <span class="n">Ix</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">n_col</span><span class="p">))</span>
 <span class="n">Ii</span> <span class="o">=</span> <span class="n">Ij</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">n_col</span><span class="p">)</span>
-<span class="n">mask</span> <span class="o">=</span> <span class="n">Cj</span><span class="p">[</span><span class="kc">None</span><span class="p">,:]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">Cj</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">]</span>
 <span class="n">CSi</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">Ci</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="n">mask</span><span class="o">.</span><span class="n">shape</span><span class="p">)[</span><span class="n">mask</span><span class="p">]</span>
 <span class="n">CSi</span>
 </pre></div>
@@ -1483,8 +1525,8 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CSi_</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Cj</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Ci</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span> <span class="c1"># not used</span>
-<span class="n">CSi_</span> <span class="c1"># not used</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">CSi_</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">Cj</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span> <span class="o">==</span> <span class="n">Si</span><span class="p">[:,</span> <span class="kc">None</span><span class="p">],</span> <span class="n">Ci</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:],</span> <span class="mi">0</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># not used</span>
+<span class="n">CSi_</span>  <span class="c1"># not used</span>
 </pre></div>
 </div>
 </div>
@@ -1724,33 +1766,44 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wg_sdict</span> <span class="o">=</span> <span class="p">{</span>
-    
-    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">]),</span> <span class="c1"># assume for now there are three possible paths between these two ports.</span>
-    <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">]),</span> <span class="c1"># assume for now there are three possible paths between these two ports.</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">]</span>
+    <span class="p">),</span>  <span class="c1"># assume for now there are three possible paths between these two ports.</span>
+    <span class="p">(</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;in0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="mf">100.0</span><span class="p">,</span> <span class="mf">200.0</span><span class="p">,</span> <span class="mf">300.0</span><span class="p">]</span>
+    <span class="p">),</span>  <span class="c1"># assume for now there are three possible paths between these two ports.</span>
 <span class="p">}</span>
 
 <span class="n">dc_sdict</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]),</span> <span class="c1"># assume for now there are two possible paths between these two ports.</span>
+    <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]</span>
+    <span class="p">),</span>  <span class="c1"># assume for now there are two possible paths between these two ports.</span>
     <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="mf">15.0</span><span class="p">,</span>
     <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mf">15.0</span><span class="p">,</span>
-    <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]),</span> <span class="c1"># assume for now there are two possible paths between these two ports.</span>
+    <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
+        <span class="p">[</span><span class="mf">10.0</span><span class="p">,</span> <span class="mf">20.0</span><span class="p">]</span>
+    <span class="p">),</span>  <span class="c1"># assume for now there are two possible paths between these two ports.</span>
 <span class="p">}</span>
 
-<span class="n">instances</span><span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="n">dc_sdict</span><span class="p">,</span>
-    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
-    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="n">dc_sdict</span><span class="p">,</span>
+<span class="n">instances</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;dc1&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;dc&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;wg&quot;</span><span class="p">},</span>
+    <span class="s2">&quot;dc2&quot;</span><span class="p">:</span> <span class="p">{</span><span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="s2">&quot;dc&quot;</span><span class="p">},</span>
 <span class="p">}</span>
-<span class="n">connections</span><span class="o">=</span> <span class="p">{</span>
+<span class="n">connections</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;dc1,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;wg,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;wg,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;dc1,out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,in1&quot;</span><span class="p">,</span>
 <span class="p">}</span>
-<span class="n">ports</span><span class="o">=</span> <span class="p">{</span>
+<span class="n">ports</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s2">&quot;in0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;in1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc1,in1&quot;</span><span class="p">,</span>
     <span class="s2">&quot;out0&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out0&quot;</span><span class="p">,</span>
     <span class="s2">&quot;out1&quot;</span><span class="p">:</span> <span class="s2">&quot;dc2,out1&quot;</span><span class="p">,</span>
+<span class="p">}</span>
+<span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;wg&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">wg_sdict</span><span class="p">,</span>
+    <span class="s2">&quot;dc&quot;</span><span class="p">:</span> <span class="k">lambda</span><span class="p">:</span> <span class="n">dc_sdense</span><span class="p">,</span>
 <span class="p">}</span>
 </pre></div>
 </div>
@@ -1762,12 +1815,18 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">additive</span><span class="o">.</span><span class="n">_graph_edges</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">edges</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">additive</span><span class="o">.</span><span class="n">_graph_edges</span><span class="p">(</span>
+    <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]]()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()},</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span>
+<span class="p">)</span>
 <span class="n">edges</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.10/site-packages/jax/_src/numpy/lax_numpy.py:2171: ComplexWarning: Casting complex values to real discards the imaginary part
+  out_array: Array = lax_internal._convert_element_type(
+</pre></div>
+</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[((&#39;dc1&#39;, &#39;out0&#39;),
   (&#39;wg&#39;, &#39;in0&#39;),
   {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
@@ -1810,36 +1869,108 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
  ((&#39;dc2&#39;, &#39;out1&#39;),
   (&#39;&#39;, &#39;out1&#39;),
   {&#39;type&#39;: &#39;C&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out0&#39;),
+  (&#39;dc1&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out0&#39;),
+  (&#39;dc1&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out0&#39;),
+  (&#39;dc1&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out0&#39;),
+  (&#39;dc1&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out1&#39;),
+  (&#39;dc1&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out1&#39;),
+  (&#39;dc1&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out1&#39;),
+  (&#39;dc1&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;out1&#39;),
+  (&#39;dc1&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
  ((&#39;dc1&#39;, &#39;in0&#39;),
   (&#39;dc1&#39;, &#39;out0&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)}),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
  ((&#39;dc1&#39;, &#39;in0&#39;),
   (&#39;dc1&#39;, &#39;out1&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in0&#39;),
+  (&#39;dc1&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in0&#39;),
+  (&#39;dc1&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
  ((&#39;dc1&#39;, &#39;in1&#39;),
   (&#39;dc1&#39;, &#39;out0&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
  ((&#39;dc1&#39;, &#39;in1&#39;),
   (&#39;dc1&#39;, &#39;out1&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)}),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in1&#39;),
+  (&#39;dc1&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc1&#39;, &#39;in1&#39;),
+  (&#39;dc1&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
  ((&#39;wg&#39;, &#39;in0&#39;),
   (&#39;wg&#39;, &#39;out0&#39;),
   {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([100., 200., 300.], dtype=float64)}),
  ((&#39;wg&#39;, &#39;out0&#39;),
   (&#39;wg&#39;, &#39;in0&#39;),
   {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([100., 200., 300.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out0&#39;),
+  (&#39;dc2&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out0&#39;),
+  (&#39;dc2&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out0&#39;),
+  (&#39;dc2&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out0&#39;),
+  (&#39;dc2&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out1&#39;),
+  (&#39;dc2&#39;, &#39;out0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out1&#39;),
+  (&#39;dc2&#39;, &#39;out1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out1&#39;),
+  (&#39;dc2&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;out1&#39;),
+  (&#39;dc2&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
  ((&#39;dc2&#39;, &#39;in0&#39;),
   (&#39;dc2&#39;, &#39;out0&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)}),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
  ((&#39;dc2&#39;, &#39;in0&#39;),
   (&#39;dc2&#39;, &#39;out1&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in0&#39;),
+  (&#39;dc2&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in0&#39;),
+  (&#39;dc2&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
  ((&#39;dc2&#39;, &#39;in1&#39;),
   (&#39;dc2&#39;, &#39;out0&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([15.], dtype=float64)}),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
  ((&#39;dc2&#39;, &#39;in1&#39;),
   (&#39;dc2&#39;, &#39;out1&#39;),
-  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([10., 20.], dtype=float64)})]
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.70710678], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in1&#39;),
+  (&#39;dc2&#39;, &#39;in0&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)}),
+ ((&#39;dc2&#39;, &#39;in1&#39;),
+  (&#39;dc2&#39;, &#39;in1&#39;),
+  {&#39;type&#39;: &#39;S&#39;, &#39;length&#39;: Array([0.], dtype=float64)})]
 </pre></div>
 </div>
 </div>
@@ -1855,7 +1986,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" src="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" />
+<img alt="../_images/815c86ddd961a41d699046f4f080ab555516690991ac676f638b4db91ace8177.png" src="../_images/815c86ddd961a41d699046f4f080ab555516690991ac676f638b4db91ace8177.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -1866,7 +1997,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" src="../_images/03491ed18a8fde2536aba409139d5eb4491f659a72d1e3d5a1b901392457b514.png" />
+<img alt="../_images/815c86ddd961a41d699046f4f080ab555516690991ac676f638b4db91ace8177.png" src="../_images/815c86ddd961a41d699046f4f080ab555516690991ac676f638b4db91ace8177.png" />
 </div>
 </div>
 <p>We can now get a list of all possible paths in the network. Note that these paths <strong>must</strong> alternate between an S-edge and a C-edge:</p>
@@ -1902,9 +2033,8 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Array([120., 130., 220., 230., 320., 330., 130., 140., 230., 240., 330.,
-        340.], dtype=float64),
- Array([30.], dtype=float64)]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[Array([101.41421356, 201.41421356, 301.41421356], dtype=float64),
+ Array([0.], dtype=float64)]
 </pre></div>
 </div>
 </div>
@@ -1912,31 +2042,48 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <p>This is all brought together in the additive KLU backend:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit_additive</span><span class="p">(</span>
-    <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit_additive</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">),</span> <span class="n">instances</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">analyzed_instances</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_instances_additive</span><span class="p">(</span><span class="n">instances</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
+<span class="n">analyzed_circuit</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">analyze_circuit_additive</span><span class="p">(</span>
+    <span class="n">analyzed_instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span>
+<span class="p">)</span>
+<span class="n">sax</span><span class="o">.</span><span class="n">backends</span><span class="o">.</span><span class="n">evaluate_circuit_additive</span><span class="p">(</span>
+    <span class="n">analyzed_circuit</span><span class="p">,</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">v</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]]()</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 <span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.10/site-packages/jax/_src/numpy/lax_numpy.py:2171: ComplexWarning: Casting complex values to real discards the imaginary part
+  out_array: Array = lax_internal._convert_element_type(
+</pre></div>
+</div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;,
-  &#39;out0&#39;): [Array([120., 130., 220., 230., 320., 330., 130., 140., 230., 240., 330.,
-         340.], dtype=float64), Array([30.], dtype=float64)],
- (&#39;in0&#39;, &#39;out1&#39;): [Array([125., 135., 225., 235., 325., 335.], dtype=float64),
-  Array([25., 35.], dtype=float64)],
- (&#39;in1&#39;, &#39;out0&#39;): [Array([125., 225., 325., 135., 235., 335.], dtype=float64),
-  Array([25., 35.], dtype=float64)],
- (&#39;in1&#39;, &#39;out1&#39;): [Array([130., 230., 330.], dtype=float64),
-  Array([20., 30., 30., 40.], dtype=float64)],
+  &#39;in1&#39;): [Array([101.41421356, 201.41421356, 301.41421356], dtype=float64), Array([100., 200., 300.], dtype=float64), Array([0.], dtype=float64)],
+ (&#39;in0&#39;,
+  &#39;out0&#39;): [Array([101.41421356, 201.41421356, 301.41421356], dtype=float64), Array([0.], dtype=float64)],
+ (&#39;in0&#39;,
+  &#39;out1&#39;): [Array([100.70710678, 200.70710678, 300.70710678], dtype=float64), Array([0.70710678], dtype=float64)],
+ (&#39;in1&#39;, &#39;in0&#39;): [Array([100., 200., 300.], dtype=float64),
+  Array([101.41421356, 201.41421356, 301.41421356], dtype=float64),
+  Array([0.], dtype=float64)],
+ (&#39;in1&#39;,
+  &#39;out0&#39;): [Array([100.70710678, 200.70710678, 300.70710678], dtype=float64), Array([0.70710678], dtype=float64)],
+ (&#39;in1&#39;, &#39;out1&#39;): [Array([100., 200., 300.], dtype=float64),
+  Array([1.41421356], dtype=float64)],
  (&#39;out0&#39;,
-  &#39;in0&#39;): [Array([120., 130., 220., 230., 320., 330., 130., 140., 230., 240., 330.,
-         340.], dtype=float64), Array([30.], dtype=float64)],
- (&#39;out0&#39;, &#39;in1&#39;): [Array([125., 135., 225., 235., 325., 335.], dtype=float64),
-  Array([25., 35.], dtype=float64)],
- (&#39;out1&#39;, &#39;in0&#39;): [Array([125., 225., 325., 135., 235., 335.], dtype=float64),
-  Array([25., 35.], dtype=float64)],
- (&#39;out1&#39;, &#39;in1&#39;): [Array([130., 230., 330.], dtype=float64),
-  Array([20., 30., 30., 40.], dtype=float64)]}
+  &#39;in0&#39;): [Array([101.41421356, 201.41421356, 301.41421356], dtype=float64), Array([0.], dtype=float64)],
+ (&#39;out0&#39;,
+  &#39;in1&#39;): [Array([100.70710678, 200.70710678, 300.70710678], dtype=float64), Array([0.70710678], dtype=float64)],
+ (&#39;out0&#39;, &#39;out1&#39;): [Array([0.], dtype=float64),
+  Array([101.41421356, 201.41421356, 301.41421356], dtype=float64),
+  Array([100., 200., 300.], dtype=float64)],
+ (&#39;out1&#39;,
+  &#39;in0&#39;): [Array([100.70710678, 200.70710678, 300.70710678], dtype=float64), Array([0.70710678], dtype=float64)],
+ (&#39;out1&#39;, &#39;in1&#39;): [Array([100., 200., 300.], dtype=float64),
+  Array([1.41421356], dtype=float64)],
+ (&#39;out1&#39;, &#39;out0&#39;): [Array([0.], dtype=float64),
+  Array([100., 200., 300.], dtype=float64),
+  Array([101.41421356, 201.41421356, 301.41421356], dtype=float64)]}
 </pre></div>
 </div>
 </div>
@@ -1982,6 +2129,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -2056,8 +2204,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sax.backends.klu &#8212; sax 0.10.4 documentation</title>
+    <title>sax.backends.klu &#8212; sax 0.11.1 documentation</title>
   
   
   
@@ -18,15 +18,15 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../../../_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../../../_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../../../_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
 
   
-  <link href="../../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../../_static/pygments.css" />
     <link rel="stylesheet" href="../../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -37,9 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../../../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../../../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="../../../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="../../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
 
     <script data-url_root="../../../" id="documentation_options" src="../../../_static/documentation_options.js"></script>
     <script src="../../../_static/jquery.js"></script>
@@ -62,7 +62,7 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
 
@@ -105,12 +105,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <header>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
   
+  </header>
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -139,8 +147,8 @@
       
     
     
-    <img src="../../../_static/logo.png" class="logo__image only-light" alt="sax 0.10.4 documentation - Home"/>
-    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="sax 0.10.4 documentation - Home"/>`);</script>
+    <img src="../../../_static/logo.png" class="logo__image only-light" alt="sax 0.11.1 documentation - Home"/>
+    <script>document.write(`<img src="../../../_static/logo.png" class="logo__image only-dark" alt="sax 0.11.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -338,7 +346,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <h1>Source code for sax.backends.klu</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; SAX KLU Backend &quot;&quot;&quot;</span>
@@ -352,27 +360,42 @@ document.write(`
 <span class="kn">import</span> <span class="nn">klujax</span>
 <span class="kn">from</span> <span class="nn">natsort</span> <span class="kn">import</span> <span class="n">natsorted</span>
 
-<span class="kn">from</span> <span class="nn">..saxtypes</span> <span class="kn">import</span> <span class="n">SDense</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">scoo</span><span class="p">,</span> <span class="n">sdense</span>
+<span class="kn">from</span> <span class="nn">..netlist</span> <span class="kn">import</span> <span class="n">Component</span>
+<span class="kn">from</span> <span class="nn">..saxtypes</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">SCoo</span><span class="p">,</span> <span class="n">SDense</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">scoo</span>
 
 <span class="n">solve_klu</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">solve</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 <span class="n">mul_coo</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">coo_mul_vec</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 
 
+<div class="viewcode-block" id="analyze_instances_klu"><a class="viewcode-back" href="../../../sax.backends.klu.html#sax.backends.klu.analyze_instances_klu">[docs]</a><span class="k">def</span> <span class="nf">analyze_instances_klu</span><span class="p">(</span>
+    <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Component</span><span class="p">],</span>
+    <span class="n">models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SCoo</span><span class="p">]:</span>
+    <span class="n">instances</span><span class="p">,</span> <span class="n">instances_old</span> <span class="o">=</span> <span class="p">{},</span> <span class="n">instances</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">instances_old</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">Component</span><span class="p">):</span>
+            <span class="n">v</span> <span class="o">=</span> <span class="n">Component</span><span class="p">(</span><span class="o">**</span><span class="n">v</span><span class="p">)</span>
+        <span class="n">instances</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">v</span>
+    <span class="n">model_names</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">component</span><span class="p">)</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">values</span><span class="p">())</span>
+    <span class="n">dummy_models</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">scoo</span><span class="p">(</span><span class="n">models</span><span class="p">[</span><span class="n">k</span><span class="p">]())</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">model_names</span><span class="p">}</span>
+    <span class="n">dummy_instances</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">dummy_models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">i</span><span class="o">.</span><span class="n">component</span><span class="p">)]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">return</span> <span class="n">dummy_instances</span></div>
+
+
 <div class="viewcode-block" id="analyze_circuit_klu"><a class="viewcode-back" href="../../../sax.backends.klu.html#sax.backends.klu.analyze_circuit_klu">[docs]</a><span class="k">def</span> <span class="nf">analyze_circuit_klu</span><span class="p">(</span>
+    <span class="n">analyzed_instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SCoo</span><span class="p">],</span>
     <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
     <span class="n">ports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
     <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">connections</span><span class="p">,</span> <span class="o">**</span><span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">()}}</span>
-    <span class="n">instances</span> <span class="o">=</span> <span class="n">_get_dummy_instances</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
     <span class="n">inverse_ports</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">ports</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="n">port_map</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">k</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ports</span><span class="p">)}</span>
 
-    <span class="n">idx</span><span class="p">,</span> <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">Sx</span><span class="p">,</span> <span class="n">instance_ports</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">{}</span>
-    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
-        <span class="n">si</span><span class="p">,</span> <span class="n">sj</span><span class="p">,</span> <span class="n">sx</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">scoo</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
+    <span class="n">idx</span><span class="p">,</span> <span class="n">Si</span><span class="p">,</span> <span class="n">Sj</span><span class="p">,</span> <span class="n">instance_ports</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="p">[],</span> <span class="p">[],</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">analyzed_instances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">si</span><span class="p">,</span> <span class="n">sj</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">scoo</span><span class="p">(</span><span class="n">instance</span><span class="p">)</span>
         <span class="n">Si</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">si</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
         <span class="n">Sj</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sj</span> <span class="o">+</span> <span class="n">idx</span><span class="p">)</span>
-        <span class="n">Sx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span>
         <span class="n">instance_ports</span><span class="o">.</span><span class="n">update</span><span class="p">({</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">name</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="n">i</span> <span class="o">+</span> <span class="n">idx</span> <span class="k">for</span> <span class="n">p</span><span class="p">,</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">ports_map</span><span class="o">.</span><span class="n">items</span><span class="p">()})</span>
         <span class="n">idx</span> <span class="o">+=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ports_map</span><span class="p">)</span>
 
@@ -414,7 +437,7 @@ document.write(`
         <span class="n">Cextj</span><span class="p">,</span>
         <span class="n">I_CSi</span><span class="p">,</span>
         <span class="n">I_CSj</span><span class="p">,</span>
-        <span class="nb">tuple</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
+        <span class="nb">tuple</span><span class="p">((</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">analyzed_instances</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span>
         <span class="nb">tuple</span><span class="p">(</span><span class="n">port_map</span><span class="p">),</span>
     <span class="p">)</span></div>
 
@@ -438,10 +461,7 @@ document.write(`
     <span class="n">Sx</span> <span class="o">=</span> <span class="p">[]</span>
     <span class="n">batch_shape</span> <span class="o">=</span> <span class="p">()</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">pm_</span> <span class="ow">in</span> <span class="n">dummy_pms</span><span class="p">:</span>
-        <span class="n">S</span><span class="p">,</span> <span class="n">pm</span> <span class="o">=</span> <span class="n">sdense</span><span class="p">(</span><span class="n">instances</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
-        <span class="n">perm</span> <span class="o">=</span> <span class="p">[</span><span class="n">pm</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">pm_</span><span class="p">]</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">S</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">perm</span><span class="p">,</span> <span class="p">:][</span><span class="o">...</span><span class="p">,</span> <span class="p">:,</span> <span class="n">perm</span><span class="p">]</span>
-        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">sx</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">scoo</span><span class="p">((</span><span class="n">S</span><span class="p">,</span> <span class="n">pm_</span><span class="p">))</span>
+        <span class="n">_</span><span class="p">,</span> <span class="n">_</span><span class="p">,</span> <span class="n">sx</span><span class="p">,</span> <span class="n">ports_map</span> <span class="o">=</span> <span class="n">scoo</span><span class="p">(</span><span class="n">instances</span><span class="p">[</span><span class="n">name</span><span class="p">])</span>
         <span class="n">Sx</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">sx</span><span class="p">)</span>
         <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">&gt;</span> <span class="nb">len</span><span class="p">(</span><span class="n">batch_shape</span><span class="p">):</span>
             <span class="n">batch_shape</span> <span class="o">=</span> <span class="n">sx</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">]</span>
@@ -484,13 +504,16 @@ document.write(`
 
 
 <span class="k">def</span> <span class="nf">_get_dummy_instances</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;no longer used. deprecated by analyze_instances_klu.&quot;&quot;&quot;</span>
     <span class="n">instance_ports</span> <span class="o">=</span> <span class="n">_get_instance_ports</span><span class="p">(</span><span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span>
     <span class="n">dummy_instances</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">ports</span> <span class="ow">in</span> <span class="n">instance_ports</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
         <span class="n">num_ports</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">ports</span><span class="p">)</span>
         <span class="n">pm</span> <span class="o">=</span> <span class="p">{</span><span class="n">p</span><span class="p">:</span> <span class="n">i</span> <span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ports</span><span class="p">)}</span>
-        <span class="n">S</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ones</span><span class="p">((</span><span class="n">num_ports</span><span class="p">,</span> <span class="n">num_ports</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
-        <span class="n">dummy_instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">S</span><span class="p">,</span> <span class="n">pm</span><span class="p">)</span>
+        <span class="n">ij</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">mgrid</span><span class="p">[:</span><span class="n">num_ports</span><span class="p">,</span> <span class="p">:</span><span class="n">num_ports</span><span class="p">]</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">ij</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">j</span> <span class="o">=</span> <span class="n">ij</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="o">.</span><span class="n">ravel</span><span class="p">()</span>
+        <span class="n">dummy_instances</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">j</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">pm</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">dummy_instances</span>
 </pre></div>
 
@@ -510,6 +533,8 @@ document.write(`
             </div>
             
             
+              
+                <div class="bd-sidebar-secondary bd-toc"></div>
               
             
           </div>
@@ -554,8 +579,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../../../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="../../../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
 
   <footer class="bd-footer">
   </footer>

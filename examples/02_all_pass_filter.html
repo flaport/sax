@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>Simulating an All-Pass Filter &#8212; sax 0.10.4 documentation</title>
+    <title>Simulating an All-Pass Filter &#8212; sax 0.11.1 documentation</title>
   
   
   
@@ -22,15 +22,15 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -41,9 +41,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -70,7 +70,7 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
 
@@ -113,12 +113,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <header>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
   
+  </header>
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -147,8 +155,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.10.4 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.10.4 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.11.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.11.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -473,7 +481,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="simulating-an-all-pass-filter">
 <h1>Simulating an All-Pass Filter<a class="headerlink" href="#simulating-an-all-pass-filter" title="Permalink to this heading">#</a></h1>
@@ -528,12 +536,18 @@ o = \frac{t-10^{-\alpha L/20}\exp(2\pi j n_{\rm eff}(\lambda) L / \lambda)}{1-t1
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">all_pass_analytical</span><span class="p">():</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot; Analytic Frequency Domain Response of an all pass filter &quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Analytic Frequency Domain Response of an all pass filter&quot;&quot;&quot;</span>
     <span class="n">detected</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">zeros_like</span><span class="p">(</span><span class="n">wl</span><span class="p">)</span>
     <span class="n">transmission</span> <span class="o">=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">coupling</span>
-    <span class="n">neff_wl</span> <span class="o">=</span> <span class="n">neff</span> <span class="o">+</span> <span class="p">(</span><span class="n">wl0</span> <span class="o">-</span> <span class="n">wl</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>  <span class="c1"># we expect a linear behavior with respect to wavelength</span>
-    <span class="n">out</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">transmission</span><span class="p">)</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff_wl</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="n">wl</span><span class="p">)</span>
-    <span class="n">out</span> <span class="o">/=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">transmission</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff_wl</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="n">wl</span><span class="p">)</span>
+    <span class="n">neff_wl</span> <span class="o">=</span> <span class="p">(</span>
+        <span class="n">neff</span> <span class="o">+</span> <span class="p">(</span><span class="n">wl0</span> <span class="o">-</span> <span class="n">wl</span><span class="p">)</span> <span class="o">*</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>
+    <span class="p">)</span>  <span class="c1"># we expect a linear behavior with respect to wavelength</span>
+    <span class="n">out</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">transmission</span><span class="p">)</span> <span class="o">-</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff_wl</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="n">wl</span>
+    <span class="p">)</span>
+    <span class="n">out</span> <span class="o">/=</span> <span class="mi">1</span> <span class="o">-</span> <span class="n">jnp</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="n">transmission</span><span class="p">)</span> <span class="o">*</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="mf">20.0</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span>
+        <span class="mi">2</span><span class="n">j</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff_wl</span> <span class="o">*</span> <span class="n">ring_length</span> <span class="o">/</span> <span class="n">wl</span>
+    <span class="p">)</span>
     <span class="n">detected</span> <span class="o">=</span> <span class="nb">abs</span><span class="p">(</span><span class="n">out</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span>
     <span class="k">return</span> <span class="n">detected</span>
 </pre></div>
@@ -555,12 +569,12 @@ o = \frac{t-10^{-\alpha L/20}\exp(2\pi j n_{\rm eff}(\lambda) L / \lambda)}{1-t1
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 191 ms, sys: 7.32 ms, total: 198 ms
-Wall time: 197 ms
-CPU times: user 26.3 ms, sys: 687 µs, total: 27 ms
-Wall time: 25.2 ms
-CPU times: user 15 µs, sys: 5 µs, total: 20 µs
-Wall time: 22.9 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 210 ms, sys: 4.48 ms, total: 214 ms
+Wall time: 213 ms
+CPU times: user 27.6 ms, sys: 39 µs, total: 27.6 ms
+Wall time: 26 ms
+CPU times: user 21 µs, sys: 7 µs, total: 28 µs
+Wall time: 29.6 µs
 </pre></div>
 </div>
 <img alt="../_images/2defabf8031d134caeaadb5c2bb6d3e4032ea52cedd31c66b1bf0102af7b5908.png" src="../_images/2defabf8031d134caeaadb5c2bb6d3e4032ea52cedd31c66b1bf0102af7b5908.png" />
@@ -621,12 +635,12 @@ Wall time: 22.9 µs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 525 ms, sys: 8.87 ms, total: 534 ms
-Wall time: 531 ms
-CPU times: user 26 µs, sys: 6 µs, total: 32 µs
-Wall time: 34.8 µs
-CPU times: user 18 µs, sys: 4 µs, total: 22 µs
-Wall time: 26 µs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 335 ms, sys: 8.52 ms, total: 343 ms
+Wall time: 340 ms
+CPU times: user 193 µs, sys: 50 µs, total: 243 µs
+Wall time: 225 µs
+CPU times: user 16 µs, sys: 4 µs, total: 20 µs
+Wall time: 22.2 µs
 </pre></div>
 </div>
 <img alt="../_images/51586b83d08165b9705d60a9d1efecd156e567ccb2f5641636a4da04dca134b9.png" src="../_images/51586b83d08165b9705d60a9d1efecd156e567ccb2f5641636a4da04dca134b9.png" />
@@ -672,6 +686,7 @@ Wall time: 26 µs
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -731,8 +746,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
 
   <footer class="bd-footer">
   </footer>

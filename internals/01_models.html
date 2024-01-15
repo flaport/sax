@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>Models and Model Factories &#8212; sax 0.10.4 documentation</title>
+    <title>Models and Model Factories &#8212; sax 0.11.1 documentation</title>
   
   
   
@@ -22,15 +22,15 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/bootstrap.css?digest=5b4479735964841361fd" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=5b4479735964841361fd" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
 
   
-  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=5b4479735964841361fd" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+  <link href="../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=bd9e20870c6007c4c509" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -41,9 +41,9 @@
     <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd" />
-  <script src="../_static/vendor/fontawesome/6.1.2/js/all.min.js?digest=5b4479735964841361fd"></script>
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509" />
+  <script src="../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=bd9e20870c6007c4c509"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -68,7 +68,7 @@
 
   
   
-  <a class="skip-link" href="#main-content">Skip to main content</a>
+  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
   
   <div id="pst-scroll-pixel-helper"></div>
 
@@ -111,12 +111,20 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <header>
   
-    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
-    </nav>
+    <div class="bd-header navbar navbar-expand-lg bd-navbar">
+    </div>
   
+  </header>
+
   <div class="bd-container">
     <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
       
       <div class="bd-sidebar-primary bd-sidebar">
         
@@ -145,8 +153,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.10.4 documentation - Home"/>
-    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.10.4 documentation - Home"/>`);</script>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.11.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.11.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -470,7 +478,7 @@ document.write(`
               
                 
 <div id="searchbox"></div>
-                <article class="bd-article" role="main">
+                <article class="bd-article">
                   
   <section class="tex2jax_ignore mathjax_ignore" id="models-and-model-factories">
 <h1>Models and Model Factories<a class="headerlink" href="#models-and-model-factories" title="Permalink to this heading">#</a></h1>
@@ -525,7 +533,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unitary_model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">unitary_model</span><span class="p">()</span> <span class="c1"># a unitary model returns an SCoo by default</span>
+<span class="n">unitary_model</span><span class="p">()</span>  <span class="c1"># a unitary model returns an SCoo by default</span>
 </pre></div>
 </div>
 </div>
@@ -603,11 +611,9 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ports_in</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in0&#39;</span><span class="p">]</span>
-<span class="n">ports_out</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;out0&#39;</span><span class="p">,</span> <span class="s1">&#39;out1&#39;</span><span class="p">,</span> <span class="s1">&#39;out2&#39;</span><span class="p">,</span> <span class="s1">&#39;out3&#39;</span><span class="p">,</span> <span class="s1">&#39;out4&#39;</span><span class="p">]</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span>
-    <span class="n">ports</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ports_in</span><span class="o">+</span><span class="n">ports_out</span><span class="p">),</span> <span class="n">jit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reciprocal</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ports_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">]</span>
+<span class="n">ports_out</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">,</span> <span class="s2">&quot;out2&quot;</span><span class="p">,</span> <span class="s2">&quot;out3&quot;</span><span class="p">,</span> <span class="s2">&quot;out4&quot;</span><span class="p">]</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="n">ports</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ports_in</span> <span class="o">+</span> <span class="n">ports_out</span><span class="p">),</span> <span class="n">jit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reciprocal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">model</span><span class="p">()</span>
 </pre></div>
@@ -653,9 +659,9 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mzi</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
     <span class="n">netlist</span><span class="o">=</span><span class="p">{</span>
         <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span>
-            <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="s1">&#39;u12&#39;</span><span class="p">,</span>
-            <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s1">&#39;u11&#39;</span><span class="p">,</span>
-            <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="s1">&#39;u12&#39;</span><span class="p">,</span>
+            <span class="s2">&quot;lft&quot;</span><span class="p">:</span> <span class="s2">&quot;u12&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;top&quot;</span><span class="p">:</span> <span class="s2">&quot;u11&quot;</span><span class="p">,</span>
+            <span class="s2">&quot;rgt&quot;</span><span class="p">:</span> <span class="s2">&quot;u12&quot;</span><span class="p">,</span>
         <span class="p">},</span>
         <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">{</span>
             <span class="s2">&quot;lft,out0&quot;</span><span class="p">:</span> <span class="s2">&quot;rgt,out0&quot;</span><span class="p">,</span>
@@ -668,8 +674,8 @@ document.write(`
         <span class="p">},</span>
     <span class="p">},</span>
     <span class="n">models</span><span class="o">=</span><span class="p">{</span>
-        <span class="s1">&#39;u12&#39;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
-        <span class="s1">&#39;u11&#39;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
+        <span class="s2">&quot;u12&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">),</span>
+        <span class="s2">&quot;u11&quot;</span><span class="p">:</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">),</span>
     <span class="p">},</span>
 <span class="p">)</span>
 <span class="n">mzi</span><span class="p">()</span>
@@ -689,7 +695,7 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">copier_model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">copier</span><span class="p">(</span><span class="mi">2</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-<span class="n">copier_model</span><span class="p">()</span> <span class="c1"># a copier model returns an SCoo by default</span>
+<span class="n">copier_model</span><span class="p">()</span>  <span class="c1"># a copier model returns an SCoo by default</span>
 </pre></div>
 </div>
 </div>
@@ -748,11 +754,9 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ports_in</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;in0&#39;</span><span class="p">]</span>
-<span class="n">ports_out</span><span class="o">=</span><span class="p">[</span><span class="s1">&#39;out0&#39;</span><span class="p">,</span> <span class="s1">&#39;out1&#39;</span><span class="p">,</span> <span class="s1">&#39;out2&#39;</span><span class="p">,</span> <span class="s1">&#39;out3&#39;</span><span class="p">,</span> <span class="s1">&#39;out4&#39;</span><span class="p">]</span>
-<span class="n">model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span>
-    <span class="n">ports</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ports_in</span><span class="o">+</span><span class="n">ports_out</span><span class="p">),</span> <span class="n">jit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reciprocal</span><span class="o">=</span><span class="kc">True</span>
-<span class="p">)</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">ports_in</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">]</span>
+<span class="n">ports_out</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;out0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">,</span> <span class="s2">&quot;out2&quot;</span><span class="p">,</span> <span class="s2">&quot;out3&quot;</span><span class="p">,</span> <span class="s2">&quot;out4&quot;</span><span class="p">]</span>
+<span class="n">model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">models</span><span class="o">.</span><span class="n">unitary</span><span class="p">(</span><span class="n">ports</span><span class="o">=</span><span class="nb">tuple</span><span class="p">(</span><span class="n">ports_in</span> <span class="o">+</span> <span class="n">ports_out</span><span class="p">),</span> <span class="n">jit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">reciprocal</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 <span class="n">model</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">sdict</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 <span class="n">model</span><span class="p">()</span>
 </pre></div>
@@ -803,11 +807,11 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;copier&#39;: &lt;functools._lru_cache_wrapper at 0x7f8eec4dfed0&gt;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{&#39;copier&#39;: &lt;functools._lru_cache_wrapper at 0x7fc0088a2820&gt;,
  &#39;coupler&#39;: &lt;function sax.models.coupler(*, coupling: &#39;float&#39; = 0.5) -&gt; &#39;SDict&#39;&gt;,
- &#39;passthru&#39;: &lt;functools._lru_cache_wrapper at 0x7f8eec4de140&gt;,
+ &#39;passthru&#39;: &lt;functools._lru_cache_wrapper at 0x7fc0088a2a30&gt;,
  &#39;straight&#39;: &lt;function sax.models.straight(*, wl: &#39;FloatArrayND | float&#39; = 1.55, wl0: &#39;float&#39; = 1.55, neff: &#39;float&#39; = 2.34, ng: &#39;float&#39; = 3.4, length: &#39;float&#39; = 10.0, loss: &#39;float&#39; = 0.0) -&gt; &#39;SDict&#39;&gt;,
- &#39;unitary&#39;: &lt;functools._lru_cache_wrapper at 0x7f8eec4d8040&gt;}
+ &#39;unitary&#39;: &lt;functools._lru_cache_wrapper at 0x7fc0088a2770&gt;}
 </pre></div>
 </div>
 </div>
@@ -852,6 +856,7 @@ document.write(`
             
               
                 <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
 
   <div class="sidebar-secondary-item">
   <div class="page-toc tocsection onthispage">
@@ -910,8 +915,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../_static/scripts/bootstrap.js?digest=5b4479735964841361fd"></script>
-<script src="../_static/scripts/pydata-sphinx-theme.js?digest=5b4479735964841361fd"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=bd9e20870c6007c4c509"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=bd9e20870c6007c4c509"></script>
 
   <footer class="bd-footer">
   </footer>
