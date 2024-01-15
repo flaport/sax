@@ -70,7 +70,9 @@ Example:
 SCoo = Tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
 """ A sparse S-matrix in COO format (recommended for internal library use only)
 
-An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map. The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix. The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!
+An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map.
+The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix.
+The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!
 
 Example:
 
