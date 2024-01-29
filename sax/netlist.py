@@ -402,7 +402,10 @@ def _flatten_netlist(recnet, net, sep):
         for ip1, ip2 in child_net["connections"].items():
             net["connections"][f"{name}{sep}{ip1}"] = f"{name}{sep}{ip2}"
         for p, ip2 in net["ports"].items():
-            n2, p2 = ip2.split(",")
+            try:
+                n2, p2 = ip2.split(",")
+            except ValueError:
+                continue
             if n2 == name:
                 if p2 in ports:
                     net["ports"][p] = ports[p2]
