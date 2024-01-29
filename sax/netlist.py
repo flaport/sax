@@ -14,6 +14,7 @@ import networkx as nx
 import numpy as np
 import yaml
 from natsort import natsorted
+import warnings
 
 from .utils import clean_string, hash_dict
 
@@ -396,15 +397,26 @@ def _flatten_netlist(recnet, net, sep):
             n2, p2 = ip2.split(",")
             if n1 == name:
                 del net["connections"][ip1]
+                if p1 not in ports:
+                    warnings.warn(
+                        f"Port {ip1} not found. Connection {ip1}<->{ip2} ignored."
+                    )
+                    continue
                 net["connections"][ports[p1]] = ip2
             elif n2 == name:
+                if p2 not in ports:
+                    warnings.warn(
+                        f"Port {ip2} not found. Connection {ip1}<->{ip2} ignored."
+                    )
+                    continue
                 net["connections"][ip1] = ports[p2]
         for ip1, ip2 in child_net["connections"].items():
             net["connections"][f"{name}{sep}{ip1}"] = f"{name}{sep}{ip2}"
-        for p, ip2 in net["ports"].items():
+        for p, ip2 in list(net["ports"].items()):
             try:
                 n2, p2 = ip2.split(",")
             except ValueError:
+                warnings.warn(f"Unconventional port definition ignored: {p}->{ip2}.")
                 continue
             if n2 == name:
                 if p2 in ports:
