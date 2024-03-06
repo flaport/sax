@@ -66,8 +66,8 @@ class Component(_BaseModel):
 
     component: Union[str, Dict[str, Any]] = Field(..., title="Component")
     settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
+    info: Optional[Dict[str, Any]] = Field(None, title="Info")
 
-    # this was added:
     @validator("component")
     def validate_component_name(cls, value):
         if "," in value:
