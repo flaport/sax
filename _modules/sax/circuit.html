@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sax.circuit &#8212; sax 0.11.4 documentation</title>
+    <title>sax.circuit &#8212; sax 0.12.0 documentation</title>
   
   
   
@@ -143,8 +143,8 @@
       
     
     
-    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.11.4 documentation - Home"/>
-    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="sax 0.11.4 documentation - Home"/>`);</script>
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.12.0 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="sax 0.12.0 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -453,7 +453,11 @@ document.write(`
         <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">subnetlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">if</span> <span class="n">info</span> <span class="ow">and</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+                <span class="n">component</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">all_models</span><span class="p">:</span>
                 <span class="n">all_models</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">g</span><span class="o">.</span><span class="n">add_node</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
@@ -550,7 +554,13 @@ document.write(`
         <span class="n">ports</span><span class="p">,</span> <span class="n">inst_port_mode</span><span class="p">,</span> <span class="n">ignore_missing_ports</span><span class="o">=</span><span class="n">ignore_missing_ports</span>
     <span class="p">)</span>
 
-    <span class="n">inst2model</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">models</span><span class="p">[</span><span class="n">inst</span><span class="o">.</span><span class="n">component</span><span class="p">]</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">inst2model</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">inst</span> <span class="ow">in</span> <span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">inst</span><span class="o">.</span><span class="n">info</span> <span class="ow">and</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="n">inst</span><span class="o">.</span><span class="n">info</span><span class="p">:</span>
+            <span class="n">inst2model</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">info</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">])]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">inst2model</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="p">[</span><span class="nb">str</span><span class="p">(</span><span class="n">inst</span><span class="o">.</span><span class="n">component</span><span class="p">)]</span>
+
     <span class="n">model_settings</span> <span class="o">=</span> <span class="p">{</span><span class="n">name</span><span class="p">:</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">model</span> <span class="ow">in</span> <span class="n">inst2model</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="n">netlist_settings</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">name</span><span class="p">:</span> <span class="p">{</span>
@@ -765,7 +775,11 @@ document.write(`
         <span class="k">if</span> <span class="n">model_name</span> <span class="ow">in</span> <span class="n">models</span><span class="p">:</span>
             <span class="k">continue</span>
         <span class="k">for</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">subnetlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">():</span>
-            <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
+            <span class="n">info</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;info&quot;</span><span class="p">,</span> <span class="p">{})</span>
+            <span class="k">if</span> <span class="n">info</span> <span class="ow">and</span> <span class="s2">&quot;model&quot;</span> <span class="ow">in</span> <span class="n">info</span><span class="p">:</span>
+                <span class="n">component</span> <span class="o">=</span> <span class="n">info</span><span class="p">[</span><span class="s2">&quot;model&quot;</span><span class="p">]</span>
+            <span class="k">else</span><span class="p">:</span>
+                <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
             <span class="k">if</span> <span class="p">(</span><span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">missing_models</span><span class="p">)</span> <span class="ow">and</span> <span class="p">(</span><span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">models</span><span class="p">):</span>
                 <span class="n">missing_models</span><span class="p">[</span><span class="n">component</span><span class="p">]</span> <span class="o">=</span> <span class="n">models</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">component</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span>
                 <span class="n">missing_model_names</span><span class="o">.</span><span class="n">append</span><span class="p">(</span><span class="n">component</span><span class="p">)</span>
