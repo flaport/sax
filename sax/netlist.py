@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import os
 import re
+import warnings
 from copy import deepcopy
 from enum import Enum
 from functools import lru_cache
@@ -14,7 +15,6 @@ import networkx as nx
 import numpy as np
 import yaml
 from natsort import natsorted
-import warnings
 
 from .utils import clean_string, hash_dict
 

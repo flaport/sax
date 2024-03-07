@@ -26,7 +26,12 @@ def analyze_instances_fg(
         else:
             model_names.add(str(i.component))
     dummy_models = {k: sdict(models[k]()) for k in model_names}
-    dummy_instances = {k: dummy_models[str(i.component)] for k, i in instances.items()}
+    dummy_instances = {}
+    for k, i in instances.items():
+        if i.info and "model" in i.info and isinstance(i.info["model"], str):
+            dummy_instances[k] = dummy_models[str(i.info["model"])]
+        else:
+            dummy_instances[k] = dummy_models[str(i.component)]
     return dummy_instances
 
 
