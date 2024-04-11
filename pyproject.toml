@@ -4,7 +4,7 @@ requires = ["setuptools", "pip", "build", "wheel"]
 
 [project]
 name = "sax"
-version = "0.12.1"
+version = "0.12.2"
 requires-python = ">=3.9.0"
 authors = [
 { name = "Floris Laporte", email = "floris.laporte@rockleyphotonics.com" },
