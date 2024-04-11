@@ -27,7 +27,7 @@ classifiers = [
 dependencies = [
   "black",
   "fastcore",
-  "flax",
+  "flax>=0.8.2",
   "jax",
   "jaxlib",
   "jaxtyping",
