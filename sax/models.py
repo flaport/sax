@@ -21,26 +21,35 @@ def straight(
     length: float = 10.0,
     loss: float = 0.0,
 ) -> SDict:
-    """a simple straight waveguide model"""
+    """A simple straight waveguide model.
+
+    Args:
+        wl: wavelength in microns.
+        wl0: reference wavelength in microns.
+        neff: effective index.
+        ng: group index.
+        length: length of the waveguide in microns.
+        loss: loss in dB/cm.
+
+    """
     dwl = wl - wl0
     dneff_dwl = (ng - neff) / wl0
     _neff = neff - dwl * dneff_dwl
     phase = 2 * jnp.pi * _neff * length / wl
     amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
     transmission = amplitude * jnp.exp(1j * phase)
-    sdict = reciprocal(
+    return reciprocal(
         {
             ("in0", "out0"): transmission,
         }
     )
-    return sdict
 
 
 def coupler(*, coupling: float = 0.5) -> SDict:
     """a simple coupler model"""
     kappa = coupling**0.5
     tau = (1 - coupling) ** 0.5
-    sdict = reciprocal(
+    return reciprocal(
         {
             ("in0", "out0"): tau,
             ("in0", "out1"): 1j * kappa,
@@ -48,12 +57,13 @@ def coupler(*, coupling: float = 0.5) -> SDict:
             ("in1", "out1"): tau,
         }
     )
-    return sdict
 
 
 def _validate_ports(
     ports, num_inputs, num_outputs, diagonal
 ) -> Tuple[Tuple[str, ...], Tuple[str, ...], int, int]:
+    """Validate the ports and return the input and output ports."""
+
     if ports is None:
         if num_inputs is None or num_outputs is None:
             raise ValueError(
@@ -103,6 +113,17 @@ def unitary(
     reciprocal=True,
     diagonal=False,
 ) -> Model:
+    """A unitary model.
+
+    Args:
+        num_inputs: number of input ports.
+        num_outputs: number of output ports.
+        ports: tuple of input and output ports.
+        jit: whether to jit the model.
+        reciprocal: whether the model is reciprocal.
+        diagonal: whether the model is diagonal.
+
+    """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
         ports, num_inputs, num_outputs, diagonal
     )
@@ -156,9 +177,7 @@ def unitary(
 
     func.__name__ = f"unitary_{num_inputs}_{num_outputs}"
     func.__qualname__ = f"unitary_{num_inputs}_{num_outputs}"
-    if jit:
-        return jax.jit(func)
-    return func
+    return jax.jit(func) if jit else func
 
 
 @cache
@@ -171,6 +190,16 @@ def copier(
     reciprocal=True,
     diagonal=False,
 ) -> Model:
+    """A copier model.
+
+    Args:
+        num_inputs: number of input ports.
+        num_outputs: number of output ports.
+        ports: tuple of input and output ports.
+        jit: whether to jit the model.
+        reciprocal: whether the model is reciprocal.
+        diagonal: whether the model is diagonal.
+    """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
         ports, num_inputs, num_outputs, diagonal
     )
@@ -212,9 +241,7 @@ def copier(
 
     func.__name__ = f"unitary_{num_inputs}_{num_outputs}"
     func.__qualname__ = f"unitary_{num_inputs}_{num_outputs}"
-    if jit:
-        return jax.jit(func)
-    return func
+    return jax.jit(func) if jit else func
 
 
 @cache
@@ -225,14 +252,20 @@ def passthru(
     jit=True,
     reciprocal=True,
 ) -> Model:
+    """A passthru model.
+
+    Args:
+        num_links: number of links.
+        ports: tuple of input and output ports.
+        jit: whether to jit the model.
+        reciprocal: whether the model is reciprocal.
+    """
     passthru = unitary(
         num_links, num_links, ports, jit=jit, reciprocal=reciprocal, diagonal=True
     )
     passthru.__name__ = f"passthru_{num_links}_{num_links}"
     passthru.__qualname__ = f"passthru_{num_links}_{num_links}"
-    if jit:
-        return jax.jit(passthru)
-    return passthru
+    return jax.jit(passthru) if jit else passthru
 
 
 models = {
@@ -245,6 +278,4 @@ models = {
 
 
 def get_models(copy: bool = True):
-    if copy:
-        return {**models}
-    return models
+    return {**models} if copy else models
