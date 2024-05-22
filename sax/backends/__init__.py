@@ -60,6 +60,30 @@ except ImportError:
         "better performance during circuit evaluation!"
     )
 
+try:
+    from .cuda import analyze_circuit_klu, analyze_instances_klu, evaluate_circuit_klu
+
+    circuit_backends["klu_cuda"] = (
+        analyze_instances_klu,
+        analyze_circuit_klu,
+        evaluate_circuit_klu,
+    )
+    circuit_backends["default"] = (
+        analyze_instances_klu,
+        analyze_circuit_klu,
+        evaluate_circuit_klu,
+    )
+except ImportError:
+    circuit_backends["default"] = (
+        analyze_instances_fg,
+        analyze_circuit_fg,
+        evaluate_circuit_fg,
+    )
+    warnings.warn(
+        "cuda not found. Please install klujax, cupy and cupyx for "
+        "better performance during circuit evaluation!"
+    )
+
 
 def analyze_instances(
     instances: Dict[str, Component],
