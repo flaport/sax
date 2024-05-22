@@ -71,6 +71,11 @@ dev = [
 # "meep",
 ]
 
+cuda = [
+  "jax[cuda]",
+  "cupy",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["sax", "sax.nn", "sax.backends"]
