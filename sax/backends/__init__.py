@@ -61,17 +61,21 @@ except ImportError:
     )
 
 try:
-    from .cuda import analyze_circuit_klu, analyze_instances_klu, evaluate_circuit_klu
+    from .cuda import (
+        analyze_circuit_cuda,
+        analyze_instances_cuda,
+        evaluate_circuit_cuda,
+    )
 
-    circuit_backends["klu_cuda"] = (
-        analyze_instances_klu,
-        analyze_circuit_klu,
-        evaluate_circuit_klu,
+    circuit_backends["cuda"] = (
+        analyze_instances_cuda,
+        analyze_circuit_cuda,
+        evaluate_circuit_cuda,
     )
     circuit_backends["default"] = (
-        analyze_instances_klu,
-        analyze_circuit_klu,
-        evaluate_circuit_klu,
+        analyze_instances_cuda,
+        analyze_circuit_cuda,
+        evaluate_circuit_cuda,
     )
 except ImportError:
     circuit_backends["default"] = (
@@ -80,7 +84,7 @@ except ImportError:
         evaluate_circuit_fg,
     )
     warnings.warn(
-        "cuda not found. Please install klujax, cupy and cupyx for "
+        "cupy not found. Please install cupy for "
         "better performance during circuit evaluation!"
     )
 
