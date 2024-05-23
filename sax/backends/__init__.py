@@ -78,11 +78,8 @@ try:
         evaluate_circuit_cuda,
     )
 except ImportError:
-    circuit_backends["default"] = (
-        analyze_instances_fg,
-        analyze_circuit_fg,
-        evaluate_circuit_fg,
-    )
+    default_backend = "klu" if "klu" in circuit_backends else "fg"
+    circuit_backends["default"] = circuit_backends[default_backend]
     warnings.warn(
         "cupy not found. Please install cupy for "
         "better performance during circuit evaluation!"

@@ -31,19 +31,18 @@ def solve_cuda(Ai, Aj, Ax, B):
 
     Returns: array: Solution matrix.
     """
-    # TODO: Maybe the shape of Ax is wrong? Unsure -- the KLU backend uses jax.vmap.
-    Ax = Ax[0]
+    results = []
+    for Ax_mat in Ax:
+        # Create sparse matrix in COO format
+        A_coo = cupyx.scipy.sparse.coo_matrix((Ax_mat, (Ai, Aj)))
 
-    # Create sparse matrix in COO format
-    A_coo = cupyx.scipy.sparse.coo_matrix((Ax, (Ai, Aj)))
+        # Convert to CSR format for solving
+        A_csr = A_coo.tocsr()
 
-    # Convert to CSR format for solving
-    A_csr = A_coo.tocsr()
+        # Solve the linear system
+        results.append(cupyx.scipy.sparse.linalg.spsolve(A_csr, B))
 
-    # Solve the linear system
-    solution = cupyx.scipy.sparse.linalg.spsolve(A_csr, B)
-
-    return solution
+    return cp.asarray(results)
 
 
 def coo_mul_vec(Si, Sj, Sx, x):
@@ -59,15 +58,15 @@ def coo_mul_vec(Si, Sj, Sx, x):
     Returns:
         array: Resulting vector from the multiplication.
     """
-    # TODO: Maybe the shape of Ax is wrong? Unsure -- the KLU backend uses jax.vmap.
-    Sx = Sx[0]
+    results = []
+    for Sx_mat, x_vec in zip(Sx, x):
+        # Create sparse matrix in COO format
+        S_coo = cupyx.scipy.sparse.coo_matrix((Sx_mat, (Si, Sj)))
 
-    # Create sparse matrix in COO format
-    S_coo = cupyx.scipy.sparse.coo_matrix((Sx, (Si, Sj)))
+        # Perform the matrix-vector multiplication
+        results.append(S_coo.dot(x_vec))
 
-    # Perform the matrix-vector multiplication
-    result = S_coo.dot(x)
-    return result
+    return cp.asarray(results)
 
 
 def analyze_instances_cuda(
@@ -195,8 +194,7 @@ def evaluate_circuit_cuda(analyzed: Any, instances: Dict[str, SType]) -> SDense:
 
     CextT_S_inv_I_CS_Cext = S_inv_I_CS_Cext[..., Cexti, :][..., :, Cextj]
 
-    # TODO: Check that n should be from shape[-2]. We dropped a dimension somewhere.
-    n = CextT_S_inv_I_CS_Cext.shape[-2]
+    _, n, _ = CextT_S_inv_I_CS_Cext.shape
     S = CextT_S_inv_I_CS_Cext.reshape(*batch_shape, n, n)
 
     return jnp.asarray(S), {p: i for i, p in enumerate(port_map)}
