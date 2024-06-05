@@ -49,7 +49,16 @@ def circuit(
     return_type: str = "sdict",
     ignore_missing_ports: bool = False,
 ) -> Tuple[Model, CircuitInfo]:
-    """create a circuit function for a given netlist"""
+    """Create a circuit function for a given netlist.
+
+    Args:
+        netlist: The netlist to create a circuit for.
+        models: A dictionary of models to use in the circuit.
+        backend: The backend to use for the circuit.
+        return_type: The type of the circuit function to return.
+        ignore_missing_ports: Ignore missing ports in the netlist.
+
+    """
     netlist = _ensure_recursive_netlist_dict(netlist)
 
     # TODO: do the following two steps *after* recursive netlist parsing.
@@ -71,7 +80,7 @@ def circuit(
             continue
 
         flatnet = recnet.__root__[model_name]
-        current_models.update(new_models)
+        current_models |= new_models
         new_models = {}
 
         current_models[model_name] = circuit = _flat_circuit(
@@ -141,7 +150,7 @@ def _patch_path():
     os_paths = {p: None for p in os.environ.get("PATH", "").split(os.pathsep)}
     sys_paths = {p: None for p in sys.path}
     other_paths = {os.path.dirname(sys.executable): None}
-    os.environ["PATH"] = os.pathsep.join({**os_paths, **sys_paths, **other_paths})
+    os.environ["PATH"] = os.pathsep.join(os_paths | sys_paths | other_paths)
 
 
 def _my_dag_pos(dag):
@@ -167,13 +176,11 @@ def _my_dag_pos(dag):
 
 
 def _find_root(g):
-    nodes = [n for n, d in g.in_degree() if d == 0]
-    return nodes
+    return [n for n, d in g.in_degree() if d == 0]
 
 
 def _find_leaves(g):
-    nodes = [n for n, d in g.out_degree() if d == 0]
-    return nodes
+    return [n for n, d in g.out_degree() if d == 0]
 
 
 def _validate_models(models, dag):
@@ -242,11 +249,9 @@ def _flat_circuit(
 
 
 def _forward_global_settings(instances, settings):
-    global_settings = {}
-    for k in list(settings.keys()):
-        if k in instances:
-            continue
-        global_settings[k] = settings.pop(k)
+    global_settings = {
+        k: settings.pop(k) for k in list(settings.keys()) if k not in instances
+    }
     if global_settings:
         settings = update_settings(settings, **global_settings)
     return settings
@@ -255,10 +260,7 @@ def _forward_global_settings(instances, settings):
 def _port_modes_dict(port_modes):
     result = {}
     for port_mode in port_modes:
-        if "@" in port_mode:
-            port, mode = port_mode.split("@")
-        else:
-            port, mode = port_mode, None
+        port, mode = port_mode.split("@") if "@" in port_mode else (port_mode, None)
         if port not in result:
             result[port] = set()
         if mode is not None:
@@ -407,7 +409,13 @@ def get_required_circuit_models(
     netlist: Union[Netlist, NetlistDict, RecursiveNetlist, RecursiveNetlistDict],
     models: Optional[Dict[str, Model]] = None,
 ) -> List:
-    """Figure out which models are needed for a given netlist"""
+    """Figure out which models are needed for a given netlist.
+
+    Args:
+        netlist: The netlist to create a circuit for.
+        models: A dictionary of models to use in the circuit.
+
+    """
     if models is None:
         models = {}
     assert isinstance(models, dict)
@@ -434,7 +442,7 @@ def get_required_circuit_models(
             else:
                 component = instance["component"]
             if (component not in missing_models) and (component not in models):
-                missing_models[component] = models.get(component, None)
+                missing_models[component] = models.get(component)
                 missing_model_names.append(component)
                 g.add_node(component)
             g.add_edge(model_name, component)
