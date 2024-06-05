@@ -14,19 +14,19 @@
   
   <script data-cfasync="false">
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
-    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.5.1/css/all.min.css?digest=8d27b9dea8ad943066ae" rel="stylesheet" />
-  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-solid-900.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-brands-400.woff2" />
-<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.1/webfonts/fa-regular-400.woff2" />
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -37,9 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae" />
-  <script src="../../_static/vendor/fontawesome/6.5.1/js/all.min.js?digest=8d27b9dea8ad943066ae"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -62,27 +62,23 @@
 
   
   
-  <a id="pst-skip-link" class="skip-link" href="#main-content">Skip to main content</a>
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
   
   <div id="pst-scroll-pixel-helper"></div>
   
   <button type="button" class="btn rounded-pill" id="pst-back-to-top">
-    <i class="fa-solid fa-arrow-up"></i>
-    Back to top
-  </button>
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__primary"
-          id="__primary"/>
-  <label class="overlay overlay-primary" for="__primary"></label>
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
   
   <input type="checkbox"
           class="sidebar-toggle"
-          name="__secondary"
-          id="__secondary"/>
-  <label class="overlay overlay-secondary" for="__secondary"></label>
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
   
   <div class="search-button__wrapper">
     <div class="search-button__overlay"></div>
@@ -104,8 +100,13 @@
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
 </form></div>
   </div>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
   
-    <header class="bd-header navbar navbar-expand-lg bd-navbar">
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
     </header>
   
 
@@ -172,20 +173,20 @@
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
 <ul class="nav bd-sidenav">
-<li class="toctree-l1 has-children"><a class="reference internal" href="../../sax.html">sax package</a><input class="toctree-checkbox" id="toctree-checkbox-1" name="toctree-checkbox-1" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-1"><i class="fa-solid fa-chevron-down"></i></label><ul>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.backends.html">sax.backends package</a><input class="toctree-checkbox" id="toctree-checkbox-2" name="toctree-checkbox-2" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-2"><i class="fa-solid fa-chevron-down"></i></label><ul>
+<li class="toctree-l1 has-children"><a class="reference internal" href="../../sax.html">sax package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.additive.html">sax.backends.additive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
-</li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.nn.html">sax.nn package</a><input class="toctree-checkbox" id="toctree-checkbox-3" name="toctree-checkbox-3" type="checkbox"/><label class="toctree-toggle" for="toctree-checkbox-3"><i class="fa-solid fa-chevron-down"></i></label><ul>
+</details></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.nn.html">sax.nn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.nn.core.html">sax.nn.core module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.nn.io.html">sax.nn.io module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.nn.loss.html">sax.nn.loss module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.nn.utils.html">sax.nn.utils module</a></li>
 </ul>
-</li>
+</details></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sax.circuit.html">sax.circuit module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sax.models.html">sax.models module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sax.multimode.html">sax.multimode module</a></li>
@@ -194,7 +195,7 @@
 <li class="toctree-l2"><a class="reference internal" href="../../sax.saxtypes.html">sax.saxtypes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../../sax.utils.html">sax.utils module</a></li>
 </ul>
-</li>
+</details></li>
 </ul>
 
     </div>
@@ -210,7 +211,7 @@
 
       </div>
       
-      <main id="main-content" class="bd-main">
+      <main id="main-content" class="bd-main" role="main">
         
         
 
@@ -219,7 +220,7 @@
           <div class="bd-content">
             <div class="bd-article-container">
               
-              <div class="bd-header-article">
+              <div class="bd-header-article d-print-none">
 <div class="header-article-items header-article__inner">
   
     <div class="header-article-items__start">
@@ -368,39 +369,49 @@ document.write(`
     <span class="n">length</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">10.0</span><span class="p">,</span>
     <span class="n">loss</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;a simple straight waveguide model&quot;&quot;&quot;</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A simple straight waveguide model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        wl: wavelength in microns.</span>
+<span class="sd">        wl0: reference wavelength in microns.</span>
+<span class="sd">        neff: effective index.</span>
+<span class="sd">        ng: group index.</span>
+<span class="sd">        length: length of the waveguide in microns.</span>
+<span class="sd">        loss: loss in dB/cm.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">dwl</span> <span class="o">=</span> <span class="n">wl</span> <span class="o">-</span> <span class="n">wl0</span>
     <span class="n">dneff_dwl</span> <span class="o">=</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>
     <span class="n">_neff</span> <span class="o">=</span> <span class="n">neff</span> <span class="o">-</span> <span class="n">dwl</span> <span class="o">*</span> <span class="n">dneff_dwl</span>
     <span class="n">phase</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">_neff</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="n">wl</span>
     <span class="n">amplitude</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="mi">20</span><span class="p">),</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
     <span class="n">transmission</span> <span class="o">=</span> <span class="n">amplitude</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">)</span>
-    <span class="n">sdict</span> <span class="o">=</span> <span class="n">reciprocal</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">reciprocal</span><span class="p">(</span>
         <span class="p">{</span>
             <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">transmission</span><span class="p">,</span>
         <span class="p">}</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">sdict</span></div>
+    <span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="coupler"><a class="viewcode-back" href="../../sax.models.html#sax.models.coupler">[docs]</a><span class="k">def</span> <span class="nf">coupler</span><span class="p">(</span><span class="o">*</span><span class="p">,</span> <span class="n">coupling</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;a simple coupler model&quot;&quot;&quot;</span>
     <span class="n">kappa</span> <span class="o">=</span> <span class="n">coupling</span><span class="o">**</span><span class="mf">0.5</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">coupling</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
-    <span class="n">sdict</span> <span class="o">=</span> <span class="n">reciprocal</span><span class="p">(</span>
+    <span class="k">return</span> <span class="n">reciprocal</span><span class="p">(</span>
         <span class="p">{</span>
             <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
             <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
             <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
             <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
         <span class="p">}</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">sdict</span></div>
+    <span class="p">)</span></div>
 
 
 <span class="k">def</span> <span class="nf">_validate_ports</span><span class="p">(</span>
     <span class="n">ports</span><span class="p">,</span> <span class="n">num_inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">diagonal</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">],</span> <span class="nb">int</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate the ports and return the input and output ports.&quot;&quot;&quot;</span>
+
     <span class="k">if</span> <span class="n">ports</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">if</span> <span class="n">num_inputs</span> <span class="ow">is</span> <span class="kc">None</span> <span class="ow">or</span> <span class="n">num_outputs</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
             <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -450,6 +461,17 @@ document.write(`
     <span class="n">reciprocal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A unitary model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_inputs: number of input ports.</span>
+<span class="sd">        num_outputs: number of output ports.</span>
+<span class="sd">        ports: tuple of input and output ports.</span>
+<span class="sd">        jit: whether to jit the model.</span>
+<span class="sd">        reciprocal: whether the model is reciprocal.</span>
+<span class="sd">        diagonal: whether the model is diagonal.</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_ports</span><span class="p">,</span> <span class="n">output_ports</span><span class="p">,</span> <span class="n">num_inputs</span><span class="p">,</span> <span class="n">num_outputs</span> <span class="o">=</span> <span class="n">_validate_ports</span><span class="p">(</span>
         <span class="n">ports</span><span class="p">,</span> <span class="n">num_inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">diagonal</span>
     <span class="p">)</span>
@@ -503,9 +525,7 @@ document.write(`
 
     <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;unitary_</span><span class="si">{</span><span class="n">num_inputs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">num_outputs</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;unitary_</span><span class="si">{</span><span class="n">num_inputs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">num_outputs</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="n">jit</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">func</span></div>
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">if</span> <span class="n">jit</span> <span class="k">else</span> <span class="n">func</span></div>
 
 
 <div class="viewcode-block" id="copier"><a class="viewcode-back" href="../../sax.models.html#sax.models.copier">[docs]</a><span class="nd">@cache</span>
@@ -518,6 +538,16 @@ document.write(`
     <span class="n">reciprocal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">diagonal</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A copier model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_inputs: number of input ports.</span>
+<span class="sd">        num_outputs: number of output ports.</span>
+<span class="sd">        ports: tuple of input and output ports.</span>
+<span class="sd">        jit: whether to jit the model.</span>
+<span class="sd">        reciprocal: whether the model is reciprocal.</span>
+<span class="sd">        diagonal: whether the model is diagonal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">input_ports</span><span class="p">,</span> <span class="n">output_ports</span><span class="p">,</span> <span class="n">num_inputs</span><span class="p">,</span> <span class="n">num_outputs</span> <span class="o">=</span> <span class="n">_validate_ports</span><span class="p">(</span>
         <span class="n">ports</span><span class="p">,</span> <span class="n">num_inputs</span><span class="p">,</span> <span class="n">num_outputs</span><span class="p">,</span> <span class="n">diagonal</span>
     <span class="p">)</span>
@@ -559,9 +589,7 @@ document.write(`
 
     <span class="n">func</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;unitary_</span><span class="si">{</span><span class="n">num_inputs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">num_outputs</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">func</span><span class="o">.</span><span class="vm">__qualname__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;unitary_</span><span class="si">{</span><span class="n">num_inputs</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">num_outputs</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="n">jit</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">func</span></div>
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">func</span><span class="p">)</span> <span class="k">if</span> <span class="n">jit</span> <span class="k">else</span> <span class="n">func</span></div>
 
 
 <div class="viewcode-block" id="passthru"><a class="viewcode-back" href="../../sax.models.html#sax.models.passthru">[docs]</a><span class="nd">@cache</span>
@@ -572,14 +600,20 @@ document.write(`
     <span class="n">jit</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
     <span class="n">reciprocal</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;A passthru model.</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        num_links: number of links.</span>
+<span class="sd">        ports: tuple of input and output ports.</span>
+<span class="sd">        jit: whether to jit the model.</span>
+<span class="sd">        reciprocal: whether the model is reciprocal.</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">passthru</span> <span class="o">=</span> <span class="n">unitary</span><span class="p">(</span>
         <span class="n">num_links</span><span class="p">,</span> <span class="n">num_links</span><span class="p">,</span> <span class="n">ports</span><span class="p">,</span> <span class="n">jit</span><span class="o">=</span><span class="n">jit</span><span class="p">,</span> <span class="n">reciprocal</span><span class="o">=</span><span class="n">reciprocal</span><span class="p">,</span> <span class="n">diagonal</span><span class="o">=</span><span class="kc">True</span>
     <span class="p">)</span>
     <span class="n">passthru</span><span class="o">.</span><span class="vm">__name__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;passthru_</span><span class="si">{</span><span class="n">num_links</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">num_links</span><span class="si">}</span><span class="s2">&quot;</span>
     <span class="n">passthru</span><span class="o">.</span><span class="vm">__qualname__</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;passthru_</span><span class="si">{</span><span class="n">num_links</span><span class="si">}</span><span class="s2">_</span><span class="si">{</span><span class="n">num_links</span><span class="si">}</span><span class="s2">&quot;</span>
-    <span class="k">if</span> <span class="n">jit</span><span class="p">:</span>
-        <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">passthru</span><span class="p">)</span>
-    <span class="k">return</span> <span class="n">passthru</span></div>
+    <span class="k">return</span> <span class="n">jax</span><span class="o">.</span><span class="n">jit</span><span class="p">(</span><span class="n">passthru</span><span class="p">)</span> <span class="k">if</span> <span class="n">jit</span> <span class="k">else</span> <span class="n">passthru</span></div>
 
 
 <span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
@@ -592,9 +626,7 @@ document.write(`
 
 
 <div class="viewcode-block" id="get_models"><a class="viewcode-back" href="../../sax.models.html#sax.models.get_models">[docs]</a><span class="k">def</span> <span class="nf">get_models</span><span class="p">(</span><span class="n">copy</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">):</span>
-    <span class="k">if</span> <span class="n">copy</span><span class="p">:</span>
-        <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">}</span>
-    <span class="k">return</span> <span class="n">models</span></div>
+    <span class="k">return</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">}</span> <span class="k">if</span> <span class="n">copy</span> <span class="k">else</span> <span class="n">models</span></div>
 </pre></div>
 
                 </article>
@@ -604,7 +636,7 @@ document.write(`
               
               
               
-                <footer class="prev-next-footer">
+                <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
 </div>
@@ -613,8 +645,6 @@ document.write(`
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"></div>
               
             
           </div>
@@ -659,8 +689,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=8d27b9dea8ad943066ae"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=8d27b9dea8ad943066ae"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
 
   <footer class="bd-footer">
   </footer>
