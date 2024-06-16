@@ -6,11 +6,12 @@ import os
 import shutil
 import sys
 from functools import partial
-from typing import Any, Dict, List, NamedTuple, Optional, Tuple, TypedDict, Union
+from typing import Any, Dict, List, NamedTuple, Optional, Tuple, Union
 
 import black
 import networkx as nx
 import numpy as np
+from pydantic import ValidationError
 
 from .backends import circuit_backends
 from .netlist import (
@@ -29,16 +30,11 @@ from .utils import (
     update_settings,
 )
 
-try:
-    from pydantic.v1 import ValidationError  # type: ignore
-except ImportError:
-    from pydantic import ValidationError  # type: ignore
-
 
 class CircuitInfo(NamedTuple):
     """Information about the circuit function you created."""
 
-    dag: nx.DiGraph
+    dag: nx.Graph
     models: Dict[str, Model]
 
 
@@ -66,7 +62,7 @@ def circuit(
     netlist, instance_models = _extract_instance_models(netlist)
 
     recnet: RecursiveNetlist = _validate_net(netlist)  # type: ignore
-    dependency_dag: nx.DiGraph = _validate_dag(_create_dag(recnet, models))
+    dependency_dag: nx.Graph = _validate_dag(_create_dag(recnet, models))
     models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
     backend = _validate_circuit_backend(backend)
 
@@ -108,7 +104,7 @@ def _create_dag(
     all_models = {}
     g = nx.DiGraph()
 
-    for model_name, subnetlist in netlist.dict()["__root__"].items():
+    for model_name, subnetlist in netlist.model_dump()["__root__"].items():
         if model_name not in all_models:
             all_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)
@@ -133,7 +129,7 @@ def _create_dag(
     return g
 
 
-def _draw_dag(dag, with_labels=True, **kwargs):
+def draw_dag(dag, with_labels=True, **kwargs):
     _patch_path()
     if shutil.which("dot"):
         return nx.draw(
@@ -337,7 +333,7 @@ def _enforce_return_type(model, return_type):
 
 def _ensure_recursive_netlist_dict(netlist):
     if not isinstance(netlist, dict):
-        netlist = netlist.dict()
+        netlist = netlist.model_dump()
     if "__root__" in netlist:
         netlist = netlist["__root__"]
     if "instances" in netlist:
@@ -429,7 +425,7 @@ def get_required_circuit_models(
     missing_model_names = []
     g = nx.DiGraph()
 
-    for model_name, subnetlist in recnet.dict()["__root__"].items():
+    for model_name, subnetlist in recnet.model_dump()["__root__"].items():
         if model_name not in missing_models:
             missing_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)

@@ -5,9 +5,9 @@ requires = ["setuptools", "pip", "build", "wheel"]
 [project]
 name = "sax"
 version = "0.12.2"
-requires-python = ">=3.9.0"
+requires-python = ">=3.10.0"
 authors = [
-{ name = "Floris Laporte", email = "floris.laporte@rockleyphotonics.com" },
+{ name = "Floris Laporte", email = "floris.laporte@gmail.com" },
 ]
 description = "Autograd and XLA for S-parameters"
 readme = "README.md"
@@ -16,7 +16,6 @@ classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.9",
   "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
@@ -37,7 +36,7 @@ dependencies = [
   "networkx",
   "numpy",
   "orjson",
-  "pydantic",
+  "pydantic>=2.2",
   "pyyaml",
   "tqdm",
 ]
@@ -50,7 +49,7 @@ dev = [
   "black[jupyter]",
   "bump2version",
   "flake8",
-  "gdsfactory>=0.7.4",
+  "gdsfactory>=0.8.1",
   "gplugins",
   "ipyevents",
   "ipykernel",

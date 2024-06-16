@@ -15,13 +15,9 @@ import networkx as nx
 import numpy as np
 import yaml
 from natsort import natsorted
+from pydantic import BaseModel, ConfigDict, Field, ValidationError, validator
 
 from .utils import clean_string, hash_dict
-
-try:
-    from pydantic.v1 import BaseModel, Extra, Field, ValidationError, validator
-except ImportError:
-    from pydantic import BaseModel, Extra, Field, ValidationError, validator
 
 
 def netlist(dic: Dict) -> RecursiveNetlist:
@@ -29,21 +25,21 @@ def netlist(dic: Dict) -> RecursiveNetlist:
     if isinstance(dic, RecursiveNetlist):
         return dic
     elif isinstance(dic, Netlist):
-        dic = dic.dict()
+        dic = dic.model_dump()
     try:
-        flat_net = Netlist.parse_obj(dic)
-        net = RecursiveNetlist.parse_obj({"top_level": flat_net})
+        flat_net = Netlist.model_validate(dic)
+        net = RecursiveNetlist.model_validate({"top_level": flat_net})
     except ValidationError:
-        net = RecursiveNetlist.parse_obj(dic)
+        net = RecursiveNetlist.model_validate(dic)
     return net
 
 
 class _BaseModel(BaseModel):  # type: ignore
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
+    model_config = ConfigDict(
+        extra="ignore",
+        frozen=True,
+        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()},
+    )
 
     def __repr__(self):
         s = super().__repr__()
@@ -54,16 +50,10 @@ class _BaseModel(BaseModel):  # type: ignore
         return self.__repr__()
 
     def __hash__(self):
-        return hash_dict(self.dict())
+        return hash_dict(self.model_dump())
 
 
 class Component(_BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
     component: Union[str, Dict[str, Any]] = Field(..., title="Component")
     settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
     info: Optional[Dict[str, Any]] = Field(None, title="Info")
@@ -92,12 +82,6 @@ class PortEnum(Enum):
 
 
 class Placement(_BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
     x: Optional[Union[str, float]] = Field(0, title="X")
     y: Optional[Union[str, float]] = Field(0, title="Y")
     xmin: Optional[Union[str, float]] = Field(None, title="Xmin")
@@ -112,28 +96,16 @@ class Placement(_BaseModel):
 
 
 class Route(_BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
-    links: Dict[str, str] = Field(..., title="Links")
-    settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
-    routing_strategy: Optional[str] = Field(None, title="Routing Strategy")
+    links: Dict[str, str] = Field(..., title="Links", default_factory=dict)
+    settings: Optional[Dict[str, Any]] = Field(None, title="Settings", default_factory=dict)
+    routing_strategy: Optional[str] = Field(None, title="Routing Strategy", default_factory=dict)
 
 
 class Netlist(_BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()}
-
-    instances: Dict[str, Component] = Field(..., title="Instances")
-    connections: Optional[Dict[str, str]] = Field(None, title="Connections")
-    ports: Optional[Dict[str, str]] = Field(None, title="Ports")
-    placements: Optional[Dict[str, Placement]] = Field(None, title="Placements")
+    instances: Dict[str, Component] = Field(..., title="Instances", default_factory=dict)
+    connections: Optional[Dict[str, str]] = Field(None, title="Connections", default_factory=dict)
+    ports: Optional[Dict[str, str]] = Field(None, title="Ports", default_factory=dict)
+    placements: Optional[Dict[str, Placement]] = Field(None, title="Placements", default_factory=dict)
 
     # these were removed (irrelevant for SAX):
 
@@ -198,11 +170,6 @@ class Netlist(_BaseModel):
 
 
 class RecursiveNetlist(_BaseModel):
-    class Config:
-        extra = Extra.ignore
-        allow_mutation = False
-        frozen = True
-
     __root__: Dict[str, Netlist]
 
 
@@ -219,7 +186,7 @@ RecursiveNetlistDict = Dict[str, NetlistDict]
 def load_netlist(pic_path) -> Netlist:
     with open(pic_path, "r") as file:
         net = yaml.safe_load(file.read())
-    return Netlist.parse_obj(net)
+    return Netlist.model_validate(net)
 
 
 @lru_cache()
@@ -238,7 +205,7 @@ def load_recursive_netlist(pic_path, ext=".yml"):
             continue
         netlists[_clean_string(path)] = load_netlist(path)
 
-    return RecursiveNetlist.parse_obj(netlists)
+    return RecursiveNetlist.model_validate(netlists)
 
 
 def get_netlist_instances_by_prefix(
@@ -255,7 +222,7 @@ def get_netlist_instances_by_prefix(
     Returns:
         A list of all instances with the given prefix.
     """
-    recursive_netlist_root = recursive_netlist.dict()["__root__"]
+    recursive_netlist_root = recursive_netlist.model_dump()["__root__"]
     result = []
     for key in recursive_netlist_root.keys():
         if key.startswith(prefix):
@@ -280,7 +247,7 @@ def get_component_instances(
         A dictionary of all instances of the given component.
     """
     instance_names = []
-    recursive_netlist_root = recursive_netlist.dict()["__root__"]
+    recursive_netlist_root = recursive_netlist.model_dump()["__root__"]
 
     # Should only be one in a netlist-to-digraph. Can always be very specified.
     top_level_prefixes = get_netlist_instances_by_prefix(
