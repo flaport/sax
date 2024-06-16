@@ -7,7 +7,18 @@ import re
 import warnings
 from functools import lru_cache, partial, wraps
 from hashlib import md5
-from typing import Any, Callable, Dict, Iterable, Iterator, Tuple, Union, cast, overload
+from typing import (
+    Any,
+    Callable,
+    Dict,
+    Iterable,
+    Iterator,
+    NamedTuple,
+    Tuple,
+    Union,
+    cast,
+    overload,
+)
 
 import jax
 import jax.numpy as jnp
@@ -598,3 +609,38 @@ def _numpyfy(obj: Any):
         return np.asarray(obj)
     else:
         return {k: _numpyfy(v) for k, v in obj.items()}
+
+
+class Normalization(NamedTuple):
+    mean: ComplexArrayND
+    std: ComplexArrayND
+
+
+def normalization(x: ComplexArrayND, axis=None):
+    if axis is None:
+        return Normalization(x.mean(), x.std())
+    else:
+        return Normalization(x.mean(axis), x.std(axis))
+
+
+def cartesian_product(*arrays: ComplexArrayND) -> ComplexArrayND:
+    """calculate the n-dimensional cartesian product of an arbitrary number of arrays"""
+    ixarrays = jnp.ix_(*arrays)
+    barrays = jnp.broadcast_arrays(*ixarrays)
+    sarrays = jnp.stack(barrays, -1)
+    assert isinstance(sarrays, jnp.ndarray)
+    product = sarrays.reshape(-1, sarrays.shape[-1])
+    assert isinstance(product, jnp.ndarray)
+    return product
+
+
+def normalize(x: ComplexArrayND, normalization: Normalization) -> Tuple[ComplexArrayND]:
+    """normalize an array with a given mean and standard deviation"""
+    mean, std = normalization
+    return (x - mean) / std
+
+
+def denormalize(x: ComplexArrayND, normalization: Normalization) -> ComplexArrayND:
+    """denormalize an array with a given mean and standard deviation"""
+    mean, std = normalization
+    return x * std + mean

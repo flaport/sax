@@ -6,7 +6,7 @@ from typing import Dict, cast
 
 import jax.numpy as jnp
 
-from ..saxtypes import ComplexArrayND
+from .saxtypes import ComplexArrayND
 
 
 def mse(x: ComplexArrayND, y: ComplexArrayND) -> float:
@@ -16,9 +16,8 @@ def mse(x: ComplexArrayND, y: ComplexArrayND) -> float:
 
 def huber_loss(x: ComplexArrayND, y: ComplexArrayND, delta: float = 0.5) -> float:
     """huber loss"""
-    return cast(
-        float, ((delta**2) * ((1.0 + (abs(x - y) / delta) ** 2) ** 0.5 - 1.0)).mean()
-    )
+    loss = ((delta**2) * ((1.0 + (abs(x - y) / delta) ** 2) ** 0.5 - 1.0)).mean()
+    return cast(float, loss)
 
 
 def l2_reg(weights: Dict[str, ComplexArrayND]) -> float:
@@ -28,4 +27,4 @@ def l2_reg(weights: Dict[str, ComplexArrayND]) -> float:
     for w in (v for k, v in weights.items() if k[0] in ("w", "b")):
         numel = numel + w.size
         loss = loss + (jnp.abs(w) ** 2).sum()
-    return loss / numel
+    return cast(float, loss / numel)

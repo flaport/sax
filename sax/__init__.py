@@ -23,6 +23,9 @@ from . import saxtypes as saxtypes
 from . import utils as utils
 from .circuit import circuit as circuit
 from .circuit import get_required_circuit_models as get_required_circuit_models
+from .loss import huber_loss as huber_loss
+from .loss import l2_reg as l2_reg
+from .loss import mse as mse
 from .models import get_models as get_models
 from .models import passthru as passthru
 from .multimode import multimode as multimode
@@ -70,8 +73,10 @@ from .saxtypes import sdense as sdense
 from .saxtypes import sdict as sdict
 from .saxtypes import validate_model as validate_model
 from .utils import block_diag as block_diag
+from .utils import cartesian_product as cartesian_product
 from .utils import clean_string as clean_string
 from .utils import copy_settings as copy_settings
+from .utils import denormalize as denormalize
 from .utils import flatten_dict as flatten_dict
 from .utils import get_inputs_outputs as get_inputs_outputs
 from .utils import get_port_combinations as get_port_combinations
@@ -80,6 +85,8 @@ from .utils import get_settings as get_settings
 from .utils import grouped_interp as grouped_interp
 from .utils import merge_dicts as merge_dicts
 from .utils import mode_combinations as mode_combinations
+from .utils import normalization as normalization
+from .utils import normalize as normalize
 from .utils import reciprocal as reciprocal
 from .utils import rename_params as rename_params
 from .utils import rename_ports as rename_ports
