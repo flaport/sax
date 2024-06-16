@@ -111,11 +111,7 @@ def _create_dag(
         if model_name in models:
             continue
         for instance in subnetlist["instances"].values():
-            info = instance.get("info", {})
-            if info and "model" in info:
-                component = info["model"]
-            else:
-                component = instance["component"]
+            component = instance["component"]
             if component not in all_models:
                 all_models[component] = models.get(component, None)
                 g.add_node(component)
@@ -212,10 +208,7 @@ def _flat_circuit(
 
     inst2model = {}
     for k, inst in instances.items():
-        if inst.info and "model" in inst.info:
-            inst2model[k] = models[str(inst.info["model"])]
-        else:
-            inst2model[k] = models[str(inst.component)]
+        inst2model[k] = models[inst.component]
 
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
     netlist_settings = {
@@ -432,11 +425,7 @@ def get_required_circuit_models(
         if model_name in models:
             continue
         for instance in subnetlist["instances"].values():
-            info = instance.get("info", {})
-            if info and "model" in info:
-                component = info["model"]
-            else:
-                component = instance["component"]
+            component = instance["component"]
             if (component not in missing_models) and (component not in models):
                 missing_models[component] = models.get(component)
                 missing_model_names.append(component)

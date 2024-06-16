@@ -27,17 +27,11 @@ def analyze_instances_klu(
         instances[k] = v
     model_names = set()
     for i in instances.values():
-        if i.info and "model" in i.info and isinstance(i.info["model"], str):
-            model_names.add(str(i.info["model"]))
-        else:
-            model_names.add(str(i.component))
+        model_names.add(i.component)
     dummy_models = {k: scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
-        if i.info and "model" in i.info and isinstance(i.info["model"], str):
-            dummy_instances[k] = dummy_models[str(i.info["model"])]
-        else:
-            dummy_instances[k] = dummy_models[str(i.component)]
+        dummy_instances[k] = dummy_models[i.component]
     return dummy_instances
 
 
