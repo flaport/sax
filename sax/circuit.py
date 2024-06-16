@@ -34,7 +34,7 @@ from .utils import (
 class CircuitInfo(NamedTuple):
     """Information about the circuit function you created."""
 
-    dag: nx.Graph
+    dag: nx.DiGraph[str]
     models: Dict[str, Model]
 
 
@@ -60,9 +60,9 @@ def circuit(
     # TODO: do the following two steps *after* recursive netlist parsing.
     netlist = remove_unused_instances(netlist)
     netlist, instance_models = _extract_instance_models(netlist)
+    recnet: RecursiveNetlist = _validate_net(netlist)
+    dependency_dag: nx.DiGraph[str] = _validate_dag(_create_dag(recnet, models))
 
-    recnet: RecursiveNetlist = _validate_net(netlist)  # type: ignore
-    dependency_dag: nx.Graph = _validate_dag(_create_dag(recnet, models))
     models = _validate_models({**(models or {}), **instance_models}, dependency_dag)
     backend = _validate_circuit_backend(backend)
 
@@ -75,7 +75,7 @@ def circuit(
             new_models[model_name] = models[model_name]
             continue
 
-        flatnet = recnet.__root__[model_name]
+        flatnet = recnet.root[model_name]
         current_models |= new_models
         new_models = {}
 
@@ -96,7 +96,7 @@ def circuit(
 def _create_dag(
     netlist: RecursiveNetlist,
     models: Optional[Dict[str, Any]] = None,
-):
+) -> nx.DiGraph[str]:
     if models is None:
         models = {}
     assert isinstance(models, dict)
@@ -104,7 +104,7 @@ def _create_dag(
     all_models = {}
     g = nx.DiGraph()
 
-    for model_name, subnetlist in netlist.model_dump()["__root__"].items():
+    for model_name, subnetlist in netlist.model_dump().items():
         if model_name not in all_models:
             all_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)
@@ -122,11 +122,11 @@ def _create_dag(
             g.add_edge(model_name, component)
 
     # we only need the nodes that depend on the parent...
-    parent_node = next(iter(netlist.__root__.keys()))
+    parent_node = next(iter(netlist.root.keys()))
     nodes = [parent_node, *nx.descendants(g, parent_node)]
     g = nx.induced_subgraph(g, nodes)
 
-    return g
+    return g  # type: ignore
 
 
 def draw_dag(dag, with_labels=True, **kwargs):
@@ -331,11 +331,9 @@ def _enforce_return_type(model, return_type):
     return stype_func(model)
 
 
-def _ensure_recursive_netlist_dict(netlist):
+def _ensure_recursive_netlist_dict(netlist: Any) -> RecursiveNetlistDict:
     if not isinstance(netlist, dict):
         netlist = netlist.model_dump()
-    if "__root__" in netlist:
-        netlist = netlist["__root__"]
     if "instances" in netlist:
         netlist = {"top_level": netlist}
     netlist = {**netlist}
@@ -379,14 +377,16 @@ def _validate_circuit_backend(backend):
     return backend
 
 
-def _validate_net(netlist: Union[Netlist, RecursiveNetlist]) -> RecursiveNetlist:
+def _validate_net(
+    netlist: Union[Netlist, RecursiveNetlist, NetlistDict, RecursiveNetlistDict]
+) -> RecursiveNetlist:
     if isinstance(netlist, dict):
         try:
-            netlist = Netlist.parse_obj(netlist)
+            netlist = Netlist.model_validate(netlist)
         except ValidationError:
-            netlist = RecursiveNetlist.parse_obj(netlist)
-    elif isinstance(netlist, Netlist):
-        netlist = RecursiveNetlist(__root__={"top_level": netlist})
+            netlist = RecursiveNetlist.model_validate(netlist)
+    if isinstance(netlist, Netlist):
+        netlist = RecursiveNetlist(root={"top_level": netlist})
     return netlist
 
 
@@ -419,13 +419,13 @@ def get_required_circuit_models(
     # TODO: do the following two steps *after* recursive netlist parsing.
     netlist = remove_unused_instances(netlist)
     netlist, _ = _extract_instance_models(netlist)
-    recnet: RecursiveNetlist = _validate_net(netlist)  # type: ignore
+    recnet: RecursiveNetlist = _validate_net(netlist)
 
     missing_models = {}
     missing_model_names = []
     g = nx.DiGraph()
 
-    for model_name, subnetlist in recnet.model_dump()["__root__"].items():
+    for model_name, subnetlist in recnet.model_dump().items():
         if model_name not in missing_models:
             missing_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)

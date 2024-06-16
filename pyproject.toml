@@ -33,6 +33,7 @@ dependencies = [
   "klujax>=0.2.5",
   "matplotlib",
   "natsort",
+  "typing-extensions>=4.10.0",
   "networkx",
   "numpy",
   "orjson",

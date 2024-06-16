@@ -8,19 +8,28 @@ import warnings
 from copy import deepcopy
 from enum import Enum
 from functools import lru_cache
-from typing import Any, Dict, Optional, TypedDict, Union
+from typing import Any, TypedDict
 
 import black
 import networkx as nx
 import numpy as np
 import yaml
 from natsort import natsorted
-from pydantic import BaseModel, ConfigDict, Field, ValidationError, validator
+from pydantic import (
+    BaseModel,
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    RootModel,
+    ValidationError,
+    field_validator,
+)
+from typing_extensions import Annotated
 
 from .utils import clean_string, hash_dict
 
 
-def netlist(dic: Dict) -> RecursiveNetlist:
+def netlist(dic: dict) -> RecursiveNetlist:
     """return a netlist from a given dictionary"""
     if isinstance(dic, RecursiveNetlist):
         return dic
@@ -38,7 +47,7 @@ class _BaseModel(BaseModel):  # type: ignore
     model_config = ConfigDict(
         extra="ignore",
         frozen=True,
-        json_encoders = {np.ndarray: lambda arr: np.round(arr, 12).tolist()},
+        json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
     )
 
     def __repr__(self):
@@ -54,11 +63,10 @@ class _BaseModel(BaseModel):  # type: ignore
 
 
 class Component(_BaseModel):
-    component: Union[str, Dict[str, Any]] = Field(..., title="Component")
-    settings: Optional[Dict[str, Any]] = Field(None, title="Settings")
-    info: Optional[Dict[str, Any]] = Field(None, title="Info")
+    component: str
+    settings: dict[str, Any] = Field(default_factory=dict)
 
-    @validator("component")
+    @field_validator("component")
     def validate_component_name(cls, value):
         if "," in value:
             raise ValueError(
@@ -82,53 +90,33 @@ class PortEnum(Enum):
 
 
 class Placement(_BaseModel):
-    x: Optional[Union[str, float]] = Field(0, title="X")
-    y: Optional[Union[str, float]] = Field(0, title="Y")
-    xmin: Optional[Union[str, float]] = Field(None, title="Xmin")
-    ymin: Optional[Union[str, float]] = Field(None, title="Ymin")
-    xmax: Optional[Union[str, float]] = Field(None, title="Xmax")
-    ymax: Optional[Union[str, float]] = Field(None, title="Ymax")
-    dx: Optional[float] = Field(0, title="Dx")
-    dy: Optional[float] = Field(0, title="Dy")
-    port: Optional[Union[str, PortEnum]] = Field(None, title="Port")
-    rotation: Optional[int] = Field(0, title="Rotation")
-    mirror: Optional[bool] = Field(False, title="Mirror")
+    x: str | float = 0.0
+    y: str | float = 0.0
+    dx: str | float = 0.0
+    dy: str | float = 0.0
+    rotation: float = 0.0
+    mirror: bool = False
+    xmin: str | float | None = None
+    xmax: str | float | None = None
+    ymin: str | float | None = None
+    ymax: str | float | None = None
+    port: str | PortEnum | None = None
 
 
-class Route(_BaseModel):
-    links: Dict[str, str] = Field(..., title="Links", default_factory=dict)
-    settings: Optional[Dict[str, Any]] = Field(None, title="Settings", default_factory=dict)
-    routing_strategy: Optional[str] = Field(None, title="Routing Strategy", default_factory=dict)
+def _str_to_component(s: Any) -> Component:
+    if isinstance(s, str):
+        return Component(component=s)
+    return Component.model_validate(s)
+
+
+CoercingComponent = Annotated[Component | str, BeforeValidator(_str_to_component)]
 
 
 class Netlist(_BaseModel):
-    instances: Dict[str, Component] = Field(..., title="Instances", default_factory=dict)
-    connections: Optional[Dict[str, str]] = Field(None, title="Connections", default_factory=dict)
-    ports: Optional[Dict[str, str]] = Field(None, title="Ports", default_factory=dict)
-    placements: Optional[Dict[str, Placement]] = Field(None, title="Placements", default_factory=dict)
-
-    # these were removed (irrelevant for SAX):
-
-    # routes: Optional[Dict[str, Route]] = Field(None, title='Routes')
-    # name: Optional[str] = Field(None, title='Name')
-    # info: Optional[Dict[str, Any]] = Field(None, title='Info')
-    # settings: Optional[Dict[str, Any]] = Field(None, title='Settings')
-    # pdk: Optional[str] = Field(None, title='Pdk')
-
-    # these are extra additions:
-
-    @validator("instances", pre=True)
-    def coerce_different_type_instance_into_component_model(cls, instances):
-        new_instances = {}
-        for k, v in instances.items():
-            if isinstance(v, str):
-                v = {
-                    "component": v,
-                    "settings": {},
-                }
-            new_instances[k] = v
-
-        return new_instances
+    instances: dict[str, CoercingComponent] = Field(default_factory=dict)
+    connections: dict[str, str] = Field(default_factory=dict)
+    ports: dict[str, str] = Field(default_factory=dict)
+    placements: dict[str, Placement] = Field(default_factory=dict)
 
     @staticmethod
     def clean_instance_string(value):
@@ -138,11 +126,11 @@ class Netlist(_BaseModel):
             )
         return clean_string(value)
 
-    @validator("instances")
+    @field_validator("instances")
     def validate_instance_names(cls, instances):
         return {cls.clean_instance_string(k): v for k, v in instances.items()}
 
-    @validator("placements")
+    @field_validator("placements")
     def validate_placement_names(cls, placements):
         if placements is not None:
             return {cls.clean_instance_string(k): v for k, v in placements.items()}
@@ -154,14 +142,14 @@ class Netlist(_BaseModel):
         comp = cls.clean_instance_string(",".join(comp))
         return f"{comp},{port}"
 
-    @validator("connections")
+    @field_validator("connections")
     def validate_connection_names(cls, connections):
         return {
             cls.clean_connection_string(k): cls.clean_connection_string(v)
             for k, v in connections.items()
         }
 
-    @validator("ports")
+    @field_validator("ports")
     def validate_port_names(cls, ports):
         return {
             cls.clean_instance_string(k): cls.clean_connection_string(v)
@@ -169,17 +157,33 @@ class Netlist(_BaseModel):
         }
 
 
-class RecursiveNetlist(_BaseModel):
-    __root__: Dict[str, Netlist]
+class RecursiveNetlist(RootModel):
+    root: dict[str, Netlist]
+
+    model_config = ConfigDict(
+        frozen=True,
+        json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
+    )
+
+    def __repr__(self):
+        s = super().__repr__()
+        s = black.format_str(s, mode=black.Mode())
+        return s
+
+    def __str__(self):
+        return self.__repr__()
+
+    def __hash__(self):
+        return hash_dict(self.model_dump())
 
 
 class NetlistDict(TypedDict):
-    instances: Dict
-    connections: Dict[str, str]
-    ports: Dict[str, str]
+    instances: dict
+    connections: dict[str, str]
+    ports: dict[str, str]
 
 
-RecursiveNetlistDict = Dict[str, NetlistDict]
+RecursiveNetlistDict = dict[str, NetlistDict]
 
 
 @lru_cache()
@@ -197,7 +201,7 @@ def load_recursive_netlist(pic_path, ext=".yml"):
         return clean_string(re.sub(ext, "", os.path.split(path)[-1]))
 
     # the circuit we're interested in should come first:
-    netlists: Dict[str, Netlist] = {_clean_string(pic_path): Netlist()}
+    netlists: dict[str, Netlist] = {_clean_string(pic_path): Netlist()}
 
     for filename in os.listdir(folder_path):
         path = os.path.join(folder_path, filename)
@@ -222,7 +226,7 @@ def get_netlist_instances_by_prefix(
     Returns:
         A list of all instances with the given prefix.
     """
-    recursive_netlist_root = recursive_netlist.model_dump()["__root__"]
+    recursive_netlist_root = recursive_netlist.model_dump()
     result = []
     for key in recursive_netlist_root.keys():
         if key.startswith(prefix):
@@ -247,7 +251,7 @@ def get_component_instances(
         A dictionary of all instances of the given component.
     """
     instance_names = []
-    recursive_netlist_root = recursive_netlist.model_dump()["__root__"]
+    recursive_netlist_root = recursive_netlist.model_dump()
 
     # Should only be one in a netlist-to-digraph. Can always be very specified.
     top_level_prefixes = get_netlist_instances_by_prefix(
