@@ -16,7 +16,7 @@ import yaml
 from natsort import natsorted
 from pydantic import AfterValidator
 from pydantic import BaseModel as _BaseModel
-from pydantic import BeforeValidator, ConfigDict, Field, RootModel
+from pydantic import BeforeValidator, ConfigDict, Field, RootModel, model_validator
 from typing_extensions import Annotated
 
 from .utils import clean_string, hash_dict
@@ -83,16 +83,6 @@ class Placement(BaseModel):
     port: str | PortPlacement | None = None
 
 
-def _coerce_component(obj: Any) -> Component:
-    if isinstance(obj, str):
-        return Component(component=obj)
-    elif isinstance(obj, partial):
-        return _component_from_partial(obj)
-    elif callable(obj):
-        return _coerce_component(obj.__name__)
-    return Component.model_validate(obj)
-
-
 def _component_from_partial(p: partial):
     settings = {}
     f: Any = p
@@ -107,6 +97,20 @@ def _component_from_partial(p: partial):
     if not callable(f):
         raise ValueError("partial of non-callable.")
     return Component(component=f.__name__, settings=settings)
+
+
+def _coerce_component(obj: Any) -> Component:
+    if isinstance(obj, str):
+        return Component(component=obj)
+    elif isinstance(obj, partial):
+        return _component_from_partial(obj)
+    elif callable(obj):
+        return _coerce_component(obj.__name__)
+    elif isinstance(obj, dict) and "info" in obj:
+        info = obj.pop("info", {})
+        settings = obj.pop("settings", {})
+        obj["settings"] = {**settings, **info}
+    return Component.model_validate(obj)
 
 
 CoercingComponent = Annotated[Component, BeforeValidator(_coerce_component)]
@@ -133,11 +137,59 @@ PortStr = Annotated[str, AfterValidator(_validate_port_str)]
 InstancePortStr = Annotated[str, AfterValidator(_validate_instance_port_str)]
 
 
+def _nets_to_connections(nets: list[dict], connections: dict):
+    connections = {k: v for k, v in connections.items()}
+    inverse_connections = {v: k for k, v in connections.items()}
+
+    def _is_connected(p):
+        return (p in connections) or (p in inverse_connections)
+
+    def _add_connection(p, q):
+        connections[p] = q
+        inverse_connections[q] = p
+
+    def _get_connected_port(p):
+        if p in connections:
+            return connections[p]
+        else:
+            return inverse_connections[p]
+
+    for net in nets:
+        p = net["p1"]
+        q = net["p2"]
+        if _is_connected(p):
+            _q = _get_connected_port(p)
+            raise ValueError(
+                "SAX currently does not support multiply connected ports. "
+                f"Got {p}<->{q} and {p}<->{_q}"
+            )
+        if _is_connected(q):
+            _p = _get_connected_port(q)
+            raise ValueError(
+                "SAX currently does not support multiply connected ports. "
+                f"Got {p}<->{q} and {_p}<->{q}"
+            )
+        _add_connection(p, q)
+    return connections
+
+
 class Netlist(BaseModel):
     instances: dict[InstanceStr, CoercingComponent] = Field(default_factory=dict)
     connections: dict[InstancePortStr, InstancePortStr] = Field(default_factory=dict)
     ports: dict[PortStr, InstancePortStr] = Field(default_factory=dict)
     placements: dict[InstanceStr, Placement] = Field(default_factory=dict)
+
+    @model_validator(mode="before")
+    @classmethod
+    def coerce_nets_into_connections(cls, netlist: dict):
+        if not isinstance(netlist, dict):
+            return netlist
+        if "nets" in netlist:
+            nets = netlist.pop("nets", [])
+            connections = netlist.pop("connections", {})
+            connections = _nets_to_connections(nets, connections)
+            netlist["connections"] = connections
+        return netlist
 
 
 class RecursiveNetlist(RootModel):

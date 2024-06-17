@@ -49,11 +49,12 @@ def circuit(
         ignore_missing_ports: Ignore missing ports in the netlist.
 
     """
+    backend = _validate_circuit_backend(backend)
+
     instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(netlist, remove_unused_instances=True)
-    dependency_dag: nx.DiGraph[str] = _validate_dag(_create_dag(recnet, models))
+    dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
     models = _validate_models(models, dependency_dag, extra_models=instance_models)
-    backend = _validate_circuit_backend(backend)
 
     circuit = None
     new_models = {}
@@ -85,6 +86,7 @@ def circuit(
 def _create_dag(
     netlist: RecursiveNetlist,
     models: dict[str, Model] | None = None,
+    validate: bool = False,
 ) -> nx.DiGraph[str]:
     if models is None:
         models = {}
@@ -111,6 +113,8 @@ def _create_dag(
     nodes = [parent_node, *nx.descendants(g, parent_node)]
     g = nx.induced_subgraph(g, nodes)
     assert isinstance(g, nx.DiGraph)
+    if validate:
+        g = _validate_dag(g)
     return g
 
 
@@ -140,7 +144,7 @@ def get_required_circuit_models(
     """
     instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(netlist, remove_unused_instances=True)
-    dependency_dag: nx.DiGraph[str] = _validate_dag(_create_dag(recnet, models))
+    dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
     _, required, _ = _find_missing_models(
         models, dependency_dag, extra_models=instance_models
     )
