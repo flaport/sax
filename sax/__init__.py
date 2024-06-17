@@ -11,14 +11,8 @@ from math import pi as pi
 
 from scipy.constants import c as c
 
-try:
-    from flax.core.frozen_dict import FrozenDict as FrozenDict
-except ImportError:
-    FrozenDict = dict
-
 from . import backends as backends
 from . import models as models
-from . import patched as patched
 from . import saxtypes as saxtypes
 from . import utils as utils
 from .circuit import circuit as circuit
@@ -30,7 +24,9 @@ from .models import get_models as get_models
 from .models import passthru as passthru
 from .multimode import multimode as multimode
 from .multimode import singlemode as singlemode
-from .netlist import RecursiveNetlist, flatten_netlist
+from .netlist import Netlist as Netlist
+from .netlist import RecursiveNetlist as RecursiveNetlist
+from .netlist import flatten_netlist as flatten_netlist
 from .netlist import get_component_instances as get_component_instances
 from .netlist import get_netlist_instances_by_prefix as get_netlist_instances_by_prefix
 from .netlist import load_netlist as load_netlist

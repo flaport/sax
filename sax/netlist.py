@@ -6,44 +6,31 @@ import os
 import re
 import warnings
 from copy import deepcopy
-from enum import Enum
 from functools import lru_cache
-from typing import Any, TypedDict
+from typing import Any, Literal, TypedDict
 
 import black
 import networkx as nx
 import numpy as np
 import yaml
 from natsort import natsorted
-from pydantic import (
-    BaseModel,
-    BeforeValidator,
-    ConfigDict,
-    Field,
-    RootModel,
-    ValidationError,
-    field_validator,
-)
+from pydantic import BaseModel as _BaseModel
+from pydantic import BeforeValidator, ConfigDict, Field, RootModel, field_validator
 from typing_extensions import Annotated
 
 from .utils import clean_string, hash_dict
 
 
-def netlist(dic: dict) -> RecursiveNetlist:
-    """return a netlist from a given dictionary"""
-    if isinstance(dic, RecursiveNetlist):
-        return dic
-    elif isinstance(dic, Netlist):
-        dic = dic.model_dump()
-    try:
-        flat_net = Netlist.model_validate(dic)
-        net = RecursiveNetlist.model_validate({"top_level": flat_net})
-    except ValidationError:
-        net = RecursiveNetlist.model_validate(dic)
-    return net
+class NetlistDict(TypedDict):
+    instances: dict
+    connections: dict[str, str]
+    ports: dict[str, str]
 
 
-class _BaseModel(BaseModel):  # type: ignore
+RecursiveNetlistDict = dict[str, NetlistDict]
+
+
+class BaseModel(_BaseModel):
     model_config = ConfigDict(
         extra="ignore",
         frozen=True,
@@ -62,7 +49,7 @@ class _BaseModel(BaseModel):  # type: ignore
         return hash_dict(self.model_dump())
 
 
-class Component(_BaseModel):
+class Component(BaseModel):
     component: str
     settings: dict[str, Any] = Field(default_factory=dict)
 
@@ -76,20 +63,10 @@ class Component(_BaseModel):
         return clean_string(value)
 
 
-class PortEnum(Enum):
-    ce = "ce"
-    cw = "cw"
-    nc = "nc"
-    ne = "ne"
-    nw = "nw"
-    sc = "sc"
-    se = "se"
-    sw = "sw"
-    center = "center"
-    cc = "cc"
+PortPlacement = Literal["ce", "cw", "nc", "ne", "nw", "sc", "se", "sw", "cc", "center"]
 
 
-class Placement(_BaseModel):
+class Placement(BaseModel):
     x: str | float = 0.0
     y: str | float = 0.0
     dx: str | float = 0.0
@@ -100,7 +77,7 @@ class Placement(_BaseModel):
     xmax: str | float | None = None
     ymin: str | float | None = None
     ymax: str | float | None = None
-    port: str | PortEnum | None = None
+    port: str | PortPlacement | None = None
 
 
 def _str_to_component(s: Any) -> Component:
@@ -112,7 +89,7 @@ def _str_to_component(s: Any) -> Component:
 CoercingComponent = Annotated[Component | str, BeforeValidator(_str_to_component)]
 
 
-class Netlist(_BaseModel):
+class Netlist(BaseModel):
     instances: dict[str, CoercingComponent] = Field(default_factory=dict)
     connections: dict[str, str] = Field(default_factory=dict)
     ports: dict[str, str] = Field(default_factory=dict)
@@ -177,24 +154,49 @@ class RecursiveNetlist(RootModel):
         return hash_dict(self.model_dump())
 
 
-class NetlistDict(TypedDict):
-    instances: dict
-    connections: dict[str, str]
-    ports: dict[str, str]
+AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
 
 
-RecursiveNetlistDict = dict[str, NetlistDict]
+def netlist(netlist: AnyNetlist, remove_unused_instances=False) -> RecursiveNetlist:
+    """return a netlist from a given dictionary"""
+    if isinstance(netlist, RecursiveNetlist):
+        net = netlist
+    elif isinstance(netlist, Netlist):
+        net = RecursiveNetlist(root={"top_level": netlist})
+    elif isinstance(netlist, dict):
+        if "instances" in netlist:
+            flat_net = Netlist.model_validate(netlist)
+            net = RecursiveNetlist.model_validate({"top_level": flat_net})
+        else:
+            net = RecursiveNetlist.model_validate(netlist)
+    else:
+        raise ValueError(
+            "Invalid argument for `netlist`. "
+            "Expected type: dict | Netlist | RecursiveNetlist. "
+            f"Got: {type(netlist)}."
+        )
+    if remove_unused_instances:
+        recnet_dict: RecursiveNetlistDict = _remove_unused_instances(net.model_dump())
+        net = RecursiveNetlist.model_validate(recnet_dict)
+    return net
+
+
+def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~"):
+    first_name = list(recnet.keys())[0]
+    net = _copy_netlist(recnet[first_name])
+    _flatten_netlist(recnet, net, sep)
+    return net
 
 
 @lru_cache()
-def load_netlist(pic_path) -> Netlist:
+def load_netlist(pic_path: str) -> Netlist:
     with open(pic_path, "r") as file:
         net = yaml.safe_load(file.read())
     return Netlist.model_validate(net)
 
 
 @lru_cache()
-def load_recursive_netlist(pic_path, ext=".yml"):
+def load_recursive_netlist(pic_path: str, ext: str = ".yml"):
     folder_path = os.path.dirname(os.path.abspath(pic_path))
 
     def _clean_string(path: str) -> str:
@@ -267,7 +269,7 @@ def get_component_instances(
     return {component_name_prefix: instance_names}
 
 
-def remove_unused_instances(recursive_netlist: RecursiveNetlistDict):
+def _remove_unused_instances(recursive_netlist: RecursiveNetlistDict):
     recursive_netlist = {**recursive_netlist}
 
     for name, flat_netlist in recursive_netlist.items():
@@ -334,13 +336,6 @@ def _remove_unused_instances_flat(flat_netlist: NetlistDict) -> NetlistDict:
             del flat_netlist["ports"][pname]
 
     return flat_netlist
-
-
-def flatten_netlist(recnet, sep="~"):
-    first_name = list(recnet.keys())[0]
-    net = _copy_netlist(recnet[first_name])
-    _flatten_netlist(recnet, net, sep)
-    return net
 
 
 def _copy_netlist(net):

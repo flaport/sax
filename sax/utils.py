@@ -27,6 +27,7 @@ import jax.scipy.linalg
 import numpy as np
 import orjson
 from natsort import natsorted
+from numpy.exceptions import ComplexWarning
 
 from .saxtypes import (
     ComplexArrayND,
@@ -104,10 +105,10 @@ def validate_settings(settings: Settings) -> Settings:
 def try_complex_float(f: Any) -> Any:
     """try converting an object to float, return unchanged object on fail"""
     with warnings.catch_warnings():
-        warnings.filterwarnings(action="error", category=jnp.ComplexWarning)
+        warnings.filterwarnings(action="error", category=ComplexWarning)
         try:
             return jnp.asarray(f, dtype=float)
-        except jnp.ComplexWarning:  # type: ignore
+        except ComplexWarning:
             return jnp.asarray(f, dtype=complex)
         except (ValueError, TypeError):
             return f
