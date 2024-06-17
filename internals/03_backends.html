@@ -170,6 +170,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../examples/05_thinfilm.html">Thin film optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/06_additive_backend.html">Additive Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="../examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../examples/08_sparse_coo.html">Sparse COO</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
 <ul class="current nav bd-sidenav">
@@ -186,18 +187,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../sax.nn.html">sax.nn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.core.html">sax.nn.core module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.io.html">sax.nn.io module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.loss.html">sax.nn.loss module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.utils.html">sax.nn.utils module</a></li>
-</ul>
-</details></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.loss.html">sax.loss module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.models.html">sax.models module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.multimode.html">sax.multimode module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.netlist.html">sax.netlist module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../sax.patched.html">sax.patched module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.saxtypes.html">sax.saxtypes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.utils.html">sax.utils module</a></li>
 </ul>
@@ -463,22 +457,37 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_instances"><code class="docutils literal notranslate"><span class="pre">analyze_instances()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit"><code class="docutils literal notranslate"><span class="pre">analyze_circuit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filipsson-gunnar-backend">Filipsson-Gunnar Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_fg"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_fg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_fg"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_fg()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-walkthrough">Algorithm Walkthrough</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-improvements">Algorithm Improvements</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#klu-backend">KLU Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_klu"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_klu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_klu"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_klu()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-background">Theoretical Background</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.solve"><code class="docutils literal notranslate"><span class="pre">solve()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.coo_mul_vec"><code class="docutils literal notranslate"><span class="pre">coo_mul_vec()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Algorithm Walkthrough</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Algorithm Improvements</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-backend">Additive Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_additive"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_additive()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_additive"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_additive()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Example</a></li>
 </ul>
 </li>
@@ -512,15 +521,66 @@ document.write(`
 <section id="introduction">
 <h2>Introduction<a class="headerlink" href="#introduction" title="Permalink to this heading">#</a></h2>
 <p>SAX allows to easily interchange the backend of a circuit. A SAX backend consists of two static analysis steps and an evaluation step:</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_instances">
+<span class="sig-name descname"><span class="pre">analyze_instances</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends.html#analyze_instances"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_instances" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="../sax.netlist.html#sax.netlist.Component" title="sax.netlist.Component"><em>Component</em></a><em>]</em>) – </p></li>
+<li><p><strong>models</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit">
+<span class="sig-name descname"><span class="pre">analyze_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends.html#analyze_circuit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed_instances</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit">
+<span class="sig-name descname"><span class="pre">evaluate_circuit</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends.html#evaluate_circuit"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SType</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SType</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p>The <code class="docutils literal notranslate"><span class="pre">analyze_instances</span></code> step analyzes the ‘shape’ of the instances by running each model with default parameters. By shape we mean which port-combinations are present in the sparse S-matrix.</p>
-<blockquote>
-<div><p>QUESTION: can we do this more efficiently in a functional way?</p>
-</div></blockquote>
+<div class="admonition warning">
+<p class="admonition-title">Warning</p>
+<p>QUESTION: can we do this more efficiently in a functional way?</p>
+</div>
 <p>After analyzing the instances, it is assumed that the shape of the instance won’t change any more. <strong>It is therefore important that you write your model functions in such a way that the port combinations present in your s-matrix <em>never</em> changes!</strong></p>
-<blockquote>
-<div><p>NOTE: we used to do this analysis step in <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> by just looking at the connections present. However, this inherently assumed dense connectivity within the model. This is pretty inefficient for large sparse models with many ports. Ideally, however, we should be able to analyze the shape of our instances without running their models with default parameters…</p>
-</div></blockquote>
-<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be recalculated when any parameters of the circuit change. See <a class="reference internal" href="#klu-backend"><span class="xref myst">KLU backend</span></a> for a non-trivial implementation of the circuit analyzation.</p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>we used to do this analysis step in <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> by just looking at the connections present. However, this inherently assumed dense connectivity within the model. This is pretty inefficient for large sparse models with many ports. Ideally, however, we should be able to analyze the shape of our instances without running their models with default parameters…</p>
+</div>
+<p>The <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step should statically analyze the connections and ports and should return an <code class="docutils literal notranslate"><span class="pre">analyzed</span></code> object. This object contains all the static objects that are needed for circuit computation but won’t be recalculated when any parameters of the circuit change. See KLU Backend (below) for a non-trivial implementation of the circuit analyzation.</p>
 <p>The <code class="docutils literal notranslate"><span class="pre">evaluate_circuit</span></code> step evaluates the circuit for given <code class="docutils literal notranslate"><span class="pre">SType</span></code> instances, given whatever analysis object was returned from the <code class="docutils literal notranslate"><span class="pre">analyze_circuit</span></code> step and the instance <code class="docutils literal notranslate"><span class="pre">SType</span></code>s.</p>
 </section>
 <section id="example">
@@ -602,6 +662,40 @@ document.write(`
 <blockquote>
 <div><p>Filipsson, Gunnar. “<em>A new general computer algorithm for S-matrix calculation of interconnected multiports.</em>” 11th European Microwave Conference. IEEE, 1981.</p>
 </div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit_fg">
+<span class="sig-name descname"><span class="pre">analyze_circuit_fg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/filipsson_gunnar.html#analyze_circuit_fg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit_fg" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed_instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SDict</em><em>]</em>) – </p></li>
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit_fg">
+<span class="sig-name descname"><span class="pre">evaluate_circuit_fg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/filipsson_gunnar.html#evaluate_circuit_fg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit_fg" title="Permalink to this definition">#</a></dt>
+<dd><p>evaluate a circuit for the given sdicts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SType</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SDict</p>
+</dd>
+</dl>
+</dd></dl>
+
 <section id="algorithm-walkthrough">
 <h3>Algorithm Walkthrough<a class="headerlink" href="#algorithm-walkthrough" title="Permalink to this heading">#</a></h3>
 <div class="admonition note">
@@ -787,19 +881,19 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc2,out0&#39;,
- &#39;dc2,out1&#39;,
- &#39;dc2,in1&#39;,
- &#39;dc2,in0&#39;,
- &#39;dc1,in1&#39;,
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc1,in0&#39;,
  &#39;dc1,out0&#39;,
  &#39;dc1,out1&#39;,
- &#39;dc1,in0&#39;)
+ &#39;dc1,in1&#39;,
+ &#39;dc2,out1&#39;,
+ &#39;dc2,in0&#39;,
+ &#39;dc2,out0&#39;,
+ &#39;dc2,in1&#39;)
 </pre></div>
 </div>
 </div>
 </div>
-<p>Now the <a class="reference internal" href="#citation"><span class="xref myst">Gunnar Algorithm</span></a> is used. Given a (block-diagonal) ‘S-matrix’ <code class="docutils literal notranslate"><span class="pre">block_diag</span></code> and a ‘connection matrix’ <code class="docutils literal notranslate"><span class="pre">current_ports</span></code> we can interconnect port <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code> as follows:</p>
+<p>Now the Gunnar Algorithm is used. Given a (block-diagonal) ‘S-matrix’ <code class="docutils literal notranslate"><span class="pre">block_diag</span></code> and a ‘connection matrix’ <code class="docutils literal notranslate"><span class="pre">current_ports</span></code> we can interconnect port <code class="docutils literal notranslate"><span class="pre">k</span></code> and <code class="docutils literal notranslate"><span class="pre">l</span></code> as follows:</p>
 <blockquote>
 <div><p>Note: some creative freedom is used here. In SAX, the matrices we’re talking about are in fact represented by a sparse dictionary (an <code class="docutils literal notranslate"><span class="pre">SDict</span></code>), i.e. similar to a COO sparse matrix for which the indices are the port names.</p>
 </div></blockquote>
@@ -913,22 +1007,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -946,22 +1040,22 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
- (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -999,6 +1093,39 @@ document.write(`
 <blockquote>
 <div><p>Ekanathan Palamadai Natariajan. “<em>KLU - A high performance sparse linear solver for circuit simulation problems.</em>”</p>
 </div></blockquote>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit_klu">
+<span class="sig-name descname"><span class="pre">analyze_circuit_klu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/klu.html#analyze_circuit_klu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit_klu" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed_instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SCoo</em><em>]</em>) – </p></li>
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit_klu">
+<span class="sig-name descname"><span class="pre">evaluate_circuit_klu</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/klu.html#evaluate_circuit_klu"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit_klu" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SType</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SDense</p>
+</dd>
+</dl>
+</dd></dl>
+
 <section id="theoretical-background">
 <h3>Theoretical Background<a class="headerlink" href="#theoretical-background" title="Permalink to this heading">#</a></h3>
 <p>The core of the KLU algorithm is supported by <code class="docutils literal notranslate"><span class="pre">klujax</span></code>, which internally uses the Suitesparse libraries to solve the sparse system <code class="docutils literal notranslate"><span class="pre">Ax</span> <span class="pre">=</span> <span class="pre">b</span></code>, in which A is a sparse matrix.</p>
@@ -1046,6 +1173,16 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </section>
 <section id="sparse-helper-functions">
 <h3>Sparse Helper Functions<a class="headerlink" href="#sparse-helper-functions" title="Permalink to this heading">#</a></h3>
+<dl class="py function">
+<dt class="sig sig-object py" id="klujax.solve">
+<span class="sig-name descname"><span class="pre">solve</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/klujax.html#solve"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#klujax.solve" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="klujax.coo_mul_vec">
+<span class="sig-name descname"><span class="pre">coo_mul_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">b</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/klujax.html#coo_mul_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#klujax.coo_mul_vec" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
 <p><code class="docutils literal notranslate"><span class="pre">klujax.solve</span></code> solves the sparse system of equations <code class="docutils literal notranslate"><span class="pre">Ax=b</span></code> for <code class="docutils literal notranslate"><span class="pre">x</span></code>. Where <code class="docutils literal notranslate"><span class="pre">A</span></code> is represented by in <a class="reference external" href="https://en.wikipedia.org/wiki/Sparse_matrix#Coordinate_list_(COO)">COO-format</a> as (<code class="docutils literal notranslate"><span class="pre">Ai</span></code>, <code class="docutils literal notranslate"><span class="pre">Aj</span></code>, <code class="docutils literal notranslate"><span class="pre">Ax</span></code>).</p>
 <blockquote>
 <div><p>Example</p>
@@ -1751,6 +1888,40 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </section>
 <section id="additive-backend">
 <h2>Additive Backend<a class="headerlink" href="#additive-backend" title="Permalink to this heading">#</a></h2>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.analyze_circuit_additive">
+<span class="sig-name descname"><span class="pre">analyze_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/additive.html#analyze_circuit_additive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.analyze_circuit_additive" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed_instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SDict</em><em>]</em>) – </p></li>
+<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p><em>Any</em></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.backends.evaluate_circuit_additive">
+<span class="sig-name descname"><span class="pre">evaluate_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/sax/backends/additive.html#evaluate_circuit_additive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.evaluate_circuit_additive" title="Permalink to this definition">#</a></dt>
+<dd><p>evaluate a circuit for the given sdicts.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
+<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SDict</em><em>]</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>SDict</p>
+</dd>
+</dl>
+</dd></dl>
+
 <p>Sometimes we would like to calculate circuit path lengths or time delays within a circuit. We could obviously simulate these things with a time domain simulator, but in many cases a simple additive backend (as opposed to the default multiplicative backend) can suffice.</p>
 <section id="id4">
 <h3>Example<a class="headerlink" href="#id4" title="Permalink to this heading">#</a></h3>
@@ -2136,22 +2307,37 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#introduction">Introduction</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_instances"><code class="docutils literal notranslate"><span class="pre">analyze_instances()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit"><code class="docutils literal notranslate"><span class="pre">analyze_circuit()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#example">Example</a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#filipsson-gunnar-backend">Filipsson-Gunnar Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_fg"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_fg()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_fg"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_fg()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-walkthrough">Algorithm Walkthrough</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#algorithm-improvements">Algorithm Improvements</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#klu-backend">KLU Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_klu"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_klu()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_klu"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_klu()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-background">Theoretical Background</a></li>
-<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a><ul class="nav section-nav flex-column">
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.solve"><code class="docutils literal notranslate"><span class="pre">solve()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.coo_mul_vec"><code class="docutils literal notranslate"><span class="pre">coo_mul_vec()</span></code></a></li>
+</ul>
+</li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">Algorithm Walkthrough</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id3">Algorithm Improvements</a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#additive-backend">Additive Backend</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.analyze_circuit_additive"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_additive()</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.evaluate_circuit_additive"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_additive()</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id4">Example</a></li>
 </ul>
 </li>

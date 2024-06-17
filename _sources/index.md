@@ -18,13 +18,13 @@ examples/04_multimode_simulations.ipynb
 examples/05_thinfilm.ipynb
 examples/06_additive_backend.ipynb
 examples/07_layout_aware.ipynb
+examples/08_sparse_coo.ipynb
 ```
 
 ```{toctree}
 :caption: 'Library Internals'
 :maxdepth: 2
 
-internals/00_typing.ipynb
 internals/01_models.ipynb
 internals/02_circuit.ipynb
 internals/03_backends.ipynb

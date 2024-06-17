@@ -57,6 +57,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'examples/08_sparse_coo';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Models and Model Factories" href="../internals/01_models.html" />
+    <link rel="prev" title="Layout Aware Monte Carlo with GDSFactory" href="07_layout_aware.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -119,8 +121,6 @@
       
       
       
-        
-      
       <div class="bd-sidebar-primary bd-sidebar">
         
 
@@ -160,7 +160,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">SAX</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_quick_start.html">SAX Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_circuit_from_yaml.html">Circuit from YAML</a></li>
@@ -168,6 +168,7 @@
 <li class="toctree-l1"><a class="reference internal" href="05_thinfilm.html">Thin film optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="06_additive_backend.html">Additive Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Sparse COO</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
 <ul class="nav bd-sidenav">
@@ -184,18 +185,11 @@
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 has-children"><a class="reference internal" href="../sax.nn.html">sax.nn package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.core.html">sax.nn.core module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.io.html">sax.nn.io module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.loss.html">sax.nn.loss module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="../sax.nn.utils.html">sax.nn.utils module</a></li>
-</ul>
-</details></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.loss.html">sax.loss module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.models.html">sax.models module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.multimode.html">sax.multimode module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.netlist.html">sax.netlist module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="../sax.patched.html">sax.patched module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.saxtypes.html">sax.saxtypes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="../sax.utils.html">sax.utils module</a></li>
 </ul>
@@ -463,7 +457,7 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="sparse-coo">
+  <section class="tex2jax_ignore mathjax_ignore" id="sparse-coo">
 <h1>Sparse COO<a class="headerlink" href="#sparse-coo" title="Permalink to this heading">#</a></h1>
 <blockquote>
 <div><p>The most efficient S-representation is the COO representation. It’s however also the least user friendly:</p>
@@ -555,6 +549,24 @@ document.write(`
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="07_layout_aware.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Layout Aware Monte Carlo with GDSFactory</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../internals/01_models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Models and Model Factories</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               

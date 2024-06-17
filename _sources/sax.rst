@@ -8,7 +8,6 @@ Subpackages
    :maxdepth: 4
 
    sax.backends
-   sax.nn
 
 Submodules
 ----------
@@ -17,10 +16,10 @@ Submodules
    :maxdepth: 4
 
    sax.circuit
+   sax.loss
    sax.models
    sax.multimode
    sax.netlist
-   sax.patched
    sax.saxtypes
    sax.utils
 

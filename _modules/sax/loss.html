@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sax.backends &#8212; sax 0.12.2 documentation</title>
+    <title>sax.loss &#8212; sax 0.12.2 documentation</title>
   
   
   
@@ -50,7 +50,7 @@
     <script src="../../_static/clipboard.min.js"></script>
     <script src="../../_static/copybutton.js"></script>
     <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sax/backends';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = '_modules/sax/loss';</script>
     <link rel="index" title="Index" href="../../genindex.html" />
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
@@ -261,7 +261,7 @@
       
       
       
-      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2F_modules/sax/backends.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2F_modules/sax/loss.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -339,90 +339,37 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <h1>Source code for sax.backends</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; SAX Backends &quot;&quot;&quot;</span>
+  <h1>Source code for sax.loss</h1><div class="highlight"><pre>
+<span></span><span class="sd">&quot;&quot;&quot; SAX Loss Functions &quot;&quot;&quot;</span>
 
 <span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">cast</span>
 
-<span class="kn">from</span> <span class="nn">..netlist</span> <span class="kn">import</span> <span class="n">Component</span>
-<span class="kn">from</span> <span class="nn">..saxtypes</span> <span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">SType</span>
-<span class="kn">from</span> <span class="nn">.additive</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">analyze_circuit_additive</span><span class="p">,</span>
-    <span class="n">analyze_instances_additive</span><span class="p">,</span>
-    <span class="n">evaluate_circuit_additive</span><span class="p">,</span>
-<span class="p">)</span>
-<span class="kn">from</span> <span class="nn">.filipsson_gunnar</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">analyze_circuit_fg</span><span class="p">,</span>
-    <span class="n">analyze_instances_fg</span><span class="p">,</span>
-    <span class="n">evaluate_circuit_fg</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
 
-<span class="n">circuit_backends</span> <span class="o">=</span> <span class="p">{</span>
-    <span class="s2">&quot;fg&quot;</span><span class="p">:</span> <span class="p">(</span>
-        <span class="n">analyze_instances_fg</span><span class="p">,</span>
-        <span class="n">analyze_circuit_fg</span><span class="p">,</span>
-        <span class="n">evaluate_circuit_fg</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="s2">&quot;filipsson_gunnar&quot;</span><span class="p">:</span> <span class="p">(</span>
-        <span class="n">analyze_instances_fg</span><span class="p">,</span>
-        <span class="n">analyze_circuit_fg</span><span class="p">,</span>
-        <span class="n">evaluate_circuit_fg</span><span class="p">,</span>
-    <span class="p">),</span>
-    <span class="s2">&quot;additive&quot;</span><span class="p">:</span> <span class="p">(</span>
-        <span class="n">analyze_instances_additive</span><span class="p">,</span>
-        <span class="n">analyze_circuit_additive</span><span class="p">,</span>
-        <span class="n">evaluate_circuit_additive</span><span class="p">,</span>
-    <span class="p">),</span>
-<span class="p">}</span>
-
-<span class="k">try</span><span class="p">:</span>
-    <span class="kn">from</span> <span class="nn">.klu</span> <span class="kn">import</span> <span class="n">analyze_circuit_klu</span><span class="p">,</span> <span class="n">analyze_instances_klu</span><span class="p">,</span> <span class="n">evaluate_circuit_klu</span>
-
-    <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;klu&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">analyze_instances_klu</span><span class="p">,</span>
-        <span class="n">analyze_circuit_klu</span><span class="p">,</span>
-        <span class="n">evaluate_circuit_klu</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">analyze_instances_klu</span><span class="p">,</span>
-        <span class="n">analyze_circuit_klu</span><span class="p">,</span>
-        <span class="n">evaluate_circuit_klu</span><span class="p">,</span>
-    <span class="p">)</span>
-<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
-    <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span>
-        <span class="n">analyze_instances_fg</span><span class="p">,</span>
-        <span class="n">analyze_circuit_fg</span><span class="p">,</span>
-        <span class="n">evaluate_circuit_fg</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-        <span class="s2">&quot;klujax not found. Please install klujax for &quot;</span>
-        <span class="s2">&quot;better performance during circuit evaluation!&quot;</span>
-    <span class="p">)</span>
+<span class="kn">from</span> <span class="nn">.saxtypes</span> <span class="kn">import</span> <span class="n">ComplexArrayND</span>
 
 
-<div class="viewcode-block" id="analyze_instances"><a class="viewcode-back" href="../../sax.backends.html#sax.backends.analyze_instances">[docs]</a><span class="k">def</span> <span class="nf">analyze_instances</span><span class="p">(</span>
-    <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Component</span><span class="p">],</span>
-    <span class="n">models</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Model</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="mi">0</span><span class="p">](</span><span class="n">instances</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span></div>
+<div class="viewcode-block" id="mse"><a class="viewcode-back" href="../../sax.loss.html#sax.loss.mse">[docs]</a><span class="k">def</span> <span class="nf">mse</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;mean squared error&quot;&quot;&quot;</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">())</span></div>
 
 
-<div class="viewcode-block" id="analyze_circuit"><a class="viewcode-back" href="../../sax.backends.html#sax.backends.analyze_circuit">[docs]</a><span class="k">def</span> <span class="nf">analyze_circuit</span><span class="p">(</span>
-    <span class="n">analyzed_instances</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-    <span class="n">connections</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-    <span class="n">ports</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="mi">1</span><span class="p">](</span><span class="n">analyzed_instances</span><span class="p">,</span> <span class="n">connections</span><span class="p">,</span> <span class="n">ports</span><span class="p">)</span></div>
+<div class="viewcode-block" id="huber_loss"><a class="viewcode-back" href="../../sax.loss.html#sax.loss.huber_loss">[docs]</a><span class="k">def</span> <span class="nf">huber_loss</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">y</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">delta</span><span class="p">:</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;huber loss&quot;&quot;&quot;</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="p">((</span><span class="n">delta</span><span class="o">**</span><span class="mi">2</span><span class="p">)</span> <span class="o">*</span> <span class="p">((</span><span class="mf">1.0</span> <span class="o">+</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">y</span><span class="p">)</span> <span class="o">/</span> <span class="n">delta</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span> <span class="o">-</span> <span class="mf">1.0</span><span class="p">))</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">loss</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="evaluate_circuit"><a class="viewcode-back" href="../../sax.backends.html#sax.backends.evaluate_circuit">[docs]</a><span class="k">def</span> <span class="nf">evaluate_circuit</span><span class="p">(</span>
-    <span class="n">analyzed</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span>
-    <span class="n">instances</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">SType</span><span class="p">],</span>
-<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
-    <span class="k">return</span> <span class="n">circuit_backends</span><span class="p">[</span><span class="s2">&quot;default&quot;</span><span class="p">][</span><span class="mi">2</span><span class="p">](</span><span class="n">analyzed</span><span class="p">,</span> <span class="n">instances</span><span class="p">)</span></div>
+<div class="viewcode-block" id="l2_reg"><a class="viewcode-back" href="../../sax.loss.html#sax.loss.l2_reg">[docs]</a><span class="k">def</span> <span class="nf">l2_reg</span><span class="p">(</span><span class="n">weights</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">ComplexArrayND</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="nb">float</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;L2 regularization loss&quot;&quot;&quot;</span>
+    <span class="n">numel</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">loss</span> <span class="o">=</span> <span class="mf">0.0</span>
+    <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="p">(</span><span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">weights</span><span class="o">.</span><span class="n">items</span><span class="p">()</span> <span class="k">if</span> <span class="n">k</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="p">(</span><span class="s2">&quot;w&quot;</span><span class="p">,</span> <span class="s2">&quot;b&quot;</span><span class="p">)):</span>
+        <span class="n">numel</span> <span class="o">=</span> <span class="n">numel</span> <span class="o">+</span> <span class="n">w</span><span class="o">.</span><span class="n">size</span>
+        <span class="n">loss</span> <span class="o">=</span> <span class="n">loss</span> <span class="o">+</span> <span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">w</span><span class="p">)</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+    <span class="k">return</span> <span class="n">cast</span><span class="p">(</span><span class="nb">float</span><span class="p">,</span> <span class="n">loss</span> <span class="o">/</span> <span class="n">numel</span><span class="p">)</span></div>
 </pre></div>
 
                 </article>

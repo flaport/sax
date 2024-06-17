@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>sax.nn package &#8212; sax 0.12.2 documentation</title>
+    <title>sax.loss module &#8212; sax 0.12.2 documentation</title>
   
   
   
@@ -51,11 +51,11 @@
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'sax.nn';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'sax.loss';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="sax.nn.core module" href="sax.nn.core.html" />
-    <link rel="prev" title="sax.backends.klu module" href="sax.backends.klu.html" />
+    <link rel="next" title="sax.models module" href="sax.models.html" />
+    <link rel="prev" title="sax.circuit module" href="sax.circuit.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -165,6 +165,7 @@
 <li class="toctree-l1"><a class="reference internal" href="examples/05_thinfilm.html">Thin film optimization</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/06_additive_backend.html">Additive Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="examples/07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="examples/08_sparse_coo.html">Sparse COO</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
 <ul class="nav bd-sidenav">
@@ -181,18 +182,11 @@
 <li class="toctree-l3"><a class="reference internal" href="sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
-<li class="toctree-l2 current active has-children"><a class="current reference internal" href="#">sax.nn package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
-<li class="toctree-l3"><a class="reference internal" href="sax.nn.core.html">sax.nn.core module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sax.nn.io.html">sax.nn.io module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sax.nn.loss.html">sax.nn.loss module</a></li>
-<li class="toctree-l3"><a class="reference internal" href="sax.nn.utils.html">sax.nn.utils module</a></li>
-</ul>
-</details></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">sax.loss module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.models.html">sax.models module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.multimode.html">sax.multimode module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.netlist.html">sax.netlist module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sax.patched.html">sax.patched module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.saxtypes.html">sax.saxtypes module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.utils.html">sax.utils module</a></li>
 </ul>
@@ -268,7 +262,7 @@
       
       
       
-      <li><a href="https://github.com/flaport/sax/edit/main/docs/sax.nn.rst" target="_blank"
+      <li><a href="https://github.com/flaport/sax/edit/main/docs/sax.loss.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -285,7 +279,7 @@
       
       
       
-      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fsax.nn.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fsax.loss.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -315,7 +309,7 @@
       
       
       
-      <li><a href="_sources/sax.nn.rst" target="_blank"
+      <li><a href="_sources/sax.loss.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -399,7 +393,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>sax.nn package</h1>
+    <h1>sax.loss module</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -409,8 +403,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.loss.mse"><code class="docutils literal notranslate"><span class="pre">mse()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.loss.huber_loss"><code class="docutils literal notranslate"><span class="pre">huber_loss()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.loss.l2_reg"><code class="docutils literal notranslate"><span class="pre">l2_reg()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -422,22 +417,58 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="sax-nn-package">
-<h1>sax.nn package<a class="headerlink" href="#sax-nn-package" title="Permalink to this heading">#</a></h1>
-<section id="submodules">
-<h2>Submodules<a class="headerlink" href="#submodules" title="Permalink to this heading">#</a></h2>
-<div class="toctree-wrapper compound">
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="sax.nn.core.html">sax.nn.core module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sax.nn.io.html">sax.nn.io module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sax.nn.loss.html">sax.nn.loss module</a></li>
-<li class="toctree-l1"><a class="reference internal" href="sax.nn.utils.html">sax.nn.utils module</a></li>
+  <section id="module-sax.loss">
+<span id="sax-loss-module"></span><h1>sax.loss module<a class="headerlink" href="#module-sax.loss" title="Permalink to this heading">#</a></h1>
+<p>SAX Loss Functions</p>
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.loss.mse">
+<span class="sig-name descname"><span class="pre">mse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/loss.html#mse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.loss.mse" title="Permalink to this definition">#</a></dt>
+<dd><p>mean squared error</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ComplexArrayND</em>) – </p></li>
+<li><p><strong>y</strong> (<em>ComplexArrayND</em>) – </p></li>
 </ul>
-</div>
-</section>
-<section id="module-contents">
-<h2>Module contents<a class="headerlink" href="#module-contents" title="Permalink to this heading">#</a></h2>
-</section>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.loss.huber_loss">
+<span class="sig-name descname"><span class="pre">huber_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/loss.html#huber_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.loss.huber_loss" title="Permalink to this definition">#</a></dt>
+<dd><p>huber loss</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>x</strong> (<em>ComplexArrayND</em>) – </p></li>
+<li><p><strong>y</strong> (<em>ComplexArrayND</em>) – </p></li>
+<li><p><strong>delta</strong> (<em>float</em>) – </p></li>
+</ul>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.loss.l2_reg">
+<span class="sig-name descname"><span class="pre">l2_reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/loss.html#l2_reg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.loss.l2_reg" title="Permalink to this definition">#</a></dt>
+<dd><p>L2 regularization loss</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><p><strong>weights</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>ComplexArrayND</em><em>]</em>) – </p>
+</dd>
+<dt class="field-even">Return type<span class="colon">:</span></dt>
+<dd class="field-even"><p>float</p>
+</dd>
+</dl>
+</dd></dl>
+
 </section>
 
 
@@ -452,20 +483,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="sax.backends.klu.html"
+       href="sax.circuit.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">sax.backends.klu module</p>
+        <p class="prev-next-title">sax.circuit module</p>
       </div>
     </a>
     <a class="right-next"
-       href="sax.nn.core.html"
+       href="sax.models.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">sax.nn.core module</p>
+        <p class="prev-next-title">sax.models module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -485,8 +516,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#submodules">Submodules</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#module-contents">Module contents</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.loss.mse"><code class="docutils literal notranslate"><span class="pre">mse()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.loss.huber_loss"><code class="docutils literal notranslate"><span class="pre">huber_loss()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.loss.l2_reg"><code class="docutils literal notranslate"><span class="pre">l2_reg()</span></code></a></li>
 </ul>
   </nav></div>
 
