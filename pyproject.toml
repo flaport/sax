@@ -33,13 +33,13 @@ dependencies = [
   "klujax>=0.2.5",
   "matplotlib",
   "natsort",
-  "typing-extensions>=4.10.0",
   "networkx",
   "numpy",
   "orjson",
   "pydantic>=2.2",
   "pyyaml",
   "tqdm",
+  "typing-extensions>=4.10.0",
 ]
 
 [project.optional-dependencies]
@@ -58,17 +58,18 @@ dev = [
   "ipywidgets",
   "isort",
   "jedi",
+  "meow-sim",
   "myst-nb",
   "nbstripout",
   "nlopt",
   "papermill",
   "pre-commit",
+  "pydot",
   "pytest",
   "sphinx-book-theme==1.0.1",
   "sphinx-copybutton==0.5.2",
   "sphinx==5.3.0",
   "tmm",
-# "meep",
 ]
 
 [tool.setuptools.packages.find]
