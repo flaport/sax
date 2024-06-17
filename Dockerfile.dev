@@ -1,12 +1,8 @@
-FROM condaforge/mambaforge
+FROM python:3.11-slim-bookworm
 
-ENV TERM=xterm
-ENV LANG=C.UTF-8 LC_ALL=C.UTF-8
-
-RUN ln -sf /usr/share/zoneinfo/America/Los_Angeles /etc/localtime \
- && apt-get update \
- && apt-get install --no-install-recommends --yes curl rsync zstd \
- && mamba install -y pymeep
+RUN apt-get update \
+ && apt-get upgrade -yqq \
+ && apt-get install make git rsync zstd curl neovim psmisc -y
 
 COPY pyproject.toml .
 RUN pip install --upgrade pip \
@@ -16,6 +12,7 @@ RUN pip install --upgrade pip \
  && rm pyproject.toml
 
 RUN useradd sax -u 1000 -s /bin/bash
+
 USER sax
 WORKDIR /home/sax
 
