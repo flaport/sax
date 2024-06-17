@@ -2,7 +2,8 @@ build:
 	python -m build --sdist --wheel
 
 docker:
-	docker build . -t flaport/sax:latest
+	docker build . -t flaport/sax:latest -f Dockerfile
+	docker build . -t flaport/sax:0.13.0 -f Dockerfile
 
 pre-commit:
 	pre-commit install
@@ -14,6 +15,7 @@ nbrun:
 
 dockerpush:
 	docker push flaport/sax:latest
+	docker build . -t flaport/sax:0.13.0
 
 .PHONY: docs
 docs:
