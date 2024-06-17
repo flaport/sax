@@ -17,8 +17,7 @@ dockerpush:
 
 .PHONY: docs
 docs:
-	sphinx-apidoc --force --no-toc --no-headings --implicit-namespaces --module-first --maxdepth 1 --output-dir docs/source sax
-	cd docs && make html
+	cd docs/source/ && make && cd .. && make html
 
 clean:
 	find . -name "modes" | xargs rm -rf
