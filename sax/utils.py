@@ -69,18 +69,12 @@ def block_diag(*arrs: ComplexArrayND) -> ComplexArrayND:
 
 def clean_string(s: str, dot="p", minus="m", other="_") -> str:
     """clean a string such that it is a valid python identifier"""
-    original = s
     s = s.strip()
     s = s.replace(".", dot)  # dot
     s = s.replace("-", minus)  # minus
-    s = re.sub("[^0-9a-zA-Z]", other, s)
+    s = re.sub("[^0-9a-zA-Z_]", other, s)
     if s[0] in "0123456789":
         s = "_" + s
-    if s != original:
-        warnings.warn(
-            f"modified string {original} in an attempt "
-            f"to make valid python identifier: {s}"
-        )
     if not s.isidentifier():
         raise ValueError(f"failed to clean string to a valid python identifier: {s}")
     return s

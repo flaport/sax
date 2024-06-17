@@ -1,3 +1,5 @@
+from functools import partial
+
 import sax
 
 SAMPLE_NETLIST = {
@@ -6,6 +8,27 @@ SAMPLE_NETLIST = {
         "top": "waveguide",
         "btm": "waveguide",
         "rgt": "coupler",
+    },
+    "connections": {
+        "lft,out0": "btm,in0",
+        "btm,out0": "rgt,in0",
+        "lft,out1": "top,in0",
+        "top,out0": "rgt,in1",
+    },
+    "ports": {
+        "in0": "lft,in0",
+        "in1": "lft,in1",
+        "out0": "rgt,out0",
+        "out1": "rgt,out1",
+    },
+}
+
+SAMPLE_NETLIST2 = {
+    "instances": {
+        "lft": sax.models.coupler,
+        "top": partial(sax.models.straight, length=10.0),
+        "btm": partial(sax.models.straight, length=30.0),
+        "rgt": sax.models.coupler,
     },
     "connections": {
         "lft,out0": "btm,in0",
@@ -60,3 +83,13 @@ def test_netlist_function_from_recursive_netlist():
     )
     assert isinstance(net, sax.RecursiveNetlist)
     assert "top_level" in net.root
+
+
+def test_netlist_using_instance_functions():
+    net = sax.netlist(SAMPLE_NETLIST2)
+    print(net)
+    assert isinstance(net, sax.RecursiveNetlist)
+
+
+if __name__ == "__main__":
+    test_netlist_using_instance_functions()

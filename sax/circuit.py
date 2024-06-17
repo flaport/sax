@@ -13,7 +13,7 @@ import networkx as nx
 import numpy as np
 
 from .backends import circuit_backends
-from .netlist import AnyNetlist, NetlistDict, RecursiveNetlist
+from .netlist import AnyNetlist, Netlist, NetlistDict, RecursiveNetlist, is_recursive
 from .netlist import netlist as parse_netlist
 from .saxtypes import Model, Settings, SType, scoo, sdense, sdict
 from .utils import (
@@ -49,8 +49,8 @@ def circuit(
         ignore_missing_ports: Ignore missing ports in the netlist.
 
     """
+    instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(netlist, remove_unused_instances=True)
-    recnet, instance_models = _extract_instance_models(recnet)
     dependency_dag: nx.DiGraph[str] = _validate_dag(_create_dag(recnet, models))
     models = _validate_models(models, dependency_dag, extra_models=instance_models)
     backend = _validate_circuit_backend(backend)
@@ -138,8 +138,8 @@ def get_required_circuit_models(
         models: A dictionary of models to use in the circuit.
 
     """
+    instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(netlist, remove_unused_instances=True)
-    recnet, instance_models = _extract_instance_models(recnet)
     dependency_dag: nx.DiGraph[str] = _validate_dag(_create_dag(recnet, models))
     _, required, _ = _find_missing_models(
         models, dependency_dag, extra_models=instance_models
@@ -349,30 +349,29 @@ def _enforce_return_type(model, return_type):
     return stype_func(model)
 
 
-def _extract_instance_models(netlist: RecursiveNetlist):
-    models = {}
-    recnet_dict = netlist.model_dump()
-    for netname, net in recnet_dict.items():
-        net: NetlistDict = {**net}
-        net["instances"] = {**net["instances"]}
-        for name, inst in net["instances"].items():
-            if callable(inst):
-                settings = get_settings(inst)
-                if isinstance(inst, partial) and inst.args:
-                    raise ValueError(
-                        "SAX circuits and netlists don't support partials "
-                        "with positional arguments."
-                    )
-                while isinstance(inst, partial):
-                    inst = inst.func
-                models[inst.__name__] = inst
-                net["instances"][name] = {
-                    "component": inst.__name__,
-                    "settings": settings,
-                }
-        recnet_dict[netname] = net
-    netlist = RecursiveNetlist.model_validate(recnet_dict)
-    return netlist, models
+def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
+    if isinstance(netlist, Netlist):
+        return {}
+    elif isinstance(netlist, RecursiveNetlist):
+        return {}
+    elif isinstance(netlist, dict):
+        if is_recursive(netlist):
+            models = {}
+            for net in netlist.values():
+                models.update(_extract_instance_models(net))  # type: ignore
+            return models
+        else:
+            callable_instances = [
+                f for f in netlist["instances"].values() if callable(f)
+            ]
+            models = {}
+            for f in callable_instances:
+                while isinstance(f, partial):
+                    f = f.func
+                models[f.__name__] = f
+            return models
+    else:
+        return {}
 
 
 def _validate_circuit_backend(backend):

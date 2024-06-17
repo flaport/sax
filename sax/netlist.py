@@ -6,7 +6,7 @@ import os
 import re
 import warnings
 from copy import deepcopy
-from functools import lru_cache
+from functools import lru_cache, partial
 from typing import Any, Literal, TypedDict
 
 import black
@@ -14,8 +14,9 @@ import networkx as nx
 import numpy as np
 import yaml
 from natsort import natsorted
+from pydantic import AfterValidator
 from pydantic import BaseModel as _BaseModel
-from pydantic import BeforeValidator, ConfigDict, Field, RootModel, field_validator
+from pydantic import BeforeValidator, ConfigDict, Field, RootModel
 from typing_extensions import Annotated
 
 from .utils import clean_string, hash_dict
@@ -49,18 +50,20 @@ class BaseModel(_BaseModel):
         return hash_dict(self.model_dump())
 
 
-class Component(BaseModel):
-    component: str
-    settings: dict[str, Any] = Field(default_factory=dict)
+def _validate_str(s: str, what="component"):
+    if "," in s:
+        raise ValueError(f"Invalid {what} string. Should not contain ','. Got: {s}")
+    s = s.split("$")[0]
+    s = clean_string(s)
+    return s
 
-    @field_validator("component")
-    def validate_component_name(cls, value):
-        if "," in value:
-            raise ValueError(
-                f"Invalid component string. Should not contain ','. Got: {value}"
-            )
-        value = value.split("$")[0]
-        return clean_string(value)
+
+ComponentStr = Annotated[str, AfterValidator(_validate_str)]
+
+
+class Component(BaseModel):
+    component: ComponentStr
+    settings: dict[str, Any] = Field(default_factory=dict)
 
 
 PortPlacement = Literal["ce", "cw", "nc", "ne", "nw", "sc", "se", "sw", "cc", "center"]
@@ -80,58 +83,61 @@ class Placement(BaseModel):
     port: str | PortPlacement | None = None
 
 
-def _str_to_component(s: Any) -> Component:
-    if isinstance(s, str):
-        return Component(component=s)
-    return Component.model_validate(s)
+def _coerce_component(obj: Any) -> Component:
+    if isinstance(obj, str):
+        return Component(component=obj)
+    elif isinstance(obj, partial):
+        return _component_from_partial(obj)
+    elif callable(obj):
+        return _coerce_component(obj.__name__)
+    return Component.model_validate(obj)
 
 
-CoercingComponent = Annotated[Component | str, BeforeValidator(_str_to_component)]
+def _component_from_partial(p: partial):
+    settings = {}
+    f: Any = p
+    while isinstance(f, partial):
+        if f.args:
+            raise ValueError(
+                "SAX circuits and netlists don't support partials "
+                "with positional arguments."
+            )
+        settings = {**f.keywords, **settings}
+        f = f.func
+    if not callable(f):
+        raise ValueError("partial of non-callable.")
+    return Component(component=f.__name__, settings=settings)
+
+
+CoercingComponent = Annotated[Component, BeforeValidator(_coerce_component)]
+
+
+_validate_instance_str = partial(_validate_str, what="instance")
+_validate_port_str = partial(_validate_str, what="port")
+
+
+def _validate_instance_port_str(s: str):
+    parts = s.split(",")
+    if len(parts) != 2:
+        raise ValueError(
+            f"Invalid instance,port string. Should contain exactly one ','. Got: {s}"
+        )
+    i, p = parts
+    i = _validate_instance_str(i)
+    p = _validate_port_str(p)
+    return f"{i},{p}"
+
+
+InstanceStr = Annotated[str, AfterValidator(_validate_instance_str)]
+PortStr = Annotated[str, AfterValidator(_validate_port_str)]
+InstancePortStr = Annotated[str, AfterValidator(_validate_instance_port_str)]
 
 
 class Netlist(BaseModel):
-    instances: dict[str, CoercingComponent] = Field(default_factory=dict)
-    connections: dict[str, str] = Field(default_factory=dict)
-    ports: dict[str, str] = Field(default_factory=dict)
-    placements: dict[str, Placement] = Field(default_factory=dict)
-
-    @staticmethod
-    def clean_instance_string(value):
-        if "," in value:
-            raise ValueError(
-                f"Invalid instance string. Should not contain ','. Got: {value}"
-            )
-        return clean_string(value)
-
-    @field_validator("instances")
-    def validate_instance_names(cls, instances):
-        return {cls.clean_instance_string(k): v for k, v in instances.items()}
-
-    @field_validator("placements")
-    def validate_placement_names(cls, placements):
-        if placements is not None:
-            return {cls.clean_instance_string(k): v for k, v in placements.items()}
-        return {}
-
-    @classmethod
-    def clean_connection_string(cls, value):
-        *comp, port = value.split(",")
-        comp = cls.clean_instance_string(",".join(comp))
-        return f"{comp},{port}"
-
-    @field_validator("connections")
-    def validate_connection_names(cls, connections):
-        return {
-            cls.clean_connection_string(k): cls.clean_connection_string(v)
-            for k, v in connections.items()
-        }
-
-    @field_validator("ports")
-    def validate_port_names(cls, ports):
-        return {
-            cls.clean_instance_string(k): cls.clean_connection_string(v)
-            for k, v in ports.items()
-        }
+    instances: dict[InstanceStr, CoercingComponent] = Field(default_factory=dict)
+    connections: dict[InstancePortStr, InstancePortStr] = Field(default_factory=dict)
+    ports: dict[PortStr, InstancePortStr] = Field(default_factory=dict)
+    placements: dict[InstanceStr, Placement] = Field(default_factory=dict)
 
 
 class RecursiveNetlist(RootModel):
@@ -157,18 +163,18 @@ class RecursiveNetlist(RootModel):
 AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
 
 
-def netlist(netlist: AnyNetlist, remove_unused_instances=False) -> RecursiveNetlist:
+def netlist(netlist: Any, remove_unused_instances: bool = False) -> RecursiveNetlist:
     """return a netlist from a given dictionary"""
     if isinstance(netlist, RecursiveNetlist):
         net = netlist
     elif isinstance(netlist, Netlist):
         net = RecursiveNetlist(root={"top_level": netlist})
     elif isinstance(netlist, dict):
-        if "instances" in netlist:
+        if is_recursive(netlist):
+            net = RecursiveNetlist.model_validate(netlist)
+        else:
             flat_net = Netlist.model_validate(netlist)
             net = RecursiveNetlist.model_validate({"top_level": flat_net})
-        else:
-            net = RecursiveNetlist.model_validate(netlist)
     else:
         raise ValueError(
             "Invalid argument for `netlist`. "
@@ -212,6 +218,19 @@ def load_recursive_netlist(pic_path: str, ext: str = ".yml"):
         netlists[_clean_string(path)] = load_netlist(path)
 
     return RecursiveNetlist.model_validate(netlists)
+
+
+def is_recursive(netlist: AnyNetlist):
+    if isinstance(netlist, RecursiveNetlist):
+        return True
+    elif isinstance(netlist, dict):
+        return "instances" not in netlist
+    else:
+        return False
+
+
+def is_not_recursive(netlist: AnyNetlist):
+    return not is_recursive(netlist)
 
 
 def get_netlist_instances_by_prefix(
