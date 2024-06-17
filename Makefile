@@ -2,8 +2,8 @@ build:
 	python -m build --sdist --wheel
 
 docker:
-	docker build . -t flaport/sax:latest -f Dockerfile
-	docker build . -t flaport/sax:0.13.1 -f Dockerfile
+	docker build . -t flaport/sax:latest -f Dockerfile.dev
+	docker build . -t flaport/sax:0.13.1 -f Dockerfile.dev
 
 pre-commit:
 	pre-commit install
