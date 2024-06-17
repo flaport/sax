@@ -15,7 +15,7 @@ nbrun:
 
 dockerpush:
 	docker push flaport/sax:latest
-	docker build . -t flaport/sax:0.13.1
+	docker push flaport/sax:0.13.1
 
 .PHONY: docs
 docs:
