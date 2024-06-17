@@ -386,9 +386,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -404,19 +402,6 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.load_nn_weights_json"><code class="docutils literal notranslate"><span class="pre">load_nn_weights_json()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.save_nn_weights_json"><code class="docutils literal notranslate"><span class="pre">save_nn_weights_json()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.get_available_sizes"><code class="docutils literal notranslate"><span class="pre">get_available_sizes()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.get_dense_weights_path"><code class="docutils literal notranslate"><span class="pre">get_dense_weights_path()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.get_norm_path"><code class="docutils literal notranslate"><span class="pre">get_norm_path()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.load_nn_dense"><code class="docutils literal notranslate"><span class="pre">load_nn_dense()</span></code></a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -426,114 +411,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-sax.nn.io">
-<span id="sax-nn-io-module"></span><h1>sax.nn.io module<a class="headerlink" href="#module-sax.nn.io" title="Permalink to this heading">#</a></h1>
-<p>SAX Neural Network I/O Utilities</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.io.load_nn_weights_json">
-<span class="sig-name descname"><span class="pre">load_nn_weights_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/io.html#load_nn_weights_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.io.load_nn_weights_json" title="Permalink to this definition">#</a></dt>
-<dd><p>Load json weights from given path</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>path</strong> (<em>str</em>) – </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Dict</em>[str, ComplexArrayND]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.io.save_nn_weights_json">
-<span class="sig-name descname"><span class="pre">save_nn_weights_json</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">path</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/io.html#save_nn_weights_json"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.io.save_nn_weights_json" title="Permalink to this definition">#</a></dt>
-<dd><p>Save json weights to given path</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>weights</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>ComplexArrayND</em><em>]</em>) – </p></li>
-<li><p><strong>path</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.io.get_available_sizes">
-<span class="sig-name descname"><span class="pre">get_available_sizes</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dirpath</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/io.html#get_available_sizes"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.io.get_available_sizes" title="Permalink to this definition">#</a></dt>
-<dd><p>Get all available json weight hidden sizes given filename parameters</p>
-<dl class="simple">
-<dt>&gt; Note: this function does NOT return the input size and the output size</dt><dd><p>of the neural network. ONLY the hidden sizes are reported. The input
-and output sizes can easily be derived from <cite>input_names</cite> (after
-preprocessing) and <cite>output_names</cite>.</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>dirpath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>prefix</strong> (<em>str</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>List</em>[<em>Tuple</em>[int, …]]</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.io.get_dense_weights_path">
-<span class="sig-name descname"><span class="pre">get_dense_weights_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath='weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix='dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/io.html#get_dense_weights_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.io.get_dense_weights_path" title="Permalink to this definition">#</a></dt>
-<dd><p>Create the SAX conventional path for a given weight dictionary</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sizes</strong> (<em>int</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>dirpath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>prefix</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.io.get_norm_path">
-<span class="sig-name descname"><span class="pre">get_norm_path</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*shape</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">dirpath='norms'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">prefix='norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/io.html#get_norm_path"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.io.get_norm_path" title="Permalink to this definition">#</a></dt>
-<dd><p>Create the SAX conventional path for the normalization constants</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>shape</strong> (<em>int</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>dirpath</strong> (<em>str</em>) – </p></li>
-<li><p><strong>prefix</strong> (<em>str</em>) – </p></li>
-</ul>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.io.load_nn_dense">
-<span class="sig-name descname"><span class="pre">load_nn_dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">*sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weightprefix='dense'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">weightdirpath='weights'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normdirpath='norms'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">normprefix='norm'</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/io.html#load_nn_dense"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.io.load_nn_dense" title="Permalink to this definition">#</a></dt>
-<dd><p>Load a pre-trained dense model</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>sizes</strong> (<em>int</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Callable</em></p>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="sax-nn-io-module">
+<h1>sax.nn.io module<a class="headerlink" href="#sax-nn-io-module" title="Permalink to this heading">#</a></h1>
 </section>
 
 
@@ -571,26 +450,6 @@ preprocessing) and <cite>output_names</cite>.</p>
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.load_nn_weights_json"><code class="docutils literal notranslate"><span class="pre">load_nn_weights_json()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.save_nn_weights_json"><code class="docutils literal notranslate"><span class="pre">save_nn_weights_json()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.get_available_sizes"><code class="docutils literal notranslate"><span class="pre">get_available_sizes()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.get_dense_weights_path"><code class="docutils literal notranslate"><span class="pre">get_dense_weights_path()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.get_norm_path"><code class="docutils literal notranslate"><span class="pre">get_norm_path()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.io.load_nn_dense"><code class="docutils literal notranslate"><span class="pre">load_nn_dense()</span></code></a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>

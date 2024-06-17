@@ -386,9 +386,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -404,16 +402,6 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.loss.mse"><code class="docutils literal notranslate"><span class="pre">mse()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.loss.huber_loss"><code class="docutils literal notranslate"><span class="pre">huber_loss()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.loss.l2_reg"><code class="docutils literal notranslate"><span class="pre">l2_reg()</span></code></a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -423,58 +411,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-sax.nn.loss">
-<span id="sax-nn-loss-module"></span><h1>sax.nn.loss module<a class="headerlink" href="#module-sax.nn.loss" title="Permalink to this heading">#</a></h1>
-<p>SAX Loss Functions</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.loss.mse">
-<span class="sig-name descname"><span class="pre">mse</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/loss.html#mse"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.loss.mse" title="Permalink to this definition">#</a></dt>
-<dd><p>mean squared error</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>ComplexArrayND</em>) – </p></li>
-<li><p><strong>y</strong> (<em>ComplexArrayND</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.loss.huber_loss">
-<span class="sig-name descname"><span class="pre">huber_loss</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">x</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">delta</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">0.5</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/loss.html#huber_loss"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.loss.huber_loss" title="Permalink to this definition">#</a></dt>
-<dd><p>huber loss</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>x</strong> (<em>ComplexArrayND</em>) – </p></li>
-<li><p><strong>y</strong> (<em>ComplexArrayND</em>) – </p></li>
-<li><p><strong>delta</strong> (<em>float</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.loss.l2_reg">
-<span class="sig-name descname"><span class="pre">l2_reg</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/loss.html#l2_reg"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.loss.l2_reg" title="Permalink to this definition">#</a></dt>
-<dd><p>L2 regularization loss</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>weights</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>ComplexArrayND</em><em>]</em>) – </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>float</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="sax-nn-loss-module">
+<h1>sax.nn.loss module<a class="headerlink" href="#sax-nn-loss-module" title="Permalink to this heading">#</a></h1>
 </section>
 
 
@@ -512,23 +450,6 @@ document.write(`
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.loss.mse"><code class="docutils literal notranslate"><span class="pre">mse()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.loss.huber_loss"><code class="docutils literal notranslate"><span class="pre">huber_loss()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.loss.l2_reg"><code class="docutils literal notranslate"><span class="pre">l2_reg()</span></code></a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>

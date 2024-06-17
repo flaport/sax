@@ -422,8 +422,8 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#changelog">Changelog</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unreleased">Unreleased</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">0.10.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">0.13.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">0.10.2</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a></li>
@@ -652,11 +652,16 @@ you should install the development version of SAX:</p>
 </section>
 <section class="tex2jax_ignore mathjax_ignore" id="changelog">
 <h1><a class="reference external" href="https://keepachangelog.com/en/1.0.0/">Changelog</a><a class="headerlink" href="#changelog" title="Permalink to this heading">#</a></h1>
-<section id="unreleased">
-<h2><a class="reference external" href="https://github.com/flaport/sax/compare/0.10.2...main">Unreleased</a><a class="headerlink" href="#unreleased" title="Permalink to this heading">#</a></h2>
-</section>
 <section id="id1">
-<h2><a class="reference external" href="https://github.com/flaport/sax/compare/0.10.1...0.10.2">0.10.2</a><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<h2><a class="reference external" href="https://github.com/flaport/sax/compare/0.12.2...0.13.0">0.13.0</a><a class="headerlink" href="#id1" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>Deprecate <code class="docutils literal notranslate"><span class="pre">sax.nn</span></code>.</p></li>
+<li><p>Deprecate support for pydantic v1.</p></li>
+<li><p>Add support for gdsfactory 8 netlists (i.e. <code class="docutils literal notranslate"><span class="pre">nets</span></code> in stead of <code class="docutils literal notranslate"><span class="pre">connections</span></code>)</p></li>
+</ul>
+</section>
+<section id="id2">
+<h2><a class="reference external" href="https://github.com/flaport/sax/compare/0.10.1...0.10.2">0.10.2</a><a class="headerlink" href="#id2" title="Permalink to this heading">#</a></h2>
 <ul class="simple">
 <li><p>evaluate rather than trace model to get ports</p></li>
 </ul>
@@ -672,7 +677,7 @@ you should install the development version of SAX:</p>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="sax.nn.html">sax.nn package</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="sax.nn.html#submodules">Submodules</a></li>
-<li class="toctree-l4"><a class="reference internal" href="sax.nn.html#module-sax.nn">Module contents</a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.nn.html#module-contents">Module contents</a></li>
 </ul>
 </li>
 </ul>
@@ -681,6 +686,7 @@ you should install the development version of SAX:</p>
 <li class="toctree-l3"><a class="reference internal" href="sax.circuit.html">sax.circuit module</a><ul>
 <li class="toctree-l4"><a class="reference internal" href="sax.circuit.html#sax.circuit.CircuitInfo"><code class="docutils literal notranslate"><span class="pre">CircuitInfo</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.circuit.html#sax.circuit.circuit"><code class="docutils literal notranslate"><span class="pre">circuit()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.circuit.html#sax.circuit.draw_dag"><code class="docutils literal notranslate"><span class="pre">draw_dag()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.circuit.html#sax.circuit.get_required_circuit_models"><code class="docutils literal notranslate"><span class="pre">get_required_circuit_models()</span></code></a></li>
 </ul>
 </li>
@@ -699,20 +705,20 @@ you should install the development version of SAX:</p>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="sax.netlist.html">sax.netlist module</a><ul>
-<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.netlist"><code class="docutils literal notranslate"><span class="pre">netlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict"><code class="docutils literal notranslate"><span class="pre">NetlistDict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Component"><code class="docutils literal notranslate"><span class="pre">Component</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.PortEnum"><code class="docutils literal notranslate"><span class="pre">PortEnum</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Placement"><code class="docutils literal notranslate"><span class="pre">Placement</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Route"><code class="docutils literal notranslate"><span class="pre">Route</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.Netlist"><code class="docutils literal notranslate"><span class="pre">Netlist</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.RecursiveNetlist"><code class="docutils literal notranslate"><span class="pre">RecursiveNetlist</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict"><code class="docutils literal notranslate"><span class="pre">NetlistDict</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.netlist"><code class="docutils literal notranslate"><span class="pre">netlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.flatten_netlist"><code class="docutils literal notranslate"><span class="pre">flatten_netlist()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.load_netlist"><code class="docutils literal notranslate"><span class="pre">load_netlist()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.load_recursive_netlist"><code class="docutils literal notranslate"><span class="pre">load_recursive_netlist()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.is_recursive"><code class="docutils literal notranslate"><span class="pre">is_recursive()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.is_not_recursive"><code class="docutils literal notranslate"><span class="pre">is_not_recursive()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.get_netlist_instances_by_prefix"><code class="docutils literal notranslate"><span class="pre">get_netlist_instances_by_prefix()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.get_component_instances"><code class="docutils literal notranslate"><span class="pre">get_component_instances()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.remove_unused_instances"><code class="docutils literal notranslate"><span class="pre">remove_unused_instances()</span></code></a></li>
-<li class="toctree-l4"><a class="reference internal" href="sax.netlist.html#sax.netlist.flatten_netlist"><code class="docutils literal notranslate"><span class="pre">flatten_netlist()</span></code></a></li>
 </ul>
 </li>
 <li class="toctree-l3"><a class="reference internal" href="sax.patched.html">sax.patched module</a></li>
@@ -774,6 +780,11 @@ you should install the development version of SAX:</p>
 <li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.validate_sdict"><code class="docutils literal notranslate"><span class="pre">validate_sdict()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.get_inputs_outputs"><code class="docutils literal notranslate"><span class="pre">get_inputs_outputs()</span></code></a></li>
 <li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.hash_dict"><code class="docutils literal notranslate"><span class="pre">hash_dict()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.Normalization"><code class="docutils literal notranslate"><span class="pre">Normalization</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.normalization"><code class="docutils literal notranslate"><span class="pre">normalization()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.cartesian_product"><code class="docutils literal notranslate"><span class="pre">cartesian_product()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.normalize"><code class="docutils literal notranslate"><span class="pre">normalize()</span></code></a></li>
+<li class="toctree-l4"><a class="reference internal" href="sax.utils.html#sax.utils.denormalize"><code class="docutils literal notranslate"><span class="pre">denormalize()</span></code></a></li>
 </ul>
 </li>
 </ul>
@@ -839,8 +850,8 @@ you should install the development version of SAX:</p>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#changelog">Changelog</a><ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#unreleased">Unreleased</a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">0.10.2</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">0.13.0</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#id2">0.10.2</a></li>
 </ul>
 </li>
 <li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#other">Other</a></li>

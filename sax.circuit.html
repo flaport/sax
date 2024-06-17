@@ -415,6 +415,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.circuit"><code class="docutils literal notranslate"><span class="pre">circuit()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.draw_dag"><code class="docutils literal notranslate"><span class="pre">draw_dag()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.get_required_circuit_models"><code class="docutils literal notranslate"><span class="pre">get_required_circuit_models()</span></code></a></li>
 </ul>
             </nav>
@@ -438,20 +439,20 @@ document.write(`
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>dag</strong> (<em>DiGraph</em>) – </p></li>
-<li><p><strong>models</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em>) – </p></li>
+<li><p><strong>dag</strong> (<em>nx.DiGraph</em><em>[</em><em>str</em><em>]</em>) – </p></li>
+<li><p><strong>models</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em>) – </p></li>
 </ul>
 </dd>
 </dl>
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sax.circuit.CircuitInfo.dag">
-<span class="sig-name descname"><span class="pre">dag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">DiGraph</span></em><a class="headerlink" href="#sax.circuit.CircuitInfo.dag" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">dag</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">nx.DiGraph</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#sax.circuit.CircuitInfo.dag" title="Permalink to this definition">#</a></dt>
 <dd><p>Alias for field number 0</p>
 </dd></dl>
 
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sax.circuit.CircuitInfo.models">
-<span class="sig-name descname"><span class="pre">models</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">Dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#sax.circuit.CircuitInfo.models" title="Permalink to this definition">#</a></dt>
+<span class="sig-name descname"><span class="pre">models</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#sax.circuit.CircuitInfo.models" title="Permalink to this definition">#</a></dt>
 <dd><p>Alias for field number 1</p>
 </dd></dl>
 
@@ -464,18 +465,23 @@ document.write(`
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>netlist</strong> (<em>Union</em><em>[</em><a class="reference internal" href="sax.netlist.html#sax.netlist.Netlist" title="sax.netlist.Netlist"><em>Netlist</em></a><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>NetlistDict</em></a><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.RecursiveNetlist" title="sax.netlist.RecursiveNetlist"><em>RecursiveNetlist</em></a><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>NetlistDict</em></a><em>]</em><em>]</em>) – The netlist to create a circuit for.</p></li>
-<li><p><strong>models</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em><em>]</em>) – A dictionary of models to use in the circuit.</p></li>
+<li><p><strong>netlist</strong> (<a class="reference internal" href="sax.netlist.html#sax.netlist.Netlist" title="sax.netlist.Netlist"><em>sax.netlist.Netlist</em></a><em> | </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>sax.netlist.NetlistDict</em></a><em> | </em><a class="reference internal" href="sax.netlist.html#sax.netlist.RecursiveNetlist" title="sax.netlist.RecursiveNetlist"><em>sax.netlist.RecursiveNetlist</em></a><em> | </em><em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>sax.netlist.NetlistDict</em></a><em>]</em>) – The netlist to create a circuit for.</p></li>
+<li><p><strong>models</strong> (<em>Optional</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em><em>]</em>) – A dictionary of models to use in the circuit.</p></li>
 <li><p><strong>backend</strong> (<em>str</em>) – The backend to use for the circuit.</p></li>
 <li><p><strong>return_type</strong> (<em>str</em>) – The type of the circuit function to return.</p></li>
 <li><p><strong>ignore_missing_ports</strong> (<em>bool</em>) – Ignore missing ports in the netlist.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Tuple</em>[Model, <a class="reference internal" href="#sax.circuit.CircuitInfo" title="sax.circuit.CircuitInfo"><em>CircuitInfo</em></a>]</p>
+<dd class="field-even"><p>tuple[Model, <a class="reference internal" href="#sax.circuit.CircuitInfo" title="sax.circuit.CircuitInfo">sax.circuit.CircuitInfo</a>]</p>
 </dd>
 </dl>
 </dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.circuit.draw_dag">
+<span class="sig-name descname"><span class="pre">draw_dag</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">with_labels</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">True</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/circuit.html#draw_dag"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.circuit.draw_dag" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
 
 <dl class="py function">
 <dt class="sig sig-object py" id="sax.circuit.get_required_circuit_models">
@@ -484,12 +490,12 @@ document.write(`
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>netlist</strong> (<em>Union</em><em>[</em><a class="reference internal" href="sax.netlist.html#sax.netlist.Netlist" title="sax.netlist.Netlist"><em>Netlist</em></a><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>NetlistDict</em></a><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.RecursiveNetlist" title="sax.netlist.RecursiveNetlist"><em>RecursiveNetlist</em></a><em>, </em><em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>NetlistDict</em></a><em>]</em><em>]</em>) – The netlist to create a circuit for.</p></li>
-<li><p><strong>models</strong> (<em>Optional</em><em>[</em><em>Dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em><em>]</em>) – A dictionary of models to use in the circuit.</p></li>
+<li><p><strong>netlist</strong> (<a class="reference internal" href="sax.netlist.html#sax.netlist.Netlist" title="sax.netlist.Netlist"><em>sax.netlist.Netlist</em></a><em> | </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>sax.netlist.NetlistDict</em></a><em> | </em><a class="reference internal" href="sax.netlist.html#sax.netlist.RecursiveNetlist" title="sax.netlist.RecursiveNetlist"><em>sax.netlist.RecursiveNetlist</em></a><em> | </em><em>dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.NetlistDict" title="sax.netlist.NetlistDict"><em>sax.netlist.NetlistDict</em></a><em>]</em>) – The netlist to create a circuit for.</p></li>
+<li><p><strong>models</strong> (<em>Optional</em><em>[</em><em>dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em><em>]</em>) – A dictionary of models to use in the circuit.</p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>List</em></p>
+<dd class="field-even"><p>list[str]</p>
 </dd>
 </dl>
 </dd></dl>
@@ -547,6 +553,7 @@ document.write(`
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.circuit"><code class="docutils literal notranslate"><span class="pre">circuit()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.draw_dag"><code class="docutils literal notranslate"><span class="pre">draw_dag()</span></code></a></li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.get_required_circuit_models"><code class="docutils literal notranslate"><span class="pre">get_required_circuit_models()</span></code></a></li>
 </ul>
   </nav></div>

@@ -475,11 +475,11 @@ document.write(`
 <span class="kn">import</span> <span class="nn">sax</span>
 <span class="kn">from</span> <span class="nn">sax.circuit</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">_create_dag</span><span class="p">,</span>
-    <span class="n">_draw_dag</span><span class="p">,</span>
-    <span class="n">_find_root</span><span class="p">,</span>
     <span class="n">_find_leaves</span><span class="p">,</span>
-    <span class="n">_validate_models</span><span class="p">,</span>
+    <span class="n">_find_root</span><span class="p">,</span>
     <span class="n">_flat_circuit</span><span class="p">,</span>
+    <span class="n">_validate_models</span><span class="p">,</span>
+    <span class="n">draw_dag</span><span class="p">,</span>
 <span class="p">)</span>
 </pre></div>
 </div>
@@ -496,8 +496,6 @@ document.write(`
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gdsfactory</span> <span class="k">as</span> <span class="nn">gf</span>
 <span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
 <span class="kn">from</span> <span class="nn">gdsfactory.components</span> <span class="kn">import</span> <span class="n">mzi</span>
-<span class="kn">from</span> <span class="nn">gdsfactory.get_netlist</span> <span class="kn">import</span> <span class="n">get_netlist_recursive</span><span class="p">,</span> <span class="n">get_netlist</span><span class="p">,</span> <span class="n">get_netlist_yaml</span>
-<span class="kn">from</span> <span class="nn">gdsfactory.quickplotter</span> <span class="kn">import</span> <span class="n">quickplot</span>
 
 
 <span class="nd">@gf</span><span class="o">.</span><span class="n">cell</span>
@@ -509,8 +507,8 @@ document.write(`
     <span class="n">mzi2</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">delta_length</span><span class="o">=</span><span class="mi">20</span><span class="p">)</span>
 
     <span class="c1"># references</span>
-    <span class="n">mzi1_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mzi1</span>
-    <span class="n">mzi2_</span> <span class="o">=</span> <span class="n">c</span> <span class="o">&lt;&lt;</span> <span class="n">mzi2</span>
+    <span class="n">mzi1_</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">add_ref</span><span class="p">(</span><span class="n">mzi1</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mzi1&quot;</span><span class="p">)</span>
+    <span class="n">mzi2_</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">add_ref</span><span class="p">(</span><span class="n">mzi2</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s2">&quot;mzi2&quot;</span><span class="p">)</span>
 
     <span class="c1"># connections</span>
     <span class="n">mzi2_</span><span class="o">.</span><span class="n">connect</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="n">mzi1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s2">&quot;o2&quot;</span><span class="p">])</span>
@@ -519,17 +517,28 @@ document.write(`
     <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s2">&quot;o1&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mzi1_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s2">&quot;o1&quot;</span><span class="p">])</span>
     <span class="n">c</span><span class="o">.</span><span class="n">add_port</span><span class="p">(</span><span class="s2">&quot;o2&quot;</span><span class="p">,</span> <span class="n">port</span><span class="o">=</span><span class="n">mzi2_</span><span class="o">.</span><span class="n">ports</span><span class="p">[</span><span class="s2">&quot;o2&quot;</span><span class="p">])</span>
     <span class="k">return</span> <span class="n">c</span>
-
-
-<span class="n">comp</span> <span class="o">=</span> <span class="n">twomzi</span><span class="p">()</span>
-<span class="n">quickplot</span><span class="p">(</span><span class="n">comp</span><span class="p">)</span>
-<span class="n">recnet</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">get_netlist_recursive</span><span class="p">(</span><span class="n">comp</span><span class="p">))</span>
-<span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="s2">&quot;mzi_delta_length10&quot;</span><span class="p">]</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">comp</span> <span class="o">=</span> <span class="n">twomzi</span><span class="p">()</span>
+<span class="n">comp</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/5e39eb4c641382f470cc9c2af9e8c5dc870748bdc20add1325d8281b796c69d1.png" src="../_images/5e39eb4c641382f470cc9c2af9e8c5dc870748bdc20add1325d8281b796c69d1.png" />
+<img alt="../_images/b168e5dbc6fafb238e3cb922e0a4fbddfda98b379704823e481898c766f792c3.png" src="../_images/b168e5dbc6fafb238e3cb922e0a4fbddfda98b379704823e481898c766f792c3.png" />
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">recnet</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">parse_obj</span><span class="p">(</span><span class="n">comp</span><span class="o">.</span><span class="n">get_netlist</span><span class="p">(</span><span class="n">recursive</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="n">mzi1_comp</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="s2">&quot;twomzi&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">instances</span><span class="p">[</span><span class="s2">&quot;mzi1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">component</span>
+<span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="n">mzi1_comp</span><span class="p">]</span>
+</pre></div>
+</div>
 </div>
 </div>
 <p>To be able to model this device we’ll need some SAX dummy models:</p>
@@ -708,24 +717,24 @@ document.write(`
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dag</span> <span class="o">=</span> <span class="n">_create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">)</span>
-<span class="n">_draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
+<span class="n">draw_dag</span><span class="p">(</span><span class="n">dag</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/f9006bb393e3ccc9d67437f41da2815f703c080480ad24c22ab685abc1c8a9e5.png" src="../_images/f9006bb393e3ccc9d67437f41da2815f703c080480ad24c22ab685abc1c8a9e5.png" />
+<img alt="../_images/909abd234c2a8b9bf6978c2498a352a7cd1fabfa811de0cae36bb6578577e95d.png" src="../_images/909abd234c2a8b9bf6978c2498a352a7cd1fabfa811de0cae36bb6578577e95d.png" />
 </div>
 </div>
 <p>Note that the DAG depends on the models we supply. We could for example stub one of the sub-netlists by a pre-defined model:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">dag_</span> <span class="o">=</span> <span class="n">_create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="p">{</span><span class="o">**</span><span class="n">models</span><span class="p">,</span> <span class="s2">&quot;mzi_delta_length10&quot;</span><span class="p">:</span> <span class="n">mmi2x2</span><span class="p">})</span>
-<span class="n">_draw_dag</span><span class="p">(</span><span class="n">dag_</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">draw_dag</span><span class="p">(</span><span class="n">dag_</span><span class="p">,</span> <span class="n">with_labels</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/8f7623a2694daee21d6c3322ec638bc79be54e9921a02a29992e5c317777b017.png" src="../_images/8f7623a2694daee21d6c3322ec638bc79be54e9921a02a29992e5c317777b017.png" />
+<img alt="../_images/909abd234c2a8b9bf6978c2498a352a7cd1fabfa811de0cae36bb6578577e95d.png" src="../_images/909abd234c2a8b9bf6978c2498a352a7cd1fabfa811de0cae36bb6578577e95d.png" />
 </div>
 </div>
 <p>This is useful if we for example pre-calculated a certain model.</p>
@@ -766,7 +775,7 @@ document.write(`
 <p>We can now dow a bottom-up simulation. Since at the bottom of the DAG, our circuit is always flat (i.e. not hierarchical) we can implement a minimal <code class="docutils literal notranslate"><span class="pre">_flat_circuit</span></code> definition, which only needs to work on a flat (non-hierarchical circuit):</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="s2">&quot;mzi_delta_length10&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="n">mzi1_comp</span><span class="p">]</span>
 <span class="n">single_mzi</span> <span class="o">=</span> <span class="n">_flat_circuit</span><span class="p">(</span>
     <span class="n">flatnet</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span>
     <span class="n">flatnet</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
@@ -798,7 +807,7 @@ document.write(`
 <p>Note that we can also supply multimode models:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">__root__</span><span class="p">[</span><span class="s2">&quot;mzi_delta_length10&quot;</span><span class="p">]</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">flatnet</span> <span class="o">=</span> <span class="n">recnet</span><span class="o">.</span><span class="n">root</span><span class="p">[</span><span class="n">mzi1_comp</span><span class="p">]</span>
 <span class="n">single_mzi</span> <span class="o">=</span> <span class="n">_flat_circuit</span><span class="p">(</span>
     <span class="n">flatnet</span><span class="o">.</span><span class="n">instances</span><span class="p">,</span>
     <span class="n">flatnet</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
@@ -877,7 +886,7 @@ document.write(`
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;mzi_delta_length10&#39;, &#39;mzi_delta_length20&#39;]
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>[&#39;bend_euler&#39;, &#39;mmi1x2&#39;, &#39;straight&#39;]
 </pre></div>
 </div>
 </div>

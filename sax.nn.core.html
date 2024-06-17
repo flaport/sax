@@ -386,9 +386,7 @@ document.write(`
   </button>
 `);
 </script>
-<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="fa-solid fa-list"></span>
-</label>
+
 </div></div>
       
     </div>
@@ -404,16 +402,6 @@ document.write(`
     <div id="print-main-content">
         <div id="jb-print-toc">
             
-            <div>
-                <h2> Contents </h2>
-            </div>
-            <nav aria-label="Page">
-                <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.core.preprocess"><code class="docutils literal notranslate"><span class="pre">preprocess()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.core.dense"><code class="docutils literal notranslate"><span class="pre">dense()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.core.generate_dense_weights"><code class="docutils literal notranslate"><span class="pre">generate_dense_weights()</span></code></a></li>
-</ul>
-            </nav>
         </div>
     </div>
 </div>
@@ -423,68 +411,8 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-sax.nn.core">
-<span id="sax-nn-core-module"></span><h1>sax.nn.core module<a class="headerlink" href="#module-sax.nn.core" title="Permalink to this heading">#</a></h1>
-<p>SAX Neural Network Core Utils</p>
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.core.preprocess">
-<span class="sig-name descname"><span class="pre">preprocess</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="o"><span class="pre">*</span></span><span class="n"><span class="pre">params</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/core.html#preprocess"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.core.preprocess" title="Permalink to this definition">#</a></dt>
-<dd><p>preprocess parameters</p>
-<dl class="simple">
-<dt>&gt; Note: (1) all arguments are first casted into the same shape. (2) then pairs</dt><dd><p>of arguments are divided into each other to create relative arguments. (3) all
-arguments are then stacked into one big tensor</p>
-</dd>
-</dl>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><p><strong>params</strong> (<em>ComplexArrayND</em>) – </p>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>ComplexArrayND</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.core.dense">
-<span class="sig-name descname"><span class="pre">dense</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">weights</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">*params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x_norm=(0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">y_norm=(0.0</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">1.0)</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">activation=&lt;PjitFunction</span> <span class="pre">of</span> <span class="pre">&lt;function</span> <span class="pre">leaky_relu&gt;&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/core.html#dense"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.core.dense" title="Permalink to this definition">#</a></dt>
-<dd><p>simple dense neural network</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>weights</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Array</em><em>]</em>) – </p></li>
-<li><p><strong>params</strong> (<em>ComplexArrayND</em>) – </p></li>
-<li><p><strong>x_norm</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
-<li><p><strong>y_norm</strong> (<em>Tuple</em><em>[</em><em>float</em><em>, </em><em>float</em><em>]</em>) – </p></li>
-<li><p><strong>preprocess</strong> (<em>Callable</em>) – </p></li>
-<li><p><strong>activation</strong> (<em>Callable</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>ComplexArrayND</p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.nn.core.generate_dense_weights">
-<span class="sig-name descname"><span class="pre">generate_dense_weights</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">key</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">sizes</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">input_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">output_names=None</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">preprocess=&lt;function</span> <span class="pre">preprocess&gt;</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/nn/core.html#generate_dense_weights"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.nn.core.generate_dense_weights" title="Permalink to this definition">#</a></dt>
-<dd><p>Generate the weights for a dense neural network</p>
-<dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>key</strong> (<em>Union</em><em>[</em><em>int</em><em>, </em><em>Array</em><em>]</em>) – </p></li>
-<li><p><strong>sizes</strong> (<em>Tuple</em><em>[</em><em>int</em><em>, </em><em>...</em><em>]</em>) – </p></li>
-<li><p><strong>input_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-<li><p><strong>output_names</strong> (<em>Optional</em><em>[</em><em>Tuple</em><em>[</em><em>str</em><em>, </em><em>...</em><em>]</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Dict</em>[str, ComplexArrayND]</p>
-</dd>
-</dl>
-</dd></dl>
-
+  <section id="sax-nn-core-module">
+<h1>sax.nn.core module<a class="headerlink" href="#sax-nn-core-module" title="Permalink to this heading">#</a></h1>
 </section>
 
 
@@ -522,23 +450,6 @@ arguments are then stacked into one big tensor</p>
             </div>
             
             
-              
-                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
-
-
-  <div class="sidebar-secondary-item">
-  <div class="page-toc tocsection onthispage">
-    <i class="fa-solid fa-list"></i> Contents
-  </div>
-  <nav class="bd-toc-nav page-toc">
-    <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.core.preprocess"><code class="docutils literal notranslate"><span class="pre">preprocess()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.core.dense"><code class="docutils literal notranslate"><span class="pre">dense()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.nn.core.generate_dense_weights"><code class="docutils literal notranslate"><span class="pre">generate_dense_weights()</span></code></a></li>
-</ul>
-  </nav></div>
-
-</div></div>
               
             
           </div>

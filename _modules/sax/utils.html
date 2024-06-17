@@ -355,7 +355,18 @@ document.write(`
 <span class="kn">import</span> <span class="nn">warnings</span>
 <span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
 <span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Callable</span><span class="p">,</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Iterator</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">Union</span><span class="p">,</span> <span class="n">cast</span><span class="p">,</span> <span class="n">overload</span>
+<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+    <span class="n">Any</span><span class="p">,</span>
+    <span class="n">Callable</span><span class="p">,</span>
+    <span class="n">Dict</span><span class="p">,</span>
+    <span class="n">Iterable</span><span class="p">,</span>
+    <span class="n">Iterator</span><span class="p">,</span>
+    <span class="n">NamedTuple</span><span class="p">,</span>
+    <span class="n">Tuple</span><span class="p">,</span>
+    <span class="n">Union</span><span class="p">,</span>
+    <span class="n">cast</span><span class="p">,</span>
+    <span class="n">overload</span><span class="p">,</span>
+<span class="p">)</span>
 
 <span class="kn">import</span> <span class="nn">jax</span>
 <span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
@@ -364,6 +375,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">orjson</span>
 <span class="kn">from</span> <span class="nn">natsort</span> <span class="kn">import</span> <span class="n">natsorted</span>
+<span class="kn">from</span> <span class="nn">numpy.exceptions</span> <span class="kn">import</span> <span class="n">ComplexWarning</span>
 
 <span class="kn">from</span> <span class="nn">.saxtypes</span> <span class="kn">import</span> <span class="p">(</span>
     <span class="n">ComplexArrayND</span><span class="p">,</span>
@@ -405,18 +417,12 @@ document.write(`
 
 <div class="viewcode-block" id="clean_string"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.clean_string">[docs]</a><span class="k">def</span> <span class="nf">clean_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dot</span><span class="o">=</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">minus</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;clean a string such that it is a valid python identifier&quot;&quot;&quot;</span>
-    <span class="n">original</span> <span class="o">=</span> <span class="n">s</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">dot</span><span class="p">)</span>  <span class="c1"># dot</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;-&quot;</span><span class="p">,</span> <span class="n">minus</span><span class="p">)</span>  <span class="c1"># minus</span>
-    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[^0-9a-zA-Z]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
+    <span class="n">s</span> <span class="o">=</span> <span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="s2">&quot;[^0-9a-zA-Z_]&quot;</span><span class="p">,</span> <span class="n">other</span><span class="p">,</span> <span class="n">s</span><span class="p">)</span>
     <span class="k">if</span> <span class="n">s</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">in</span> <span class="s2">&quot;0123456789&quot;</span><span class="p">:</span>
         <span class="n">s</span> <span class="o">=</span> <span class="s2">&quot;_&quot;</span> <span class="o">+</span> <span class="n">s</span>
-    <span class="k">if</span> <span class="n">s</span> <span class="o">!=</span> <span class="n">original</span><span class="p">:</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">warn</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;modified string </span><span class="si">{</span><span class="n">original</span><span class="si">}</span><span class="s2"> in an attempt &quot;</span>
-            <span class="sa">f</span><span class="s2">&quot;to make valid python identifier: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span>
-        <span class="p">)</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">s</span><span class="o">.</span><span class="n">isidentifier</span><span class="p">():</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;failed to clean string to a valid python identifier: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">s</span></div>
@@ -441,10 +447,10 @@ document.write(`
 <div class="viewcode-block" id="try_complex_float"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.try_complex_float">[docs]</a><span class="k">def</span> <span class="nf">try_complex_float</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;try converting an object to float, return unchanged object on fail&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
-        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">ComplexWarning</span><span class="p">)</span>
+        <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ComplexWarning</span><span class="p">)</span>
         <span class="k">try</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
-        <span class="k">except</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ComplexWarning</span><span class="p">:</span>  <span class="c1"># type: ignore</span>
+        <span class="k">except</span> <span class="n">ComplexWarning</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">complex</span><span class="p">)</span>
         <span class="k">except</span> <span class="p">(</span><span class="ne">ValueError</span><span class="p">,</span> <span class="ne">TypeError</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">f</span>
@@ -946,6 +952,41 @@ document.write(`
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_numpyfy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+
+
+<div class="viewcode-block" id="Normalization"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.Normalization">[docs]</a><span class="k">class</span> <span class="nc">Normalization</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+    <span class="n">mean</span><span class="p">:</span> <span class="n">ComplexArrayND</span>
+    <span class="n">std</span><span class="p">:</span> <span class="n">ComplexArrayND</span></div>
+
+
+<div class="viewcode-block" id="normalization"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.normalization">[docs]</a><span class="k">def</span> <span class="nf">normalization</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Normalization</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Normalization</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span></div>
+
+
+<div class="viewcode-block" id="cartesian_product"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.cartesian_product">[docs]</a><span class="k">def</span> <span class="nf">cartesian_product</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;calculate the n-dimensional cartesian product of an arbitrary number of arrays&quot;&quot;&quot;</span>
+    <span class="n">ixarrays</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
+    <span class="n">barrays</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="o">*</span><span class="n">ixarrays</span><span class="p">)</span>
+    <span class="n">sarrays</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">stack</span><span class="p">(</span><span class="n">barrays</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sarrays</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+    <span class="n">product</span> <span class="o">=</span> <span class="n">sarrays</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">sarrays</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">product</span><span class="p">,</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">product</span></div>
+
+
+<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">normalization</span><span class="p">:</span> <span class="n">Normalization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ComplexArrayND</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;normalize an array with a given mean and standard deviation&quot;&quot;&quot;</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">normalization</span>
+    <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span></div>
+
+
+<div class="viewcode-block" id="denormalize"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.denormalize">[docs]</a><span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">normalization</span><span class="p">:</span> <span class="n">Normalization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;denormalize an array with a given mean and standard deviation&quot;&quot;&quot;</span>
+    <span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">normalization</span>
+    <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">std</span> <span class="o">+</span> <span class="n">mean</span></div>
 </pre></div>
 
                 </article>
