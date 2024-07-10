@@ -1,1 +1,1 @@
-FROM flaport/sax:0.13.1
+FROM flaport/sax:0.13.2
