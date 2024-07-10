@@ -34,7 +34,6 @@ RecursiveNetlistDict = dict[str, NetlistDict]
 class BaseModel(_BaseModel):
     model_config = ConfigDict(
         extra="ignore",
-        frozen=True,
         json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
     )
 
@@ -196,7 +195,6 @@ class RecursiveNetlist(RootModel):
     root: dict[str, Netlist]
 
     model_config = ConfigDict(
-        frozen=True,
         json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
     )
 
@@ -215,7 +213,9 @@ class RecursiveNetlist(RootModel):
 AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
 
 
-def netlist(netlist: Any, remove_unused_instances: bool = False) -> RecursiveNetlist:
+def netlist(
+    netlist: Any, with_unconnected_instances: bool = True, with_placements=True
+) -> RecursiveNetlist:
     """return a netlist from a given dictionary"""
     if isinstance(netlist, RecursiveNetlist):
         net = netlist
@@ -233,9 +233,12 @@ def netlist(netlist: Any, remove_unused_instances: bool = False) -> RecursiveNet
             "Expected type: dict | Netlist | RecursiveNetlist. "
             f"Got: {type(netlist)}."
         )
-    if remove_unused_instances:
+    if not with_unconnected_instances:
         recnet_dict: RecursiveNetlistDict = _remove_unused_instances(net.model_dump())
         net = RecursiveNetlist.model_validate(recnet_dict)
+    if not with_placements:
+        for _net in net.root.values():
+            _net.placements = {}
     return net
 
 

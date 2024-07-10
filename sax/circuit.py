@@ -52,7 +52,9 @@ def circuit(
     backend = _validate_circuit_backend(backend)
 
     instance_models = _extract_instance_models(netlist)
-    recnet: RecursiveNetlist = parse_netlist(netlist, remove_unused_instances=True)
+    recnet: RecursiveNetlist = parse_netlist(
+        netlist, with_unconnected_instances=False, with_placements=False
+    )
     dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
     models = _validate_models(models, dependency_dag, extra_models=instance_models)
 
@@ -143,7 +145,9 @@ def get_required_circuit_models(
 
     """
     instance_models = _extract_instance_models(netlist)
-    recnet: RecursiveNetlist = parse_netlist(netlist, remove_unused_instances=True)
+    recnet: RecursiveNetlist = parse_netlist(
+        netlist, with_unconnected_instances=False, with_placements=False
+    )
     dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
     _, required, _ = _find_missing_models(
         models, dependency_dag, extra_models=instance_models
