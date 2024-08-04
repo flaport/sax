@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sax.circuit &#8212; sax 0.13.1 documentation</title>
+    <title>sax.circuit &#8212; sax 0.13.2 documentation</title>
   
   
   
@@ -18,12 +18,12 @@
   </script>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
-<link href="../../_static/styles/bootstrap.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
 
   
-  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=3ee479438cf8b5e0d341" rel="stylesheet" />
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
   <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
 <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
@@ -37,9 +37,9 @@
     <link rel="stylesheet" type="text/css" href="../../_static/_static/css/custom.css" />
   
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341" />
-  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=3ee479438cf8b5e0d341"></script>
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -132,6 +132,8 @@
         <div class="sidebar-primary-item">
 
   
+    
+  
 
 <a class="navbar-brand logo" href="../../index.html">
   
@@ -144,8 +146,8 @@
       
     
     
-    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.13.1 documentation - Home"/>
-    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="sax 0.13.1 documentation - Home"/>`);</script>
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.13.2 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="sax 0.13.2 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -298,10 +300,10 @@
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
-    <span class="theme-switch nav-link" data-mode="light"><i class="fa-solid fa-sun fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="dark"><i class="fa-solid fa-moon fa-lg"></i></span>
-    <span class="theme-switch nav-link" data-mode="auto"><i class="fa-solid fa-circle-half-stroke fa-lg"></i></span>
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
   </button>
 `);
 </script>
@@ -309,7 +311,7 @@ document.write(`
 
 <script>
 document.write(`
-  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
   </button>
 `);
@@ -394,7 +396,9 @@ document.write(`
     <span class="n">backend</span> <span class="o">=</span> <span class="n">_validate_circuit_backend</span><span class="p">(</span><span class="n">backend</span><span class="p">)</span>
 
     <span class="n">instance_models</span> <span class="o">=</span> <span class="n">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
-    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">parse_netlist</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">remove_unused_instances</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">parse_netlist</span><span class="p">(</span>
+        <span class="n">netlist</span><span class="p">,</span> <span class="n">with_unconnected_instances</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_placements</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
     <span class="n">dependency_dag</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">models</span> <span class="o">=</span> <span class="n">_validate_models</span><span class="p">(</span><span class="n">models</span><span class="p">,</span> <span class="n">dependency_dag</span><span class="p">,</span> <span class="n">extra_models</span><span class="o">=</span><span class="n">instance_models</span><span class="p">)</span>
 
@@ -485,7 +489,9 @@ document.write(`
 
 <span class="sd">    &quot;&quot;&quot;</span>
     <span class="n">instance_models</span> <span class="o">=</span> <span class="n">_extract_instance_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
-    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">parse_netlist</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">remove_unused_instances</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+    <span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlist</span> <span class="o">=</span> <span class="n">parse_netlist</span><span class="p">(</span>
+        <span class="n">netlist</span><span class="p">,</span> <span class="n">with_unconnected_instances</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">with_placements</span><span class="o">=</span><span class="kc">False</span>
+    <span class="p">)</span>
     <span class="n">dependency_dag</span><span class="p">:</span> <span class="n">nx</span><span class="o">.</span><span class="n">DiGraph</span><span class="p">[</span><span class="nb">str</span><span class="p">]</span> <span class="o">=</span> <span class="n">_create_dag</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">models</span><span class="p">,</span> <span class="n">validate</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
     <span class="n">_</span><span class="p">,</span> <span class="n">required</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">_find_missing_models</span><span class="p">(</span>
         <span class="n">models</span><span class="p">,</span> <span class="n">dependency_dag</span><span class="p">,</span> <span class="n">extra_models</span><span class="o">=</span><span class="n">instance_models</span>
@@ -802,8 +808,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script src="../../_static/scripts/bootstrap.js?digest=3ee479438cf8b5e0d341"></script>
-<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=3ee479438cf8b5e0d341"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
