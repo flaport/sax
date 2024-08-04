@@ -58,7 +58,7 @@ dev = [
   "ipywidgets",
   "isort",
   "jedi",
-  "meow-sim",
+  "meow-sim>0.11.1",
   "myst-nb",
   "nbstripout",
   "nlopt",
