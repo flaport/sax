@@ -55,6 +55,7 @@ def circuit(
     recnet: RecursiveNetlist = parse_netlist(
         netlist, with_unconnected_instances=False, with_placements=False
     )
+    _validate_netlist_ports(recnet)
     dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
     models = _validate_models(models, dependency_dag, extra_models=instance_models)
 
@@ -402,3 +403,17 @@ def _validate_dag(dag):
     if not dag.is_directed():
         raise ValueError("Netlist dependency cycles detected!")
     return dag
+
+
+def _validate_netlist_ports(netlist: RecursiveNetlist):
+    if len(netlist.root) < 1:
+        raise ValueError("Cannot create circuit: empty netlist")
+    net: Netlist = netlist.root[list(netlist.root)[0]]
+    ports_str = ", ".join(list(net.ports))
+    if not ports_str:
+        ports_str = "no ports given"
+    if len(net.ports) < 2:
+        raise ValueError(
+            "Cannot create circuit: "
+            f"at least 2 ports need to be defined. Got {ports_str}."
+        )
