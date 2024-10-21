@@ -17,6 +17,11 @@ from .filipsson_gunnar import (
     analyze_instances_fg,
     evaluate_circuit_fg,
 )
+from .forward_only import (
+    analyze_circuit_forward,
+    analyze_instances_forward,
+    evaluate_circuit_forward,
+)
 
 circuit_backends = {
     "fg": (
@@ -34,6 +39,11 @@ circuit_backends = {
         analyze_circuit_additive,
         evaluate_circuit_additive,
     ),
+    "forward":  (
+        analyze_instances_forward,
+        analyze_circuit_forward,
+        evaluate_circuit_forward,
+    )
 }
 
 try:
