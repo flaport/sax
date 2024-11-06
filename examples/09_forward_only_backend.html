@@ -1,0 +1,697 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" data-content_root="" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
+<meta content="metadata description" lang="en" name="description" xml:lang="en" />
+<meta content="Sphinx, MyST" name="keywords" />
+<meta content="en_US" property="og:locale" />
+
+    <title>Forward-only Backend &#8212; sax 0.13.4 documentation</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
+  </script>
+  <!-- 
+    this give us a css class that will be invisible only if js is disabled 
+  -->
+  <noscript>
+    <style>
+      .pst-js-only { display: none !important; }
+
+    </style>
+  </noscript>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/plot_directive.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
+  
+  <!-- So that users can add custom icons -->
+  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/sphinx_highlight.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'examples/09_forward_only_backend';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  <meta name="docsearch:version" content="" />
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <div id="pst-skip-link" class="skip-link d-print-none"><a href="#main-content">Skip to main content</a></div>
+  
+  <div id="pst-scroll-pixel-helper"></div>
+  
+  <button type="button" class="btn rounded-pill" id="pst-back-to-top">
+    <i class="fa-solid fa-arrow-up"></i>Back to top</button>
+
+  
+  <dialog id="pst-search-dialog">
+    
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         placeholder="Search..."
+         aria-label="Search..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form>
+  </dialog>
+
+  <div class="pst-async-banner-revealer d-none">
+  <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
+</div>
+
+  
+    <header class="bd-header navbar navbar-expand-lg bd-navbar d-print-none">
+    </header>
+  
+
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      
+      
+        
+      
+      <dialog id="pst-primary-sidebar-modal"></dialog>
+      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+
+  
+    
+  
+
+<a class="navbar-brand logo" href="../index.html">
+  
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.13.4 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.4 documentation - Home"/>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Home</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../index.html">SAX</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="01_quick_start.html">SAX Quick Start</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_circuit_from_yaml.html">Circuit from YAML</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_multimode_simulations.html">Multimode simulations</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_thinfilm.html">Thin film optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_additive_backend.html">Additive Backend</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
+<li class="toctree-l1"><a class="reference internal" href="08_sparse_coo.html">Sparse COO</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../internals/01_models.html">Models and Model Factories</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/02_circuit.html">Circuit</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../internals/03_backends.html">Backends</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1 has-children"><a class="reference internal" href="../sax.html">sax package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l2 has-children"><a class="reference internal" href="../sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.additive.html">sax.backends.additive module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
+</ul>
+</details></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.circuit.html">sax.circuit module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.loss.html">sax.loss module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.models.html">sax.models module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.multimode.html">sax.multimode module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.netlist.html">sax.netlist module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.saxtypes.html">sax.saxtypes module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="../sax.utils.html">sax.utils module</a></li>
+</ul>
+</details></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main" role="main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article d-print-none">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/flaport/sax/main?urlpath=lab/tree/examples/09_forward_only_backend.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/flaport/sax/blob/main/examples/09_forward_only_backend.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/edit/main/examples/09_forward_only_backend.ipynb" target="_blank"
+   class="btn btn-sm btn-source-edit-button dropdown-item"
+   title="Suggest edit"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-pencil-alt"></i>
+  </span>
+<span class="btn__text-container">Suggest edit</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fexamples/09_forward_only_backend.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/examples/09_forward_only_backend.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+
+<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
+  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
+  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
+</button>
+
+
+<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass fa-lg"></i>
+</button>
+
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Forward-only Backend</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="forward-only-backend">
+<h1>Forward-only Backend<a class="headerlink" href="#forward-only-backend" title="Permalink to this heading">#</a></h1>
+<blockquote>
+<div><p>An efficient backend when the components in circuit have low back-reflection. In this case, only forward-direction matrix multiplication is calculated to reduce computational cost for complicated circuit. The improvement compared to other backends (‘klu’ for example) is demonstrated with an example of cascaded AMZI structure.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sax</span>
+<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Define waveguide and directional coupler components</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">waveguide</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">wl0</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">neff</span><span class="o">=</span><span class="mf">2.34</span><span class="p">,</span> <span class="n">ng</span><span class="o">=</span><span class="mf">3.4</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
+    <span class="n">dwl</span> <span class="o">=</span> <span class="n">wl</span> <span class="o">-</span> <span class="n">wl0</span>
+    <span class="n">dneff_dwl</span> <span class="o">=</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>
+    <span class="n">neff</span> <span class="o">=</span> <span class="n">neff</span> <span class="o">-</span> <span class="n">dwl</span> <span class="o">*</span> <span class="n">dneff_dwl</span>
+    <span class="n">phase</span> <span class="o">=</span> <span class="mi">2</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">pi</span> <span class="o">*</span> <span class="n">neff</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="n">wl</span>
+    <span class="n">transmission</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="n">loss</span> <span class="o">*</span> <span class="n">length</span> <span class="o">/</span> <span class="mi">20</span><span class="p">)</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">phase</span><span class="p">)</span>
+    <span class="n">sdict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">transmission</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">sdict</span>
+
+
+<span class="k">def</span> <span class="nf">coupler</span><span class="p">(</span><span class="n">coupling</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
+    <span class="n">kappa</span> <span class="o">=</span> <span class="n">coupling</span><span class="o">**</span><span class="mf">0.5</span>
+    <span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">coupling</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
+    <span class="n">coupler_dict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span>
+        <span class="p">{</span>
+            <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">):</span> <span class="mi">1</span><span class="n">j</span> <span class="o">*</span> <span class="n">kappa</span><span class="p">,</span>
+            <span class="p">(</span><span class="s2">&quot;in1&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">):</span> <span class="n">tau</span><span class="p">,</span>
+        <span class="p">}</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">coupler_dict</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Create a cascaded AMZI structure with n identical AMZIs, with the next AMZI is connected to the “cross” port of the previous one.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">cascaded_amzi_generator</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;klu&quot;</span><span class="p">):</span>
+    <span class="n">netlist</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">{},</span>
+        <span class="s2">&quot;ports&quot;</span><span class="p">:</span> <span class="p">{},</span>
+    <span class="p">}</span>
+
+    <span class="n">models</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;coupler&quot;</span><span class="p">:</span> <span class="n">coupler</span><span class="p">,</span>
+        <span class="s2">&quot;waveguide&quot;</span><span class="p">:</span> <span class="n">waveguide</span><span class="p">,</span>
+    <span class="p">}</span>
+
+    <span class="c1"># Build the netlist</span>
+    <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+        <span class="c1"># Define instance names</span>
+        <span class="n">left_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;left_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">right_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;right_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">top_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;top_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+        <span class="n">btm_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;btm_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span>
+
+        <span class="c1"># Add instances</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">][</span><span class="n">left_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;coupler&quot;</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">][</span><span class="n">right_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;coupler&quot;</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">][</span><span class="n">top_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;waveguide&quot;</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">][</span><span class="n">btm_name</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;waveguide&quot;</span>
+
+        <span class="c1"># Internal connections within AMZI i</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_name</span><span class="si">}</span><span class="s2">,out0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">btm_name</span><span class="si">}</span><span class="s2">,in0&quot;</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">btm_name</span><span class="si">}</span><span class="s2">,out0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">right_name</span><span class="si">}</span><span class="s2">,in0&quot;</span>
+
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_name</span><span class="si">}</span><span class="s2">,out1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">top_name</span><span class="si">}</span><span class="s2">,in0&quot;</span>
+        <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">top_name</span><span class="si">}</span><span class="s2">,out0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">right_name</span><span class="si">}</span><span class="s2">,in1&quot;</span>
+
+        <span class="k">if</span> <span class="n">i</span> <span class="o">&gt;</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="c1"># Connections between AMZIs via the cross port</span>
+            <span class="n">prev_right_name</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;right_</span><span class="si">{</span><span class="n">i</span><span class="w"> </span><span class="o">-</span><span class="w"> </span><span class="mi">1</span><span class="si">}</span><span class="s2">&quot;</span>
+            <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prev_right_name</span><span class="si">}</span><span class="s2">,out0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_name</span><span class="si">}</span><span class="s2">,in1&quot;</span>
+            <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;connections&quot;</span><span class="p">][</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prev_right_name</span><span class="si">}</span><span class="s2">,out1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">left_name</span><span class="si">}</span><span class="s2">,in0&quot;</span>
+
+    <span class="c1"># Define external ports</span>
+    <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">][</span><span class="s2">&quot;in0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;left_1,in0&quot;</span>
+    <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">][</span><span class="s2">&quot;in1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="s2">&quot;left_1,in1&quot;</span>
+    <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">][</span><span class="s2">&quot;out0&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;right_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">,out0&quot;</span>
+    <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">][</span><span class="s2">&quot;out1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;right_</span><span class="si">{</span><span class="n">n</span><span class="si">}</span><span class="s2">,out1&quot;</span>
+
+    <span class="c1"># Create the circuit</span>
+    <span class="n">mzi_ideal</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span><span class="n">netlist</span><span class="o">=</span><span class="n">netlist</span><span class="p">,</span> <span class="n">models</span><span class="o">=</span><span class="n">models</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="n">backend</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">mzi_ideal</span><span class="p">,</span> <span class="n">info</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Consider a case with 20 cascaded AMZIs</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">wavelengths</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="mf">1.500</span><span class="p">,</span> <span class="mf">1.600</span><span class="p">,</span> <span class="mi">100_000</span><span class="p">)</span>
+<span class="n">n</span> <span class="o">=</span> <span class="mi">10</span>
+<span class="n">params</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;wl&quot;</span><span class="p">:</span> <span class="n">wavelengths</span><span class="p">}</span>
+<span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="n">n</span> <span class="o">+</span> <span class="mi">1</span><span class="p">):</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;left_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coupling&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;right_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;coupling&quot;</span><span class="p">:</span> <span class="mf">0.5</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;top_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">50</span><span class="p">}</span>
+    <span class="n">params</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;btm_</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mi">0</span><span class="p">}</span>
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>Run simulation with ‘klu’ backend and ‘forward-only’ backend</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">mzi_ideal</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">cascaded_amzi_generator</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;klu&quot;</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">mzi_ideal</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">transmissions_klu</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.89 s, sys: 2.44 s, total: 5.33 s
+Wall time: 4.58 s
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">%%time</span>
+<span class="n">mzi_ideal</span><span class="p">,</span> <span class="n">info</span> <span class="o">=</span> <span class="n">cascaded_amzi_generator</span><span class="p">(</span><span class="n">n</span><span class="p">,</span> <span class="n">backend</span><span class="o">=</span><span class="s2">&quot;forward&quot;</span><span class="p">)</span>
+<span class="n">S</span> <span class="o">=</span> <span class="n">mzi_ideal</span><span class="p">(</span><span class="o">**</span><span class="n">params</span><span class="p">)</span>
+<span class="n">transmissions_forward</span> <span class="o">=</span> <span class="mi">10</span> <span class="o">*</span> <span class="n">jnp</span><span class="o">.</span><span class="n">log10</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out1&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 324 ms, sys: 156 ms, total: 480 ms
+Wall time: 294 ms
+</pre></div>
+</div>
+</div>
+</div>
+<blockquote>
+<div><p>As the circuit becomes more complex, the forward-only backend experiences a more significant speed-up, and the results remain accurate as long as there is no backreflection.</p>
+</div></blockquote>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">fig</span><span class="p">,</span> <span class="n">axs</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">transmissions_klu</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;klu&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">wavelengths</span><span class="p">,</span> <span class="n">transmissions_forward</span><span class="p">,</span> <span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;forward&quot;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">xlim</span><span class="p">(</span><span class="mf">1.53</span><span class="p">,</span> <span class="mf">1.57</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;wavelength (um)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;transmission (dB)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/eadc67d29b07cfae040489b2bfac979bea5499ad3fbacd7aa48161a006cbee11.png" src="../_images/eadc67d29b07cfae040489b2bfac979bea5499ad3fbacd7aa48161a006cbee11.png" />
+</div>
+</div>
+</section>
+
+
+                </article>
+              
+
+              
+              
+              
+              
+                <footer class="prev-next-footer d-print-none">
+                  
+<div class="prev-next-area">
+</div>
+                </footer>
+              
+            </div>
+            
+            
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Floris Laporte
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+
+  <p class="copyright">
+    
+      © Copyright 2023, Apache2.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
+<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
