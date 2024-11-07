@@ -3,7 +3,7 @@ build:
 
 docker:
 	docker build . -t flaport/sax:latest -f Dockerfile.dev
-	docker build . -t flaport/sax:0.13.4 -f Dockerfile.dev
+	docker build . -t flaport/sax:0.13.5 -f Dockerfile.dev
 
 pre-commit:
 	pre-commit install
@@ -15,7 +15,7 @@ nbrun:
 
 dockerpush:
 	docker push flaport/sax:latest
-	docker push flaport/sax:0.13.4
+	docker push flaport/sax:0.13.5
 
 .PHONY: docs
 docs:
