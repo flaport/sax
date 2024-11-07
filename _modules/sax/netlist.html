@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sax.netlist &#8212; sax 0.13.4 documentation</title>
+    <title>sax.netlist &#8212; sax 0.13.5 documentation</title>
   
   
   
@@ -139,8 +139,8 @@
       
     
     
-    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.13.4 documentation - Home"/>
-    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.4 documentation - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.13.5 documentation - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.5 documentation - Home"/>
   
   
 </a></div>
@@ -354,7 +354,8 @@
 <div class="viewcode-block" id="NetlistDict"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.NetlistDict">[docs]</a><span class="k">class</span> <span class="nc">NetlistDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">instances</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
-    <span class="n">ports</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span></div>
+    <span class="n">ports</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+    <span class="n">settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span></div>
 
 
 <span class="n">RecursiveNetlistDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">]</span>
@@ -506,6 +507,7 @@
     <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">InstancePortStr</span><span class="p">,</span> <span class="n">InstancePortStr</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">ports</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">PortStr</span><span class="p">,</span> <span class="n">InstancePortStr</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">placements</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">InstanceStr</span><span class="p">,</span> <span class="n">Placement</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
+    <span class="n">settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>  <span class="c1"># TODO: use this</span>
 
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
     <span class="nd">@classmethod</span>

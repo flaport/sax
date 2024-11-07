@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>sax.netlist module &#8212; sax 0.13.4 documentation</title>
+    <title>sax.netlist module &#8212; sax 0.13.5 documentation</title>
   
   
   
@@ -140,8 +140,8 @@
       
     
     
-    <img src="_static/logo.png" class="logo__image only-light" alt="sax 0.13.4 documentation - Home"/>
-    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.4 documentation - Home"/>
+    <img src="_static/logo.png" class="logo__image only-light" alt="sax 0.13.5 documentation - Home"/>
+    <img src="_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.5 documentation - Home"/>
   
   
 </a></div>
@@ -394,6 +394,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.instances"><code class="docutils literal notranslate"><span class="pre">NetlistDict.instances</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.connections"><code class="docutils literal notranslate"><span class="pre">NetlistDict.connections</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.ports"><code class="docutils literal notranslate"><span class="pre">NetlistDict.ports</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.settings"><code class="docutils literal notranslate"><span class="pre">NetlistDict.settings</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a></li>
@@ -421,6 +422,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.connections"><code class="docutils literal notranslate"><span class="pre">Netlist.connections</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.ports"><code class="docutils literal notranslate"><span class="pre">Netlist.ports</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.placements"><code class="docutils literal notranslate"><span class="pre">Netlist.placements</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.settings"><code class="docutils literal notranslate"><span class="pre">Netlist.settings</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.RecursiveNetlist"><code class="docutils literal notranslate"><span class="pre">RecursiveNetlist</span></code></a><ul class="nav section-nav flex-column">
@@ -466,6 +468,11 @@
 <dl class="py attribute">
 <dt class="sig sig-object py" id="sax.netlist.NetlistDict.ports">
 <span class="sig-name descname"><span class="pre">ports</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">str</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#sax.netlist.NetlistDict.ports" title="Permalink to this definition">#</a></dt>
+<dd></dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.netlist.NetlistDict.settings">
+<span class="sig-name descname"><span class="pre">settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#sax.netlist.NetlistDict.settings" title="Permalink to this definition">#</a></dt>
 <dd></dd></dl>
 
 </dd></dl>
@@ -522,7 +529,7 @@
 <dd><dl class="field-list simple">
 <dt class="field-odd">Constraints<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>func</strong> = &lt;function _validate_str at 0x7fbf5f2fa980&gt;</p></li>
+<li><p><strong>func</strong> = &lt;function _validate_str at 0x7f21b9762980&gt;</p></li>
 </ul>
 </dd>
 </dl>
@@ -803,6 +810,10 @@
 <span class="w">         </span><span class="p">},</span>
 <span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Placements&quot;</span><span class="p">,</span>
 <span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">&quot;settings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">         </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span>
+<span class="w">         </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">      </span><span class="p">}</span>
 <span class="w">   </span><span class="p">},</span>
 <span class="w">   </span><span class="nt">&quot;$defs&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
@@ -985,6 +996,7 @@
 <li><p><a class="reference internal" href="#sax.netlist.Netlist.instances" title="sax.netlist.Netlist.instances"><code class="xref py py-obj docutils literal notranslate"><span class="pre">instances</span> <span class="pre">(dict[str,</span> <span class="pre">sax.netlist.Component])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#sax.netlist.Netlist.placements" title="sax.netlist.Netlist.placements"><code class="xref py py-obj docutils literal notranslate"><span class="pre">placements</span> <span class="pre">(dict[str,</span> <span class="pre">sax.netlist.Placement])</span></code></a></p></li>
 <li><p><a class="reference internal" href="#sax.netlist.Netlist.ports" title="sax.netlist.Netlist.ports"><code class="xref py py-obj docutils literal notranslate"><span class="pre">ports</span> <span class="pre">(dict[str,</span> <span class="pre">str])</span></code></a></p></li>
+<li><p><a class="reference internal" href="#sax.netlist.Netlist.settings" title="sax.netlist.Netlist.settings"><code class="xref py py-obj docutils literal notranslate"><span class="pre">settings</span> <span class="pre">(dict[str,</span> <span class="pre">typing.Any])</span></code></a></p></li>
 </ul>
 </dd>
 </dl>
@@ -1027,6 +1039,18 @@
 <dl class="py attribute pydantic_field">
 <dt class="sig sig-object py" id="sax.netlist.Netlist.placements">
 <em class="property"><span class="pre">attribute</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">placements</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">InstanceStr</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><a class="reference internal" href="#sax.netlist.Placement" title="sax.netlist.Placement"><span class="pre">Placement</span></a><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#sax.netlist.Netlist.placements" title="Permalink to this definition">#</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Validated by<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><code class="xref py py-obj docutils literal notranslate"><span class="pre">coerce_nets_into_connections</span></code></p></li>
+</ul>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py attribute pydantic_field">
+<dt class="sig sig-object py" id="sax.netlist.Netlist.settings">
+<em class="property"><span class="pre">attribute</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">settings</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Any</span><span class="p"><span class="pre">]</span></span></em><em class="property"> <span class="pre">[Optional]</span></em><a class="headerlink" href="#sax.netlist.Netlist.settings" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Validated by<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
@@ -1092,6 +1116,10 @@
 <span class="w">                  </span><span class="nt">&quot;$ref&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;#/$defs/Placement&quot;</span>
 <span class="w">               </span><span class="p">},</span>
 <span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Placements&quot;</span><span class="p">,</span>
+<span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
+<span class="w">            </span><span class="p">},</span>
+<span class="w">            </span><span class="nt">&quot;settings&quot;</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">               </span><span class="nt">&quot;title&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;Settings&quot;</span><span class="p">,</span>
 <span class="w">               </span><span class="nt">&quot;type&quot;</span><span class="p">:</span><span class="w"> </span><span class="s2">&quot;object&quot;</span>
 <span class="w">            </span><span class="p">}</span>
 <span class="w">         </span><span class="p">},</span>
@@ -1433,6 +1461,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.instances"><code class="docutils literal notranslate"><span class="pre">NetlistDict.instances</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.connections"><code class="docutils literal notranslate"><span class="pre">NetlistDict.connections</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.ports"><code class="docutils literal notranslate"><span class="pre">NetlistDict.ports</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.NetlistDict.settings"><code class="docutils literal notranslate"><span class="pre">NetlistDict.settings</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.BaseModel"><code class="docutils literal notranslate"><span class="pre">BaseModel</span></code></a></li>
@@ -1460,6 +1489,7 @@
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.connections"><code class="docutils literal notranslate"><span class="pre">Netlist.connections</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.ports"><code class="docutils literal notranslate"><span class="pre">Netlist.ports</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.placements"><code class="docutils literal notranslate"><span class="pre">Netlist.placements</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.Netlist.settings"><code class="docutils literal notranslate"><span class="pre">Netlist.settings</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.netlist.RecursiveNetlist"><code class="docutils literal notranslate"><span class="pre">RecursiveNetlist</span></code></a><ul class="nav section-nav flex-column">
