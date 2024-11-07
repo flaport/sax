@@ -26,6 +26,7 @@ class NetlistDict(TypedDict):
     instances: dict
     connections: dict[str, str]
     ports: dict[str, str]
+    settings: dict[str, Any]
 
 
 RecursiveNetlistDict = dict[str, NetlistDict]
@@ -177,6 +178,7 @@ class Netlist(BaseModel):
     connections: dict[InstancePortStr, InstancePortStr] = Field(default_factory=dict)
     ports: dict[PortStr, InstancePortStr] = Field(default_factory=dict)
     placements: dict[InstanceStr, Placement] = Field(default_factory=dict)
+    settings: dict[str, Any] = Field(default_factory=dict)  # TODO: use this
 
     @model_validator(mode="before")
     @classmethod
