@@ -12,7 +12,7 @@ import black
 import networkx as nx
 import numpy as np
 
-from .backends import circuit_backends
+from .backends import circuit_backends, backend_map
 from .netlist import AnyNetlist, Netlist, NetlistDict, RecursiveNetlist, is_recursive
 from .netlist import netlist as parse_netlist
 from .saxtypes import Model, Settings, SType, scoo, sdense, sdict
@@ -30,6 +30,7 @@ class CircuitInfo(NamedTuple):
 
     dag: nx.DiGraph[str]
     models: dict[str, Model]
+    backend: str
 
 
 def circuit(
@@ -83,7 +84,11 @@ def circuit(
 
     assert circuit is not None
     circuit = _enforce_return_type(circuit, return_type)
-    return circuit, CircuitInfo(dag=dependency_dag, models=current_models)
+    return circuit, CircuitInfo(
+        dag=dependency_dag,
+        models=current_models,
+        backend=backend_map.get(backend, backend),
+    )
 
 
 def _create_dag(

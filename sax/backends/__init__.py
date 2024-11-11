@@ -39,11 +39,18 @@ circuit_backends = {
         analyze_circuit_additive,
         evaluate_circuit_additive,
     ),
-    "forward":  (
+    "forward": (
         analyze_instances_forward,
         analyze_circuit_forward,
         evaluate_circuit_forward,
-    )
+    ),
+}
+
+backend_map = {
+    "fg": "filipsson_gunnar",
+    "filipsson_gunnar": "filipsson_gunnar",
+    "additive": "additive",
+    "forward": "forward",
 }
 
 try:
@@ -59,12 +66,15 @@ try:
         analyze_circuit_klu,
         evaluate_circuit_klu,
     )
+    backend_map["klu"] = "klu"
+    backend_map["default"] = "klu"
 except ImportError:
     circuit_backends["default"] = (
         analyze_instances_fg,
         analyze_circuit_fg,
         evaluate_circuit_fg,
     )
+    backend_map["default"] = "filipsson_gunnar"
     warnings.warn(
         "klujax not found. Please install klujax for "
         "better performance during circuit evaluation!"
