@@ -393,6 +393,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo"><code class="docutils literal notranslate"><span class="pre">CircuitInfo</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo.dag"><code class="docutils literal notranslate"><span class="pre">CircuitInfo.dag</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo.models"><code class="docutils literal notranslate"><span class="pre">CircuitInfo.models</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo.backend"><code class="docutils literal notranslate"><span class="pre">CircuitInfo.backend</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.circuit"><code class="docutils literal notranslate"><span class="pre">circuit()</span></code></a></li>
@@ -414,7 +415,7 @@
 <p>SAX Circuit Definition</p>
 <dl class="py class">
 <dt class="sig sig-object py" id="sax.circuit.CircuitInfo">
-<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CircuitInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/circuit.html#CircuitInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.circuit.CircuitInfo" title="Permalink to this definition">#</a></dt>
+<em class="property"><span class="pre">class</span><span class="w"> </span></em><span class="sig-name descname"><span class="pre">CircuitInfo</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">dag</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">backend</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/circuit.html#CircuitInfo"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.circuit.CircuitInfo" title="Permalink to this definition">#</a></dt>
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">NamedTuple</span></code></p>
 <p>Information about the circuit function you created.</p>
 <dl class="field-list simple">
@@ -422,6 +423,7 @@
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>dag</strong> (<em>nx.DiGraph</em><em>[</em><em>str</em><em>]</em>) – </p></li>
 <li><p><strong>models</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em>) – </p></li>
+<li><p><strong>backend</strong> (<em>str</em>) – </p></li>
 </ul>
 </dd>
 </dl>
@@ -435,6 +437,12 @@
 <dt class="sig sig-object py" id="sax.circuit.CircuitInfo.models">
 <span class="sig-name descname"><span class="pre">models</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">dict</span><span class="p"><span class="pre">[</span></span><span class="pre">str</span><span class="p"><span class="pre">,</span></span><span class="w"> </span><span class="pre">Model</span><span class="p"><span class="pre">]</span></span></em><a class="headerlink" href="#sax.circuit.CircuitInfo.models" title="Permalink to this definition">#</a></dt>
 <dd><p>Alias for field number 1</p>
+</dd></dl>
+
+<dl class="py attribute">
+<dt class="sig sig-object py" id="sax.circuit.CircuitInfo.backend">
+<span class="sig-name descname"><span class="pre">backend</span></span><em class="property"><span class="p"><span class="pre">:</span></span><span class="w"> </span><span class="pre">str</span></em><a class="headerlink" href="#sax.circuit.CircuitInfo.backend" title="Permalink to this definition">#</a></dt>
+<dd><p>Alias for field number 2</p>
 </dd></dl>
 
 </dd></dl>
@@ -532,6 +540,7 @@
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo"><code class="docutils literal notranslate"><span class="pre">CircuitInfo</span></code></a><ul class="nav section-nav flex-column">
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo.dag"><code class="docutils literal notranslate"><span class="pre">CircuitInfo.dag</span></code></a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo.models"><code class="docutils literal notranslate"><span class="pre">CircuitInfo.models</span></code></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.CircuitInfo.backend"><code class="docutils literal notranslate"><span class="pre">CircuitInfo.backend</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.circuit.circuit"><code class="docutils literal notranslate"><span class="pre">circuit()</span></code></a></li>
