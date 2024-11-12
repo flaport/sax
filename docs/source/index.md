@@ -19,6 +19,7 @@ examples/05_thinfilm.ipynb
 examples/06_additive_backend.ipynb
 examples/07_layout_aware.ipynb
 examples/08_sparse_coo.ipynb
+examples/09_forward_only_backend.ipynb
 ```
 
 ```{toctree}
