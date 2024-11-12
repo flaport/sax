@@ -60,6 +60,8 @@
     <script>DOCUMENTATION_OPTIONS.pagename = 'examples/09_forward_only_backend';</script>
     <link rel="index" title="Index" href="../genindex.html" />
     <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Models and Model Factories" href="../internals/01_models.html" />
+    <link rel="prev" title="Sparse COO" href="08_sparse_coo.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   <meta name="docsearch:version" content="" />
@@ -111,8 +113,6 @@
       
       
       
-        
-      
       <dialog id="pst-primary-sidebar-modal"></dialog>
       <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
         
@@ -155,7 +155,7 @@
 <li class="toctree-l1"><a class="reference internal" href="../index.html">SAX</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Examples</span></p>
-<ul class="nav bd-sidenav">
+<ul class="current nav bd-sidenav">
 <li class="toctree-l1"><a class="reference internal" href="01_quick_start.html">SAX Quick Start</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_all_pass_filter.html">Simulating an All-Pass Filter</a></li>
 <li class="toctree-l1"><a class="reference internal" href="03_circuit_from_yaml.html">Circuit from YAML</a></li>
@@ -164,6 +164,7 @@
 <li class="toctree-l1"><a class="reference internal" href="06_additive_backend.html">Additive Backend</a></li>
 <li class="toctree-l1"><a class="reference internal" href="07_layout_aware.html">Layout Aware Monte Carlo with GDSFactory</a></li>
 <li class="toctree-l1"><a class="reference internal" href="08_sparse_coo.html">Sparse COO</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Forward-only Backend</a></li>
 </ul>
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">Library Internals</span></p>
 <ul class="nav bd-sidenav">
@@ -449,6 +450,9 @@
 <blockquote>
 <div><p>An efficient backend when the components in circuit have low back-reflection. In this case, only forward-direction matrix multiplication is calculated to reduce computational cost for complicated circuit. The improvement compared to other backends (‘klu’ for example) is demonstrated with an example of cascaded AMZI structure.</p>
 </div></blockquote>
+<blockquote>
+<div><p>This notebook as well as the forward-only backend itself was contributed by <a class="reference external" href="https://github.com/zhetaoj">zhetaoj</a>.</p>
+</div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">sax</span>
@@ -581,8 +585,8 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.04 s, sys: 2.36 s, total: 5.4 s
-Wall time: 4.67 s
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 3.09 s, sys: 1.46 s, total: 4.55 s
+Wall time: 3.8 s
 </pre></div>
 </div>
 </div>
@@ -597,8 +601,8 @@ Wall time: 4.67 s
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 301 ms, sys: 175 ms, total: 476 ms
-Wall time: 294 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 344 ms, sys: 161 ms, total: 504 ms
+Wall time: 313 ms
 </pre></div>
 </div>
 </div>
@@ -638,6 +642,24 @@ Wall time: 294 ms
                 <footer class="prev-next-footer d-print-none">
                   
 <div class="prev-next-area">
+    <a class="left-prev"
+       href="08_sparse_coo.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Sparse COO</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="../internals/01_models.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Models and Model Factories</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
 </div>
                 </footer>
               

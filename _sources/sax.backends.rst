@@ -9,6 +9,7 @@ Submodules
 
    sax.backends.additive
    sax.backends.filipsson_gunnar
+   sax.backends.forward_only
    sax.backends.klu
 
 Module contents
