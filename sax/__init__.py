@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 __author__ = "Floris Laporte"
-__version__ = "0.13.5"
+__version__ = "0.14.0"
 
 
 from functools import partial as partial
