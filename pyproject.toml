@@ -30,7 +30,7 @@ dependencies = [
   "jax>=0.4.35",
   "jaxlib>=0.4.35",
   "jaxtyping",
-  "klujax>=0.3.0",
+  "klujax>=0.3.1",
   "matplotlib",
   "natsort",
   "networkx",
