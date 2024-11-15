@@ -33,6 +33,7 @@ from .netlist import load_netlist as load_netlist
 from .netlist import load_recursive_netlist as load_recursive_netlist
 from .netlist import netlist as netlist
 from .netlist import rename_instances as rename_instances
+from .netlist import rename_models as rename_models
 from .saxtypes import Array as Array
 from .saxtypes import ArrayLike as ArrayLike
 from .saxtypes import Complex as Complex

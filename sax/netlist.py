@@ -504,10 +504,10 @@ def rename_instances(
 ) -> Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict:
     given_as_dict = isinstance(netlist, dict)
 
-    try:
-        netlist = Netlist.model_validate(netlist)
-    except ValidationError:
+    if is_recursive(netlist):
         netlist = RecursiveNetlist.model_validate(netlist)
+    else:
+        netlist = Netlist.model_validate(netlist)
 
     if isinstance(netlist, RecursiveNetlist):
         net = RecursiveNetlist(
@@ -542,6 +542,85 @@ def rename_instances(
         connections=connections,
         ports=ports,
         placements=placements,
+        settings=netlist.settings,
+    )
+    return net if not given_as_dict else net.model_dump()
+
+
+@overload
+def rename_models(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
+    ...
+
+
+@overload
+def rename_models(
+    netlist: RecursiveNetlist, mapping: dict[str, str]
+) -> RecursiveNetlist:
+    ...
+
+
+@overload
+def rename_models(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict:
+    ...
+
+
+@overload
+def rename_models(
+    netlist: RecursiveNetlistDict, mapping: dict[str, str]
+) -> RecursiveNetlistDict:
+    ...
+
+
+def rename_models(
+    netlist: Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict,
+    mapping: dict[str, str],
+) -> Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict:
+    given_as_dict = isinstance(netlist, dict)
+
+    if is_recursive(netlist):
+        netlist = RecursiveNetlist.model_validate(netlist)
+    else:
+        netlist = Netlist.model_validate(netlist)
+
+    if isinstance(netlist, RecursiveNetlist):
+        net = RecursiveNetlist(
+            **{
+                k: rename_models(v, mapping).model_dump()
+                for k, v in netlist.root.items()
+            }
+        )
+        return net if not given_as_dict else net.model_dump()
+
+    # it's a sax.Netlist now:
+    inverse_mapping = {v: k for k, v in mapping.items()}
+    if len(inverse_mapping) != len(mapping):
+        raise ValueError("Duplicate names to map onto found.")
+
+    instances = {}
+    for k, instance in netlist.instances.items():
+        given_as_str = False
+        if isinstance(instance, str):
+            given_as_str = True
+            instance = {
+                "component": instance,
+                "settings": {},
+            }
+        elif isinstance(instance, Component):
+            instance = instance.model_dump()
+        assert isinstance(instance, dict)
+        instance["component"] = mapping.get(
+            instance["component"], instance["component"]
+        )
+        if given_as_str:
+            instances[k] = instance["component"]
+        else:
+            instances[k] = instance
+
+    net = Netlist(
+        instances=instances,
+        connections=netlist.connections,
+        ports=netlist.ports,
+        placements=netlist.placements,
         settings=netlist.settings,
     )
     return net if not given_as_dict else net.model_dump()
