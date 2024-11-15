@@ -7,7 +7,7 @@ import re
 import warnings
 from copy import deepcopy
 from functools import lru_cache, partial
-from typing import Any, Literal, TypedDict
+from typing import Any, Literal, TypedDict, overload
 
 import black
 import networkx as nx
@@ -16,7 +16,14 @@ import yaml
 from natsort import natsorted
 from pydantic import AfterValidator
 from pydantic import BaseModel as _BaseModel
-from pydantic import BeforeValidator, ConfigDict, Field, RootModel, model_validator
+from pydantic import (
+    BeforeValidator,
+    ConfigDict,
+    Field,
+    RootModel,
+    ValidationError,
+    model_validator,
+)
 from typing_extensions import Annotated
 
 from .utils import clean_string, hash_dict
@@ -465,3 +472,76 @@ def _flatten_netlist(recnet, net, sep):
                     net["ports"][p] = ports[p2]
                 else:
                     del net["ports"][p]
+
+
+@overload
+def rename_instances(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
+    ...
+
+
+@overload
+def rename_instances(
+    netlist: RecursiveNetlist, mapping: dict[str, str]
+) -> RecursiveNetlist:
+    ...
+
+
+@overload
+def rename_instances(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict:
+    ...
+
+
+@overload
+def rename_instances(
+    netlist: RecursiveNetlistDict, mapping: dict[str, str]
+) -> RecursiveNetlistDict:
+    ...
+
+
+def rename_instances(
+    netlist: Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict,
+    mapping: dict[str, str],
+) -> Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict:
+    given_as_dict = isinstance(netlist, dict)
+
+    try:
+        netlist = Netlist.model_validate(netlist)
+    except ValidationError:
+        netlist = RecursiveNetlist.model_validate(netlist)
+
+    if isinstance(netlist, RecursiveNetlist):
+        net = RecursiveNetlist(
+            **{
+                k: rename_instances(v, mapping).model_dump()
+                for k, v in netlist.root.items()
+            }
+        )
+        return net if not given_as_dict else net.model_dump()
+
+    # it's a sax.Netlist now:
+    inverse_mapping = {v: k for k, v in mapping.items()}
+    if len(inverse_mapping) != len(mapping):
+        raise ValueError("Duplicate names to map onto found.")
+    instances = {mapping.get(k, k): v for k, v in netlist.instances.items()}
+    connections = {}
+    for ip1, ip2 in netlist.connections.items():
+        i1, p1 = ip1.split(",")
+        i2, p2 = ip2.split(",")
+        i1 = mapping.get(i1, i1)
+        i2 = mapping.get(i2, i2)
+        connections[f"{i1},{p1}"] = f"{i2},{p2}"
+    ports = {}
+    for q, ip in netlist.ports.items():
+        i, p = ip.split(",")
+        i = mapping.get(i, i)
+        ports[q] = f"{i},{p}"
+
+    placements = {mapping.get(k, k): v for k, v in netlist.placements.items()}
+    net = Netlist(
+        instances=instances,
+        connections=connections,
+        ports=ports,
+        placements=placements,
+        settings=netlist.settings,
+    )
+    return net if not given_as_dict else net.model_dump()
