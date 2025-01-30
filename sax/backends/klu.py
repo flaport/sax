@@ -6,6 +6,7 @@ import time
 from typing import Any, Dict
 
 import jax
+import jax.interpreters.batching
 import jax.numpy as jnp
 import klujax
 from natsort import natsorted
@@ -114,11 +115,23 @@ def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
     idx = 0
     Sx = []
     batch_shape = ()
+    batch_dim = batch_trace = None
     for name, pm_ in dummy_pms:
         _, _, sx, ports_map = scoo(instances[name])
+
+        curr_batch_dim = curr_batch_trace = None
+        if isinstance(sx, jax.interpreters.batching.BatchTracer):
+            curr_batch_dim = sx.batch_dim
+            curr_batch_trace = sx._trace # Is there a nicer way to get the trace?
+            sx = sx.val 
+            # to make SAX compatible to downstream jax.vmap
+            # else the batch dimensions are not read propely
+
         Sx.append(sx)
         if len(sx.shape[:-1]) > len(batch_shape):
             batch_shape = sx.shape[:-1]
+            batch_dim = curr_batch_dim
+            batch_trace = curr_batch_trace
         idx += len(ports_map)
 
     Sx = jnp.concatenate(
@@ -137,6 +150,9 @@ def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
 
     _, n, _ = CextT_S_inv_I_CS_Cext.shape
     S = CextT_S_inv_I_CS_Cext.reshape(*batch_shape, n, n)
+
+    if batch_dim is not None:
+        S = jax.interpreters.batching.BatchTracer(batch_trace, S, batch_dim)
 
     return S, {p: i for i, p in enumerate(port_map)}
 
