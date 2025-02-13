@@ -1,5 +1,5 @@
 build:
-	python -m build --sdist --wheel
+	uv run python -m build --sdist --wheel
 
 docker:
 	docker build . -t flaport/sax:latest -f Dockerfile.dev
@@ -7,10 +7,9 @@ docker:
 
 pre-commit:
 	pre-commit install
-	git config filter.nbstripout.extrakeys 'metadata.papermill'
 
 nbrun:
-	find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs parallel -j `nproc --all` papermill {} {} -k python3 :::
+	find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs parallel -j `nproc --all` uv run papermill {} {} -k python3 :::
 	rm -rf modes
 
 dockerpush:

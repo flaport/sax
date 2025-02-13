@@ -1,0 +1,78 @@
+name: Docs
+on:
+  workflow_dispatch:
+  pull_request:
+  push:
+    branches:
+      - main
+
+jobs:
+
+  run:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+      - name: Create Venv
+        run: uv sync --all-extras
+      - name: Run notebooks
+        run: find . -name "*.ipynb" -not -path "*/tests/*" -not -path "*/.ipynb_checkpoints/*" | xargs parallel uv run papermill {} {} -k python3 ':::'
+      - name: Upload artifacts [internals]
+        uses: actions/upload-artifact@v4
+        with:
+          name: internals
+          path: ./internals
+      - name: Upload artifacts [examples]
+        uses: actions/upload-artifact@v4
+        with:
+          name: examples
+          path: ./examples
+
+  docs:
+    runs-on: ubuntu-latest
+    needs:
+      - run
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download artifacts [internals]
+        uses: actions/download-artifact@v4
+        with:
+          name: internals
+          path: ./internals
+      - name: Download artifacts [examples]
+        uses: actions/download-artifact@v4
+        with:
+          name: examples
+          path: ./examples
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+      - name: Create Venv
+        run: uv sync --all-extras
+      - name: Build docs
+        run: make docs && touch docs/build/html/.nojekyll
+      - name: Upload artifacts [docs]
+        uses: actions/upload-artifact@v4
+        with:
+          name: docs
+          path: ./docs/build/html
+
+  pages:
+    runs-on: ubuntu-latest
+    needs:
+      - docs
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Download 'docs' artifact
+        uses: actions/download-artifact@master
+        with:
+          name: docs
+          path: docs/build/html
+      - name: Deploy
+        uses: JamesIves/github-pages-deploy-action@4.1.7
+        with:
+          branch: pages
+          folder: docs/build/html
