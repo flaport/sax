@@ -9,9 +9,10 @@ import networkx as nx
 from ..netlist import Component
 from ..saxtypes import Model, SCoo, scoo, SDict, sdict
 
+
 def analyze_instances_forward(
-        instances: Dict[str, Component],
-        models: Dict[str, Model],
+    instances: Dict[str, Component],
+    models: Dict[str, Model],
 ) -> Dict[str, SCoo]:
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
@@ -29,17 +30,17 @@ def analyze_instances_forward(
 
 
 def analyze_circuit_forward(
-        analyzed_instances: Dict[str, SDict],
-        connections: Dict[str, str],
-        ports: Dict[str, str],
+    analyzed_instances: Dict[str, SDict],
+    connections: Dict[str, str],
+    ports: Dict[str, str],
 ) -> Any:
     return connections, ports
 
 
 # import matplotlib.pyplot as plt
 def evaluate_circuit_forward(
-        analyzed: Any,
-        instances: Dict[str, SDict],
+    analyzed: Any,
+    instances: Dict[str, SDict],
 ) -> SDict:
     """Evaluate a circuit for the given sdicts using simple matrix multiplication."""
     connections, ports = analyzed
@@ -51,16 +52,16 @@ def evaluate_circuit_forward(
     # Dictionary to store signals at each node
     circuit_sdict = {}
     for in_port in ports.keys():
-        if in_port.startswith('in'):
-            node_signals = {('', in_port): 1}
-            bfs_output = nx.bfs_layers(graph, ('', in_port))
+        if in_port.startswith("in"):
+            node_signals = {("", in_port): 1}
+            bfs_output = nx.bfs_layers(graph, ("", in_port))
             for layer in bfs_output:
                 layer_signals = {}
                 for node in layer:
                     if node in node_signals:
                         signal = node_signals[node]
                         for neighbor in graph.successors(node):
-                            transmission = graph[node][neighbor]['transmission']
+                            transmission = graph[node][neighbor]["transmission"]
                             if neighbor in layer_signals:
                                 layer_signals[neighbor] += signal * transmission
                             else:
@@ -69,7 +70,7 @@ def evaluate_circuit_forward(
             sdict = {
                 (in_port, p2): v
                 for (p1, p2), v in node_signals.items()
-                if p1 == '' and p2.startswith('out')
+                if p1 == "" and p2.startswith("out")
             }
             circuit_sdict.update(sdict)
     return circuit_sdict
@@ -85,9 +86,9 @@ def _split_port(port: str) -> Tuple[str, str]:
 
 
 def _graph_edges_directed(
-        instances: Dict[str, SDict],
-        connections: Dict[str, str],
-        ports: Dict[str, str],
+    instances: Dict[str, SDict],
+    connections: Dict[str, str],
+    ports: Dict[str, str],
 ):
     one = jnp.array([1.0], dtype=float)
     edges_dict = {}
@@ -95,7 +96,7 @@ def _graph_edges_directed(
     edges_dict.update({_split_port(k): _split_port(v) for k, v in ports.items()})
     edges = []
     for n1, n2 in edges_dict.items():
-        if n1[0] == '' and n1[1].startswith('out'):
+        if n1[0] == "" and n1[1].startswith("out"):
             edges += [(n2, n1, {"transmission": one})]
         else:
             edges += [(n1, n2, {"transmission": one})]
@@ -103,6 +104,12 @@ def _graph_edges_directed(
     for instance in instances:
         s = instances[instance]
         for (p1, p2), w in sdict(s).items():
-            if p1.startswith('in') and p2.startswith('out'):
-                edges += [((instance, p1), (instance, p2), {"transmission": jnp.asarray(w, dtype=complex).ravel()})]
+            if p1.startswith("in") and p2.startswith("out"):
+                edges += [
+                    (
+                        (instance, p1),
+                        (instance, p2),
+                        {"transmission": jnp.asarray(w, dtype=complex).ravel()},
+                    )
+                ]
     return edges
