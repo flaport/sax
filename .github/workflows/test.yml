@@ -24,7 +24,7 @@ jobs:
       - name: Create Venv
         run: uv sync --all-extras
       - name: Run tests
-        run: pytest
+        run: uv run pytest
       - name: Upload artifacts [tests]
         uses: actions/upload-artifact@master
         with:
