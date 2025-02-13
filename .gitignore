@@ -1,3 +1,4 @@
+uv.lock
 *.swp
 *.nfs*
 modes
@@ -5,6 +6,7 @@ modes
 # IDE settings
 .vscode/
 .idea/
+bugfixes/
 
 # nbdev
 docs/
