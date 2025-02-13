@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>SAX Quick Start &#8212; sax 0.13.5 documentation</title>
+    <title>SAX Quick Start &#8212; sax 0.14.1 documentation</title>
   
   
   
@@ -20,19 +20,17 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -42,11 +40,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -57,7 +54,7 @@
     <script src="../_static/clipboard.min.js"></script>
     <script src="../_static/copybutton.js"></script>
     <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script type="application/vnd.jupyter.widget-state+json">{"state": {"279996636a494de488da1eb507f2f4dd": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_4cd681bd240845dcad58a0f995c75bb7", "placeholder": "\u200b", "style": "IPY_MODEL_d28c7e49e85c40e9b63bf1f1098e9e82", "tabbable": null, "tooltip": null, "value": "100%"}}, "3ed16be1cd52407591b26f5ac628795d": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "4cd681bd240845dcad58a0f995c75bb7": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "66f67cf42627415cbb0e4f9b4b8c2b05": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "ad36fea6dd68476a8d1b87816fba47d0": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_66f67cf42627415cbb0e4f9b4b8c2b05", "placeholder": "\u200b", "style": "IPY_MODEL_d0f9da5d7e4848a68babee5606b633bb", "tabbable": null, "tooltip": null, "value": "\u2007300/300\u2007[00:05&lt;00:00,\u200758.77it/s,\u2007loss=0.000000]"}}, "d0f9da5d7e4848a68babee5606b633bb": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "d28c7e49e85c40e9b63bf1f1098e9e82": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "d433e1a49c0e4e52bf5dfc902f7ef488": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "db9569a86c194f018b5b4201278b9a32": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "FloatProgressModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_d433e1a49c0e4e52bf5dfc902f7ef488", "max": 300.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_ebf25dec07c4418e8ab43ebe60ffe71e", "tabbable": null, "tooltip": null, "value": 300.0}}, "ebf25dec07c4418e8ab43ebe60ffe71e": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "ProgressStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "edb3326ff4b34fd69e0ca4d373115ba2": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HBoxModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_279996636a494de488da1eb507f2f4dd", "IPY_MODEL_db9569a86c194f018b5b4201278b9a32", "IPY_MODEL_ad36fea6dd68476a8d1b87816fba47d0"], "layout": "IPY_MODEL_3ed16be1cd52407591b26f5ac628795d", "tabbable": null, "tooltip": null}}}, "version_major": 2, "version_minor": 0}</script>
+    <script type="application/vnd.jupyter.widget-state+json">{"state": {"09ea2e7e94294d869b9d4fa14336e346": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1bf94c084d1f4efb8bf7cef5a6f67020": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "1f7847bd932e4accb249fe676a4ac366": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "ProgressStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "ProgressStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "bar_color": null, "description_width": ""}}, "3a5d27ca03c147768138a848d7c60b0d": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "611d0fab932a4af7bb251795837ce61c": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "72b3180f79184684a13dc577b0ee2a0d": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLStyleModel", "state": {"_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLStyleModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "StyleView", "background": null, "description_width": "", "font_size": null, "text_color": null}}, "736e374c71a74ed68ec58f16c97c1529": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_09ea2e7e94294d869b9d4fa14336e346", "placeholder": "\u200b", "style": "IPY_MODEL_611d0fab932a4af7bb251795837ce61c", "tabbable": null, "tooltip": null, "value": "\u2007300/300\u2007[00:08&lt;00:00,\u200742.49it/s,\u2007loss=0.000000]"}}, "8c6beaeb5aaa42f49ffbf4f1bc19cfd2": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HBoxModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HBoxModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HBoxView", "box_style": "", "children": ["IPY_MODEL_b435bbdbd791457ab77deeed6ee475a2", "IPY_MODEL_eaa27a1ccd5c410bbd3eec79b30c2627", "IPY_MODEL_736e374c71a74ed68ec58f16c97c1529"], "layout": "IPY_MODEL_c02f45b4c7bb4159b0cb89cc60ae21ef", "tabbable": null, "tooltip": null}}, "b435bbdbd791457ab77deeed6ee475a2": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "HTMLModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "HTMLModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "HTMLView", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_3a5d27ca03c147768138a848d7c60b0d", "placeholder": "\u200b", "style": "IPY_MODEL_72b3180f79184684a13dc577b0ee2a0d", "tabbable": null, "tooltip": null, "value": "100%"}}, "c02f45b4c7bb4159b0cb89cc60ae21ef": {"model_module": "@jupyter-widgets/base", "model_module_version": "2.0.0", "model_name": "LayoutModel", "state": {"_model_module": "@jupyter-widgets/base", "_model_module_version": "2.0.0", "_model_name": "LayoutModel", "_view_count": null, "_view_module": "@jupyter-widgets/base", "_view_module_version": "2.0.0", "_view_name": "LayoutView", "align_content": null, "align_items": null, "align_self": null, "border_bottom": null, "border_left": null, "border_right": null, "border_top": null, "bottom": null, "display": null, "flex": null, "flex_flow": null, "grid_area": null, "grid_auto_columns": null, "grid_auto_flow": null, "grid_auto_rows": null, "grid_column": null, "grid_gap": null, "grid_row": null, "grid_template_areas": null, "grid_template_columns": null, "grid_template_rows": null, "height": null, "justify_content": null, "justify_items": null, "left": null, "margin": null, "max_height": null, "max_width": null, "min_height": null, "min_width": null, "object_fit": null, "object_position": null, "order": null, "overflow": null, "padding": null, "right": null, "top": null, "visibility": null, "width": null}}, "eaa27a1ccd5c410bbd3eec79b30c2627": {"model_module": "@jupyter-widgets/controls", "model_module_version": "2.0.0", "model_name": "FloatProgressModel", "state": {"_dom_classes": [], "_model_module": "@jupyter-widgets/controls", "_model_module_version": "2.0.0", "_model_name": "FloatProgressModel", "_view_count": null, "_view_module": "@jupyter-widgets/controls", "_view_module_version": "2.0.0", "_view_name": "ProgressView", "bar_style": "success", "description": "", "description_allow_html": false, "layout": "IPY_MODEL_1bf94c084d1f4efb8bf7cef5a6f67020", "max": 300.0, "min": 0.0, "orientation": "horizontal", "style": "IPY_MODEL_1f7847bd932e4accb249fe676a4ac366", "tabbable": null, "tooltip": null, "value": 300.0}}}, "version_major": 2, "version_minor": 0}</script>
     <script crossorigin="anonymous" integrity="sha256-Ae2Vz/4ePdIu6ZyI/5ZGsYnb+m0JlOmKPjt6XZ9JJkA=" src="https://cdnjs.cloudflare.com/ajax/libs/require.js/2.3.4/require.min.js"></script>
     <script crossorigin="anonymous" data-jupyter-widgets-cdn="https://cdn.jsdelivr.net/npm/" src="https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.6/dist/embed-amd.js"></script>
     <script>DOCUMENTATION_OPTIONS.pagename = 'examples/01_quick_start';</script>
@@ -67,7 +64,6 @@
     <link rel="prev" title="SAX" href="../index.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -83,8 +79,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -92,6 +99,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -99,8 +107,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -116,8 +124,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -146,8 +153,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.13.5 documentation - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.5 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.14.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.14.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -181,6 +188,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.additive.html">sax.backends.additive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.forward_only.html">sax.backends.forward_only module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
@@ -413,16 +421,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 <label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <span class="fa-solid fa-list"></span>
 </label>
@@ -485,7 +501,7 @@
 <span class="o">%</span><span class="k">env</span> XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 
 <span class="c1"># Using GPU?</span>
-<span class="kn">import</span> <span class="nn">jax.extend</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.extend</span>
 
 <span class="nb">print</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">backend</span><span class="o">.</span><span class="n">get_backend</span><span class="p">()</span><span class="o">.</span><span class="n">platform</span><span class="p">)</span>
 </pre></div>
@@ -507,12 +523,12 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 <h2>Imports<a class="headerlink" href="#imports" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">jax</span>
-<span class="kn">import</span> <span class="nn">jax.example_libraries.optimizers</span> <span class="k">as</span> <span class="nn">opt</span>
-<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>  <span class="c1"># plotting</span>
-<span class="kn">import</span> <span class="nn">sax</span>
-<span class="kn">from</span> <span class="nn">tqdm.notebook</span> <span class="kn">import</span> <span class="n">trange</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.example_libraries.optimizers</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">opt</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">matplotlib.pyplot</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">plt</span>  <span class="c1"># plotting</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">tqdm.notebook</span><span class="w"> </span><span class="kn">import</span> <span class="n">trange</span>
 </pre></div>
 </div>
 </div>
@@ -597,7 +613,7 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 <p>Constructing such an <code class="docutils literal notranslate"><span class="pre">SDict</span></code> is easy, however, usually we’re more interested in having parametrized models for our components. To parametrize the coupler <code class="docutils literal notranslate"><span class="pre">SDict</span></code>, just wrap it in a function to obtain a SAX <code class="docutils literal notranslate"><span class="pre">Model</span></code>, which is a keyword-only function mapping to an <code class="docutils literal notranslate"><span class="pre">SDict</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">coupler</span><span class="p">(</span><span class="n">coupling</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">coupler</span><span class="p">(</span><span class="n">coupling</span><span class="o">=</span><span class="mf">0.5</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
     <span class="n">kappa</span> <span class="o">=</span> <span class="n">coupling</span><span class="o">**</span><span class="mf">0.5</span>
     <span class="n">tau</span> <span class="o">=</span> <span class="p">(</span><span class="mi">1</span> <span class="o">-</span> <span class="n">coupling</span><span class="p">)</span> <span class="o">**</span> <span class="mf">0.5</span>
     <span class="n">coupler_dict</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">reciprocal</span><span class="p">(</span>
@@ -631,7 +647,7 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 <p>We can define a waveguide in the same way:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">waveguide</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">wl0</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">neff</span><span class="o">=</span><span class="mf">2.34</span><span class="p">,</span> <span class="n">ng</span><span class="o">=</span><span class="mf">3.4</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">waveguide</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">wl0</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">neff</span><span class="o">=</span><span class="mf">2.34</span><span class="p">,</span> <span class="n">ng</span><span class="o">=</span><span class="mf">3.4</span><span class="p">,</span> <span class="n">length</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span> <span class="n">loss</span><span class="o">=</span><span class="mf">0.0</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">SDict</span><span class="p">:</span>
     <span class="n">dwl</span> <span class="o">=</span> <span class="n">wl</span> <span class="o">-</span> <span class="n">wl0</span>
     <span class="n">dneff_dwl</span> <span class="o">=</span> <span class="p">(</span><span class="n">ng</span> <span class="o">-</span> <span class="n">neff</span><span class="p">)</span> <span class="o">/</span> <span class="n">wl0</span>
     <span class="n">neff</span> <span class="o">=</span> <span class="n">neff</span> <span class="o">-</span> <span class="n">dwl</span> <span class="o">*</span> <span class="n">dneff_dwl</span>
@@ -727,7 +743,7 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CircuitInfo(dag=&lt;networkx.classes.digraph.DiGraph object at 0x7f2bfc0e1710&gt;, models={&#39;waveguide&#39;: &lt;function waveguide at 0x7f2b8b633ce0&gt;, &#39;coupler&#39;: &lt;function coupler at 0x7f2b8b633b00&gt;, &#39;top_level&#39;: &lt;function _flat_circuit.&lt;locals&gt;._circuit at 0x7f2b8b1d5ee0&gt;}, backend=&#39;klu&#39;)
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CircuitInfo(dag=&lt;networkx.classes.digraph.DiGraph object at 0x7f10091079e0&gt;, models={&#39;waveguide&#39;: &lt;function waveguide at 0x7f1008d57a60&gt;, &#39;coupler&#39;: &lt;function coupler at 0x7f1008d579c0&gt;, &#39;top_level&#39;: &lt;function _flat_circuit.&lt;locals&gt;._circuit at 0x7f100875d580&gt;}, backend=&#39;klu&#39;)
 </pre></div>
 </div>
 </div>
@@ -740,8 +756,8 @@ env: XLA_FLAGS=--xla_gpu_cuda_data_dir=/usr/lib/cuda
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 11.9 ms, sys: 0 ns, total: 11.9 ms
-Wall time: 11.7 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 19.1 ms, sys: 8 μs, total: 19.1 ms
+Wall time: 20.1 ms
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
@@ -778,8 +794,8 @@ Wall time: 11.7 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 118 ms, sys: 0 ns, total: 118 ms
-Wall time: 76.8 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 137 ms, sys: 12 ms, total: 149 ms
+Wall time: 142 ms
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
@@ -809,8 +825,8 @@ Wall time: 76.8 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 733 μs, sys: 0 ns, total: 733 μs
-Wall time: 424 μs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 927 μs, sys: 0 ns, total: 927 μs
+Wall time: 1.82 ms
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
@@ -873,8 +889,8 @@ Wall time: 424 μs
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 439 ms, sys: 9.34 ms, total: 448 ms
-Wall time: 407 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 592 ms, sys: 22.9 ms, total: 615 ms
+Wall time: 594 ms
 </pre></div>
 </div>
 </div>
@@ -892,7 +908,7 @@ Wall time: 407 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/fce1cd2866c1f3dd57627d4f95953ce8152c12b0cfafe77f462640638713c140.png" src="../_images/fce1cd2866c1f3dd57627d4f95953ce8152c12b0cfafe77f462640638713c140.png" />
+<img alt="../_images/60d67a1ba0534f19f09f380abcc2b8e6bd2cfbee8eb0df6a3df800859a584910.png" src="../_images/60d67a1ba0534f19f09f380abcc2b8e6bd2cfbee8eb0df6a3df800859a584910.png" />
 </div>
 </div>
 </section>
@@ -902,7 +918,7 @@ Wall time: 407 ms
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span> <span class="nf">loss_fn</span><span class="p">(</span><span class="n">delta_length</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">loss_fn</span><span class="p">(</span><span class="n">delta_length</span><span class="p">):</span>
     <span class="n">S</span> <span class="o">=</span> <span class="n">mzi</span><span class="p">(</span><span class="n">wl</span><span class="o">=</span><span class="mf">1.55</span><span class="p">,</span> <span class="n">top</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span> <span class="o">+</span> <span class="n">delta_length</span><span class="p">},</span> <span class="n">btm</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;length&quot;</span><span class="p">:</span> <span class="mf">15.0</span><span class="p">})</span>
     <span class="k">return</span> <span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">S</span><span class="p">[</span><span class="s2">&quot;in0&quot;</span><span class="p">,</span> <span class="s2">&quot;out0&quot;</span><span class="p">])</span> <span class="o">**</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">mean</span><span class="p">()</span>
 </pre></div>
@@ -916,8 +932,8 @@ Wall time: 407 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 76.8 ms, sys: 4.36 ms, total: 81.2 ms
-Wall time: 68.3 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 138 ms, sys: 5.01 ms, total: 143 ms
+Wall time: 116 ms
 </pre></div>
 </div>
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Array(0.08961828, dtype=float64)
@@ -951,7 +967,7 @@ Wall time: 68.3 ms
 <p>Given all this, a single training step can be defined:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">step_fn</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">step_fn</span><span class="p">(</span><span class="n">step</span><span class="p">,</span> <span class="n">state</span><span class="p">):</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="n">params_fn</span><span class="p">(</span><span class="n">state</span><span class="p">)</span>
     <span class="n">loss</span> <span class="o">=</span> <span class="n">loss_fn</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
     <span class="n">grad</span> <span class="o">=</span> <span class="n">grad_fn</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>
@@ -972,7 +988,7 @@ Wall time: 68.3 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<script type="application/vnd.jupyter.widget-view+json">{"model_id": "edb3326ff4b34fd69e0ca4d373115ba2", "version_major": 2, "version_minor": 0}</script></div>
+<script type="application/vnd.jupyter.widget-view+json">{"model_id": "8c6beaeb5aaa42f49ffbf4f1bc19cfd2", "version_major": 2, "version_minor": 0}</script></div>
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
@@ -1001,7 +1017,7 @@ Wall time: 68.3 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/93145ddf1689bd6e23935209170d44bbe1fdf0f7b4e5f52549bc5a9c2791241a.png" src="../_images/93145ddf1689bd6e23935209170d44bbe1fdf0f7b4e5f52549bc5a9c2791241a.png" />
+<img alt="../_images/3f8ee29aa0de15b7fc399fa09925546aa0e753e39615e82ce0813558144fe753.png" src="../_images/3f8ee29aa0de15b7fc399fa09925546aa0e753e39615e82ce0813558144fe753.png" />
 </div>
 </div>
 <p>The minimum of the MZI is perfectly located at 1550nm.</p>
@@ -1057,7 +1073,7 @@ Wall time: 68.3 ms
 <p>Let’s create a <em>model factory</em> (<code class="docutils literal notranslate"><span class="pre">ModelFactory</span></code>) for this. In SAX, a <em>model factory</em> is any keyword-only function that generates a <code class="docutils literal notranslate"><span class="pre">Model</span></code>:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mzi_chain</span><span class="p">(</span><span class="n">num_mzis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mzi_chain</span><span class="p">(</span><span class="n">num_mzis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">sax</span><span class="o">.</span><span class="n">Model</span><span class="p">:</span>
     <span class="n">chain</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">sax</span><span class="o">.</span><span class="n">circuit</span><span class="p">(</span>
         <span class="n">netlist</span><span class="o">=</span><span class="p">{</span>
             <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="p">{</span><span class="sa">f</span><span class="s2">&quot;dc</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">:</span> <span class="s2">&quot;dc_with_arms&quot;</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">num_mzis</span> <span class="o">+</span> <span class="mi">1</span><span class="p">)},</span>
@@ -1104,14 +1120,14 @@ Wall time: 68.3 ms
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 657 ms, sys: 61.7 ms, total: 718 ms
-Wall time: 604 ms
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 901 ms, sys: 60.8 ms, total: 962 ms
+Wall time: 971 ms
 </pre></div>
 </div>
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.3 s, sys: 42.9 ms, total: 2.34 s
-Wall time: 1.2 s
-CPU times: user 2.55 ms, sys: 0 ns, total: 2.55 ms
-Wall time: 705 μs
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 2.53 s, sys: 38.4 ms, total: 2.57 s
+Wall time: 2 s
+CPU times: user 1.69 ms, sys: 0 ns, total: 1.69 ms
+Wall time: 701 μs
 </pre></div>
 </div>
 </div>
@@ -1132,9 +1148,9 @@ Wall time: 705 μs
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/1a101db06c6b47e6b3e6084fcd2fe6605a638e3d57821b2607646f58407ebe5f.png" src="../_images/1a101db06c6b47e6b3e6084fcd2fe6605a638e3d57821b2607646f58407ebe5f.png" />
-<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 135 ms, sys: 84.4 ms, total: 219 ms
-Wall time: 193 ms
+<img alt="../_images/dd1590ac4ce9792a90997a3203f3e1fdd4efc9584e254eff76af9cb10dd6fc94.png" src="../_images/dd1590ac4ce9792a90997a3203f3e1fdd4efc9584e254eff76af9cb10dd6fc94.png" />
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>CPU times: user 192 ms, sys: 38.9 ms, total: 231 ms
+Wall time: 222 ms
 </pre></div>
 </div>
 </div>
@@ -1178,8 +1194,7 @@ Wall time: 193 ms
             
             
               
-                <dialog id="pst-secondary-sidebar-modal"></dialog>
-                <div id="pst-secondary-sidebar" class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
 
 
   <div class="sidebar-secondary-item">
@@ -1244,8 +1259,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

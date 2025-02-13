@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>klujax &#8212; sax 0.13.5 documentation</title>
+    <title>klujax &#8212; sax 0.14.1 documentation</title>
   
   
   
@@ -16,19 +16,17 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -38,11 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -58,7 +55,6 @@
     <link rel="search" title="Search" href="../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -74,8 +70,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -83,6 +90,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -90,8 +98,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,8 +117,7 @@
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -139,8 +146,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.13.5 documentation - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.5 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.14.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.14.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -174,6 +181,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.additive.html">sax.backends.additive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.forward_only.html">sax.backends.forward_only module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
@@ -292,16 +300,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 
 </div></div>
       
@@ -330,117 +346,51 @@
   <h1>Source code for klujax</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; klujax: a KLU solver for JAX &quot;&quot;&quot;</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.2.10&quot;</span>
+<span class="c1"># Metadata ============================================================================</span>
+
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.3.1&quot;</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Floris Laporte&quot;</span>
 <span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;solve&quot;</span><span class="p">,</span> <span class="s2">&quot;coo_mul_vec&quot;</span><span class="p">]</span>
 
-
 <span class="c1"># Imports =============================================================================</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">time</span> <span class="kn">import</span> <span class="n">time</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.extend</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">lax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jax.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShapedArray</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jax.interpreters</span><span class="w"> </span><span class="kn">import</span> <span class="n">ad</span><span class="p">,</span> <span class="n">batching</span><span class="p">,</span> <span class="n">mlir</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span>
 
-<span class="kn">import</span> <span class="nn">jax</span>
-<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">from</span> <span class="nn">jax</span> <span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">lax</span>
-<span class="kn">from</span> <span class="nn">jax.core</span> <span class="kn">import</span> <span class="n">ShapedArray</span>
-<span class="kn">from</span> <span class="nn">jax.interpreters</span> <span class="kn">import</span> <span class="n">ad</span><span class="p">,</span> <span class="n">batching</span>
-<span class="kn">from</span> <span class="nn">jaxlib</span> <span class="kn">import</span> <span class="n">xla_client</span>
-<span class="kn">from</span> <span class="nn">jax._src.interpreters.xla</span> <span class="kn">import</span> <span class="p">(</span>
-    <span class="n">_backend_specific_translations</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="kn">import</span> <span class="nn">klujax_cpp</span>
-
+<span class="kn">import</span><span class="w"> </span><span class="nn">klujax_cpp</span>
 
 <span class="c1"># Config ==============================================================================</span>
 
-
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
 <span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_platform_name&quot;</span><span class="p">,</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">_log</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">DEBUG</span> <span class="k">else</span> <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>  <span class="c1"># noqa: E731</span>
+
+<span class="c1"># The main functions ==================================================================</span>
 
 
-<span class="c1"># Constants ===========================================================================</span>
+<div class="viewcode-block" id="solve"><a class="viewcode-back" href="../internals/03_backends.html#klujax.solve">[docs]</a><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Solve for x in the sparse linear system Ax=b.</span>
 
+<span class="sd">    Args:</span>
+<span class="sd">        Ai: [n_nz; int32]: the row indices of the sparse matrix A</span>
+<span class="sd">        Aj: [n_nz; int32]: the column indices of the sparse matrix A</span>
+<span class="sd">        Ax: [n_lhs? x n_nz; float64|complex128]: the values of the sparse matrix A</span>
+<span class="sd">        b:  [n_lhs? x n_col x n_rhs?; float64|complex128]: the target vector</span>
 
-<span class="n">COMPLEX_DTYPES</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
-    <span class="c1"># np.complex256,</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
-<span class="p">)</span>
-
-
-<span class="c1"># Primitives ==========================================================================</span>
-
-
-<span class="n">solve_f64</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_f64&quot;</span><span class="p">)</span>
-<span class="n">solve_c128</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_c128&quot;</span><span class="p">)</span>
-<span class="n">coo_mul_vec_f64</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;coo_mul_vec_f64&quot;</span><span class="p">)</span>
-<span class="n">coo_mul_vec_c128</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;coo_mul_vec_c128&quot;</span><span class="p">)</span>
-
-
-<span class="c1"># Helper Decorators ===================================================================</span>
-
-<span class="n">_cpu_translations</span> <span class="o">=</span> <span class="n">_backend_specific_translations</span><span class="p">[</span><span class="s2">&quot;cpu&quot;</span><span class="p">]</span>
-
-
-<span class="k">def</span> <span class="nf">_wrap_old_translation</span><span class="p">(</span><span class="n">f</span><span class="p">):</span>
-    <span class="nd">@wraps</span><span class="p">(</span><span class="n">f</span><span class="p">)</span>
-    <span class="k">def</span> <span class="nf">wrapped</span><span class="p">(</span><span class="n">ctx</span><span class="p">,</span> <span class="n">avals_in</span><span class="p">,</span> <span class="n">avals_out</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">):</span>
-        <span class="n">ans</span> <span class="o">=</span> <span class="n">f</span><span class="p">(</span><span class="n">ctx</span><span class="o">.</span><span class="n">builder</span><span class="p">,</span> <span class="o">*</span><span class="n">args</span><span class="p">,</span> <span class="o">**</span><span class="n">kw</span><span class="p">)</span>
-        <span class="k">return</span> <span class="p">[</span><span class="n">ans</span><span class="p">]</span>
-
-    <span class="k">return</span> <span class="n">wrapped</span>
-
-
-<span class="k">def</span> <span class="nf">xla_register_cpu</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="n">cpp_fun</span><span class="p">):</span>
-    <span class="n">name</span> <span class="o">=</span> <span class="n">primitive</span><span class="o">.</span><span class="n">name</span><span class="o">.</span><span class="n">encode</span><span class="p">()</span>
-
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">xla_client</span><span class="o">.</span><span class="n">register_custom_call_target</span><span class="p">(</span>
-            <span class="n">name</span><span class="p">,</span>
-            <span class="n">cpp_fun</span><span class="p">(),</span>
-        <span class="p">)</span>
-        <span class="n">_cpu_translations</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">_wrap_old_translation</span><span class="p">(</span><span class="n">partial</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">name</span><span class="p">))</span>
-        <span class="c1">#mlir.register_lowering(primitive, partial(fun, name), &#39;cpu&#39;)</span>
-        <span class="k">return</span> <span class="n">fun</span>
-
-    <span class="k">return</span> <span class="n">decorator</span>
-
-
-<span class="k">def</span> <span class="nf">ad_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">ad</span><span class="o">.</span><span class="n">primitive_jvps</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">fun</span>
-        <span class="k">return</span> <span class="n">fun</span>
-
-    <span class="k">return</span> <span class="n">decorator</span>
-
-
-<span class="k">def</span> <span class="nf">transpose_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">ad</span><span class="o">.</span><span class="n">primitive_transposes</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">fun</span>
-        <span class="k">return</span> <span class="n">fun</span>
-
-    <span class="k">return</span> <span class="n">decorator</span>
-
-
-<span class="k">def</span> <span class="nf">vmap_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
-    <span class="k">def</span> <span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">batching</span><span class="o">.</span><span class="n">primitive_batchers</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">fun</span>
-
-    <span class="k">return</span> <span class="n">decorator</span>
-
-
-<span class="c1"># The Functions =======================================================================</span>
-
-
-<div class="viewcode-block" id="solve"><a class="viewcode-back" href="../internals/03_backends.html#klujax.solve">[docs]</a><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>  <span class="c1"># jitting by default allows for empty implementation definitions</span>
-<span class="k">def</span> <span class="nf">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="sd">    Returns:</span>
+<span class="sd">        x: the result (x≈A^-1b)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="n">COMPLEX_DTYPES</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">solve_c128</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
             <span class="n">Ai</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
@@ -455,39 +405,295 @@
             <span class="n">Ax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
             <span class="n">b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+
+    <span class="k">return</span> <span class="n">result</span>  <span class="c1"># type: ignore</span></div>
 
 
-<div class="viewcode-block" id="coo_mul_vec"><a class="viewcode-back" href="../internals/03_backends.html#klujax.coo_mul_vec">[docs]</a><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>  <span class="c1"># jitting by default allows for empty implementation definitions</span>
-<span class="k">def</span> <span class="nf">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="n">COMPLEX_DTYPES</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)):</span>
+<div class="viewcode-block" id="coo_mul_vec"><a class="viewcode-back" href="../internals/03_backends.html#klujax.coo_mul_vec">[docs]</a><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply a sparse matrix with a vector: Ax=b</span>
+
+<span class="sd">    Args:</span>
+<span class="sd">        Ai: [n_nz; int32]: the row indices of the sparse matrix A</span>
+<span class="sd">        Aj: [n_nz; int32]: the column indices of the sparse matrix A</span>
+<span class="sd">        Ax: [n_lhs? x n_nz; float64|complex128]: the values of the sparse matrix A</span>
+<span class="sd">        x:  [n_lhs? x n_col x n_rhs?; float64|complex128]: the vector that&#39;s being multiplied by A</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        b: the result of the multiplication (b=Ax)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="n">COMPLEX_DTYPES</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)):</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">coo_mul_vec_c128</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
             <span class="n">Ai</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Aj</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Ax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">),</span>
-            <span class="n">b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">),</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">coo_mul_vec_f64</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
             <span class="n">Ai</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Aj</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Ax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
-            <span class="n">b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
+            <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span></div>
+    <span class="k">return</span> <span class="n">result</span>  <span class="c1"># type: ignore</span></div>
 
 
-<span class="c1"># Implementation ======================================================================</span>
+<span class="c1"># Constants ===========================================================================</span>
+
+<span class="n">COMPLEX_DTYPES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+    <span class="c1"># np.complex256,</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Primitives ==========================================================================</span>
+
+<span class="n">solve_f64</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_f64&quot;</span><span class="p">)</span>
+<span class="n">solve_c128</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_c128&quot;</span><span class="p">)</span>
+<span class="n">coo_mul_vec_f64</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;coo_mul_vec_f64&quot;</span><span class="p">)</span>
+<span class="n">coo_mul_vec_c128</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;coo_mul_vec_c128&quot;</span><span class="p">)</span>
+
+<span class="c1"># Register XLA extensions ==============================================================</span>
+
+<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;_solve_f64&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_f64</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;_coo_mul_vec_f64&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">coo_mul_vec_f64</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;_solve_c128&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_c128</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;_coo_mul_vec_c128&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">coo_mul_vec_c128</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Helper Decorators ===================================================================</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">ad_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
+        <span class="n">ad</span><span class="o">.</span><span class="n">primitive_jvps</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">fun</span>
+        <span class="k">return</span> <span class="n">fun</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">transpose_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
+        <span class="n">ad</span><span class="o">.</span><span class="n">primitive_transposes</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">fun</span>
+        <span class="k">return</span> <span class="n">fun</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">vmap_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
+        <span class="n">batching</span><span class="o">.</span><span class="n">primitive_batchers</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">fun</span>
+
+    <span class="k">return</span> <span class="n">decorator</span>
+
+
+<span class="c1"># Implementations =====================================================================</span>
 
 
 <span class="nd">@solve_f64</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="nd">@solve_c128</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="nd">@coo_mul_vec_f64</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="nd">@coo_mul_vec_c128</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="k">def</span> <span class="nf">coo_vec_operation_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="c1"># No implementations needed, as function is jitted by default (see above)</span>
-    <span class="k">raise</span> <span class="ne">NotImplementedError</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_f64_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
 
+    <span class="n">_b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
+        <span class="s2">&quot;_solve_f64&quot;</span><span class="p">,</span>
+        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_b</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">Ai</span><span class="p">,</span>
+        <span class="n">Aj</span><span class="p">,</span>
+        <span class="n">Ax</span><span class="p">,</span>
+        <span class="n">_b</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+
+<span class="nd">@solve_c128</span><span class="o">.</span><span class="n">def_impl</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_c128_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+    <span class="n">_b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
+        <span class="s2">&quot;_solve_c128&quot;</span><span class="p">,</span>
+        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_b</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">Ai</span><span class="p">,</span>
+        <span class="n">Aj</span><span class="p">,</span>
+        <span class="n">Ax</span><span class="p">,</span>
+        <span class="n">_b</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+
+<span class="nd">@coo_mul_vec_f64</span><span class="o">.</span><span class="n">def_impl</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_f64_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
+        <span class="s2">&quot;_coo_mul_vec_f64&quot;</span><span class="p">,</span>
+        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_x</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">Ai</span><span class="p">,</span>
+        <span class="n">Aj</span><span class="p">,</span>
+        <span class="n">Ax</span><span class="p">,</span>
+        <span class="n">_x</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+
+<span class="nd">@coo_mul_vec_c128</span><span class="o">.</span><span class="n">def_impl</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_c128_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
+    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
+        <span class="s2">&quot;_coo_mul_vec_c128&quot;</span><span class="p">,</span>
+        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_x</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
+        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
+        <span class="n">Ai</span><span class="p">,</span>
+        <span class="n">Aj</span><span class="p">,</span>
+        <span class="n">Ax</span><span class="p">,</span>
+        <span class="n">_x</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
+    <span class="n">Ai</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
+    <span class="n">Aj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
+    <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ai</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Aj</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ai</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Aj</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">prefer_x_rhs_over_lhs</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefer_x_rhs_over_lhs</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Ax should be at most 2D with shape: (n_lhs, n_nz). Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="s2">&quot;Note: jax.vmap is supported. Use it if needed.&quot;</span>
+        <span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
+
+    <span class="n">a_n_lhs</span><span class="p">,</span> <span class="n">n_nz</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span>
+    <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_nz</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_nz</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">prefer_x_rhs_over_lhs</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">False</span>
+    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prefer_x_rhs_over_lhs</span><span class="p">:</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">True</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;x should be at most 3D with shape: (n_lhs, n_col, n_rhs). Got: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="s2">&quot;Note: jax.vmap is supported. Use it if needed.&quot;</span>
+        <span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_col</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_rhs</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">a_n_lhs</span> <span class="o">==</span> <span class="n">x_n_lhs</span><span class="p">:</span>
+        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">a_n_lhs</span>
+    <span class="k">elif</span> <span class="n">a_n_lhs</span> <span class="o">&gt;</span> <span class="n">x_n_lhs</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">x_n_lhs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Cannot broadcast n_lhs for x into n_lhs for Ax. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Got: n_lhs[x]=</span><span class="si">{</span><span class="n">x_n_lhs</span><span class="si">}</span><span class="s2">; n_lhs[Ax]=</span><span class="si">{</span><span class="n">a_n_lhs</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">a_n_lhs</span>
+        <span class="k">if</span> <span class="n">shape_includes_lhs</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,)</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,)</span> <span class="o">+</span> <span class="n">shape</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="k">if</span> <span class="ow">not</span> <span class="n">a_n_lhs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Cannot broadcast n_lhs for Ax into n_lhs for x. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;Got: n_lhs[x]=</span><span class="si">{</span><span class="n">x_n_lhs</span><span class="si">}</span><span class="s2">; n_lhs[Ax]=</span><span class="si">{</span><span class="n">a_n_lhs</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">x_n_lhs</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_lhs</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="n">n_nz</span><span class="p">))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">))</span>
+
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="c1"># We retain the old shape of b so the result of the primitive can be</span>
+    <span class="c1"># reshaped to the expected shape.</span>
+    <span class="k">return</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span>
+
+
+<span class="c1"># Lowerings ===========================================================================</span>
+
+<span class="n">solve_f64_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">solve_f64_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">solve_f64_lowering</span><span class="p">)</span>
+
+<span class="n">solve_c128_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">solve_c128_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">solve_c128_lowering</span><span class="p">)</span>
+
+<span class="n">coo_mul_vec_f64_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">coo_mul_vec_f64_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">,</span> <span class="n">coo_mul_vec_f64_lowering</span><span class="p">)</span>
+
+<span class="n">coo_mul_vec_c128_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span>
+    <span class="n">coo_mul_vec_c128_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">,</span> <span class="n">coo_mul_vec_c128_lowering</span><span class="p">)</span>
 
 <span class="c1"># Abstract Evaluations ================================================================</span>
 
@@ -496,70 +702,8 @@
 <span class="nd">@solve_c128</span><span class="o">.</span><span class="n">def_abstract_eval</span>
 <span class="nd">@coo_mul_vec_f64</span><span class="o">.</span><span class="n">def_abstract_eval</span>
 <span class="nd">@coo_mul_vec_c128</span><span class="o">.</span><span class="n">def_abstract_eval</span>
-<span class="k">def</span> <span class="nf">coo_vec_operation_abstract_eval</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coo_vec_operation_abstract_eval</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">return</span> <span class="n">ShapedArray</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
-
-
-<span class="c1"># XLA Implementations =================================================================</span>
-
-
-<span class="nd">@xla_register_cpu</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_f64</span><span class="p">)</span>
-<span class="nd">@xla_register_cpu</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_c128</span><span class="p">)</span>
-<span class="nd">@xla_register_cpu</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">,</span> <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">coo_mul_vec_f64</span><span class="p">)</span>
-<span class="nd">@xla_register_cpu</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">,</span> <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">coo_mul_vec_c128</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">coo_vec_operation_xla</span><span class="p">(</span><span class="n">primitive_name</span><span class="p">,</span> <span class="n">c</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="n">Ax_shape</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_shape</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
-    <span class="n">Ai_shape</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_shape</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
-    <span class="n">Aj_shape</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_shape</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
-    <span class="n">b_shape</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_shape</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-    <span class="o">*</span><span class="n">_n_lhs_list</span><span class="p">,</span> <span class="n">_Anz</span> <span class="o">=</span> <span class="n">Ax_shape</span><span class="o">.</span><span class="n">dimensions</span><span class="p">()</span>
-    <span class="k">assert</span> <span class="nb">len</span><span class="p">(</span><span class="n">_n_lhs_list</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">,</span> <span class="s2">&quot;solve alows for maximum one batch dimension.&quot;</span>
-    <span class="n">_n_lhs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">_n_lhs_list</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)))</span>
-    <span class="n">Ax</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Reshape</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="p">(</span><span class="n">_n_lhs</span> <span class="o">*</span> <span class="n">_Anz</span><span class="p">,))</span>
-    <span class="n">Ax_shape</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_shape</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
-    <span class="k">if</span> <span class="n">_n_lhs_list</span><span class="p">:</span>
-        <span class="n">_n_lhs_b</span><span class="p">,</span> <span class="n">_n_col</span><span class="p">,</span> <span class="o">*</span><span class="n">_n_rhs_list</span> <span class="o">=</span> <span class="n">b_shape</span><span class="o">.</span><span class="n">dimensions</span><span class="p">()</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">_n_col</span><span class="p">,</span> <span class="o">*</span><span class="n">_n_rhs_list</span> <span class="o">=</span> <span class="n">b_shape</span><span class="o">.</span><span class="n">dimensions</span><span class="p">()</span>
-        <span class="n">_n_lhs_b</span> <span class="o">=</span> <span class="mi">1</span>
-    <span class="k">assert</span> <span class="n">_n_lhs_b</span> <span class="o">==</span> <span class="n">_n_lhs</span><span class="p">,</span> <span class="s2">&quot;Batch dimension of Ax and b don&#39;t match.&quot;</span>
-    <span class="n">_n_col</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">_n_col</span><span class="p">)</span>
-    <span class="n">_n_rhs</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">_n_rhs_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">)))</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Reshape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">_n_lhs</span><span class="p">,</span> <span class="n">_n_col</span><span class="p">,</span> <span class="n">_n_rhs</span><span class="p">))</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Transpose</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Reshape</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="p">(</span><span class="n">_n_lhs</span> <span class="o">*</span> <span class="n">_n_rhs</span> <span class="o">*</span> <span class="n">_n_col</span><span class="p">,))</span>
-    <span class="n">b_shape</span> <span class="o">=</span> <span class="n">c</span><span class="o">.</span><span class="n">get_shape</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-    <span class="n">Anz</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">ConstantLiteral</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">_Anz</span><span class="p">))</span>
-    <span class="n">n_col</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">ConstantLiteral</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">_n_col</span><span class="p">))</span>
-    <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">ConstantLiteral</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">_n_rhs</span><span class="p">))</span>
-    <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">ConstantLiteral</span><span class="p">(</span><span class="n">c</span><span class="p">,</span> <span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">(</span><span class="n">_n_lhs</span><span class="p">))</span>
-    <span class="n">Anz_shape</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">Shape</span><span class="o">.</span><span class="n">array_shape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="p">(),</span> <span class="p">())</span>
-    <span class="n">n_col_shape</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">Shape</span><span class="o">.</span><span class="n">array_shape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="p">(),</span> <span class="p">())</span>
-    <span class="n">n_lhs_shape</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">Shape</span><span class="o">.</span><span class="n">array_shape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="p">(),</span> <span class="p">())</span>
-    <span class="n">n_rhs_shape</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">Shape</span><span class="o">.</span><span class="n">array_shape</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">dtype</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span> <span class="p">(),</span> <span class="p">())</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">CustomCallWithLayout</span><span class="p">(</span>
-        <span class="n">c</span><span class="p">,</span>
-        <span class="n">primitive_name</span><span class="p">,</span>
-        <span class="n">operands</span><span class="o">=</span><span class="p">(</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_lhs</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">,</span> <span class="n">Anz</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">),</span>
-        <span class="n">operand_shapes_with_layout</span><span class="o">=</span><span class="p">(</span>
-            <span class="n">n_col_shape</span><span class="p">,</span>
-            <span class="n">n_lhs_shape</span><span class="p">,</span>
-            <span class="n">n_rhs_shape</span><span class="p">,</span>
-            <span class="n">Anz_shape</span><span class="p">,</span>
-            <span class="n">Ai_shape</span><span class="p">,</span>
-            <span class="n">Aj_shape</span><span class="p">,</span>
-            <span class="n">Ax_shape</span><span class="p">,</span>
-            <span class="n">b_shape</span><span class="p">,</span>
-        <span class="p">),</span>
-        <span class="n">shape_with_layout</span><span class="o">=</span><span class="n">b_shape</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Reshape</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="n">_n_lhs</span><span class="p">,</span> <span class="n">_n_rhs</span><span class="p">,</span> <span class="n">_n_col</span><span class="p">))</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Transpose</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">))</span>
-    <span class="k">if</span> <span class="n">_n_lhs_list</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Reshape</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="n">_n_lhs</span><span class="p">,</span> <span class="n">_n_col</span><span class="p">,</span> <span class="o">*</span><span class="n">_n_rhs_list</span><span class="p">))</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">xla_client</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">Reshape</span><span class="p">(</span><span class="n">result</span><span class="p">,</span> <span class="p">(</span><span class="n">_n_col</span><span class="p">,</span> <span class="o">*</span><span class="n">_n_rhs_list</span><span class="p">))</span>
-    <span class="k">return</span> <span class="n">result</span>
 
 
 <span class="c1"># Forward Gradients ===================================================================</span>
@@ -567,7 +711,7 @@
 
 <span class="nd">@ad_register</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">)</span>
 <span class="nd">@ad_register</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">solve_value_and_jvp</span><span class="p">(</span><span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_value_and_jvp</span><span class="p">(</span><span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">):</span>
     <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">arg_values</span>
     <span class="n">dAi</span><span class="p">,</span> <span class="n">dAj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">arg_tangents</span>
     <span class="n">dAx</span> <span class="o">=</span> <span class="n">dAx</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAx</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
@@ -583,7 +727,7 @@
 
 <span class="nd">@ad_register</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">)</span>
 <span class="nd">@ad_register</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">coo_mul_vec_value_and_jvp</span><span class="p">(</span><span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_value_and_jvp</span><span class="p">(</span><span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">):</span>
     <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">arg_values</span>
     <span class="n">dAi</span><span class="p">,</span> <span class="n">dAj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">arg_tangents</span>
     <span class="n">dAx</span> <span class="o">=</span> <span class="n">dAx</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAx</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
@@ -601,7 +745,7 @@
 
 <span class="nd">@transpose_register</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">)</span>
 <span class="nd">@transpose_register</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">solve_transpose</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_transpose</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
@@ -612,7 +756,7 @@
 
 <span class="nd">@transpose_register</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">)</span>
 <span class="nd">@transpose_register</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">coo_mul_vec_transpose</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_transpose</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
     <span class="k">assert</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>  <span class="c1"># xor</span>
@@ -632,7 +776,7 @@
 <span class="nd">@vmap_register</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">solve</span><span class="p">)</span>
 <span class="nd">@vmap_register</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">,</span> <span class="n">coo_mul_vec</span><span class="p">)</span>
 <span class="nd">@vmap_register</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">,</span> <span class="n">coo_mul_vec</span><span class="p">)</span>
-<span class="k">def</span> <span class="nf">coo_vec_operation_vmap</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">vector_arg_values</span><span class="p">,</span> <span class="n">batch_axes</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coo_vec_operation_vmap</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">vector_arg_values</span><span class="p">,</span> <span class="n">batch_axes</span><span class="p">):</span>
     <span class="n">aAi</span><span class="p">,</span> <span class="n">aAj</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="n">ab</span> <span class="o">=</span> <span class="n">batch_axes</span>
     <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">vector_arg_values</span>
 
@@ -641,95 +785,42 @@
 
     <span class="k">if</span> <span class="n">aAx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">aAx</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">aAx</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">ab</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ab</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># treat as lhs</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># treat as lhs</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span>
 
     <span class="k">if</span> <span class="n">ab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">aAx</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="n">aAx</span><span class="p">]</span>
-        <span class="k">if</span> <span class="n">aAx</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># treat as lhs</span>
         <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
         <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span>
 
     <span class="k">if</span> <span class="n">aAx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-        <span class="k">if</span> <span class="n">ab</span> <span class="o">!=</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
-        <span class="n">n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="o">*</span><span class="n">n_rhs_list</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">prod</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">(</span><span class="n">n_rhs_list</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="n">np</span><span class="o">.</span><span class="n">int32</span><span class="p">))</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">)</span><span class="o">.</span><span class="n">transpose</span><span class="p">((</span><span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_col</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vmap: </span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># treat as rhs</span>
+        <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vmap: </span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span>
+        <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+        <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:]</span>
+
+        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
+        <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vmap: </span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="c1"># b is now guaranteed to have shape (n_lhs, n_col, n_rhs)</span>
         <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">n_col</span><span class="p">,</span> <span class="n">n_lhs</span><span class="p">,</span> <span class="o">*</span><span class="n">n_rhs_list</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="mi">1</span>
+        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
 
     <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;invalid arguments for vmap&quot;</span><span class="p">)</span>
-
-
-<span class="c1"># Quick Tests =========================================================================</span>
-
-
-<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s2">&quot;__main__&quot;</span><span class="p">:</span>
-    <span class="n">A</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-        <span class="p">[</span>
-            <span class="p">[</span><span class="mi">2</span> <span class="o">+</span> <span class="mi">3</span><span class="n">j</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">],</span>
-        <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">A</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">(</span>
-        <span class="p">[</span>
-            <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">],</span>
-            <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">4</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
-        <span class="p">],</span>
-        <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">8</span><span class="p">],</span> <span class="p">[</span><span class="mi">45</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">],</span> <span class="p">[</span><span class="mi">19</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">7</span><span class="p">],</span> <span class="p">[</span><span class="mi">45</span><span class="p">,</span> <span class="mi">44</span><span class="p">],</span> <span class="p">[</span><span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="o">-</span><span class="mi">4</span><span class="p">],</span> <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span> <span class="p">[</span><span class="mi">19</span><span class="p">,</span> <span class="mi">18</span><span class="p">]],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">3</span> <span class="o">+</span> <span class="mi">8</span><span class="n">j</span><span class="p">,</span> <span class="mi">8</span> <span class="o">+</span> <span class="mi">45</span><span class="n">j</span><span class="p">,</span> <span class="mi">23</span> <span class="o">+</span> <span class="o">-</span><span class="mi">3</span><span class="n">j</span><span class="p">,</span> <span class="o">-</span><span class="mi">7</span> <span class="o">-</span> <span class="mi">3</span><span class="n">j</span><span class="p">,</span> <span class="mi">13</span> <span class="o">+</span> <span class="mi">19</span><span class="n">j</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">)</span>
-    <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="mi">8</span><span class="p">,</span> <span class="mi">45</span><span class="p">,</span> <span class="o">-</span><span class="mi">3</span><span class="p">,</span> <span class="mi">3</span><span class="p">,</span> <span class="mi">19</span><span class="p">],</span> <span class="n">dtype</span><span class="o">=</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">)</span>
-    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="nb">abs</span><span class="p">(</span><span class="n">A</span><span class="p">)</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">)</span>
-    <span class="n">Ax</span> <span class="o">=</span> <span class="n">A</span><span class="p">[</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">]</span>
-
-    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-
-    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-
-    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">solve_sum</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-
-    <span class="n">solve_sum_grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">solve_sum</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">solve_sum_grad</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
-
-    <span class="k">def</span> <span class="nf">coo_mul_vec_sum</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-        <span class="k">return</span> <span class="n">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
-
-    <span class="n">coo_mul_vec_sum_grad</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">grad</span><span class="p">(</span><span class="n">coo_mul_vec_sum</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
-    <span class="n">t</span> <span class="o">=</span> <span class="n">time</span><span class="p">()</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">coo_mul_vec_sum_grad</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">time</span><span class="p">()</span><span class="o">-</span><span class="n">t</span><span class="si">:</span><span class="s2">.3e</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span> <span class="n">result</span><span class="p">)</span>
 </pre></div>
 
                 </article>
@@ -792,8 +883,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sax.netlist &#8212; sax 0.13.5 documentation</title>
+    <title>sax.netlist &#8212; sax 0.14.1 documentation</title>
   
   
   
@@ -16,19 +16,17 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -38,11 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/css/custom.css" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -58,7 +55,6 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -74,8 +70,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -83,6 +90,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -90,8 +98,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,8 +117,7 @@
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -139,8 +146,8 @@
       
     
     
-    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.13.5 documentation - Home"/>
-    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.5 documentation - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.14.1 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="sax 0.14.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -174,6 +181,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.additive.html">sax.backends.additive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.forward_only.html">sax.backends.forward_only module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
@@ -292,16 +300,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 
 </div></div>
       
@@ -330,29 +346,36 @@
   <h1>Source code for sax.netlist</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; SAX netlist parsing and utilities &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">os</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">copy</span> <span class="kn">import</span> <span class="n">deepcopy</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">partial</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">TypedDict</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">copy</span><span class="w"> </span><span class="kn">import</span> <span class="n">deepcopy</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">partial</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Literal</span><span class="p">,</span> <span class="n">TypedDict</span><span class="p">,</span> <span class="n">overload</span>
 
-<span class="kn">import</span> <span class="nn">black</span>
-<span class="kn">import</span> <span class="nn">networkx</span> <span class="k">as</span> <span class="nn">nx</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">yaml</span>
-<span class="kn">from</span> <span class="nn">natsort</span> <span class="kn">import</span> <span class="n">natsorted</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">AfterValidator</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BaseModel</span> <span class="k">as</span> <span class="n">_BaseModel</span>
-<span class="kn">from</span> <span class="nn">pydantic</span> <span class="kn">import</span> <span class="n">BeforeValidator</span><span class="p">,</span> <span class="n">ConfigDict</span><span class="p">,</span> <span class="n">Field</span><span class="p">,</span> <span class="n">RootModel</span><span class="p">,</span> <span class="n">model_validator</span>
-<span class="kn">from</span> <span class="nn">typing_extensions</span> <span class="kn">import</span> <span class="n">Annotated</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">black</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">networkx</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">nx</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">yaml</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">natsort</span><span class="w"> </span><span class="kn">import</span> <span class="n">natsorted</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">AfterValidator</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span> <span class="k">as</span> <span class="n">_BaseModel</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
+    <span class="n">BeforeValidator</span><span class="p">,</span>
+    <span class="n">ConfigDict</span><span class="p">,</span>
+    <span class="n">Field</span><span class="p">,</span>
+    <span class="n">RootModel</span><span class="p">,</span>
+    <span class="n">ValidationError</span><span class="p">,</span>
+    <span class="n">model_validator</span><span class="p">,</span>
+<span class="p">)</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing_extensions</span><span class="w"> </span><span class="kn">import</span> <span class="n">Annotated</span>
 
-<span class="kn">from</span> <span class="nn">.utils</span> <span class="kn">import</span> <span class="n">clean_string</span><span class="p">,</span> <span class="n">hash_dict</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.utils</span><span class="w"> </span><span class="kn">import</span> <span class="n">clean_string</span><span class="p">,</span> <span class="n">hash_dict</span>
 
 
-<div class="viewcode-block" id="NetlistDict"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.NetlistDict">[docs]</a><span class="k">class</span> <span class="nc">NetlistDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
+<div class="viewcode-block" id="NetlistDict"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.NetlistDict">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">NetlistDict</span><span class="p">(</span><span class="n">TypedDict</span><span class="p">):</span>
     <span class="n">instances</span><span class="p">:</span> <span class="nb">dict</span>
     <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
     <span class="n">ports</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
@@ -362,25 +385,25 @@
 <span class="n">RecursiveNetlistDict</span> <span class="o">=</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">NetlistDict</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.BaseModel">[docs]</a><span class="k">class</span> <span class="nc">BaseModel</span><span class="p">(</span><span class="n">_BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="BaseModel"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.BaseModel">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">BaseModel</span><span class="p">(</span><span class="n">_BaseModel</span><span class="p">):</span>
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
         <span class="n">extra</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span>
         <span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()},</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">black</span><span class="o">.</span><span class="n">format_str</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">black</span><span class="o">.</span><span class="n">Mode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">s</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">hash_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span></div>
 
 
-<span class="k">def</span> <span class="nf">_validate_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;component&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;component&quot;</span><span class="p">):</span>
     <span class="k">if</span> <span class="s2">&quot;,&quot;</span> <span class="ow">in</span> <span class="n">s</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Invalid </span><span class="si">{</span><span class="n">what</span><span class="si">}</span><span class="s2"> string. Should not contain &#39;,&#39;. Got: </span><span class="si">{</span><span class="n">s</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;$&quot;</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
@@ -391,7 +414,7 @@
 <span class="n">ComponentStr</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AfterValidator</span><span class="p">(</span><span class="n">_validate_str</span><span class="p">)]</span>
 
 
-<div class="viewcode-block" id="Component"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.Component">[docs]</a><span class="k">class</span> <span class="nc">Component</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Component"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.Component">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Component</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">component</span><span class="p">:</span> <span class="n">ComponentStr</span>
     <span class="n">settings</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span></div>
 
@@ -399,7 +422,7 @@
 <span class="n">PortPlacement</span> <span class="o">=</span> <span class="n">Literal</span><span class="p">[</span><span class="s2">&quot;ce&quot;</span><span class="p">,</span> <span class="s2">&quot;cw&quot;</span><span class="p">,</span> <span class="s2">&quot;nc&quot;</span><span class="p">,</span> <span class="s2">&quot;ne&quot;</span><span class="p">,</span> <span class="s2">&quot;nw&quot;</span><span class="p">,</span> <span class="s2">&quot;sc&quot;</span><span class="p">,</span> <span class="s2">&quot;se&quot;</span><span class="p">,</span> <span class="s2">&quot;sw&quot;</span><span class="p">,</span> <span class="s2">&quot;cc&quot;</span><span class="p">,</span> <span class="s2">&quot;center&quot;</span><span class="p">]</span>
 
 
-<div class="viewcode-block" id="Placement"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.Placement">[docs]</a><span class="k">class</span> <span class="nc">Placement</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Placement"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.Placement">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Placement</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">x</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">y</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
     <span class="n">dx</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="nb">float</span> <span class="o">=</span> <span class="mf">0.0</span>
@@ -413,7 +436,7 @@
     <span class="n">port</span><span class="p">:</span> <span class="nb">str</span> <span class="o">|</span> <span class="n">PortPlacement</span> <span class="o">|</span> <span class="kc">None</span> <span class="o">=</span> <span class="kc">None</span></div>
 
 
-<span class="k">def</span> <span class="nf">_component_from_partial</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">partial</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_component_from_partial</span><span class="p">(</span><span class="n">p</span><span class="p">:</span> <span class="n">partial</span><span class="p">):</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="n">f</span><span class="p">:</span> <span class="n">Any</span> <span class="o">=</span> <span class="n">p</span>
     <span class="k">while</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">f</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
@@ -429,7 +452,7 @@
     <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="n">f</span><span class="o">.</span><span class="vm">__name__</span><span class="p">,</span> <span class="n">settings</span><span class="o">=</span><span class="n">settings</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_coerce_component</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Component</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_coerce_component</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Component</span><span class="p">:</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">Component</span><span class="p">(</span><span class="n">component</span><span class="o">=</span><span class="n">obj</span><span class="p">)</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="n">partial</span><span class="p">):</span>
@@ -450,7 +473,7 @@
 <span class="n">_validate_port_str</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">_validate_str</span><span class="p">,</span> <span class="n">what</span><span class="o">=</span><span class="s2">&quot;port&quot;</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_validate_instance_port_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_validate_instance_port_str</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">):</span>
     <span class="n">parts</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">parts</span><span class="p">)</span> <span class="o">!=</span> <span class="mi">2</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
@@ -467,18 +490,18 @@
 <span class="n">InstancePortStr</span> <span class="o">=</span> <span class="n">Annotated</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">AfterValidator</span><span class="p">(</span><span class="n">_validate_instance_port_str</span><span class="p">)]</span>
 
 
-<span class="k">def</span> <span class="nf">_nets_to_connections</span><span class="p">(</span><span class="n">nets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_nets_to_connections</span><span class="p">(</span><span class="n">nets</span><span class="p">:</span> <span class="nb">list</span><span class="p">[</span><span class="nb">dict</span><span class="p">],</span> <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
     <span class="n">connections</span> <span class="o">=</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
     <span class="n">inverse_connections</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
-    <span class="k">def</span> <span class="nf">_is_connected</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_is_connected</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">(</span><span class="n">p</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">p</span> <span class="ow">in</span> <span class="n">inverse_connections</span><span class="p">)</span>
 
-    <span class="k">def</span> <span class="nf">_add_connection</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_add_connection</span><span class="p">(</span><span class="n">p</span><span class="p">,</span> <span class="n">q</span><span class="p">):</span>
         <span class="n">connections</span><span class="p">[</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">q</span>
         <span class="n">inverse_connections</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="n">p</span>
 
-    <span class="k">def</span> <span class="nf">_get_connected_port</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_get_connected_port</span><span class="p">(</span><span class="n">p</span><span class="p">):</span>
         <span class="k">if</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">connections</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">connections</span><span class="p">[</span><span class="n">p</span><span class="p">]</span>
         <span class="k">else</span><span class="p">:</span>
@@ -503,7 +526,7 @@
     <span class="k">return</span> <span class="n">connections</span>
 
 
-<div class="viewcode-block" id="Netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.Netlist">[docs]</a><span class="k">class</span> <span class="nc">Netlist</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+<div class="viewcode-block" id="Netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.Netlist">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Netlist</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
     <span class="n">instances</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">InstanceStr</span><span class="p">,</span> <span class="n">CoercingComponent</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">connections</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">InstancePortStr</span><span class="p">,</span> <span class="n">InstancePortStr</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
     <span class="n">ports</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="n">PortStr</span><span class="p">,</span> <span class="n">InstancePortStr</span><span class="p">]</span> <span class="o">=</span> <span class="n">Field</span><span class="p">(</span><span class="n">default_factory</span><span class="o">=</span><span class="nb">dict</span><span class="p">)</span>
@@ -512,7 +535,7 @@
 
     <span class="nd">@model_validator</span><span class="p">(</span><span class="n">mode</span><span class="o">=</span><span class="s2">&quot;before&quot;</span><span class="p">)</span>
     <span class="nd">@classmethod</span>
-    <span class="k">def</span> <span class="nf">coerce_nets_into_connections</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">netlist</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">coerce_nets_into_connections</span><span class="p">(</span><span class="bp">cls</span><span class="p">,</span> <span class="n">netlist</span><span class="p">:</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
             <span class="k">return</span> <span class="n">netlist</span>
         <span class="k">if</span> <span class="s2">&quot;nets&quot;</span> <span class="ow">in</span> <span class="n">netlist</span><span class="p">:</span>
@@ -523,29 +546,29 @@
         <span class="k">return</span> <span class="n">netlist</span></div>
 
 
-<div class="viewcode-block" id="RecursiveNetlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.RecursiveNetlist">[docs]</a><span class="k">class</span> <span class="nc">RecursiveNetlist</span><span class="p">(</span><span class="n">RootModel</span><span class="p">):</span>
+<div class="viewcode-block" id="RecursiveNetlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.RecursiveNetlist">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">RecursiveNetlist</span><span class="p">(</span><span class="n">RootModel</span><span class="p">):</span>
     <span class="n">root</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Netlist</span><span class="p">]</span>
 
     <span class="n">model_config</span> <span class="o">=</span> <span class="n">ConfigDict</span><span class="p">(</span>
         <span class="n">json_encoders</span><span class="o">=</span><span class="p">{</span><span class="n">np</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span> <span class="k">lambda</span> <span class="n">arr</span><span class="p">:</span> <span class="n">np</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="n">arr</span><span class="p">,</span> <span class="mi">12</span><span class="p">)</span><span class="o">.</span><span class="n">tolist</span><span class="p">()},</span>
     <span class="p">)</span>
 
-    <span class="k">def</span> <span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__repr__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="n">s</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
         <span class="n">s</span> <span class="o">=</span> <span class="n">black</span><span class="o">.</span><span class="n">format_str</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">mode</span><span class="o">=</span><span class="n">black</span><span class="o">.</span><span class="n">Mode</span><span class="p">())</span>
         <span class="k">return</span> <span class="n">s</span>
 
-    <span class="k">def</span> <span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__str__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="bp">self</span><span class="o">.</span><span class="fm">__repr__</span><span class="p">()</span>
 
-    <span class="k">def</span> <span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+    <span class="k">def</span><span class="w"> </span><span class="fm">__hash__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">hash_dict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">model_dump</span><span class="p">())</span></div>
 
 
 <span class="n">AnyNetlist</span> <span class="o">=</span> <span class="n">Netlist</span> <span class="o">|</span> <span class="n">NetlistDict</span> <span class="o">|</span> <span class="n">RecursiveNetlist</span> <span class="o">|</span> <span class="n">RecursiveNetlistDict</span>
 
 
-<div class="viewcode-block" id="netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.netlist">[docs]</a><span class="k">def</span> <span class="nf">netlist</span><span class="p">(</span>
+<div class="viewcode-block" id="netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.netlist">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">netlist</span><span class="p">(</span>
     <span class="n">netlist</span><span class="p">:</span> <span class="n">Any</span><span class="p">,</span> <span class="n">with_unconnected_instances</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">True</span><span class="p">,</span> <span class="n">with_placements</span><span class="o">=</span><span class="kc">True</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlist</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;return a netlist from a given dictionary&quot;&quot;&quot;</span>
@@ -574,7 +597,7 @@
     <span class="k">return</span> <span class="n">net</span></div>
 
 
-<div class="viewcode-block" id="flatten_netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.flatten_netlist">[docs]</a><span class="k">def</span> <span class="nf">flatten_netlist</span><span class="p">(</span><span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlistDict</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;~&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="flatten_netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.flatten_netlist">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">flatten_netlist</span><span class="p">(</span><span class="n">recnet</span><span class="p">:</span> <span class="n">RecursiveNetlistDict</span><span class="p">,</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;~&quot;</span><span class="p">):</span>
     <span class="n">first_name</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">recnet</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
     <span class="n">net</span> <span class="o">=</span> <span class="n">_copy_netlist</span><span class="p">(</span><span class="n">recnet</span><span class="p">[</span><span class="n">first_name</span><span class="p">])</span>
     <span class="n">_flatten_netlist</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">sep</span><span class="p">)</span>
@@ -582,17 +605,17 @@
 
 
 <div class="viewcode-block" id="load_netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.load_netlist">[docs]</a><span class="nd">@lru_cache</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">load_netlist</span><span class="p">(</span><span class="n">pic_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Netlist</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_netlist</span><span class="p">(</span><span class="n">pic_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Netlist</span><span class="p">:</span>
     <span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">pic_path</span><span class="p">,</span> <span class="s2">&quot;r&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">file</span><span class="p">:</span>
         <span class="n">net</span> <span class="o">=</span> <span class="n">yaml</span><span class="o">.</span><span class="n">safe_load</span><span class="p">(</span><span class="n">file</span><span class="o">.</span><span class="n">read</span><span class="p">())</span>
     <span class="k">return</span> <span class="n">Netlist</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">net</span><span class="p">)</span></div>
 
 
 <div class="viewcode-block" id="load_recursive_netlist"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.load_recursive_netlist">[docs]</a><span class="nd">@lru_cache</span><span class="p">()</span>
-<span class="k">def</span> <span class="nf">load_recursive_netlist</span><span class="p">(</span><span class="n">pic_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.yml&quot;</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">load_recursive_netlist</span><span class="p">(</span><span class="n">pic_path</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">ext</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;.yml&quot;</span><span class="p">):</span>
     <span class="n">folder_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">dirname</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">abspath</span><span class="p">(</span><span class="n">pic_path</span><span class="p">))</span>
 
-    <span class="k">def</span> <span class="nf">_clean_string</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_clean_string</span><span class="p">(</span><span class="n">path</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">clean_string</span><span class="p">(</span><span class="n">re</span><span class="o">.</span><span class="n">sub</span><span class="p">(</span><span class="n">ext</span><span class="p">,</span> <span class="s2">&quot;&quot;</span><span class="p">,</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">path</span><span class="p">)[</span><span class="o">-</span><span class="mi">1</span><span class="p">]))</span>
 
     <span class="c1"># the circuit we&#39;re interested in should come first:</span>
@@ -607,7 +630,7 @@
     <span class="k">return</span> <span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">netlists</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="is_recursive"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.is_recursive">[docs]</a><span class="k">def</span> <span class="nf">is_recursive</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">AnyNetlist</span><span class="p">):</span>
+<div class="viewcode-block" id="is_recursive"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.is_recursive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">is_recursive</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">AnyNetlist</span><span class="p">):</span>
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">):</span>
         <span class="k">return</span> <span class="kc">True</span>
     <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -616,11 +639,11 @@
         <span class="k">return</span> <span class="kc">False</span></div>
 
 
-<div class="viewcode-block" id="is_not_recursive"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.is_not_recursive">[docs]</a><span class="k">def</span> <span class="nf">is_not_recursive</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">AnyNetlist</span><span class="p">):</span>
+<div class="viewcode-block" id="is_not_recursive"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.is_not_recursive">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">is_not_recursive</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">AnyNetlist</span><span class="p">):</span>
     <span class="k">return</span> <span class="ow">not</span> <span class="n">is_recursive</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_netlist_instances_by_prefix"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.get_netlist_instances_by_prefix">[docs]</a><span class="k">def</span> <span class="nf">get_netlist_instances_by_prefix</span><span class="p">(</span>
+<div class="viewcode-block" id="get_netlist_instances_by_prefix"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.get_netlist_instances_by_prefix">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_netlist_instances_by_prefix</span><span class="p">(</span>
     <span class="n">recursive_netlist</span><span class="p">:</span> <span class="n">RecursiveNetlist</span><span class="p">,</span>
     <span class="n">prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
 <span class="p">):</span>
@@ -642,7 +665,7 @@
     <span class="k">return</span> <span class="n">result</span></div>
 
 
-<div class="viewcode-block" id="get_component_instances"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.get_component_instances">[docs]</a><span class="k">def</span> <span class="nf">get_component_instances</span><span class="p">(</span>
+<div class="viewcode-block" id="get_component_instances"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.get_component_instances">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_component_instances</span><span class="p">(</span>
     <span class="n">recursive_netlist</span><span class="p">:</span> <span class="n">RecursiveNetlist</span><span class="p">,</span>
     <span class="n">top_level_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
     <span class="n">component_name_prefix</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span>
@@ -675,7 +698,7 @@
     <span class="k">return</span> <span class="p">{</span><span class="n">component_name_prefix</span><span class="p">:</span> <span class="n">instance_names</span><span class="p">}</span></div>
 
 
-<span class="k">def</span> <span class="nf">_remove_unused_instances</span><span class="p">(</span><span class="n">recursive_netlist</span><span class="p">:</span> <span class="n">RecursiveNetlistDict</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_remove_unused_instances</span><span class="p">(</span><span class="n">recursive_netlist</span><span class="p">:</span> <span class="n">RecursiveNetlistDict</span><span class="p">):</span>
     <span class="n">recursive_netlist</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">recursive_netlist</span><span class="p">}</span>
 
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">flat_netlist</span> <span class="ow">in</span> <span class="n">recursive_netlist</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -684,7 +707,7 @@
     <span class="k">return</span> <span class="n">recursive_netlist</span>
 
 
-<span class="k">def</span> <span class="nf">_get_connectivity_netlist</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_connectivity_netlist</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
     <span class="n">connectivity_netlist</span> <span class="o">=</span> <span class="p">{</span>
         <span class="s2">&quot;instances&quot;</span><span class="p">:</span> <span class="n">natsorted</span><span class="p">(</span><span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]),</span>
         <span class="s2">&quot;connections&quot;</span><span class="p">:</span> <span class="p">[</span>
@@ -696,7 +719,7 @@
     <span class="k">return</span> <span class="n">connectivity_netlist</span>
 
 
-<span class="k">def</span> <span class="nf">_get_connectivity_graph</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_connectivity_graph</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
     <span class="n">graph</span> <span class="o">=</span> <span class="n">nx</span><span class="o">.</span><span class="n">Graph</span><span class="p">()</span>
     <span class="n">connectivity_netlist</span> <span class="o">=</span> <span class="n">_get_connectivity_netlist</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
     <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">connectivity_netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]:</span>
@@ -708,7 +731,7 @@
     <span class="k">return</span> <span class="n">graph</span>
 
 
-<span class="k">def</span> <span class="nf">_get_nodes_to_remove</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">netlist</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_nodes_to_remove</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">netlist</span><span class="p">):</span>
     <span class="n">nodes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
     <span class="k">for</span> <span class="n">port</span> <span class="ow">in</span> <span class="n">netlist</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">]:</span>
         <span class="n">nodes</span> <span class="o">|=</span> <span class="n">nx</span><span class="o">.</span><span class="n">descendants</span><span class="p">(</span><span class="n">graph</span><span class="p">,</span> <span class="n">port</span><span class="p">)</span>
@@ -716,7 +739,7 @@
     <span class="k">return</span> <span class="nb">list</span><span class="p">(</span><span class="n">nodes_to_remove</span><span class="p">)</span>
 
 
-<span class="k">def</span> <span class="nf">_remove_unused_instances_flat</span><span class="p">(</span><span class="n">flat_netlist</span><span class="p">:</span> <span class="n">NetlistDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetlistDict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_remove_unused_instances_flat</span><span class="p">(</span><span class="n">flat_netlist</span><span class="p">:</span> <span class="n">NetlistDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">NetlistDict</span><span class="p">:</span>
     <span class="n">flat_netlist</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">flat_netlist</span><span class="p">}</span>
 
     <span class="n">flat_netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="n">flat_netlist</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]}</span>
@@ -744,7 +767,7 @@
     <span class="k">return</span> <span class="n">flat_netlist</span>
 
 
-<span class="k">def</span> <span class="nf">_copy_netlist</span><span class="p">(</span><span class="n">net</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_copy_netlist</span><span class="p">(</span><span class="n">net</span><span class="p">):</span>
     <span class="n">net</span> <span class="o">=</span> <span class="p">{</span>
         <span class="n">k</span><span class="p">:</span> <span class="n">deepcopy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span>
         <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">net</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
@@ -753,7 +776,7 @@
     <span class="k">return</span> <span class="n">net</span>
 
 
-<span class="k">def</span> <span class="nf">_flatten_netlist</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">sep</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_flatten_netlist</span><span class="p">(</span><span class="n">recnet</span><span class="p">,</span> <span class="n">net</span><span class="p">,</span> <span class="n">sep</span><span class="p">):</span>
     <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="nb">list</span><span class="p">(</span><span class="n">net</span><span class="p">[</span><span class="s2">&quot;instances&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
         <span class="n">component</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
         <span class="k">if</span> <span class="n">component</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">recnet</span><span class="p">:</span>
@@ -795,6 +818,158 @@
                     <span class="n">net</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">][</span><span class="n">p</span><span class="p">]</span> <span class="o">=</span> <span class="n">ports</span><span class="p">[</span><span class="n">p2</span><span class="p">]</span>
                 <span class="k">else</span><span class="p">:</span>
                     <span class="k">del</span> <span class="n">net</span><span class="p">[</span><span class="s2">&quot;ports&quot;</span><span class="p">][</span><span class="n">p</span><span class="p">]</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_instances</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">Netlist</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Netlist</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_instances</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlist</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_instances</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NetlistDict</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_instances</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">RecursiveNetlistDict</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlistDict</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<div class="viewcode-block" id="rename_instances"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.rename_instances">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rename_instances</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">Netlist</span> <span class="o">|</span> <span class="n">RecursiveNetlist</span> <span class="o">|</span> <span class="n">NetlistDict</span> <span class="o">|</span> <span class="n">RecursiveNetlistDict</span><span class="p">,</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Netlist</span> <span class="o">|</span> <span class="n">RecursiveNetlist</span> <span class="o">|</span> <span class="n">NetlistDict</span> <span class="o">|</span> <span class="n">RecursiveNetlistDict</span><span class="p">:</span>
+    <span class="n">given_as_dict</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_recursive</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">Netlist</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">):</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="p">(</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">rename_instances</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">net</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">given_as_dict</span> <span class="k">else</span> <span class="n">net</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+    <span class="c1"># it&#39;s a sax.Netlist now:</span>
+    <span class="n">inverse_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inverse_mapping</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Duplicate names to map onto found.&quot;</span><span class="p">)</span>
+    <span class="n">instances</span> <span class="o">=</span> <span class="p">{</span><span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">connections</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">ip1</span><span class="p">,</span> <span class="n">ip2</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">connections</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">i1</span><span class="p">,</span> <span class="n">p1</span> <span class="o">=</span> <span class="n">ip1</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">i2</span><span class="p">,</span> <span class="n">p2</span> <span class="o">=</span> <span class="n">ip2</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">i1</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i1</span><span class="p">,</span> <span class="n">i1</span><span class="p">)</span>
+        <span class="n">i2</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i2</span><span class="p">,</span> <span class="n">i2</span><span class="p">)</span>
+        <span class="n">connections</span><span class="p">[</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i1</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p1</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i2</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p2</span><span class="si">}</span><span class="s2">&quot;</span>
+    <span class="n">ports</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">q</span><span class="p">,</span> <span class="n">ip</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">ports</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">i</span><span class="p">,</span> <span class="n">p</span> <span class="o">=</span> <span class="n">ip</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;,&quot;</span><span class="p">)</span>
+        <span class="n">i</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">i</span><span class="p">)</span>
+        <span class="n">ports</span><span class="p">[</span><span class="n">q</span><span class="p">]</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">,</span><span class="si">{</span><span class="n">p</span><span class="si">}</span><span class="s2">&quot;</span>
+
+    <span class="n">placements</span> <span class="o">=</span> <span class="p">{</span><span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">placements</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="n">net</span> <span class="o">=</span> <span class="n">Netlist</span><span class="p">(</span>
+        <span class="n">instances</span><span class="o">=</span><span class="n">instances</span><span class="p">,</span>
+        <span class="n">connections</span><span class="o">=</span><span class="n">connections</span><span class="p">,</span>
+        <span class="n">ports</span><span class="o">=</span><span class="n">ports</span><span class="p">,</span>
+        <span class="n">placements</span><span class="o">=</span><span class="n">placements</span><span class="p">,</span>
+        <span class="n">settings</span><span class="o">=</span><span class="n">netlist</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">net</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">given_as_dict</span> <span class="k">else</span> <span class="n">net</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span></div>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">Netlist</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Netlist</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_models</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">RecursiveNetlist</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlist</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_models</span><span class="p">(</span><span class="n">netlist</span><span class="p">:</span> <span class="n">NetlistDict</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">NetlistDict</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<span class="nd">@overload</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_models</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">RecursiveNetlistDict</span><span class="p">,</span> <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">RecursiveNetlistDict</span><span class="p">:</span>
+    <span class="o">...</span>
+
+
+<div class="viewcode-block" id="rename_models"><a class="viewcode-back" href="../../sax.netlist.html#sax.netlist.rename_models">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rename_models</span><span class="p">(</span>
+    <span class="n">netlist</span><span class="p">:</span> <span class="n">Netlist</span> <span class="o">|</span> <span class="n">RecursiveNetlist</span> <span class="o">|</span> <span class="n">NetlistDict</span> <span class="o">|</span> <span class="n">RecursiveNetlistDict</span><span class="p">,</span>
+    <span class="n">mapping</span><span class="p">:</span> <span class="nb">dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Netlist</span> <span class="o">|</span> <span class="n">RecursiveNetlist</span> <span class="o">|</span> <span class="n">NetlistDict</span> <span class="o">|</span> <span class="n">RecursiveNetlistDict</span><span class="p">:</span>
+    <span class="n">given_as_dict</span> <span class="o">=</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">is_recursive</span><span class="p">(</span><span class="n">netlist</span><span class="p">):</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+    <span class="k">else</span><span class="p">:</span>
+        <span class="n">netlist</span> <span class="o">=</span> <span class="n">Netlist</span><span class="o">.</span><span class="n">model_validate</span><span class="p">(</span><span class="n">netlist</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">netlist</span><span class="p">,</span> <span class="n">RecursiveNetlist</span><span class="p">):</span>
+        <span class="n">net</span> <span class="o">=</span> <span class="n">RecursiveNetlist</span><span class="p">(</span>
+            <span class="o">**</span><span class="p">{</span>
+                <span class="n">k</span><span class="p">:</span> <span class="n">rename_models</span><span class="p">(</span><span class="n">v</span><span class="p">,</span> <span class="n">mapping</span><span class="p">)</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+                <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">root</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
+            <span class="p">}</span>
+        <span class="p">)</span>
+        <span class="k">return</span> <span class="n">net</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">given_as_dict</span> <span class="k">else</span> <span class="n">net</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+
+    <span class="c1"># it&#39;s a sax.Netlist now:</span>
+    <span class="n">inverse_mapping</span> <span class="o">=</span> <span class="p">{</span><span class="n">v</span><span class="p">:</span> <span class="n">k</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">mapping</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">inverse_mapping</span><span class="p">)</span> <span class="o">!=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mapping</span><span class="p">):</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Duplicate names to map onto found.&quot;</span><span class="p">)</span>
+
+    <span class="n">instances</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">instance</span> <span class="ow">in</span> <span class="n">netlist</span><span class="o">.</span><span class="n">instances</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">given_as_str</span> <span class="o">=</span> <span class="kc">False</span>
+        <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="nb">str</span><span class="p">):</span>
+            <span class="n">given_as_str</span> <span class="o">=</span> <span class="kc">True</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="p">{</span>
+                <span class="s2">&quot;component&quot;</span><span class="p">:</span> <span class="n">instance</span><span class="p">,</span>
+                <span class="s2">&quot;settings&quot;</span><span class="p">:</span> <span class="p">{},</span>
+            <span class="p">}</span>
+        <span class="k">elif</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="n">Component</span><span class="p">):</span>
+            <span class="n">instance</span> <span class="o">=</span> <span class="n">instance</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span>
+        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">instance</span><span class="p">,</span> <span class="nb">dict</span><span class="p">)</span>
+        <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">mapping</span><span class="o">.</span><span class="n">get</span><span class="p">(</span>
+            <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">],</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">given_as_str</span><span class="p">:</span>
+            <span class="n">instances</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span><span class="p">[</span><span class="s2">&quot;component&quot;</span><span class="p">]</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">instances</span><span class="p">[</span><span class="n">k</span><span class="p">]</span> <span class="o">=</span> <span class="n">instance</span>
+
+    <span class="n">net</span> <span class="o">=</span> <span class="n">Netlist</span><span class="p">(</span>
+        <span class="n">instances</span><span class="o">=</span><span class="n">instances</span><span class="p">,</span>
+        <span class="n">connections</span><span class="o">=</span><span class="n">netlist</span><span class="o">.</span><span class="n">connections</span><span class="p">,</span>
+        <span class="n">ports</span><span class="o">=</span><span class="n">netlist</span><span class="o">.</span><span class="n">ports</span><span class="p">,</span>
+        <span class="n">placements</span><span class="o">=</span><span class="n">netlist</span><span class="o">.</span><span class="n">placements</span><span class="p">,</span>
+        <span class="n">settings</span><span class="o">=</span><span class="n">netlist</span><span class="o">.</span><span class="n">settings</span><span class="p">,</span>
+    <span class="p">)</span>
+    <span class="k">return</span> <span class="n">net</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">given_as_dict</span> <span class="k">else</span> <span class="n">net</span><span class="o">.</span><span class="n">model_dump</span><span class="p">()</span></div>
 </pre></div>
 
                 </article>
@@ -857,8 +1032,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

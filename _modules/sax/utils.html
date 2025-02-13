@@ -8,7 +8,7 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>sax.utils &#8212; sax 0.13.5 documentation</title>
+    <title>sax.utils &#8212; sax 0.14.1 documentation</title>
   
   
   
@@ -16,19 +16,17 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
     <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -38,11 +36,10 @@
     <link rel="stylesheet" type="text/css" href="../../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../../_static/_static/css/custom.css" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
     <script src="../../_static/jquery.js"></script>
@@ -58,7 +55,6 @@
     <link rel="search" title="Search" href="../../search.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -74,8 +70,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../../search.html"
       method="get">
@@ -83,6 +90,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -90,8 +98,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -109,8 +117,7 @@
       
         
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -139,8 +146,8 @@
       
     
     
-    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.13.5 documentation - Home"/>
-    <img src="../../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.5 documentation - Home"/>
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="sax 0.14.1 documentation - Home"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="sax 0.14.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -174,6 +181,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../../sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.additive.html">sax.backends.additive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../../sax.backends.forward_only.html">sax.backends.forward_only module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
@@ -292,16 +300,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 
 </div></div>
       
@@ -330,14 +346,14 @@
   <h1>Source code for sax.utils</h1><div class="highlight"><pre>
 <span></span><span class="sd">&quot;&quot;&quot; SAX General Utilities &quot;&quot;&quot;</span>
 
-<span class="kn">from</span> <span class="nn">__future__</span> <span class="kn">import</span> <span class="n">annotations</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
 
-<span class="kn">import</span> <span class="nn">inspect</span>
-<span class="kn">import</span> <span class="nn">re</span>
-<span class="kn">import</span> <span class="nn">warnings</span>
-<span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
-<span class="kn">from</span> <span class="nn">hashlib</span> <span class="kn">import</span> <span class="n">md5</span>
-<span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">inspect</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">re</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">warnings</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">lru_cache</span><span class="p">,</span> <span class="n">partial</span><span class="p">,</span> <span class="n">wraps</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">hashlib</span><span class="w"> </span><span class="kn">import</span> <span class="n">md5</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">Any</span><span class="p">,</span>
     <span class="n">Callable</span><span class="p">,</span>
     <span class="n">Dict</span><span class="p">,</span>
@@ -350,16 +366,16 @@
     <span class="n">overload</span><span class="p">,</span>
 <span class="p">)</span>
 
-<span class="kn">import</span> <span class="nn">jax</span>
-<span class="kn">import</span> <span class="nn">jax.numpy</span> <span class="k">as</span> <span class="nn">jnp</span>
-<span class="kn">import</span> <span class="nn">jax.scipy</span> <span class="k">as</span> <span class="nn">jsp</span>
-<span class="kn">import</span> <span class="nn">jax.scipy.linalg</span>
-<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
-<span class="kn">import</span> <span class="nn">orjson</span>
-<span class="kn">from</span> <span class="nn">natsort</span> <span class="kn">import</span> <span class="n">natsorted</span>
-<span class="kn">from</span> <span class="nn">numpy.exceptions</span> <span class="kn">import</span> <span class="n">ComplexWarning</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.scipy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jsp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.scipy.linalg</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">orjson</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">natsort</span><span class="w"> </span><span class="kn">import</span> <span class="n">natsorted</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">numpy.exceptions</span><span class="w"> </span><span class="kn">import</span> <span class="n">ComplexWarning</span>
 
-<span class="kn">from</span> <span class="nn">.saxtypes</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">.saxtypes</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">ComplexArrayND</span><span class="p">,</span>
     <span class="n">FloatArrayND</span><span class="p">,</span>
     <span class="n">Model</span><span class="p">,</span>
@@ -378,7 +394,7 @@
 <span class="p">)</span>
 
 
-<div class="viewcode-block" id="block_diag"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.block_diag">[docs]</a><span class="k">def</span> <span class="nf">block_diag</span><span class="p">(</span><span class="o">*</span><span class="n">arrs</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
+<div class="viewcode-block" id="block_diag"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.block_diag">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">block_diag</span><span class="p">(</span><span class="o">*</span><span class="n">arrs</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;create block diagonal matrix with arbitrary batch dimensions&quot;&quot;&quot;</span>
     <span class="n">batch_shape</span> <span class="o">=</span> <span class="n">arrs</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">2</span><span class="p">]</span>
 
@@ -397,7 +413,7 @@
     <span class="k">return</span> <span class="n">block_diag</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">batch_shape</span><span class="p">,</span> <span class="n">N</span><span class="p">,</span> <span class="n">N</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="clean_string"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.clean_string">[docs]</a><span class="k">def</span> <span class="nf">clean_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dot</span><span class="o">=</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">minus</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
+<div class="viewcode-block" id="clean_string"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.clean_string">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">clean_string</span><span class="p">(</span><span class="n">s</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">dot</span><span class="o">=</span><span class="s2">&quot;p&quot;</span><span class="p">,</span> <span class="n">minus</span><span class="o">=</span><span class="s2">&quot;m&quot;</span><span class="p">,</span> <span class="n">other</span><span class="o">=</span><span class="s2">&quot;_&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">str</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;clean a string such that it is a valid python identifier&quot;&quot;&quot;</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">strip</span><span class="p">()</span>
     <span class="n">s</span> <span class="o">=</span> <span class="n">s</span><span class="o">.</span><span class="n">replace</span><span class="p">(</span><span class="s2">&quot;.&quot;</span><span class="p">,</span> <span class="n">dot</span><span class="p">)</span>  <span class="c1"># dot</span>
@@ -410,12 +426,12 @@
     <span class="k">return</span> <span class="n">s</span></div>
 
 
-<div class="viewcode-block" id="copy_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.copy_settings">[docs]</a><span class="k">def</span> <span class="nf">copy_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
+<div class="viewcode-block" id="copy_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.copy_settings">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">copy_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;copy a parameter dictionary&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">validate_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span>  <span class="c1"># validation also copies</span></div>
 
 
-<div class="viewcode-block" id="validate_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_settings">[docs]</a><span class="k">def</span> <span class="nf">validate_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
+<div class="viewcode-block" id="validate_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_settings">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">validate_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate a parameter dictionary&quot;&quot;&quot;</span>
     <span class="n">_settings</span> <span class="o">=</span> <span class="p">{}</span>
     <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
@@ -426,7 +442,7 @@
     <span class="k">return</span> <span class="n">_settings</span></div>
 
 
-<div class="viewcode-block" id="try_complex_float"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.try_complex_float">[docs]</a><span class="k">def</span> <span class="nf">try_complex_float</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
+<div class="viewcode-block" id="try_complex_float"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.try_complex_float">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">try_complex_float</span><span class="p">(</span><span class="n">f</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Any</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;try converting an object to float, return unchanged object on fail&quot;&quot;&quot;</span>
     <span class="k">with</span> <span class="n">warnings</span><span class="o">.</span><span class="n">catch_warnings</span><span class="p">():</span>
         <span class="n">warnings</span><span class="o">.</span><span class="n">filterwarnings</span><span class="p">(</span><span class="n">action</span><span class="o">=</span><span class="s2">&quot;error&quot;</span><span class="p">,</span> <span class="n">category</span><span class="o">=</span><span class="n">ComplexWarning</span><span class="p">)</span>
@@ -440,12 +456,12 @@
             <span class="k">return</span> <span class="n">f</span></div>
 
 
-<div class="viewcode-block" id="flatten_dict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.flatten_dict">[docs]</a><span class="k">def</span> <span class="nf">flatten_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
+<div class="viewcode-block" id="flatten_dict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.flatten_dict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">flatten_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;flatten a nested dictionary&quot;&quot;&quot;</span>
     <span class="k">return</span> <span class="n">_flatten_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="n">sep</span><span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_flatten_dict</span><span class="p">(</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_flatten_dict</span><span class="p">(</span>
     <span class="n">dic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">],</span> <span class="n">sep</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;,&quot;</span><span class="p">,</span> <span class="n">frozen</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span><span class="p">,</span> <span class="n">parent_key</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;&quot;</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="n">Any</span><span class="p">]:</span>
     <span class="n">items</span> <span class="o">=</span> <span class="p">[]</span>
@@ -461,7 +477,7 @@
     <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">items</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="unflatten_dict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.unflatten_dict">[docs]</a><span class="k">def</span> <span class="nf">unflatten_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
+<div class="viewcode-block" id="unflatten_dict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.unflatten_dict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">unflatten_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">,</span> <span class="n">sep</span><span class="o">=</span><span class="s2">&quot;,&quot;</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;unflatten a flattened dictionary&quot;&quot;&quot;</span>
 
     <span class="c1"># from: https://gist.github.com/fmder/494aaa2dd6f8c428cede</span>
@@ -482,7 +498,7 @@
     <span class="k">return</span> <span class="n">items</span></div>
 
 
-<div class="viewcode-block" id="get_ports"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_ports">[docs]</a><span class="k">def</span> <span class="nf">get_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_ports"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_ports">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;get port names of a model or an stype</span>
 
 <span class="sd">    .. note ::</span>
@@ -504,12 +520,12 @@
 
 
 <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">4096</span><span class="p">)</span>  <span class="c1"># cache to prevent future tracing</span>
-<span class="k">def</span> <span class="nf">_get_ports_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_ports_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]:</span>
     <span class="c1"># S: SType = jax.eval_shape(model)</span>
     <span class="k">return</span> <span class="n">get_ports</span><span class="p">(</span><span class="n">model</span><span class="p">())</span>  <span class="c1"># FIXME: this might be slow!</span>
 
 
-<div class="viewcode-block" id="get_port_combinations"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_port_combinations">[docs]</a><span class="k">def</span> <span class="nf">get_port_combinations</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
+<div class="viewcode-block" id="get_port_combinations"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_port_combinations">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_port_combinations</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">SType</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;get port combinations of a model or an stype&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="n">is_model</span><span class="p">(</span><span class="n">S</span><span class="p">):</span>
@@ -530,12 +546,12 @@
 
 
 <span class="nd">@lru_cache</span><span class="p">(</span><span class="n">maxsize</span><span class="o">=</span><span class="mi">4096</span><span class="p">)</span>  <span class="c1"># cache to prevent future tracing</span>
-<span class="k">def</span> <span class="nf">_get_port_combinations_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_get_port_combinations_from_model</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
     <span class="n">S</span><span class="p">:</span> <span class="n">SType</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">eval_shape</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">get_port_combinations</span><span class="p">(</span><span class="n">S</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="get_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_settings">[docs]</a><span class="k">def</span> <span class="nf">get_settings</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">ModelFactory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
+<div class="viewcode-block" id="get_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_settings">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_settings</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">ModelFactory</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Get the parameters of a SAX model function&quot;&quot;&quot;</span>
 
     <span class="n">signature</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
@@ -551,7 +567,7 @@
     <span class="k">return</span> <span class="n">copy_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="grouped_interp"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.grouped_interp">[docs]</a><span class="k">def</span> <span class="nf">grouped_interp</span><span class="p">(</span>
+<div class="viewcode-block" id="grouped_interp"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.grouped_interp">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">grouped_interp</span><span class="p">(</span>
     <span class="n">wl</span><span class="p">:</span> <span class="n">FloatArrayND</span><span class="p">,</span> <span class="n">wls</span><span class="p">:</span> <span class="n">FloatArrayND</span><span class="p">,</span> <span class="n">phis</span><span class="p">:</span> <span class="n">FloatArrayND</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">FloatArrayND</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Grouped phase interpolation</span>
@@ -595,7 +611,7 @@
 
     <span class="nd">@partial</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">,</span> <span class="n">in_axes</span><span class="o">=</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="n">out_axes</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
     <span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
-    <span class="k">def</span> <span class="nf">_grouped_interp</span><span class="p">(</span>
+    <span class="k">def</span><span class="w"> </span><span class="nf">_grouped_interp</span><span class="p">(</span>
         <span class="n">wl</span><span class="p">:</span> <span class="nb">float</span><span class="p">,</span>  <span class="c1"># 0D array (not-vmapped) ; 1D array (vmapped)</span>
         <span class="n">wls</span><span class="p">:</span> <span class="n">FloatArrayND</span><span class="p">,</span>  <span class="c1"># 1D array</span>
         <span class="n">phis</span><span class="p">:</span> <span class="n">FloatArrayND</span><span class="p">,</span>  <span class="c1"># 1D array</span>
@@ -641,7 +657,7 @@
     <span class="k">return</span> <span class="n">_grouped_interp</span><span class="p">(</span><span class="n">wl</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">wls</span><span class="p">,</span> <span class="n">phis</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">wl</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="merge_dicts"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.merge_dicts">[docs]</a><span class="k">def</span> <span class="nf">merge_dicts</span><span class="p">(</span><span class="o">*</span><span class="n">dicts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
+<div class="viewcode-block" id="merge_dicts"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.merge_dicts">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">merge_dicts</span><span class="p">(</span><span class="o">*</span><span class="n">dicts</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Dict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;merge (possibly deeply nested) dictionaries&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">dicts</span><span class="p">)</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
         <span class="k">return</span> <span class="nb">dict</span><span class="p">(</span><span class="n">_generate_merged_dict</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="p">{}))</span>
@@ -651,7 +667,7 @@
         <span class="k">return</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="n">dicts</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">merge_dicts</span><span class="p">(</span><span class="o">*</span><span class="n">dicts</span><span class="p">[</span><span class="mi">1</span><span class="p">:]))</span></div>
 
 
-<span class="k">def</span> <span class="nf">_generate_merged_dict</span><span class="p">(</span><span class="n">dict1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">dict2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_generate_merged_dict</span><span class="p">(</span><span class="n">dict1</span><span class="p">:</span> <span class="n">Dict</span><span class="p">,</span> <span class="n">dict2</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Iterator</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="n">Any</span><span class="p">,</span> <span class="n">Any</span><span class="p">]]:</span>
     <span class="c1"># inspired by https://stackoverflow.com/questions/7204805/how-to-merge-dictionaries-of-dictionaries</span>
     <span class="n">keys</span> <span class="o">=</span> <span class="p">{</span>
         <span class="o">**</span><span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="kc">None</span> <span class="k">for</span> <span class="n">k</span> <span class="ow">in</span> <span class="n">dict1</span><span class="p">},</span>
@@ -677,7 +693,7 @@
             <span class="k">yield</span> <span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">v</span><span class="p">)</span>
 
 
-<div class="viewcode-block" id="mode_combinations"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.mode_combinations">[docs]</a><span class="k">def</span> <span class="nf">mode_combinations</span><span class="p">(</span>
+<div class="viewcode-block" id="mode_combinations"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.mode_combinations">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">mode_combinations</span><span class="p">(</span>
     <span class="n">modes</span><span class="p">:</span> <span class="n">Iterable</span><span class="p">[</span><span class="nb">str</span><span class="p">],</span> <span class="n">cross</span><span class="p">:</span> <span class="nb">bool</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">],</span> <span class="o">...</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;create mode combinations for a collection of given modes&quot;&quot;&quot;</span>
@@ -688,7 +704,7 @@
     <span class="k">return</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">mode_combinations</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="reciprocal"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.reciprocal">[docs]</a><span class="k">def</span> <span class="nf">reciprocal</span><span class="p">(</span><span class="n">sdict</span><span class="p">:</span> <span class="n">SDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
+<div class="viewcode-block" id="reciprocal"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.reciprocal">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">reciprocal</span><span class="p">(</span><span class="n">sdict</span><span class="p">:</span> <span class="n">SDict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Make an SDict reciprocal&quot;&quot;&quot;</span>
     <span class="k">if</span> <span class="n">is_sdict</span><span class="p">(</span><span class="n">sdict</span><span class="p">):</span>
         <span class="k">return</span> <span class="p">{</span>
@@ -700,16 +716,16 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">rename_params</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ModelFactory</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ModelFactory</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_params</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">ModelFactory</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ModelFactory</span><span class="p">:</span>
     <span class="o">...</span>
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">rename_params</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_params</span><span class="p">(</span><span class="n">model</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
     <span class="o">...</span>
 
 
-<div class="viewcode-block" id="rename_params"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.rename_params">[docs]</a><span class="k">def</span> <span class="nf">rename_params</span><span class="p">(</span>
+<div class="viewcode-block" id="rename_params"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.rename_params">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rename_params</span><span class="p">(</span>
     <span class="n">model</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">ModelFactory</span><span class="p">],</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">Model</span><span class="p">,</span> <span class="n">ModelFactory</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;rename the parameters of a `Model` or `ModelFactory` given</span>
@@ -724,7 +740,7 @@
         <span class="n">old_settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">old_model_factory</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">new_model_factory</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new_model_factory</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">):</span>
             <span class="n">old_settings</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">reversed_renamings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="p">}</span>
@@ -741,7 +757,7 @@
         <span class="n">old_settings</span> <span class="o">=</span> <span class="n">get_settings</span><span class="p">(</span><span class="n">model</span><span class="p">)</span>
 
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">old_model</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">new_model</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">):</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new_model</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">):</span>
             <span class="n">old_settings</span> <span class="o">=</span> <span class="p">{</span>
                 <span class="n">reversed_renamings</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="n">k</span><span class="p">,</span> <span class="n">k</span><span class="p">):</span> <span class="n">v</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">settings</span><span class="o">.</span><span class="n">items</span><span class="p">()</span>
             <span class="p">}</span>
@@ -758,7 +774,7 @@
         <span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_replace_kwargs</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_replace_kwargs</span><span class="p">(</span><span class="n">func</span><span class="p">:</span> <span class="n">Callable</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Change the kwargs signature of a function&quot;&quot;&quot;</span>
     <span class="n">sig</span> <span class="o">=</span> <span class="n">inspect</span><span class="o">.</span><span class="n">signature</span><span class="p">(</span><span class="n">func</span><span class="p">)</span>
     <span class="n">settings</span> <span class="o">=</span> <span class="p">[</span>
@@ -769,31 +785,31 @@
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SDict</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SDict</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SDict</span><span class="p">:</span>
     <span class="o">...</span>
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SCoo</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SCoo</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SCoo</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SCoo</span><span class="p">:</span>
     <span class="o">...</span>
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SDense</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SDense</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SDense</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">SDense</span><span class="p">:</span>
     <span class="o">...</span>
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">Model</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">Model</span><span class="p">:</span>
     <span class="o">...</span>
 
 
 <span class="nd">@overload</span>
-<span class="k">def</span> <span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">ModelFactory</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ModelFactory</span><span class="p">:</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">rename_ports</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">ModelFactory</span><span class="p">,</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">])</span> <span class="o">-&gt;</span> <span class="n">ModelFactory</span><span class="p">:</span>
     <span class="o">...</span>
 
 
-<div class="viewcode-block" id="rename_ports"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.rename_ports">[docs]</a><span class="k">def</span> <span class="nf">rename_ports</span><span class="p">(</span>
+<div class="viewcode-block" id="rename_ports"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.rename_ports">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">rename_ports</span><span class="p">(</span>
     <span class="n">S</span><span class="p">:</span> <span class="n">Union</span><span class="p">[</span><span class="n">SType</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">ModelFactory</span><span class="p">],</span> <span class="n">renamings</span><span class="p">:</span> <span class="n">Dict</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]</span>
 <span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Union</span><span class="p">[</span><span class="n">SType</span><span class="p">,</span> <span class="n">Model</span><span class="p">,</span> <span class="n">ModelFactory</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;rename the ports of an `SDict`, `Model` or `ModelFactory` given</span>
@@ -815,7 +831,7 @@
         <span class="n">old_model</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">Model</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
 
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">old_model</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">new_model</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new_model</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">SType</span><span class="p">:</span>
             <span class="k">return</span> <span class="n">rename_ports</span><span class="p">(</span><span class="n">old_model</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">),</span> <span class="n">renamings</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">new_model</span>
@@ -823,7 +839,7 @@
         <span class="n">old_model_factory</span> <span class="o">=</span> <span class="n">cast</span><span class="p">(</span><span class="n">ModelFactory</span><span class="p">,</span> <span class="n">S</span><span class="p">)</span>
 
         <span class="nd">@wraps</span><span class="p">(</span><span class="n">old_model_factory</span><span class="p">)</span>
-        <span class="k">def</span> <span class="nf">new_model_factory</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">SType</span><span class="p">]:</span>
+        <span class="k">def</span><span class="w"> </span><span class="nf">new_model_factory</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Callable</span><span class="p">[</span><span class="o">...</span><span class="p">,</span> <span class="n">SType</span><span class="p">]:</span>
             <span class="k">return</span> <span class="n">rename_ports</span><span class="p">(</span><span class="n">old_model_factory</span><span class="p">(</span><span class="o">**</span><span class="n">settings</span><span class="p">),</span> <span class="n">renamings</span><span class="p">)</span>
 
         <span class="k">return</span> <span class="n">new_model_factory</span>
@@ -831,7 +847,7 @@
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;Cannot rename ports for type {type(S)}&quot;</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="update_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.update_settings">[docs]</a><span class="k">def</span> <span class="nf">update_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">,</span> <span class="o">*</span><span class="n">compnames</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
+<div class="viewcode-block" id="update_settings"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.update_settings">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">update_settings</span><span class="p">(</span><span class="n">settings</span><span class="p">:</span> <span class="n">Settings</span><span class="p">,</span> <span class="o">*</span><span class="n">compnames</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="o">**</span><span class="n">kwargs</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Settings</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;update a nested settings dictionary</span>
 
 <span class="sd">    .. note ::</span>
@@ -865,7 +881,7 @@
     <span class="k">return</span> <span class="n">_settings</span></div>
 
 
-<div class="viewcode-block" id="validate_not_mixedmode"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_not_mixedmode">[docs]</a><span class="k">def</span> <span class="nf">validate_not_mixedmode</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">):</span>
+<div class="viewcode-block" id="validate_not_mixedmode"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_not_mixedmode">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">validate_not_mixedmode</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">):</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;validate that an stype is not &#39;mixed mode&#39; (i.e. invalid)</span>
 
 <span class="sd">    Args:</span>
@@ -880,7 +896,7 @@
         <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="validate_multimode"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_multimode">[docs]</a><span class="k">def</span> <span class="nf">validate_multimode</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;te&quot;</span><span class="p">,</span> <span class="s2">&quot;tm&quot;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="validate_multimode"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_multimode">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">validate_multimode</span><span class="p">(</span><span class="n">S</span><span class="p">:</span> <span class="n">SType</span><span class="p">,</span> <span class="n">modes</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;te&quot;</span><span class="p">,</span> <span class="s2">&quot;tm&quot;</span><span class="p">))</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;validate that an stype is multimode and that the given modes are present.&quot;&quot;&quot;</span>
     <span class="k">try</span><span class="p">:</span>
         <span class="n">current_modes</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">p</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="s2">&quot;@&quot;</span><span class="p">)[</span><span class="mi">1</span><span class="p">]</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">get_ports</span><span class="p">(</span><span class="n">S</span><span class="p">))</span>
@@ -893,7 +909,7 @@
             <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="validate_sdict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_sdict">[docs]</a><span class="k">def</span> <span class="nf">validate_sdict</span><span class="p">(</span><span class="n">sdict</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
+<div class="viewcode-block" id="validate_sdict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.validate_sdict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">validate_sdict</span><span class="p">(</span><span class="n">sdict</span><span class="p">:</span> <span class="n">Any</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="kc">None</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;Validate an `SDict`&quot;&quot;&quot;</span>
 
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">sdict</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
@@ -909,7 +925,7 @@
             <span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="get_inputs_outputs"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_inputs_outputs">[docs]</a><span class="k">def</span> <span class="nf">get_inputs_outputs</span><span class="p">(</span><span class="n">ports</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]):</span>
+<div class="viewcode-block" id="get_inputs_outputs"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.get_inputs_outputs">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">get_inputs_outputs</span><span class="p">(</span><span class="n">ports</span><span class="p">:</span> <span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="o">...</span><span class="p">]):</span>
     <span class="n">inputs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ports</span> <span class="k">if</span> <span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;in&quot;</span><span class="p">))</span>
     <span class="n">outputs</span> <span class="o">=</span> <span class="nb">tuple</span><span class="p">(</span><span class="n">p</span> <span class="k">for</span> <span class="n">p</span> <span class="ow">in</span> <span class="n">ports</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">p</span><span class="o">.</span><span class="n">lower</span><span class="p">()</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="s2">&quot;in&quot;</span><span class="p">))</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="n">inputs</span><span class="p">:</span>
@@ -918,7 +934,7 @@
     <span class="k">return</span> <span class="n">inputs</span><span class="p">,</span> <span class="n">outputs</span></div>
 
 
-<div class="viewcode-block" id="hash_dict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.hash_dict">[docs]</a><span class="k">def</span> <span class="nf">hash_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
+<div class="viewcode-block" id="hash_dict"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.hash_dict">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">hash_dict</span><span class="p">(</span><span class="n">dic</span><span class="p">:</span> <span class="n">Dict</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">int</span><span class="p">:</span>
     <span class="k">return</span> <span class="nb">int</span><span class="p">(</span>
         <span class="n">md5</span><span class="p">(</span>
             <span class="n">orjson</span><span class="o">.</span><span class="n">dumps</span><span class="p">(</span>
@@ -929,26 +945,26 @@
     <span class="p">)</span></div>
 
 
-<span class="k">def</span> <span class="nf">_numpyfy</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">_numpyfy</span><span class="p">(</span><span class="n">obj</span><span class="p">:</span> <span class="n">Any</span><span class="p">):</span>
     <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">obj</span><span class="p">,</span> <span class="nb">dict</span><span class="p">):</span>
         <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">obj</span><span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="p">{</span><span class="n">k</span><span class="p">:</span> <span class="n">_numpyfy</span><span class="p">(</span><span class="n">v</span><span class="p">)</span> <span class="k">for</span> <span class="n">k</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">obj</span><span class="o">.</span><span class="n">items</span><span class="p">()}</span>
 
 
-<div class="viewcode-block" id="Normalization"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.Normalization">[docs]</a><span class="k">class</span> <span class="nc">Normalization</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
+<div class="viewcode-block" id="Normalization"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.Normalization">[docs]</a><span class="k">class</span><span class="w"> </span><span class="nc">Normalization</span><span class="p">(</span><span class="n">NamedTuple</span><span class="p">):</span>
     <span class="n">mean</span><span class="p">:</span> <span class="n">ComplexArrayND</span>
     <span class="n">std</span><span class="p">:</span> <span class="n">ComplexArrayND</span></div>
 
 
-<div class="viewcode-block" id="normalization"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.normalization">[docs]</a><span class="k">def</span> <span class="nf">normalization</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+<div class="viewcode-block" id="normalization"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.normalization">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">normalization</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">axis</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
     <span class="k">if</span> <span class="n">axis</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Normalization</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(),</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">())</span>
     <span class="k">else</span><span class="p">:</span>
         <span class="k">return</span> <span class="n">Normalization</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">axis</span><span class="p">),</span> <span class="n">x</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">axis</span><span class="p">))</span></div>
 
 
-<div class="viewcode-block" id="cartesian_product"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.cartesian_product">[docs]</a><span class="k">def</span> <span class="nf">cartesian_product</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
+<div class="viewcode-block" id="cartesian_product"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.cartesian_product">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">cartesian_product</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;calculate the n-dimensional cartesian product of an arbitrary number of arrays&quot;&quot;&quot;</span>
     <span class="n">ixarrays</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ix_</span><span class="p">(</span><span class="o">*</span><span class="n">arrays</span><span class="p">)</span>
     <span class="n">barrays</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_arrays</span><span class="p">(</span><span class="o">*</span><span class="n">ixarrays</span><span class="p">)</span>
@@ -959,13 +975,13 @@
     <span class="k">return</span> <span class="n">product</span></div>
 
 
-<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.normalize">[docs]</a><span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">normalization</span><span class="p">:</span> <span class="n">Normalization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ComplexArrayND</span><span class="p">]:</span>
+<div class="viewcode-block" id="normalize"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.normalize">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">normalize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">normalization</span><span class="p">:</span> <span class="n">Normalization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Tuple</span><span class="p">[</span><span class="n">ComplexArrayND</span><span class="p">]:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;normalize an array with a given mean and standard deviation&quot;&quot;&quot;</span>
     <span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">normalization</span>
     <span class="k">return</span> <span class="p">(</span><span class="n">x</span> <span class="o">-</span> <span class="n">mean</span><span class="p">)</span> <span class="o">/</span> <span class="n">std</span></div>
 
 
-<div class="viewcode-block" id="denormalize"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.denormalize">[docs]</a><span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">normalization</span><span class="p">:</span> <span class="n">Normalization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
+<div class="viewcode-block" id="denormalize"><a class="viewcode-back" href="../../sax.utils.html#sax.utils.denormalize">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">denormalize</span><span class="p">(</span><span class="n">x</span><span class="p">:</span> <span class="n">ComplexArrayND</span><span class="p">,</span> <span class="n">normalization</span><span class="p">:</span> <span class="n">Normalization</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ComplexArrayND</span><span class="p">:</span>
 <span class="w">    </span><span class="sd">&quot;&quot;&quot;denormalize an array with a given mean and standard deviation&quot;&quot;&quot;</span>
     <span class="n">mean</span><span class="p">,</span> <span class="n">std</span> <span class="o">=</span> <span class="n">normalization</span>
     <span class="k">return</span> <span class="n">x</span> <span class="o">*</span> <span class="n">std</span> <span class="o">+</span> <span class="n">mean</span></div>
@@ -1031,8 +1047,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>

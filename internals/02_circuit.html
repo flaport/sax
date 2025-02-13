@@ -12,7 +12,7 @@
 <meta content="Sphinx, MyST" name="keywords" />
 <meta content="en_US" property="og:locale" />
 
-    <title>Circuit &#8212; sax 0.13.5 documentation</title>
+    <title>Circuit &#8212; sax 0.14.1 documentation</title>
   
   
   
@@ -20,19 +20,17 @@
     document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
     document.documentElement.dataset.theme = localStorage.getItem("theme") || "";
   </script>
-  <!-- 
-    this give us a css class that will be invisible only if js is disabled 
-  -->
-  <noscript>
-    <style>
-      .pst-js-only { display: none !important; }
-
-    </style>
-  </noscript>
   
   <!-- Loaded before other Sphinx assets -->
-  <link href="../_static/styles/theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
-<link href="../_static/styles/pydata-sphinx-theme.css?digest=26a4bc78f4c0ddb94549" rel="stylesheet" />
+  <link href="../_static/styles/theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.5.2/css/all.min.css?digest=dfe6caa3a7d634c4db9b" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.5.2/webfonts/fa-regular-400.woff2" />
 
     <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
     <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
@@ -42,11 +40,10 @@
     <link rel="stylesheet" type="text/css" href="../_static/autodoc_pydantic.css" />
     <link rel="stylesheet" type="text/css" href="../_static/_static/css/custom.css" />
   
-  <!-- So that users can add custom icons -->
-  <script src="../_static/scripts/fontawesome.js?digest=26a4bc78f4c0ddb94549"></script>
   <!-- Pre-loaded scripts that we'll load fully later -->
-  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549" />
-<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549" />
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b" />
+  <script src="../_static/vendor/fontawesome/6.5.2/js/all.min.js?digest=dfe6caa3a7d634c4db9b"></script>
 
     <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
     <script src="../_static/jquery.js"></script>
@@ -64,7 +61,6 @@
     <link rel="prev" title="Models and Model Factories" href="01_models.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
-  <meta name="docsearch:version" content="" />
   </head>
   
   
@@ -80,8 +76,19 @@
     <i class="fa-solid fa-arrow-up"></i>Back to top</button>
 
   
-  <dialog id="pst-search-dialog">
-    
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-primary-sidebar-checkbox"/>
+  <label class="overlay overlay-primary" for="pst-primary-sidebar-checkbox"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          id="pst-secondary-sidebar-checkbox"/>
+  <label class="overlay overlay-secondary" for="pst-secondary-sidebar-checkbox"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
 <form class="bd-search d-flex align-items-center"
       action="../search.html"
       method="get">
@@ -89,6 +96,7 @@
   <input type="search"
          class="form-control"
          name="q"
+         id="search-input"
          placeholder="Search..."
          aria-label="Search..."
          autocomplete="off"
@@ -96,8 +104,8 @@
          autocapitalize="off"
          spellcheck="false"/>
   <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
-</form>
-  </dialog>
+</form></div>
+  </div>
 
   <div class="pst-async-banner-revealer d-none">
   <aside id="bd-header-version-warning" class="d-none d-print-none" aria-label="Version warning"></aside>
@@ -113,8 +121,7 @@
       
       
       
-      <dialog id="pst-primary-sidebar-modal"></dialog>
-      <div id="pst-primary-sidebar" class="bd-sidebar-primary bd-sidebar">
+      <div class="bd-sidebar-primary bd-sidebar">
         
 
   
@@ -143,8 +150,8 @@
       
     
     
-    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.13.5 documentation - Home"/>
-    <img src="../_static/logo.png" class="logo__image only-dark pst-js-only" alt="sax 0.13.5 documentation - Home"/>
+    <img src="../_static/logo.png" class="logo__image only-light" alt="sax 0.14.1 documentation - Home"/>
+    <script>document.write(`<img src="../_static/logo.png" class="logo__image only-dark" alt="sax 0.14.1 documentation - Home"/>`);</script>
   
   
 </a></div>
@@ -178,6 +185,7 @@
 <li class="toctree-l2 has-children"><a class="reference internal" href="../sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.additive.html">sax.backends.additive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
+<li class="toctree-l3"><a class="reference internal" href="../sax.backends.forward_only.html">sax.backends.forward_only module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="../sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
@@ -410,16 +418,24 @@
 
 
 
-<button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button pst-js-only" aria-label="Color mode" data-bs-title="Color mode"  data-bs-placement="bottom" data-bs-toggle="tooltip">
-  <i class="theme-switch fa-solid fa-sun                fa-lg" data-mode="light" title="Light"></i>
-  <i class="theme-switch fa-solid fa-moon               fa-lg" data-mode="dark"  title="Dark"></i>
-  <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"  title="System Settings"></i>
-</button>
+<script>
+document.write(`
+  <button class="btn btn-sm nav-link pst-navbar-icon theme-switch-button" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="theme-switch fa-solid fa-sun fa-lg" data-mode="light"></i>
+    <i class="theme-switch fa-solid fa-moon fa-lg" data-mode="dark"></i>
+    <i class="theme-switch fa-solid fa-circle-half-stroke fa-lg" data-mode="auto"></i>
+  </button>
+`);
+</script>
 
 
-<button class="btn btn-sm pst-navbar-icon search-button search-button__button pst-js-only" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+<script>
+document.write(`
+  <button class="btn btn-sm pst-navbar-icon search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
     <i class="fa-solid fa-magnifying-glass fa-lg"></i>
-</button>
+  </button>
+`);
+</script>
 
 </div></div>
       
@@ -452,10 +468,10 @@
 </div></blockquote>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">functools</span> <span class="kn">import</span> <span class="n">partial</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
-<span class="kn">import</span> <span class="nn">sax</span>
-<span class="kn">from</span> <span class="nn">sax.circuit</span> <span class="kn">import</span> <span class="p">(</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">sax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">sax.circuit</span><span class="w"> </span><span class="kn">import</span> <span class="p">(</span>
     <span class="n">_create_dag</span><span class="p">,</span>
     <span class="n">_find_leaves</span><span class="p">,</span>
     <span class="n">_find_root</span><span class="p">,</span>
@@ -475,13 +491,13 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">gdsfactory</span> <span class="k">as</span> <span class="nn">gf</span>
-<span class="kn">from</span> <span class="nn">IPython.display</span> <span class="kn">import</span> <span class="n">display</span>
-<span class="kn">from</span> <span class="nn">gdsfactory.components</span> <span class="kn">import</span> <span class="n">mzi</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span><span class="w"> </span><span class="nn">gdsfactory</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">gf</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">IPython.display</span><span class="w"> </span><span class="kn">import</span> <span class="n">display</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">gdsfactory.components</span><span class="w"> </span><span class="kn">import</span> <span class="n">mzi</span>
 
 
 <span class="nd">@gf</span><span class="o">.</span><span class="n">cell</span>
-<span class="k">def</span> <span class="nf">twomzi</span><span class="p">():</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">twomzi</span><span class="p">():</span>
     <span class="n">c</span> <span class="o">=</span> <span class="n">gf</span><span class="o">.</span><span class="n">Component</span><span class="p">()</span>
 
     <span class="c1"># instances</span>
@@ -511,7 +527,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/374dd630c5cfc7d26fe5ae72ed2f7a672fe5dcf7f3a3b98b537f5bf871e4fc12.png" src="../_images/374dd630c5cfc7d26fe5ae72ed2f7a672fe5dcf7f3a3b98b537f5bf871e4fc12.png" />
+<img alt="../_images/bb6e9550ba065615f42e442a776c3b97b7aa48a2fffa24d612592b0e4fb69345.png" src="../_images/bb6e9550ba065615f42e442a776c3b97b7aa48a2fffa24d612592b0e4fb69345.png" />
 </div>
 </div>
 <div class="cell docutils container">
@@ -522,11 +538,17 @@
 </pre></div>
 </div>
 </div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/tmp/ipykernel_3585/418843444.py:1: PydanticDeprecatedSince20: The `parse_obj` method is deprecated; use `model_validate` instead. Deprecated in Pydantic V2.0 to be removed in V3.0. See Pydantic V2 Migration Guide at https://errors.pydantic.dev/2.10/migration/
+  recnet = sax.RecursiveNetlist.parse_obj(comp.get_netlist(recursive=True))
+</pre></div>
+</div>
+</div>
 </div>
 <p>To be able to model this device we’ll need some SAX dummy models:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bend_euler</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">bend_euler</span><span class="p">(</span>
     <span class="n">angle</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span>
     <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="c1"># cross_section=&quot;strip&quot;,</span>
@@ -542,7 +564,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mmi1x2</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mmi1x2</span><span class="p">(</span>
     <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">width_taper</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="n">length_taper</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
@@ -565,7 +587,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mmi2x2</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mmi2x2</span><span class="p">(</span>
     <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">width_taper</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="n">length_taper</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
@@ -590,7 +612,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">straight</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">straight</span><span class="p">(</span>
     <span class="n">length</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
     <span class="c1"># npoints=2,</span>
     <span class="c1"># with_bbox=True,</span>
@@ -616,7 +638,7 @@
 <p>We can also create some dummy multimode models:</p>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">bend_euler_mm</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">bend_euler_mm</span><span class="p">(</span>
     <span class="n">angle</span><span class="o">=</span><span class="mf">90.0</span><span class="p">,</span>
     <span class="n">p</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="c1"># cross_section=&quot;strip&quot;,</span>
@@ -639,7 +661,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">mmi1x2_mm</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">mmi1x2_mm</span><span class="p">(</span>
     <span class="n">width</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
     <span class="n">width_taper</span><span class="o">=</span><span class="mf">1.0</span><span class="p">,</span>
     <span class="n">length_taper</span><span class="o">=</span><span class="mf">10.0</span><span class="p">,</span>
@@ -668,7 +690,7 @@
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">straight_mm</span><span class="p">(</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span><span class="w"> </span><span class="nf">straight_mm</span><span class="p">(</span>
     <span class="n">length</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span>
     <span class="c1"># npoints=2,</span>
     <span class="c1"># with_bbox=True,</span>
@@ -704,7 +726,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/393dcef67a5944133941ddfa14ad26d947bd444454cb7c1aa970643e1d3899c0.png" src="../_images/393dcef67a5944133941ddfa14ad26d947bd444454cb7c1aa970643e1d3899c0.png" />
+<img alt="../_images/570ddd76251cf84087ded928e7bd15f5c43df89f21a815342e60659c3fe3d789.png" src="../_images/570ddd76251cf84087ded928e7bd15f5c43df89f21a815342e60659c3fe3d789.png" />
 </div>
 </div>
 <p>Note that the DAG depends on the models we supply. We could for example stub one of the sub-netlists by a pre-defined model:</p>
@@ -716,7 +738,7 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<img alt="../_images/393dcef67a5944133941ddfa14ad26d947bd444454cb7c1aa970643e1d3899c0.png" src="../_images/393dcef67a5944133941ddfa14ad26d947bd444454cb7c1aa970643e1d3899c0.png" />
+<img alt="../_images/570ddd76251cf84087ded928e7bd15f5c43df89f21a815342e60659c3fe3d789.png" src="../_images/570ddd76251cf84087ded928e7bd15f5c43df89f21a815342e60659c3fe3d789.png" />
 </div>
 </div>
 <p>This is useful if we for example pre-calculated a certain model.</p>
@@ -821,13 +843,13 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
-/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
-/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
-/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
 </pre></div>
 </div>
@@ -850,13 +872,13 @@
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
-/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
-/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
-/opt/conda/lib/python3.11/site-packages/jax/_src/numpy/lax_numpy.py:5191: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
+/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5820: FutureWarning: None encountered in jnp.array(); this is currently treated as NaN. In the future this will result in an error.
   return array(a, dtype=dtype, copy=bool(copy), order=order, device=device)
 </pre></div>
 </div>
@@ -974,8 +996,8 @@ By Floris Laporte
   </div>
   
   <!-- Scripts loaded after <body> so the DOM is not blocked -->
-  <script defer src="../_static/scripts/bootstrap.js?digest=26a4bc78f4c0ddb94549"></script>
-<script defer src="../_static/scripts/pydata-sphinx-theme.js?digest=26a4bc78f4c0ddb94549"></script>
+  <script src="../_static/scripts/bootstrap.js?digest=dfe6caa3a7d634c4db9b"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=dfe6caa3a7d634c4db9b"></script>
 
   <footer class="bd-footer">
   </footer>
