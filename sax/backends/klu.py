@@ -1,8 +1,8 @@
-""" SAX KLU Backend """
+"""SAX KLU Backend"""
 
 from __future__ import annotations
-import time
 
+import time
 from typing import Any, Dict
 
 import jax
@@ -14,7 +14,7 @@ from ..netlist import Component
 from ..saxtypes import Model, SCoo, SDense, SType, scoo
 
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
-mul_coo = jax.vmap(klujax.coo_mul_vec, (None, None, 0, 0), 0)
+dot_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 
 
 def analyze_instances_klu(
@@ -131,7 +131,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
     Sx = Sx.reshape(-1, Sx.shape[-1])  # n_lhs x N
     I_CSx = I_CSx.reshape(-1, I_CSx.shape[-1])  # n_lhs x M
     inv_I_CS_Cext = solve_klu(I_CSi, I_CSj, I_CSx, Cext)
-    S_inv_I_CS_Cext = mul_coo(Si, Sj, Sx, inv_I_CS_Cext)
+    S_inv_I_CS_Cext = dot_coo(Si, Sj, Sx, inv_I_CS_Cext)
 
     CextT_S_inv_I_CS_Cext = S_inv_I_CS_Cext[..., Cexti, :][..., :, Cextj]
 
