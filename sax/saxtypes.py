@@ -113,7 +113,7 @@ def val_int(obj: Any, *, strict: bool = False) -> Int:
         strict=strict,
         type_cast=int,
         type_def=Int,
-        type_name="Int",
+        type_name="Int" if strict else "IntLike",
     )
 
 
@@ -127,7 +127,7 @@ def val_float(obj: Any, *, strict: bool = False) -> Float:
         strict=strict,
         type_cast=float,
         type_def=Float,
-        type_name="Float",
+        type_name="Float" if strict else "FloatLike",
     )
 
 
@@ -141,7 +141,7 @@ def val_complex(obj: Any, *, strict: bool = False) -> Complex:
         strict=strict,
         type_cast=complex,
         type_def=Complex,
-        type_name="Complex",
+        type_name="Complex" if strict else "ComplexLike",
     )
 
 
@@ -151,7 +151,7 @@ Complex: TypeAlias = Annotated[
 """Any complex number."""
 
 
-def _val_array_type(
+def _val_array_type(  # noqa: C901
     obj: Any,
     *,
     strict: bool,
@@ -183,8 +183,8 @@ def _val_array_type(
         if strict:
             msg = (
                 f"NOT_{type_name.upper()}: Strict validation does not allow "
-                f"broadcasting the {int(arr.ndim)}D array {arr!r} into a {ndim}D array. "
-                f"Note: use {type_name}Like type for less strict type checking."
+                f"broadcasting the {int(arr.ndim)}D array {arr!r} into a {ndim}D "
+                f"array. Note: use {type_name}Like type for less strict type checking."
             )
             raise TypeError(msg)
         _ndim = int(arr.ndim)
@@ -232,9 +232,9 @@ def val_int_array(obj: Any, *, strict: bool = False) -> IntArray:
     return _val_array_type(
         obj,
         strict=strict,
-        type_def=IntArray,
+        type_def=IntArray if strict else IntArrayLike,
         default_dtype_name="int",
-        type_name="IntArray",
+        type_name="IntArray" if strict else "IntArrayLike",
     )
 
 
@@ -248,9 +248,9 @@ def val_float_array(obj: Any, *, strict: bool = False) -> IntArray:
     return _val_array_type(
         obj,
         strict=strict,
-        type_def=FloatArray,
+        type_def=FloatArray if strict else FloatArrayLike,
         default_dtype_name="float",
-        type_name="FloatArray",
+        type_name="FloatArray" if strict else "FloatArrayLike",
     )
 
 
@@ -264,9 +264,9 @@ def val_complex_array(obj: Any, *, strict: bool = False) -> ComplexArray:
     return _val_array_type(
         obj,
         strict=strict,
-        type_def=ComplexArray,
+        type_def=ComplexArray if strict else ComplexArrayLike,
         default_dtype_name="complex",
-        type_name="ComplexArray",
+        type_name="ComplexArray" if strict else "ComplexArrayLike",
     )
 
 
@@ -280,9 +280,9 @@ def val_int_array_1d(obj: Any, *, strict: bool = False) -> IntArray1D:
     return _val_array_type(
         obj,
         strict=strict,
-        type_def=IntArray1D,
+        type_def=IntArray1D if strict else IntArray1DLike,
         default_dtype_name="int",
-        type_name="IntArray1D",
+        type_name="IntArray1D" if strict else "Intarray1DLike",
     )
 
 
@@ -296,9 +296,9 @@ def val_float_array_1d(obj: Any, *, strict: bool = False) -> FloatArray1D:
     return _val_array_type(
         obj,
         strict=strict,
-        type_def=FloatArray1D,
+        type_def=FloatArray1D if strict else FloatArray1DLike,
         default_dtype_name="float",
-        type_name="FloatArray1D",
+        type_name="FloatArray1D" if strict else "FloatArray1DLike",
     )
 
 
@@ -312,9 +312,9 @@ def val_complex_array_1d(obj: Any, *, strict: bool = False) -> ComplexArray1D:
     return _val_array_type(
         obj,
         strict=strict,
-        type_def=ComplexArray1D,
+        type_def=ComplexArray1D if strict else ComplexArray1DLike,
         default_dtype_name="complex",
-        type_name="ComplexArray1D",
+        type_name="ComplexArray1D" if strict else "ComplexArray1DLike",
     )
 
 
@@ -323,31 +323,49 @@ ComplexArray1D = Annotated[
 ]
 """1-dimensional Complex array."""
 
-IntLike: TypeAlias = int | np.integer
+IntLike: TypeAlias = Annotated[int | np.integer, _val(val_int, strict=False)]
 """Anything that can be cast into an Int without loss of data."""
 
-FloatLike: TypeAlias = IntLike | float | np.floating
+FloatLike: TypeAlias = Annotated[
+    IntLike | float | np.floating, _val(val_float, strict=False)
+]
 """Anything that can be cast into a Float without loss of data."""
 
-ComplexLike: TypeAlias = FloatLike | np.inexact
+ComplexLike: TypeAlias = Annotated[
+    FloatLike | np.inexact, _val(val_complex, strict=False)
+]
 """Anything that can be cast into a Complex without loss of data."""
 
-IntArrayLike: TypeAlias = Annotated[ArrayLike, IntLike] | IntLike
+ArrayLike: TypeAlias = Array | np.ndarray | list | tuple
+
+IntArrayLike: TypeAlias = Annotated[
+    ArrayLike | IntLike, np.integer, _val(val_int_array, strict=False)
+]
 """Anything that can be cast into a N-dimensional Int array without loss of data."""
 
-FloatArrayLike: TypeAlias = Annotated[ArrayLike, FloatLike] | FloatLike
+FloatArrayLike: TypeAlias = Annotated[
+    ArrayLike | FloatLike, np.floating, _val(val_float_array, strict=False)
+]
 """Anything that can be cast into a N-dimensional Float array without loss of data."""
 
-ComplexArrayLike: TypeAlias = Annotated[ArrayLike, ComplexLike] | ComplexLike
+ComplexArrayLike: TypeAlias = Annotated[
+    ArrayLike | ComplexLike, np.inexact, _val(val_complex_array, strict=False)
+]
 """Anything that can be cast into a N-dimensional Complex array without loss of data."""
 
-IntArrayLike1D: TypeAlias = Annotated[IntArrayLike, tuple[int]] | IntLike
+IntArray1DLike: TypeAlias = Annotated[
+    IntArrayLike, np.integer, 1, _val(val_int_array_1d, strict=False)
+]
 """1-dimensional integer array."""
 
-FloatArrayLike1D: TypeAlias = Annotated[FloatArrayLike, tuple[int]] | FloatLike
+FloatArray1DLike: TypeAlias = Annotated[
+    FloatArrayLike, np.floating, 1, _val(val_float_array_1d, strict=False)
+]
 """1-dimensional float array."""
 
-ComplexArrayLike1D: TypeAlias = Annotated[ComplexArrayLike, tuple[int]] | ComplexLike
+ComplexArray1DLike: TypeAlias = Annotated[
+    ComplexArrayLike, np.inexact, 1, _val(val_complex_array_1d, strict=False)
+]
 """1-dimensional complex array."""
 
 PortMap: TypeAlias = dict[str, Int]
@@ -516,7 +534,7 @@ def _val_0d(obj: Any, *, type_name: str = "0D") -> Array:
 
 
 @validate_call
-def _test(obj: FloatArray1D):  # noqa: ANN202
+def _test(obj: IntArrayLike):  # noqa: ANN202
     return obj
 
 
