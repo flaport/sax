@@ -11,19 +11,21 @@ from typing import (
     TYPE_CHECKING,
     Annotated,
     Any,
+    Literal,
     LiteralString,
     Protocol,
     TypeAlias,
     TypeVar,
     cast,
     get_args,
+    overload,
 )
 
 import jax
 import jax.numpy as jnp
 import numpy as np
 from jaxtyping import Array
-from pydantic import PlainValidator, validate_call
+from pydantic import PlainValidator
 from pydantic_core import PydanticCustomError
 
 if TYPE_CHECKING:
@@ -84,7 +86,7 @@ def _val_item_type(  # noqa: PLR0913
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
         arr = _try(np.asarray)(item)
-        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):
+        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):  # type: ignore[reportArgumentType]
             msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
             raise TypeError(msg)
         if strict:
@@ -99,7 +101,17 @@ def _val_item_type(  # noqa: PLR0913
     return item
 
 
-def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> Bool:
+@overload
+def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Bool: ...
+
+
+@overload
+def val_bool(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> BoolLike: ...
+
+
+def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
     return _val_item_type(
         obj,
         strict=strict,
@@ -114,7 +126,17 @@ Bool: TypeAlias = Annotated[bool | np.bool_, _val(val_bool, strict=True)]
 """Any boolean."""
 
 
-def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> Int:
+@overload
+def val_int(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Int: ...
+
+
+@overload
+def val_int(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> IntLike: ...
+
+
+def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
     if strict and _try(partial(val_bool, strict=True, cast=False))(obj) is not None:
         msg = (
             f"NOT_INT: Strict validation does not allow casting {obj} [bool] into Int. "
@@ -134,7 +156,17 @@ Int: TypeAlias = Annotated[int | np.signedinteger, _val(val_int, strict=True)]
 """Any signed integer."""
 
 
-def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> Float:
+@overload
+def val_float(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Float: ...
+
+
+@overload
+def val_float(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> FloatLike: ...
+
+
+def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike:
     return _val_item_type(
         obj,
         strict=strict,
@@ -149,7 +181,19 @@ Float: TypeAlias = Annotated[float | np.floating, _val(val_float, strict=True)]
 """Any float."""
 
 
-def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> Complex:
+@overload
+def val_complex(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> Complex: ...
+
+
+@overload
+def val_complex(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> ComplexLike: ...
+
+
+def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> ComplexLike:
     return _val_item_type(
         obj,
         strict=strict,
@@ -230,7 +274,21 @@ def _val_array_type(  # noqa: C901,PLR0913
     return arr
 
 
-def val_bool_array(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolArray:
+@overload
+def val_bool_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> BoolArray: ...
+
+
+@overload
+def val_bool_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> BoolArrayLike: ...
+
+
+def val_bool_array(
+    obj: Any, *, strict: bool = False, cast: bool = True
+) -> BoolArrayLike:
     return _val_array_type(
         obj,
         strict=strict,
@@ -245,7 +303,19 @@ BoolArray: TypeAlias = Annotated[Array, np.bool_, _val(val_bool_array, strict=Tr
 """N-dimensional Bool array."""
 
 
-def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntArray:
+@overload
+def val_int_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> IntArray: ...
+
+
+@overload
+def val_int_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> IntArrayLike: ...
+
+
+def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntArrayLike:
     return _val_array_type(
         obj,
         strict=strict,
@@ -262,7 +332,21 @@ IntArray: TypeAlias = Annotated[
 """N-dimensional Int array."""
 
 
-def val_float_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntArray:
+@overload
+def val_float_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> FloatArray: ...
+
+
+@overload
+def val_float_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> FloatArrayLike: ...
+
+
+def val_float_array(
+    obj: Any, *, strict: bool = False, cast: bool = True
+) -> FloatArrayLike:
     return _val_array_type(
         obj,
         strict=strict,
@@ -279,9 +363,21 @@ FloatArray: TypeAlias = Annotated[
 """N-dimensional Float array."""
 
 
+@overload
+def val_complex_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> ComplexArray: ...
+
+
+@overload
+def val_complex_array(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> ComplexArrayLike: ...
+
+
 def val_complex_array(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> ComplexArray:
+) -> ComplexArrayLike:
     return _val_array_type(
         obj,
         strict=strict,
@@ -298,9 +394,21 @@ ComplexArray = Annotated[
 """N-dimensional Complex array."""
 
 
+@overload
+def val_int_array_1d(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> IntArray1D: ...
+
+
+@overload
+def val_int_array_1d(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> IntArray1DLike: ...
+
+
 def val_int_array_1d(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> IntArray1D:
+) -> IntArray1DLike:
     return _val_array_type(
         obj,
         strict=strict,
@@ -317,9 +425,21 @@ IntArray1D: TypeAlias = Annotated[
 """1-dimensional Int array."""
 
 
+@overload
+def val_float_array_1d(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> FloatArray1D: ...
+
+
+@overload
+def val_float_array_1d(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> FloatArray1DLike: ...
+
+
 def val_float_array_1d(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> FloatArray1D:
+) -> FloatArray1DLike:
     return _val_array_type(
         obj,
         strict=strict,
@@ -336,9 +456,21 @@ FloatArray1D = Annotated[
 """1-dimensional Float array."""
 
 
+@overload
+def val_complex_array_1d(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> ComplexArray1D: ...
+
+
+@overload
+def val_complex_array_1d(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> ComplexArray1DLike: ...
+
+
 def val_complex_array_1d(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> ComplexArray1D:
+) -> ComplexArray1DLike:
     return _val_array_type(
         obj,
         strict=strict,
@@ -563,7 +695,7 @@ def _val_0d(obj: Any, *, type_name: str = "0D") -> Array:
     arr = _val_array(obj)
     if arr.ndim > 0:
         msg = (
-            f"NOT_0D: {short_message}. The given array should be 0D. "
+            f"NOT_SCALAR: {short_message}. The given item should be a scalar. "
             f"Got shape={arr.shape}."
         )
         raise TypeError(msg)
@@ -572,13 +704,3 @@ def _val_0d(obj: Any, *, type_name: str = "0D") -> Array:
 
 def _x64_enabled() -> bool:
     return bool(getattr(jax.config, "jax_enable_x64", False))
-
-
-@validate_call
-def _test(obj: IntLike):  # noqa: ANN202
-    return obj
-
-
-if __name__ == "__main__":
-    arr = np.array([3, 4])
-    print(repr(_test(obj=True)))
