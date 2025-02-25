@@ -1,15 +1,17 @@
-""" SAX Default Models """
+"""SAX Default Models."""
 
 from __future__ import annotations
 
 from functools import lru_cache as cache
-from typing import Optional, Tuple
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 
-from .saxtypes import FloatArrayND, Model, SCoo, SDict
 from .utils import get_inputs_outputs, reciprocal
+
+if TYPE_CHECKING:
+    from .saxtypes import FloatArrayND, Model, SCoo, SDict
 
 
 def straight(
@@ -41,12 +43,12 @@ def straight(
     return reciprocal(
         {
             ("in0", "out0"): transmission,
-        }
+        },
     )
 
 
 def coupler(*, coupling: float = 0.5) -> SDict:
-    """a simple coupler model"""
+    """A simple coupler model."""
     kappa = coupling**0.5
     tau = (1 - coupling) ** 0.5
     return reciprocal(
@@ -55,37 +57,40 @@ def coupler(*, coupling: float = 0.5) -> SDict:
             ("in0", "out1"): 1j * kappa,
             ("in1", "out0"): 1j * kappa,
             ("in1", "out1"): tau,
-        }
+        },
     )
 
 
 def _validate_ports(
-    ports, num_inputs, num_outputs, diagonal
-) -> Tuple[Tuple[str, ...], Tuple[str, ...], int, int]:
+    ports, num_inputs, num_outputs, diagonal,
+) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
     """Validate the ports and return the input and output ports."""
-
     if ports is None:
         if num_inputs is None or num_outputs is None:
-            raise ValueError(
+            msg = (
                 "if not ports given, you must specify how many input ports "
                 "and how many output ports a model has."
+            )
+            raise ValueError(
+                msg,
             )
         input_ports = [f"in{i}" for i in range(num_inputs)]
         output_ports = [f"out{i}" for i in range(num_outputs)]
     else:
-        if num_inputs is not None:
-            if num_outputs is None:
-                raise ValueError(
-                    "if num_inputs is given, num_outputs should be given as well."
-                )
-        if num_outputs is not None:
-            if num_inputs is None:
-                raise ValueError(
-                    "if num_outputs is given, num_inputs should be given as well."
-                )
+        if num_inputs is not None and num_outputs is None:
+            msg = "if num_inputs is given, num_outputs should be given as well."
+            raise ValueError(
+                msg,
+            )
+        if num_outputs is not None and num_inputs is None:
+            msg = "if num_outputs is given, num_inputs should be given as well."
+            raise ValueError(
+                msg,
+            )
         if num_inputs is not None and num_outputs is not None:
             if num_inputs + num_outputs != len(ports):
-                raise ValueError("num_inputs + num_outputs != len(ports)")
+                msg = "num_inputs + num_outputs != len(ports)"
+                raise ValueError(msg)
             input_ports = ports[:num_inputs]
             output_ports = ports[num_inputs:]
         else:
@@ -93,21 +98,23 @@ def _validate_ports(
             num_inputs = len(input_ports)
             num_outputs = len(output_ports)
 
-    if diagonal:
-        if num_inputs != num_outputs:
-            raise ValueError(
-                "Can only have a diagonal passthru if number "
-                "of input ports equals the number of output ports!"
-            )
+    if diagonal and num_inputs != num_outputs:
+        msg = (
+            "Can only have a diagonal passthru if number "
+            "of input ports equals the number of output ports!"
+        )
+        raise ValueError(
+            msg,
+        )
 
     return tuple(input_ports), tuple(output_ports), num_inputs, num_outputs
 
 
 @cache
 def unitary(
-    num_inputs: Optional[int] = None,
-    num_outputs: Optional[int] = None,
-    ports: Optional[Tuple[str, ...]] = None,
+    num_inputs: int | None = None,
+    num_outputs: int | None = None,
+    ports: tuple[str, ...] | None = None,
     *,
     jit=True,
     reciprocal=True,
@@ -125,9 +132,10 @@ def unitary(
 
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal
+        ports, num_inputs, num_outputs, diagonal,
     )
-    assert num_inputs is not None and num_outputs is not None
+    assert num_inputs is not None
+    assert num_outputs is not None
 
     # let's create the squared S-matrix:
     N = max(num_inputs, num_outputs)
@@ -137,7 +145,7 @@ def unitary(
         S = S.at[:N, N:].set(1)
     else:
         r = jnp.arange(
-            N, dtype=int
+            N, dtype=int,
         )  # reciprocal only works if num_inputs == num_outputs!
         S = S.at[r, N + r].set(1)
 
@@ -146,7 +154,7 @@ def unitary(
             S = S.at[N:, :N].set(1)
         else:
             r = jnp.arange(
-                N, dtype=int
+                N, dtype=int,
             )  # reciprocal only works if num_inputs == num_outputs!
             S = S.at[N + r, r].set(1)
 
@@ -156,7 +164,7 @@ def unitary(
 
     # Now create subset of this matrix we're interested in:
     r = jnp.concatenate(
-        [jnp.arange(num_inputs, dtype=int), N + jnp.arange(num_outputs, dtype=int)], 0
+        [jnp.arange(num_inputs, dtype=int), N + jnp.arange(num_outputs, dtype=int)], 0,
     )
     S = S[r, :][:, r]
 
@@ -182,9 +190,9 @@ def unitary(
 
 @cache
 def copier(
-    num_inputs: Optional[int] = None,
-    num_outputs: Optional[int] = None,
-    ports: Optional[Tuple[str, ...]] = None,
+    num_inputs: int | None = None,
+    num_outputs: int | None = None,
+    ports: tuple[str, ...] | None = None,
     *,
     jit=True,
     reciprocal=True,
@@ -201,9 +209,10 @@ def copier(
         diagonal: whether the model is diagonal.
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal
+        ports, num_inputs, num_outputs, diagonal,
     )
-    assert num_inputs is not None and num_outputs is not None
+    assert num_inputs is not None
+    assert num_outputs is not None
 
     # let's create the squared S-matrix:
     S = jnp.zeros((num_inputs + num_outputs, num_inputs + num_outputs), dtype=float)
@@ -212,7 +221,7 @@ def copier(
         S = S.at[:num_inputs, num_inputs:].set(1)
     else:
         r = jnp.arange(
-            num_inputs, dtype=int
+            num_inputs, dtype=int,
         )  # == range(num_outputs) # reciprocal only works if num_inputs == num_outputs!
         S = S.at[r, num_inputs + r].set(1)
 
@@ -246,8 +255,8 @@ def copier(
 
 @cache
 def passthru(
-    num_links: Optional[int] = None,
-    ports: Optional[Tuple[str, ...]] = None,
+    num_links: int | None = None,
+    ports: tuple[str, ...] | None = None,
     *,
     jit=True,
     reciprocal=True,
@@ -261,7 +270,7 @@ def passthru(
         reciprocal: whether the model is reciprocal.
     """
     passthru = unitary(
-        num_links, num_links, ports, jit=jit, reciprocal=reciprocal, diagonal=True
+        num_links, num_links, ports, jit=jit, reciprocal=reciprocal, diagonal=True,
     )
     passthru.__name__ = f"passthru_{num_links}_{num_links}"
     passthru.__qualname__ = f"passthru_{num_links}_{num_links}"

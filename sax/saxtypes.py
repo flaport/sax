@@ -1,47 +1,365 @@
-""" SAX Types and type coercions """
+"""SAX Types and type coercions.
+
+Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
+"""
 
 from __future__ import annotations
 
-import functools
-import inspect
-from collections.abc import Callable as CallableABC
-from typing import Any, Callable, Dict, Tuple, Union, cast, overload
+from contextlib import suppress
+from functools import partial, wraps
+from typing import (
+    TYPE_CHECKING,
+    Annotated,
+    Any,
+    LiteralString,
+    Protocol,
+    TypeAlias,
+    TypeVar,
+    cast,
+    get_args,
+)
 
 import jax.numpy as jnp
 import numpy as np
-from jaxtyping import Array as Array
-from jaxtyping import ArrayLike as ArrayLike
-from jaxtyping import Complex as Complex
-from jaxtyping import Float as Float
-from jaxtyping import Int as Int
-from natsort import natsorted
+from jaxtyping import Array, ArrayLike
+from pydantic import PlainValidator, validate_call
+from pydantic_core import PydanticCustomError
 
-IntArray1D = Int[Array, " dim"]
-""" One dimensional integer array """
+if TYPE_CHECKING:
+    from collections.abc import Callable
+    from types import UnionType
 
-FloatArray1D = Complex[Array, " dim"]
-""" One dimensional float array """
+__all__ = []
 
-ComplexArray1D = Complex[Array, " dim"]
-""" One dimensional complex array """
 
-IntArrayND = Int[Array, "..."]
-""" N-dimensional integer array """
+def _val(fun: Callable, **val_kwargs: Any) -> PlainValidator:
+    @wraps(fun)
+    def new(*args: Any, **kwargs: Any) -> Any:
+        kwargs.update(val_kwargs)
+        try:
+            return fun(*args, **kwargs)
+        except TypeError as e:
+            msg = str(e)
+            if ":" in msg:
+                subtype, msg = msg.split(":", 1)
+            else:
+                subtype = ""
+            raise PydanticCustomError(
+                cast(LiteralString, subtype),
+                cast(LiteralString, msg),
+            ) from e
 
-FloatArrayND = Complex[Array, "..."]
-""" N-dimensional float array """
+    return PlainValidator(new)
 
-ComplexArrayND = Complex[Array, "..."]
-""" N-dimensional complex array """
 
-PortMap = Dict[str, int]
-""" A mapping from a port name (str) to a port index (int) """
+_T = TypeVar("_T")
 
-PortCombination = Tuple[str, str]
-""" A combination of two port names (str, str) """
 
-SDict = Dict[PortCombination, ComplexArrayND]
-""" A mapping from a port combination to an S-parameter or an array of S-parameters
+def _try(
+    func: Callable[..., _T], /, exc: type[Exception] = Exception
+) -> Callable[..., _T | None]:
+    @wraps(func)
+    def new_func(*args: Any, **kwargs: Any) -> _T | None:
+        try:
+            return func(*args, **kwargs)
+        except exc:
+            return None
+
+    return new_func
+
+
+def _val_item_type(
+    obj: Any,
+    *,
+    strict: bool,
+    type_cast: Callable[..., _T],
+    type_def: Any,
+    type_name: str,
+) -> _T:
+    item = _val_0d(obj, type_name=type_name).item()
+    if not isinstance(item, _get_annotated_type(type_def)):
+        maybe_ret = _try(type_cast)(item)
+        if maybe_ret is not None:
+            if not strict:
+                return maybe_ret
+            msg = (
+                f"NOT_{type_name.upper()}: Strict validation does not allow casting "
+                f"{obj!r} {type(obj)} into {type_name}. "
+                f"Note: use {type_name}Like type for less strict type checking."
+            )
+            raise TypeError(msg)
+        msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
+        raise TypeError(msg)
+    return type_cast(item)
+
+
+def val_bool(obj: Any, *, strict: bool = False) -> Bool:
+    return _val_item_type(
+        obj,
+        strict=strict,
+        type_cast=bool,
+        type_def=Bool,
+        type_name="Bool",
+    )
+
+
+Bool: TypeAlias = Annotated[bool | np.bool, _val(val_bool, strict=True)]
+"""Any boolean."""
+
+
+def val_int(obj: Any, *, strict: bool = False) -> Int:
+    return _val_item_type(
+        obj,
+        strict=strict,
+        type_cast=int,
+        type_def=Int,
+        type_name="Int",
+    )
+
+
+Int: TypeAlias = Annotated[int | np.signedinteger, _val(val_int, strict=True)]
+"""Any signed integer."""
+
+
+def val_float(obj: Any, *, strict: bool = False) -> Float:
+    return _val_item_type(
+        obj,
+        strict=strict,
+        type_cast=float,
+        type_def=Float,
+        type_name="Float",
+    )
+
+
+Float: TypeAlias = Annotated[float | np.floating, _val(val_float, strict=True)]
+"""Any float."""
+
+
+def val_complex(obj: Any, *, strict: bool = False) -> Complex:
+    return _val_item_type(
+        obj,
+        strict=strict,
+        type_cast=complex,
+        type_def=Complex,
+        type_name="Complex",
+    )
+
+
+Complex: TypeAlias = Annotated[
+    complex | np.complexfloating, _val(val_complex, strict=True)
+]
+"""Any complex number."""
+
+
+def _val_array_type(
+    obj: Any,
+    *,
+    strict: bool,
+    type_def: Any,
+    default_dtype_name: str,
+    type_name: str,
+) -> Array:
+    if strict:
+        if isinstance(obj, np.ndarray):
+            msg = (
+                f"NOT_{type_name.upper()}: Strict validation does not allow casting "
+                f"a numpy array {obj!r} {type(obj)} into a jax-array of "
+                f"type {type_name}. Note: use {type_name}Like type for less "
+                "strict type checking."
+            )
+            raise TypeError(msg)
+        if not isinstance(obj, Array):
+            msg = (
+                f"NOT_{type_name.upper()}: Strict validation does not allow casting "
+                f"the scalar {obj!r} {type(obj)} into an array type [{type_name}]. "
+                f"Note: use {type_name}Like type for less strict type checking."
+            )
+            raise TypeError(msg)
+
+    short_message = f"Cannot validate {obj!r} into a JAX array."
+    arr = _val_array(obj, error_message=short_message)
+    ndim = _get_annotated_ndim(type_def)
+    if ndim is not None and arr.ndim != ndim:
+        if strict:
+            msg = (
+                f"NOT_{type_name.upper()}: Strict validation does not allow "
+                f"broadcasting the {int(arr.ndim)}D array {arr!r} into a {ndim}D array. "
+                f"Note: use {type_name}Like type for less strict type checking."
+            )
+            raise TypeError(msg)
+        _ndim = int(arr.ndim)
+        while arr.shape[0] == 1:
+            arr = arr[0]
+        if arr.ndim > ndim:
+            msg = (
+                f"NOT_{type_name.upper()}: Unable to cast the {_ndim}D "
+                f"array {obj!r} into a {ndim}D array. "
+            )
+            raise TypeError(msg)
+        while arr.ndim < ndim:
+            arr = arr[None]
+    if not np.issubdtype(arr.dtype, _get_annotated_dtype(type_def)):
+        maybe_ret = _try(partial(jnp.asarray, dtype=default_dtype_name))(arr)
+        if maybe_ret is not None:
+            if not strict:
+                return maybe_ret
+            msg = (
+                f"NOT_{type_name.upper()}: Strict validation does not allow casting "
+                f"{obj!r} [dtype={arr.dtype}] into {type_name}. "
+                f"Note: use {type_name}Like type for less strict type checking."
+            )
+            raise TypeError(msg)
+        msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
+        raise TypeError(msg)
+    return arr
+
+
+def val_bool_array(obj: Any, *, strict: bool = False) -> BoolArray:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        type_def=BoolArray,
+        default_dtype_name="bool",
+        type_name="BoolArray",
+    )
+
+
+BoolArray: TypeAlias = Annotated[Array, np.bool_, _val(val_bool_array, strict=True)]
+"""N-dimensional Bool array."""
+
+
+def val_int_array(obj: Any, *, strict: bool = False) -> IntArray:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        type_def=IntArray,
+        default_dtype_name="int",
+        type_name="IntArray",
+    )
+
+
+IntArray: TypeAlias = Annotated[
+    Array, np.signedinteger, _val(val_int_array, strict=True)
+]
+"""N-dimensional Int array."""
+
+
+def val_float_array(obj: Any, *, strict: bool = False) -> IntArray:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        type_def=FloatArray,
+        default_dtype_name="float",
+        type_name="FloatArray",
+    )
+
+
+FloatArray: TypeAlias = Annotated[
+    Array, np.floating, _val(val_float_array, strict=True)
+]
+"""N-dimensional Float array."""
+
+
+def val_complex_array(obj: Any, *, strict: bool = False) -> ComplexArray:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        type_def=ComplexArray,
+        default_dtype_name="complex",
+        type_name="ComplexArray",
+    )
+
+
+ComplexArray = Annotated[
+    Array, np.complexfloating, _val(val_complex_array, strict=True)
+]
+"""N-dimensional Complex array."""
+
+
+def val_int_array_1d(obj: Any, *, strict: bool = False) -> IntArray1D:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        type_def=IntArray1D,
+        default_dtype_name="int",
+        type_name="IntArray1D",
+    )
+
+
+IntArray1D: TypeAlias = Annotated[
+    ArrayLike, np.signedinteger, 1, _val(val_int_array_1d, strict=True)
+]
+"""1-dimensional Int array."""
+
+
+def val_float_array_1d(obj: Any, *, strict: bool = False) -> FloatArray1D:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        type_def=FloatArray1D,
+        default_dtype_name="float",
+        type_name="FloatArray1D",
+    )
+
+
+FloatArray1D = Annotated[
+    ArrayLike, np.floating, 1, _val(val_float_array_1d, strict=True)
+]
+"""1-dimensional Float array."""
+
+
+def val_complex_array_1d(obj: Any, *, strict: bool = False) -> ComplexArray1D:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        type_def=ComplexArray1D,
+        default_dtype_name="complex",
+        type_name="ComplexArray1D",
+    )
+
+
+ComplexArray1D = Annotated[
+    ArrayLike, np.complexfloating, 1, _val(val_complex_array_1d, strict=True)
+]
+"""1-dimensional Complex array."""
+
+IntLike: TypeAlias = int | np.integer
+"""Anything that can be cast into an Int without loss of data."""
+
+FloatLike: TypeAlias = IntLike | float | np.floating
+"""Anything that can be cast into a Float without loss of data."""
+
+ComplexLike: TypeAlias = FloatLike | np.inexact
+"""Anything that can be cast into a Complex without loss of data."""
+
+IntArrayLike: TypeAlias = Annotated[ArrayLike, IntLike] | IntLike
+"""Anything that can be cast into a N-dimensional Int array without loss of data."""
+
+FloatArrayLike: TypeAlias = Annotated[ArrayLike, FloatLike] | FloatLike
+"""Anything that can be cast into a N-dimensional Float array without loss of data."""
+
+ComplexArrayLike: TypeAlias = Annotated[ArrayLike, ComplexLike] | ComplexLike
+"""Anything that can be cast into a N-dimensional Complex array without loss of data."""
+
+IntArrayLike1D: TypeAlias = Annotated[IntArrayLike, tuple[int]] | IntLike
+"""1-dimensional integer array."""
+
+FloatArrayLike1D: TypeAlias = Annotated[FloatArrayLike, tuple[int]] | FloatLike
+"""1-dimensional float array."""
+
+ComplexArrayLike1D: TypeAlias = Annotated[ComplexArrayLike, tuple[int]] | ComplexLike
+"""1-dimensional complex array."""
+
+PortMap: TypeAlias = dict[str, Int]
+"""A mapping from a port name (str) to a port index (int)."""
+
+PortCombination = tuple[str, str]
+"""A combination of two port names (str, str)."""
+
+SDict = dict[PortCombination, ComplexArrayLike]
+"""A sparse dictionary-based S-matrix representation.
+
+A mapping from a port combination to an S-parameter or an array of S-parameters.
 
 Example:
 
@@ -53,9 +371,11 @@ Example:
 
 """
 
-SDense = Tuple[ComplexArrayND, PortMap]
-""" A dense S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array
-combined with a port map. If (N+2)-D array the S-matrix dimensions are the last two.
+SDense = tuple[ComplexArrayLike, PortMap]
+"""A dense S-matrix representation.
+
+S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
+If (N+2)-D array then the S-matrix dimensions are the last two.
 
 Example:
 
@@ -67,12 +387,16 @@ Example:
 
 """
 
-SCoo = Tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
-""" A sparse S-matrix in COO format (recommended for internal library use only)
+SCoo = tuple[IntArray1D, IntArray1D, ComplexArrayLike, PortMap]
+"""A sparse S-matrix in COO format (recommended for internal library use only).
 
-An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map.
-The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix.
-The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!
+An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three
+arrays and a port map. The three arrays represent the input port indices [`int`],
+output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse
+matrix. The port map maps a port name [`str`] to a port index [`int`].
+
+Only these four arrays **together** and in this specific **order** are considered a
+valid `SCoo` representation!
 
 Example:
 
@@ -84,10 +408,14 @@ Example:
     port_map = {"in0": 0, "in1": 2, "out0": 1}
     scoo: sax.SCoo = (Si, Sj, Sx, port_map)
 
+Note:
+    This representation is only recommended for internal library use. Please don't
+    write user-facing code using this representation.
+
 """
 
-Settings = Dict[str, Union["Settings", FloatArrayND, ComplexArrayND]]
-""" A (possibly recursive) mapping from a setting name to a float or complex value or array
+Settings = dict[str, "SettingsValue"]
+"""A (possibly nested) settings mapping.
 
 Example:
 
@@ -102,319 +430,95 @@ Example:
 
 """
 
-SType = Union[SDict, SCoo, SDense]
-""" An SDict, SDense or SCOO """
+SettingsValue = Settings | ComplexArrayLike | str | None
+"""Anything that can be used as value in a settings dict."""
 
-Model = Callable[..., SType]
-""" A keyword-only function producing an SType """
-
-ModelFactory = Callable[..., Model]
-""" A keyword-only function producing a Model """
+SType = SDict | SCoo | SDense
+"""Any S-Matrix type [SDict, SDense, SCOO]."""
 
 
-def is_float(x: Any) -> bool:
-    """Check if an object is a `Float`"""
-    if isinstance(x, float):
-        return True
-    if isinstance(x, np.ndarray):
-        return x.dtype in (np.float16, np.float32, np.float64, np.float128)
-    if isinstance(x, jnp.ndarray):
-        return x.dtype in (jnp.float16, jnp.float32, jnp.float64)
-    return False
+class SDictModel(Protocol):
+    """A keyword-only function producing an SDict."""
+
+    def __call__(self, **kwargs: SettingsValue) -> SDict: ...
 
 
-def is_complex(x: Any) -> bool:
-    """check if an object is a `ComplexFloat`"""
-    if isinstance(x, complex):
-        return True
-    if isinstance(x, np.ndarray):
-        return x.dtype in (np.complex64, np.complex128)
-    if isinstance(x, jnp.ndarray):
-        return x.dtype in (jnp.complex64, jnp.complex128)
-    return False
+class SDenseModel(Protocol):
+    """A keyword-only function producing an SDense."""
+
+    def __call__(self, **kwargs: SettingsValue) -> SDense: ...
 
 
-def is_complex_float(x: Any) -> bool:
-    """check if an object is either a `ComplexFloat` or a `Float`"""
-    return is_float(x) or is_complex(x)
+class SCooModel(Protocol):
+    """A keyword-only function producing an Scoo."""
+
+    def __call__(self, **kwargs: SettingsValue) -> SCoo: ...
 
 
-def is_sdict(x: Any) -> bool:
-    """check if an object is an `SDict` (a SAX S-dictionary)"""
-    return isinstance(x, dict)
+Model: TypeAlias = SDictModel | SDenseModel | SCooModel
+"""A keyword-only function producing an SType."""
 
 
-def is_scoo(x: Any) -> bool:
-    """check if an object is an `SCoo` (a SAX sparse S representation in COO-format)"""
-    return isinstance(x, (tuple, list)) and len(x) == 4
+class SDictModelFactory(Protocol):
+    """A keyword-only function producing an SDictModel."""
+
+    def __call__(self, **kwargs: SettingsValue) -> SDict: ...
 
 
-def is_sdense(x: Any) -> bool:
-    """check if an object is an `SDense` (a SAX dense S-matrix representation)"""
-    return isinstance(x, (tuple, list)) and len(x) == 2
+class SDenseModelFactory(Protocol):
+    """A keyword-only function producing an SDenseModel."""
+
+    def __call__(self, **kwargs: SettingsValue) -> SDense: ...
 
 
-def is_model(model: Any) -> bool:
-    """check if a callable is a `Model` (a callable returning an `SType`)"""
-    if not callable(model):
-        return False
+class SCooModelFactory(Protocol):
+    """A keyword-only function producing an ScooModel."""
+
+    def __call__(self, **kwargs: SettingsValue) -> SCoo: ...
+
+
+ModelFactory: TypeAlias = SDictModelFactory | SDenseModelFactory | SCooModelFactory
+"""A keyword-only function producing a Model."""
+
+
+def _get_annotated_type(annotated: Annotated) -> type | UnionType:
+    return get_args(annotated)[0]
+
+
+def _get_annotated_dtype(annotated: Annotated) -> Any:
+    return get_args(annotated)[1]
+
+
+def _get_annotated_ndim(annotated: Annotated) -> Any:
+    with suppress(Exception):
+        return int(get_args(annotated)[2])
+    return None
+
+
+def _val_array(obj: Any, error_message: str = "") -> Array:
     try:
-        sig = inspect.signature(model)
-    except ValueError:
-        return False
-    for param in sig.parameters.values():
-        if param.default is inspect.Parameter.empty:
-            return False  # a proper SAX model does not have any positional arguments.
-    if _is_callable_annotation(sig.return_annotation):  # model factory
-        return False
-    return True
+        return jnp.asarray(obj)
+    except TypeError as e:
+        msg = f"NOT_ARRAYLIKE: {error_message}."
+        raise TypeError(msg) from e
 
 
-def _is_callable_annotation(annotation: Any) -> bool:
-    """check if an annotation is `Callable`-like"""
-    if isinstance(annotation, str):
-        # happens when
-        # was imported at the top of the file...
-        return annotation.startswith("Callable") or annotation.endswith("Model")
-        # TODO: this is not a very robust check...
-    try:
-        return annotation.__origin__ == CallableABC
-    except AttributeError:
-        return False
-
-
-def is_model_factory(model: Any) -> bool:
-    """check if a callable is a model function."""
-    if not callable(model):
-        return False
-    sig = inspect.signature(model)
-    if _is_callable_annotation(sig.return_annotation):  # model factory
-        return True
-    return False
-
-
-def validate_model(model: Callable):
-    """Validate the parameters of a model"""
-    positional_arguments = []
-    for param in inspect.signature(model).parameters.values():
-        if param.default is inspect.Parameter.empty:
-            positional_arguments.append(param.name)
-    if positional_arguments:
-        raise ValueError(
-            f"model '{model}' takes positional "
-            f"arguments {', '.join(positional_arguments)} "
-            "and hence is not a valid SAX Model! "
-            "A SAX model should ONLY take keyword arguments (or no arguments at all)."
+def _val_0d(obj: Any, *, type_name: str = "0D") -> Array:
+    short_message = f"Cannot cast {obj!r} to {type_name}"
+    arr = _val_array(obj)
+    if arr.ndim > 0:
+        msg = (
+            f"NOT_0D: {short_message}. The given array should be 0D. "
+            f"Got shape={arr.shape}."
         )
+        raise TypeError(msg)
+    return arr
 
 
-def is_stype(stype: Any) -> bool:
-    """check if an object is an SDict, SCoo or SDense"""
-    return is_sdict(stype) or is_scoo(stype) or is_sdense(stype)
+@validate_call
+def _test(obj: FloatArray1D):  # noqa: ANN202
+    return obj
 
 
-def is_singlemode(S: Any) -> bool:
-    """check if an stype is single mode"""
-    if not is_stype(S):
-        return False
-    ports = _get_ports(S)
-    return not any(("@" in p) for p in ports)
-
-
-def _get_ports(S: SType):
-    if is_sdict(S):
-        S = cast(SDict, S)
-        ports_set = {p1 for p1, _ in S} | {p2 for _, p2 in S}
-        return tuple(natsorted(ports_set))
-    else:
-        *_, ports_map = S
-        assert isinstance(ports_map, dict)
-        return tuple(natsorted(ports_map.keys()))
-
-
-def is_multimode(S: Any) -> bool:
-    """check if an stype is single mode"""
-    if not is_stype(S):
-        return False
-
-    ports = _get_ports(S)
-    return all(("@" in p) for p in ports)
-
-
-def is_mixedmode(S: Any) -> bool:
-    """check if an stype is neither single mode nor multimode (hence invalid)"""
-    return not is_singlemode(S) and not is_multimode(S)
-
-
-@overload
-def sdict(S: Model) -> Model:
-    ...
-
-
-@overload
-def sdict(S: SType) -> SDict:
-    ...
-
-
-def sdict(S: Union[Model, SType]) -> Union[Model, SType]:
-    """Convert an `SCoo` or `SDense` to `SDict`"""
-
-    if is_model(S):
-        model = cast(Model, S)
-
-        @functools.wraps(model)
-        def wrapper(**kwargs):
-            return sdict(model(**kwargs))
-
-        return wrapper
-
-    elif is_scoo(S):
-        x_dict = _scoo_to_sdict(*cast(SCoo, S))
-    elif is_sdense(S):
-        x_dict = _sdense_to_sdict(*cast(SDense, S))
-    elif is_sdict(S):
-        x_dict = cast(SDict, S)
-    else:
-        raise ValueError("Could not convert arguments to sdict.")
-
-    return x_dict
-
-
-def _scoo_to_sdict(
-    Si: IntArray1D,
-    Sj: IntArray1D,
-    Sx: ComplexArrayND,
-    ports_map: Dict[str, int],
-) -> SDict:
-    sdict = {}
-    inverse_ports_map = {int(i): p for p, i in ports_map.items()}
-    for i, (si, sj) in enumerate(zip(Si, Sj)):
-        input_port = inverse_ports_map.get(int(si), "")
-        output_port = inverse_ports_map.get(int(sj), "")
-        sdict[input_port, output_port] = Sx[..., i]
-    sdict = {(p1, p2): v for (p1, p2), v in sdict.items() if p1 and p2}
-    return sdict
-
-
-def _sdense_to_sdict(S: Array, ports_map: Dict[str, int]) -> SDict:
-    sdict = {}
-    for p1, i in ports_map.items():
-        for p2, j in ports_map.items():
-            sdict[p1, p2] = S[..., i, j]
-    return sdict
-
-
-@overload
-def scoo(S: Callable) -> Callable:
-    ...
-
-
-@overload
-def scoo(S: SType) -> SCoo:
-    ...
-
-
-def scoo(S: Union[Callable, SType]) -> Union[Callable, SCoo]:
-    """Convert an `SDict` or `SDense` to `SCoo`"""
-
-    if is_model(S):
-        model = cast(Model, S)
-
-        @functools.wraps(model)
-        def wrapper(**kwargs):
-            return scoo(model(**kwargs))
-
-        return wrapper
-
-    elif is_scoo(S):
-        S = cast(SCoo, S)
-    elif is_sdense(S):
-        S = _sdense_to_scoo(*cast(SDense, S))
-    elif is_sdict(S):
-        S = _sdict_to_scoo(cast(SDict, S))
-    else:
-        raise ValueError("Could not convert arguments to scoo.")
-
-    return S
-
-
-def _consolidate_sdense(S, pm):
-    idxs = list(pm.values())
-    S = S[..., idxs, :][..., :, idxs]
-    pm = {p: i for i, p in enumerate(pm)}
-    return S, pm
-
-
-def _sdense_to_scoo(S: Array, ports_map: Dict[str, int]) -> SCoo:
-    S, ports_map = _consolidate_sdense(S, ports_map)
-    Sj, Si = jnp.meshgrid(jnp.arange(S.shape[-1]), jnp.arange(S.shape[-2]))
-    return Si.ravel(), Sj.ravel(), S.reshape(*S.shape[:-2], -1), ports_map
-
-
-def _sdict_to_scoo(sdict: SDict) -> SCoo:
-    all_ports = {}
-    for p1, p2 in sdict:
-        all_ports[p1] = None
-        all_ports[p2] = None
-    ports_map = {p: int(i) for i, p in enumerate(all_ports)}
-    Sx = jnp.stack(jnp.broadcast_arrays(*sdict.values()), -1)
-    Si = jnp.array([ports_map[p] for p, _ in sdict])
-    Sj = jnp.array([ports_map[p] for _, p in sdict])
-    return Si, Sj, Sx, ports_map
-
-
-@overload
-def sdense(S: Callable) -> Callable:
-    ...
-
-
-@overload
-def sdense(S: SType) -> SDense:
-    ...
-
-
-def sdense(S: Union[Callable, SType]) -> Union[Callable, SDense]:
-    """Convert an `SDict` or `SCoo` to `SDense`"""
-
-    if is_model(S):
-        model = cast(Model, S)
-
-        @functools.wraps(model)
-        def wrapper(**kwargs):
-            return sdense(model(**kwargs))
-
-        return wrapper
-
-    if is_sdict(S):
-        S = _sdict_to_sdense(cast(SDict, S))
-    elif is_scoo(S):
-        S = _scoo_to_sdense(*cast(SCoo, S))
-    elif is_sdense(S):
-        S = cast(SDense, S)
-    else:
-        raise ValueError("Could not convert arguments to sdense.")
-
-    return S
-
-
-def _scoo_to_sdense(
-    Si: Array, Sj: Array, Sx: Array, ports_map: Dict[str, int]
-) -> SDense:
-    n_col = len(ports_map)
-    S = jnp.zeros((*Sx.shape[:-1], n_col, n_col), dtype=complex)
-    S = S.at[..., Si, Sj].add(Sx)
-    return S, ports_map
-
-
-def _sdict_to_sdense(sdict: SDict) -> SDense:
-    Si, Sj, Sx, ports_map = _sdict_to_scoo(sdict)
-    return _scoo_to_sdense(Si, Sj, Sx, ports_map)
-
-
-def modelfactory(func):
-    """Decorator that marks a function as `ModelFactory`"""
-    sig = inspect.signature(func)
-    if _is_callable_annotation(sig.return_annotation):  # already model factory
-        return func
-    func.__signature__ = sig.replace(return_annotation=Model)
-    return func
+if __name__ == "__main__":
+    print(repr(_test(jnp.array(3.0))))

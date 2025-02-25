@@ -1,9 +1,9 @@
-""" SAX Multimode support """
+"""SAX Multimode support."""
 
 from __future__ import annotations
 
 from functools import wraps
-from typing import Dict, Tuple, Union, cast, overload
+from typing import cast, overload
 
 import jax.numpy as jnp
 
@@ -30,29 +30,29 @@ from .utils import (
 
 
 @overload
-def multimode(S: Model, modes: Tuple[str, ...] = ("TE", "TM")) -> Model:
+def multimode(S: Model, modes: tuple[str, ...] = ("TE", "TM")) -> Model:
     ...
 
 
 @overload
-def multimode(S: SDict, modes: Tuple[str, ...] = ("TE", "TM")) -> SDict:
+def multimode(S: SDict, modes: tuple[str, ...] = ("TE", "TM")) -> SDict:
     ...
 
 
 @overload
-def multimode(S: SCoo, modes: Tuple[str, ...] = ("TE", "TM")) -> SCoo:
+def multimode(S: SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> SCoo:
     ...
 
 
 @overload
-def multimode(S: SDense, modes: Tuple[str, ...] = ("TE", "TM")) -> SDense:
+def multimode(S: SDense, modes: tuple[str, ...] = ("TE", "TM")) -> SDense:
     ...
 
 
 def multimode(
-    S: Union[SType, Model], modes: Tuple[str, ...] = ("TE", "TM")
-) -> Union[SType, Model]:
-    """Convert a single mode model to a multimode model"""
+    S: SType | Model, modes: tuple[str, ...] = ("TE", "TM"),
+) -> SType | Model:
+    """Convert a single mode model to a multimode model."""
     if is_model(S):
         model = cast(Model, S)
 
@@ -71,15 +71,15 @@ def multimode(
 
     if is_sdict(S):
         return _multimode_sdict(cast(SDict, S), modes=modes)
-    elif is_scoo(S):
+    if is_scoo(S):
         return _multimode_scoo(cast(SCoo, S), modes=modes)
-    elif is_sdense(S):
+    if is_sdense(S):
         return _multimode_sdense(cast(SDense, S), modes=modes)
-    else:
-        raise ValueError("cannot convert to multimode. Unknown stype.")
+    msg = "cannot convert to multimode. Unknown stype."
+    raise ValueError(msg)
 
 
-def _multimode_sdict(sdict: SDict, modes: Tuple[str, ...] = ("TE", "TM")) -> SDict:
+def _multimode_sdict(sdict: SDict, modes: tuple[str, ...] = ("TE", "TM")) -> SDict:
     multimode_sdict = {}
     _mode_combinations = mode_combinations(modes)
     for (p1, p2), value in sdict.items():
@@ -88,22 +88,22 @@ def _multimode_sdict(sdict: SDict, modes: Tuple[str, ...] = ("TE", "TM")) -> SDi
     return multimode_sdict
 
 
-def _multimode_scoo(scoo: SCoo, modes: Tuple[str, ...] = ("TE", "TM")) -> SCoo:
+def _multimode_scoo(scoo: SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> SCoo:
     Si, Sj, Sx, port_map = scoo
     num_ports = len(port_map)
     mode_map = (
         {mode: i for i, mode in enumerate(modes)}
         if not isinstance(modes, dict)
-        else cast(Dict, modes)
+        else cast(dict, modes)
     )
 
     _mode_combinations = mode_combinations(modes)
 
     Si_m = jnp.concatenate(
-        [Si + mode_map[m] * num_ports for m, _ in _mode_combinations], -1
+        [Si + mode_map[m] * num_ports for m, _ in _mode_combinations], -1,
     )
     Sj_m = jnp.concatenate(
-        [Sj + mode_map[m] * num_ports for _, m in _mode_combinations], -1
+        [Sj + mode_map[m] * num_ports for _, m in _mode_combinations], -1,
     )
     Sx_m = jnp.concatenate([Sx for _ in _mode_combinations], -1)
     port_map_m = {
@@ -155,8 +155,8 @@ def singlemode(S: SDense, mode: str = "TE") -> SDense:
     ...
 
 
-def singlemode(S: Union[SType, Model], mode: str = "TE") -> Union[SType, Model]:
-    """Convert multimode model to a singlemode model"""
+def singlemode(S: SType | Model, mode: str = "TE") -> SType | Model:
+    """Convert multimode model to a singlemode model."""
     if is_model(S):
         model = cast(Model, S)
 
@@ -173,12 +173,12 @@ def singlemode(S: Union[SType, Model], mode: str = "TE") -> Union[SType, Model]:
         return S
     if is_sdict(S):
         return _singlemode_sdict(cast(SDict, S), mode=mode)
-    elif is_scoo(S):
+    if is_scoo(S):
         return _singlemode_scoo(cast(SCoo, S), mode=mode)
-    elif is_sdense(S):
+    if is_sdense(S):
         return _singlemode_sdense(cast(SDense, S), mode=mode)
-    else:
-        raise ValueError("cannot convert to multimode. Unknown stype.")
+    msg = "cannot convert to multimode. Unknown stype."
+    raise ValueError(msg)
 
 
 def _singlemode_sdict(sdict: SDict, mode: str = "TE") -> SDict:

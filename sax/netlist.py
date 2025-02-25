@@ -1,4 +1,4 @@
-""" SAX netlist parsing and utilities """
+"""SAX netlist parsing and utilities."""
 
 from __future__ import annotations
 
@@ -7,24 +7,22 @@ import re
 import warnings
 from copy import deepcopy
 from functools import lru_cache, partial
-from typing import Any, Literal, TypedDict, overload
+from typing import Annotated, Any, Literal, TypedDict, overload
 
 import black
 import networkx as nx
 import numpy as np
 import yaml
 from natsort import natsorted
-from pydantic import AfterValidator
-from pydantic import BaseModel as _BaseModel
 from pydantic import (
+    AfterValidator,
     BeforeValidator,
     ConfigDict,
     Field,
     RootModel,
-    ValidationError,
     model_validator,
 )
-from typing_extensions import Annotated
+from pydantic import BaseModel as _BaseModel
 
 from .utils import clean_string, hash_dict
 
@@ -45,12 +43,11 @@ class BaseModel(_BaseModel):
         json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = super().__repr__()
-        s = black.format_str(s, mode=black.Mode())
-        return s
+        return black.format_str(s, mode=black.Mode())
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
     def __hash__(self):
@@ -59,10 +56,10 @@ class BaseModel(_BaseModel):
 
 def _validate_str(s: str, what="component"):
     if "," in s:
-        raise ValueError(f"Invalid {what} string. Should not contain ','. Got: {s}")
+        msg = f"Invalid {what} string. Should not contain ','. Got: {s}"
+        raise ValueError(msg)
     s = s.split("$")[0]
-    s = clean_string(s)
-    return s
+    return clean_string(s)
 
 
 ComponentStr = Annotated[str, AfterValidator(_validate_str)]
@@ -95,25 +92,29 @@ def _component_from_partial(p: partial):
     f: Any = p
     while isinstance(f, partial):
         if f.args:
-            raise ValueError(
+            msg = (
                 "SAX circuits and netlists don't support partials "
                 "with positional arguments."
+            )
+            raise ValueError(
+                msg,
             )
         settings = {**f.keywords, **settings}
         f = f.func
     if not callable(f):
-        raise ValueError("partial of non-callable.")
+        msg = "partial of non-callable."
+        raise ValueError(msg)
     return Component(component=f.__name__, settings=settings)
 
 
 def _coerce_component(obj: Any) -> Component:
     if isinstance(obj, str):
         return Component(component=obj)
-    elif isinstance(obj, partial):
+    if isinstance(obj, partial):
         return _component_from_partial(obj)
-    elif callable(obj):
+    if callable(obj):
         return _coerce_component(obj.__name__)
-    elif isinstance(obj, dict) and "info" in obj:
+    if isinstance(obj, dict) and "info" in obj:
         info = obj.pop("info", {})
         settings = obj.pop("settings", {})
         obj["settings"] = {**settings, **info}
@@ -127,11 +128,12 @@ _validate_instance_str = partial(_validate_str, what="instance")
 _validate_port_str = partial(_validate_str, what="port")
 
 
-def _validate_instance_port_str(s: str):
+def _validate_instance_port_str(s: str) -> str:
     parts = s.split(",")
     if len(parts) != 2:
+        msg = f"Invalid instance,port string. Should contain exactly one ','. Got: {s}"
         raise ValueError(
-            f"Invalid instance,port string. Should contain exactly one ','. Got: {s}"
+            msg,
         )
     i, p = parts
     i = _validate_instance_str(i)
@@ -145,36 +147,41 @@ InstancePortStr = Annotated[str, AfterValidator(_validate_instance_port_str)]
 
 
 def _nets_to_connections(nets: list[dict], connections: dict):
-    connections = {k: v for k, v in connections.items()}
+    connections = dict(connections.items())
     inverse_connections = {v: k for k, v in connections.items()}
 
     def _is_connected(p):
         return (p in connections) or (p in inverse_connections)
 
-    def _add_connection(p, q):
+    def _add_connection(p, q) -> None:
         connections[p] = q
         inverse_connections[q] = p
 
     def _get_connected_port(p):
         if p in connections:
             return connections[p]
-        else:
-            return inverse_connections[p]
+        return inverse_connections[p]
 
     for net in nets:
         p = net["p1"]
         q = net["p2"]
         if _is_connected(p):
             _q = _get_connected_port(p)
-            raise ValueError(
+            msg = (
                 "SAX currently does not support multiply connected ports. "
                 f"Got {p}<->{q} and {p}<->{_q}"
             )
+            raise ValueError(
+                msg,
+            )
         if _is_connected(q):
             _p = _get_connected_port(q)
-            raise ValueError(
+            msg = (
                 "SAX currently does not support multiply connected ports. "
                 f"Got {p}<->{q} and {_p}<->{q}"
+            )
+            raise ValueError(
+                msg,
             )
         _add_connection(p, q)
     return connections
@@ -207,12 +214,11 @@ class RecursiveNetlist(RootModel):
         json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = super().__repr__()
-        s = black.format_str(s, mode=black.Mode())
-        return s
+        return black.format_str(s, mode=black.Mode())
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
     def __hash__(self):
@@ -223,9 +229,9 @@ AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
 
 
 def netlist(
-    netlist: Any, with_unconnected_instances: bool = True, with_placements=True
+    netlist: Any, with_unconnected_instances: bool = True, with_placements=True,
 ) -> RecursiveNetlist:
-    """return a netlist from a given dictionary"""
+    """Return a netlist from a given dictionary."""
     if isinstance(netlist, RecursiveNetlist):
         net = netlist
     elif isinstance(netlist, Netlist):
@@ -237,10 +243,13 @@ def netlist(
             flat_net = Netlist.model_validate(netlist)
             net = RecursiveNetlist.model_validate({"top_level": flat_net})
     else:
-        raise ValueError(
+        msg = (
             "Invalid argument for `netlist`. "
             "Expected type: dict | Netlist | RecursiveNetlist. "
             f"Got: {type(netlist)}."
+        )
+        raise ValueError(
+            msg,
         )
     if not with_unconnected_instances:
         recnet_dict: RecursiveNetlistDict = _remove_unused_instances(net.model_dump())
@@ -252,20 +261,20 @@ def netlist(
 
 
 def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~"):
-    first_name = list(recnet.keys())[0]
+    first_name = next(iter(recnet.keys()))
     net = _copy_netlist(recnet[first_name])
     _flatten_netlist(recnet, net, sep)
     return net
 
 
-@lru_cache()
+@lru_cache
 def load_netlist(pic_path: str) -> Netlist:
-    with open(pic_path, "r") as file:
+    with open(pic_path) as file:
         net = yaml.safe_load(file.read())
     return Netlist.model_validate(net)
 
 
-@lru_cache()
+@lru_cache
 def load_recursive_netlist(pic_path: str, ext: str = ".yml"):
     folder_path = os.path.dirname(os.path.abspath(pic_path))
 
@@ -287,13 +296,12 @@ def load_recursive_netlist(pic_path: str, ext: str = ".yml"):
 def is_recursive(netlist: AnyNetlist):
     if isinstance(netlist, RecursiveNetlist):
         return True
-    elif isinstance(netlist, dict):
+    if isinstance(netlist, dict):
         return "instances" not in netlist
-    else:
-        return False
+    return False
 
 
-def is_not_recursive(netlist: AnyNetlist):
+def is_not_recursive(netlist: AnyNetlist) -> bool:
     return not is_recursive(netlist)
 
 
@@ -301,8 +309,7 @@ def get_netlist_instances_by_prefix(
     recursive_netlist: RecursiveNetlist,
     prefix: str,
 ):
-    """
-    Returns a list of all instances with a given prefix in a recursive netlist.
+    """Returns a list of all instances with a given prefix in a recursive netlist.
 
     Args:
         recursive_netlist: The recursive netlist to search.
@@ -313,7 +320,7 @@ def get_netlist_instances_by_prefix(
     """
     recursive_netlist_root = recursive_netlist.model_dump()
     result = []
-    for key in recursive_netlist_root.keys():
+    for key in recursive_netlist_root:
         if key.startswith(prefix):
             result.append(key)
     return result
@@ -324,8 +331,7 @@ def get_component_instances(
     top_level_prefix: str,
     component_name_prefix: str,
 ):
-    """
-    Returns a dictionary of all instances of a given component in a recursive netlist.
+    """Returns a dictionary of all instances of a given component in a recursive netlist.
 
     Args:
         recursive_netlist: The recursive netlist to search.
@@ -340,7 +346,7 @@ def get_component_instances(
 
     # Should only be one in a netlist-to-digraph. Can always be very specified.
     top_level_prefixes = get_netlist_instances_by_prefix(
-        recursive_netlist, prefix=top_level_prefix
+        recursive_netlist, prefix=top_level_prefix,
     )
     top_level_prefix = top_level_prefixes[0]
     for key in recursive_netlist_root[top_level_prefix]["instances"]:
@@ -362,7 +368,7 @@ def _remove_unused_instances(recursive_netlist: RecursiveNetlistDict):
 
 
 def _get_connectivity_netlist(netlist):
-    connectivity_netlist = {
+    return {
         "instances": natsorted(netlist["instances"]),
         "connections": [
             (c1.split(",")[0], c2.split(",")[0])
@@ -370,7 +376,6 @@ def _get_connectivity_netlist(netlist):
         ],
         "ports": [(p, c.split(",")[0]) for p, c in netlist["ports"].items()],
     }
-    return connectivity_netlist
 
 
 def _get_connectivity_graph(netlist):
@@ -422,15 +427,14 @@ def _remove_unused_instances_flat(flat_netlist: NetlistDict) -> NetlistDict:
 
 
 def _copy_netlist(net):
-    net = {
+    return {
         k: deepcopy(v)
         for k, v in net.items()
         if k in ["instances", "connections", "ports"]
     }
-    return net
 
 
-def _flatten_netlist(recnet, net, sep):
+def _flatten_netlist(recnet, net, sep) -> None:
     for name, instance in list(net["instances"].items()):
         component = instance["component"]
         if component not in recnet:
@@ -448,14 +452,14 @@ def _flatten_netlist(recnet, net, sep):
                 del net["connections"][ip1]
                 if p1 not in ports:
                     warnings.warn(
-                        f"Port {ip1} not found. Connection {ip1}<->{ip2} ignored."
+                        f"Port {ip1} not found. Connection {ip1}<->{ip2} ignored.", stacklevel=2,
                     )
                     continue
                 net["connections"][ports[p1]] = ip2
             elif n2 == name:
                 if p2 not in ports:
                     warnings.warn(
-                        f"Port {ip2} not found. Connection {ip1}<->{ip2} ignored."
+                        f"Port {ip2} not found. Connection {ip1}<->{ip2} ignored.", stacklevel=2,
                     )
                     continue
                 net["connections"][ip1] = ports[p2]
@@ -465,7 +469,7 @@ def _flatten_netlist(recnet, net, sep):
             try:
                 n2, p2 = ip2.split(",")
             except ValueError:
-                warnings.warn(f"Unconventional port definition ignored: {p}->{ip2}.")
+                warnings.warn(f"Unconventional port definition ignored: {p}->{ip2}.", stacklevel=2)
                 continue
             if n2 == name:
                 if p2 in ports:
@@ -481,7 +485,7 @@ def rename_instances(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
 
 @overload
 def rename_instances(
-    netlist: RecursiveNetlist, mapping: dict[str, str]
+    netlist: RecursiveNetlist, mapping: dict[str, str],
 ) -> RecursiveNetlist:
     ...
 
@@ -493,7 +497,7 @@ def rename_instances(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDi
 
 @overload
 def rename_instances(
-    netlist: RecursiveNetlistDict, mapping: dict[str, str]
+    netlist: RecursiveNetlistDict, mapping: dict[str, str],
 ) -> RecursiveNetlistDict:
     ...
 
@@ -514,14 +518,15 @@ def rename_instances(
             **{
                 k: rename_instances(v, mapping).model_dump()
                 for k, v in netlist.root.items()
-            }
+            },
         )
         return net if not given_as_dict else net.model_dump()
 
     # it's a sax.Netlist now:
     inverse_mapping = {v: k for k, v in mapping.items()}
     if len(inverse_mapping) != len(mapping):
-        raise ValueError("Duplicate names to map onto found.")
+        msg = "Duplicate names to map onto found."
+        raise ValueError(msg)
     instances = {mapping.get(k, k): v for k, v in netlist.instances.items()}
     connections = {}
     for ip1, ip2 in netlist.connections.items():
@@ -554,7 +559,7 @@ def rename_models(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
 
 @overload
 def rename_models(
-    netlist: RecursiveNetlist, mapping: dict[str, str]
+    netlist: RecursiveNetlist, mapping: dict[str, str],
 ) -> RecursiveNetlist:
     ...
 
@@ -566,7 +571,7 @@ def rename_models(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict:
 
 @overload
 def rename_models(
-    netlist: RecursiveNetlistDict, mapping: dict[str, str]
+    netlist: RecursiveNetlistDict, mapping: dict[str, str],
 ) -> RecursiveNetlistDict:
     ...
 
@@ -587,14 +592,15 @@ def rename_models(
             **{
                 k: rename_models(v, mapping).model_dump()
                 for k, v in netlist.root.items()
-            }
+            },
         )
         return net if not given_as_dict else net.model_dump()
 
     # it's a sax.Netlist now:
     inverse_mapping = {v: k for k, v in mapping.items()}
     if len(inverse_mapping) != len(mapping):
-        raise ValueError("Duplicate names to map onto found.")
+        msg = "Duplicate names to map onto found."
+        raise ValueError(msg)
 
     instances = {}
     for k, instance in netlist.instances.items():
@@ -609,7 +615,7 @@ def rename_models(
             instance = instance.model_dump()
         assert isinstance(instance, dict)
         instance["component"] = mapping.get(
-            instance["component"], instance["component"]
+            instance["component"], instance["component"],
         )
         if given_as_str:
             instances[k] = instance["component"]

@@ -1,4 +1,4 @@
-""" SAX Circuit Definition """
+"""SAX Circuit Definition."""
 
 from __future__ import annotations
 
@@ -6,14 +6,14 @@ import os
 import shutil
 import sys
 from functools import partial
-from typing import Callable, NamedTuple
+from typing import TYPE_CHECKING, NamedTuple
 
 import black
 import networkx as nx
 import numpy as np
 
-from .backends import circuit_backends, backend_map
-from .netlist import AnyNetlist, Netlist, NetlistDict, RecursiveNetlist, is_recursive
+from .backends import backend_map, circuit_backends
+from .netlist import AnyNetlist, Netlist, RecursiveNetlist, is_recursive
 from .netlist import netlist as parse_netlist
 from .saxtypes import Model, Settings, SType, scoo, sdense, sdict
 from .utils import (
@@ -23,6 +23,9 @@ from .utils import (
     merge_dicts,
     update_settings,
 )
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 
 class CircuitInfo(NamedTuple):
@@ -54,7 +57,7 @@ def circuit(
 
     instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(
-        netlist, with_unconnected_instances=False, with_placements=False
+        netlist, with_unconnected_instances=False, with_placements=False,
     )
     _validate_netlist_ports(recnet)
     dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
@@ -135,8 +138,7 @@ def draw_dag(dag, with_labels=True, **kwargs):
             with_labels=with_labels,
             **kwargs,
         )
-    else:
-        return nx.draw(dag, _my_dag_pos(dag), with_labels=with_labels, **kwargs)
+    return nx.draw(dag, _my_dag_pos(dag), with_labels=with_labels, **kwargs)
 
 
 def get_required_circuit_models(
@@ -152,17 +154,17 @@ def get_required_circuit_models(
     """
     instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(
-        netlist, with_unconnected_instances=False, with_placements=False
+        netlist, with_unconnected_instances=False, with_placements=False,
     )
     dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
     _, required, _ = _find_missing_models(
-        models, dependency_dag, extra_models=instance_models
+        models, dependency_dag, extra_models=instance_models,
     )
     return required
 
 
 def _flat_circuit(
-    instances, connections, ports, models, backend, ignore_missing_ports=False
+    instances, connections, ports, models, backend, ignore_missing_ports=False,
 ):
     analyze_insts_fn, analyze_fn, evaluate_fn = circuit_backends[backend]
     dummy_instances = analyze_insts_fn(instances, models)
@@ -170,10 +172,10 @@ def _flat_circuit(
         k: _port_modes_dict(get_ports(s)) for k, s in dummy_instances.items()
     }
     connections = _get_multimode_connections(
-        connections, inst_port_mode, ignore_missing_ports=ignore_missing_ports
+        connections, inst_port_mode, ignore_missing_ports=ignore_missing_ports,
     )
     ports = _get_multimode_ports(
-        ports, inst_port_mode, ignore_missing_ports=ignore_missing_ports
+        ports, inst_port_mode, ignore_missing_ports=ignore_missing_ports,
     )
 
     inst2model = {}
@@ -199,15 +201,14 @@ def _flat_circuit(
         for inst_name, model in inst2model.items():
             instances[inst_name] = model(**full_settings.get(inst_name, {}))
 
-        S = evaluate_fn(analyzed, instances)
-        return S
+        return evaluate_fn(analyzed, instances)
 
     _replace_kwargs(_circuit, **default_settings)
 
     return _circuit
 
 
-def _patch_path():
+def _patch_path() -> None:
     os_paths = {p: None for p in os.environ.get("PATH", "").split(os.pathsep)}
     sys_paths = {p: None for p in sys.path}
     other_paths = {os.path.dirname(sys.executable): None}
@@ -231,7 +232,7 @@ def _my_dag_pos(dag):
 
     pos = {}
     for k, vs in in_degree.items():
-        for x, v in zip(horizontal_pos[k], vs):
+        for x, v in zip(horizontal_pos[k], vs, strict=False):
             pos[v] = (x, -k)
     return pos
 
@@ -245,7 +246,7 @@ def _find_leaves(g):
 
 
 def _find_missing_models(
-    models: dict | None, dag: nx.DiGraph, extra_models: dict | None = None
+    models: dict | None, dag: nx.DiGraph, extra_models: dict | None = None,
 ) -> tuple[dict[str, Callable], list[str], list[str]]:
     if extra_models is None:
         extra_models = {}
@@ -258,10 +259,10 @@ def _find_missing_models(
 
 
 def _validate_models(
-    models: dict | None, dag: nx.DiGraph, extra_models: dict | None = None
+    models: dict | None, dag: nx.DiGraph, extra_models: dict | None = None,
 ) -> dict[str, Model]:
     models, required_models, missing_models = _find_missing_models(
-        models, dag, extra_models
+        models, dag, extra_models,
     )
     if missing_models:
         model_diff = {
@@ -269,9 +270,12 @@ def _validate_models(
             "Given Models": list(models),
             "Required Models": required_models,
         }
-        raise ValueError(
+        msg = (
             "Missing models. The following models are still missing to build "
             f"the circuit:\n{black.format_str(repr(model_diff), mode=black.Mode())}"
+        )
+        raise ValueError(
+            msg,
         )
     return models
 
@@ -306,24 +310,29 @@ def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports
         except KeyError:
             if ignore_missing_ports:
                 continue
+            msg = f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}."
             raise RuntimeError(
-                f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}."
+                msg,
             )
         try:
             modes2 = inst_port_mode[inst2][port2]
         except KeyError:
             if ignore_missing_ports:
                 continue
+            msg = f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}."
             raise RuntimeError(
-                f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}."
+                msg,
             )
         if not modes1 and not modes2:
             mm_connections[f"{inst1},{port1}"] = f"{inst2},{port2}"
         elif (not modes1) or (not modes2):
-            raise ValueError(
+            msg = (
                 "trying to connect a multimode model to single mode model.\n"
                 "Please update your models dictionary.\n"
                 f"Problematic connection: '{inst_port1}':'{inst_port2}'"
+            )
+            raise ValueError(
+                msg,
             )
         else:
             common_modes = modes1.intersection(modes2)
@@ -341,8 +350,9 @@ def _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=False):
         except KeyError:
             if ignore_missing_ports:
                 continue
+            msg = f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}"
             raise RuntimeError(
-                f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}"
+                msg,
             )
         if not modes2:
             mm_ports[port] = f"{inst2},{port2}"
@@ -364,37 +374,36 @@ def _enforce_return_type(model, return_type):
 
 
 def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
-    if isinstance(netlist, Netlist):
+    if isinstance(netlist, Netlist | RecursiveNetlist):
         return {}
-    elif isinstance(netlist, RecursiveNetlist):
-        return {}
-    elif isinstance(netlist, dict):
+    if isinstance(netlist, dict):
         if is_recursive(netlist):
             models = {}
             for net in netlist.values():
                 models.update(_extract_instance_models(net))  # type: ignore
             return models
-        else:
-            callable_instances = [
-                f for f in netlist["instances"].values() if callable(f)
-            ]
-            models = {}
-            for f in callable_instances:
-                while isinstance(f, partial):
-                    f = f.func
-                models[f.__name__] = f
-            return models
-    else:
-        return {}
+        callable_instances = [
+            f for f in netlist["instances"].values() if callable(f)
+        ]
+        models = {}
+        for f in callable_instances:
+            while isinstance(f, partial):
+                f = f.func
+            models[f.__name__] = f
+        return models
+    return {}
 
 
 def _validate_circuit_backend(backend):
     backend = backend.lower()
     # assert valid circuit_backend
     if backend not in circuit_backends:
-        raise KeyError(
+        msg = (
             f"circuit backend {backend} not found. Allowed circuit backends: "
             f"{', '.join(circuit_backends.keys())}."
+        )
+        raise KeyError(
+            msg,
         )
     return backend
 
@@ -402,23 +411,30 @@ def _validate_circuit_backend(backend):
 def _validate_dag(dag):
     nodes = _find_root(dag)
     if len(nodes) > 1:
-        raise ValueError(f"Multiple top_levels found in netlist: {nodes}")
+        msg = f"Multiple top_levels found in netlist: {nodes}"
+        raise ValueError(msg)
     if len(nodes) < 1:
-        raise ValueError("Netlist does not contain any nodes.")
+        msg = "Netlist does not contain any nodes."
+        raise ValueError(msg)
     if not dag.is_directed():
-        raise ValueError("Netlist dependency cycles detected!")
+        msg = "Netlist dependency cycles detected!"
+        raise ValueError(msg)
     return dag
 
 
-def _validate_netlist_ports(netlist: RecursiveNetlist):
+def _validate_netlist_ports(netlist: RecursiveNetlist) -> None:
     if len(netlist.root) < 1:
-        raise ValueError("Cannot create circuit: empty netlist")
-    net: Netlist = netlist.root[list(netlist.root)[0]]
+        msg = "Cannot create circuit: empty netlist"
+        raise ValueError(msg)
+    net: Netlist = netlist.root[next(iter(netlist.root))]
     ports_str = ", ".join(list(net.ports))
     if not ports_str:
         ports_str = "no ports given"
     if len(net.ports) < 2:
-        raise ValueError(
+        msg = (
             "Cannot create circuit: "
             f"at least 2 ports need to be defined. Got {ports_str}."
+        )
+        raise ValueError(
+            msg,
         )

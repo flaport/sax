@@ -5,7 +5,7 @@ requires = ["setuptools", "pip", "build", "wheel"]
 [project]
 name = "sax"
 version = "0.14.2"
-requires-python = ">=3.10.0"
+requires-python = ">=3.11.0"
 authors = [
 { name = "Floris Laporte", email = "floris.laporte@gmail.com" },
 ]
@@ -22,55 +22,53 @@ classifiers = [
   "Topic :: Scientific/Engineering",
   "Topic :: Scientific/Engineering :: Physics",
 ]
-
 dependencies = [
-  "black",
-  "fastcore",
-  "flax>=0.8.2",
-  "jax>=0.5.0",
-  "jaxlib>=0.5.0",
-  "jaxtyping",
-  "klujax>=0.4.0",
-  "matplotlib",
-  "natsort",
-  "networkx",
-  "numpy>=2.0",
-  "orjson",
-  "pydantic>=2.2",
-  "pyyaml",
-  "tqdm",
-  "typing-extensions>=4.10.0",
+    "black>=25.0.0",
+    "flax>=0.10.0",
+    "jax>=0.5.0",
+    "jaxlib>=0.5.0",
+    "jaxtyping>=0.2.38",
+    "klujax>=0.4.0",
+    "matplotlib>=3.0.0",
+    "natsort>=8.0.0",
+    "networkx>=3.0.0",
+    "numpy>=2.2.0",
+    "orjson>=3.0.0",
+    "pydantic>=2.10.0",
+    "pyyaml>=6.0.0",
 ]
 
 [project.optional-dependencies]
 dev = [
-  "autodoc-pydantic",
-  "autograd",
-  "autoimport",
-  "black[jupyter]",
-  "build",
-  "bump2version",
-  "flake8",
-  "gdsfactory>=0.8.1",
-  "gplugins",
-  "ipyevents",
-  "ipykernel",
-  "ipympl",
-  "ipywidgets",
-  "isort",
-  "jedi",
-  "meow-sim>0.11.1",
-  "myst-nb",
-  "nbstripout",
-  "nlopt",
-  "papermill",
-  "pre-commit",
-  "pydot",
-  "pytest",
-  "sphinx-book-theme==1.0.1",
-  "sphinx-copybutton==0.5.2",
-  "sphinx==5.3.0",
-  "tmm",
+    "autodoc-pydantic>=2.2.0",
+    "autograd>=1.7.0",
+    "autoimport>=1.6.1",
+    "black[jupyter]>=25.1.0",
+    "build>=1.2.0",
+    "gdsfactory>=9.0.0",
+    "gplugins>=1.2.4",
+    "ipyevents>=2.0.2",
+    "ipykernel>=6.29.5",
+    "ipympl>=0.9.6",
+    "ipywidgets>=8.1.5",
+    "meow-sim>=0.11.1",
+    "mkinit>=1.1.0",
+    "mypy>=1.15.0",
+    "myst-nb>=1.2.0",
+    "nbstripout>=0.8.1",
+    "nlopt>=2.9.1",
+    "papermill>=2.6.0",
+    "pre-commit>=4.1.0",
+    "pydot>=3.0.4",
+    "pyright>=1.1.0",
+    "pytest>=8.3.4",
+    "ruff>=0.9.0",
+    "sphinx-book-theme>=1.0.1",
+    "sphinx-copybutton>=0.5.2",
+    "sphinx>=5.3.0",
+    "tbump>=6.0.0",
+    "tmm>=0.2.0",
+    "tqdm>=4.0.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -79,13 +77,45 @@ include = ["sax", "sax.backends"]
 exclude = []
 namespaces = true
 
-[tool.black]
-line-length = 88
-target-version = ['py38']
-include = '\.pyi?$'
+[tool.ruff.lint]  # see https://docs.astral.sh/ruff/rules
+ignore = ["COM819", "N803", "COM812"]
+select = ["ALL"]
 
-[tool.pyright]
-reportPrivateImportUsage = false
+[tool.ruff.lint.per-file-ignores]
+  "tests/*.py" = ["D", "INP001"]
+  "sax/validators.py" = ["ANN401", "PLR2004"]
+  "sax/saxtypes.py" = ["ANN401", "PLR2004", "EM101"]
 
-[tool.flake8]
-ignore = ['F722']
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.tbump]
+
+[[tool.tbump.file]]
+src = "pyproject.toml"
+
+[[tool.tbump.file]]
+src = "sax/__init__.py"
+
+[[tool.tbump.file]]
+src = "docs/source/conf.py"
+
+[[tool.tbump.file]]
+src = "Makefile"
+
+[[tool.tbump.file]]
+src = "Dockerfile"
+
+[tool.tbump.git]
+message_template = "Bump to {new_version}"
+tag_template = "{new_version}"
+
+[tool.tbump.version]
+current = "0.14.2"
+regex = '''
+  (?P<major>\d+)
+  \.
+  (?P<minor>\d+)
+  \.
+  (?P<patch>\d+)
+  '''
