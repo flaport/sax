@@ -1,3 +1,7 @@
+dev:
+	uv venv --python 3.12
+	uv sync --all-extras
+
 build:
 	uv run python -m build --sdist --wheel
 
@@ -21,6 +25,7 @@ docs:
 	cd docs/source/ && make && cd .. && make html
 
 clean:
+	rm -rf .venv
 	find . -name "modes" | xargs rm -rf
 	find . -name "dist" | xargs rm -rf
 	find . -name "build" | xargs rm -rf
