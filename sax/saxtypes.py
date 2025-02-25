@@ -6,7 +6,7 @@ Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 from __future__ import annotations
 
 from contextlib import suppress
-from functools import wraps
+from functools import partial, wraps
 from typing import (
     TYPE_CHECKING,
     Annotated,
@@ -72,49 +72,58 @@ def _try(
     return new_func
 
 
-def _val_item_type(
+def _val_item_type(  # noqa: PLR0913
     obj: Any,
     *,
     strict: bool,
+    cast: bool,
     type_cast: Callable[..., _T],
     type_def: Any,
     type_name: str,
 ) -> _T:
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
-        maybe_ret = _try(type_cast)(item)
-        if maybe_ret is not None:
-            if not strict:
-                return maybe_ret
+        arr = _try(np.asarray)(item)
+        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):
+            msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
+            raise TypeError(msg)
+        if strict:
             msg = (
                 f"NOT_{type_name.upper()}: Strict validation does not allow casting "
-                f"{obj!r} {type(obj)} into {type_name}. "
+                f"{obj!r} [dtype={arr.dtype}] into {type_name}. "
                 f"Note: use {type_name}Like type for less strict type checking."
             )
             raise TypeError(msg)
-        msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
-        raise TypeError(msg)
-    return type_cast(item)
+    if cast:
+        return type_cast(item)
+    return item
 
 
-def val_bool(obj: Any, *, strict: bool = False) -> Bool:
+def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> Bool:
     return _val_item_type(
         obj,
         strict=strict,
+        cast=cast,
         type_cast=bool,
         type_def=Bool,
         type_name="Bool",
     )
 
 
-Bool: TypeAlias = Annotated[bool | np.bool, _val(val_bool, strict=True)]
+Bool: TypeAlias = Annotated[bool | np.bool_, _val(val_bool, strict=True)]
 """Any boolean."""
 
 
-def val_int(obj: Any, *, strict: bool = False) -> Int:
+def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> Int:
+    if strict and _try(partial(val_bool, strict=True, cast=False))(obj) is not None:
+        msg = (
+            f"NOT_INT: Strict validation does not allow casting {obj} [bool] into Int. "
+        )
+        raise TypeError(msg)
     return _val_item_type(
         obj,
         strict=strict,
+        cast=cast,
         type_cast=int,
         type_def=Int,
         type_name="Int" if strict else "IntLike",
@@ -125,10 +134,11 @@ Int: TypeAlias = Annotated[int | np.signedinteger, _val(val_int, strict=True)]
 """Any signed integer."""
 
 
-def val_float(obj: Any, *, strict: bool = False) -> Float:
+def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> Float:
     return _val_item_type(
         obj,
         strict=strict,
+        cast=cast,
         type_cast=float,
         type_def=Float,
         type_name="Float" if strict else "FloatLike",
@@ -139,10 +149,11 @@ Float: TypeAlias = Annotated[float | np.floating, _val(val_float, strict=True)]
 """Any float."""
 
 
-def val_complex(obj: Any, *, strict: bool = False) -> Complex:
+def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> Complex:
     return _val_item_type(
         obj,
         strict=strict,
+        cast=cast,
         type_cast=complex,
         type_def=Complex,
         type_name="Complex" if strict else "ComplexLike",
@@ -204,15 +215,15 @@ def _val_array_type(  # noqa: C901,PLR0913
         while arr.ndim < ndim:
             arr = arr[None]
     if not np.issubdtype(arr.dtype, _get_annotated_dtype(type_def)):
+        if not np.can_cast(arr, default_dtype, casting="same_kind"):
+            msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
+            raise TypeError(msg)
         if strict:
             msg = (
                 f"NOT_{type_name.upper()}: Strict validation does not allow casting "
                 f"{obj!r} [dtype={arr.dtype}] into {type_name}. "
                 f"Note: use {type_name}Like type for less strict type checking."
             )
-            raise TypeError(msg)
-        if not np.can_cast(arr, default_dtype, casting="same_kind"):
-            msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
             raise TypeError(msg)
     if cast:
         return jnp.asarray(arr, dtype=default_dtype)
@@ -224,9 +235,9 @@ def val_bool_array(obj: Any, *, strict: bool = False, cast: bool = True) -> Bool
         obj,
         strict=strict,
         cast=cast,
-        type_def=BoolArray,
+        type_def=BoolArray if strict else BoolArrayLike,
         default_dtype=np.bool_,
-        type_name="BoolArray",
+        type_name="BoolArray" if strict else "BoolArrayLike",
     )
 
 
@@ -343,6 +354,9 @@ ComplexArray1D = Annotated[
 ]
 """1-dimensional Complex array."""
 
+BoolLike: TypeAlias = Annotated[bool | np.bool_, _val(val_bool, cast=False)]
+"""Anything that can be cast into an Int without loss of data."""
+
 IntLike: TypeAlias = Annotated[int | np.integer, _val(val_int, cast=False)]
 """Anything that can be cast into an Int without loss of data."""
 
@@ -356,6 +370,10 @@ ComplexLike: TypeAlias = Annotated[
 ]
 """Anything that can be cast into a Complex without loss of data."""
 
+BoolArrayLike: TypeAlias = Annotated[
+    ArrayLike | BoolLike, np.bool_, _val(val_bool_array, cast=False)
+]
+"""Anything that can be cast into a N-dimensional Int array without loss of data."""
 
 IntArrayLike: TypeAlias = Annotated[
     ArrayLike | IntLike, np.integer, _val(val_int_array, cast=False)
@@ -557,10 +575,10 @@ def _x64_enabled() -> bool:
 
 
 @validate_call
-def _test(obj: ComplexArrayLike):  # noqa: ANN202
+def _test(obj: IntLike):  # noqa: ANN202
     return obj
 
 
 if __name__ == "__main__":
     arr = np.array([3, 4])
-    print(repr(_test(arr)))
+    print(repr(_test(obj=True)))
