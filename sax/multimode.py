@@ -1,57 +1,49 @@
 """SAX Multimode support."""
 
-from __future__ import annotations
-
+from collections.abc import Iterable
 from functools import wraps
 from typing import cast, overload
 
 import jax.numpy as jnp
+from natsort import natsorted
 
-from .saxtypes import (
-    Model,
-    SCoo,
-    SDense,
-    SDict,
-    SType,
-    _consolidate_sdense,
-    is_model,
-    is_multimode,
-    is_scoo,
-    is_sdense,
-    is_sdict,
-    is_singlemode,
-)
-from .utils import (
-    block_diag,
-    mode_combinations,
-    validate_multimode,
-    validate_not_mixedmode,
-)
+import sax
 
 
 @overload
-def multimode(S: Model, modes: tuple[str, ...] = ("TE", "TM")) -> Model:
-    ...
+def multimode(
+    S: sax.SDictModel, modes: tuple[str, ...] = ("TE", "TM")
+) -> sax.SDictModel: ...
 
 
 @overload
-def multimode(S: SDict, modes: tuple[str, ...] = ("TE", "TM")) -> SDict:
-    ...
+def multimode(
+    S: sax.SCooModel, modes: tuple[str, ...] = ("TE", "TM")
+) -> sax.SCooModel: ...
 
 
 @overload
-def multimode(S: SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> SCoo:
-    ...
+def multimode(
+    S: sax.SDenseModel, modes: tuple[str, ...] = ("TE", "TM")
+) -> sax.SDenseModel: ...
 
 
 @overload
-def multimode(S: SDense, modes: tuple[str, ...] = ("TE", "TM")) -> SDense:
-    ...
+def multimode(S: sax.SDict, modes: tuple[str, ...] = ("TE", "TM")) -> sax.SDict: ...
+
+
+@overload
+def multimode(S: sax.SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> sax.SCoo: ...
+
+
+@overload
+def multimode(S: sax.SDense, modes: tuple[str, ...] = ("TE", "TM")) -> sax.SDense: ...
 
 
 def multimode(
-    S: SType | Model, modes: tuple[str, ...] = ("TE", "TM"),
-) -> SType | Model:
+    S: sax.SType | sax.Model,
+    modes: tuple[str, ...] = ("TE", "TM"),
+) -> sax.SType | sax.Model:
     """Convert a single mode model to a multimode model."""
     if is_model(S):
         model = cast(Model, S)
@@ -81,31 +73,29 @@ def multimode(
 
 def _multimode_sdict(sdict: SDict, modes: tuple[str, ...] = ("TE", "TM")) -> SDict:
     multimode_sdict = {}
-    _mode_combinations = mode_combinations(modes)
+    mode_combinations = _mode_combinations(modes)
     for (p1, p2), value in sdict.items():
-        for m1, m2 in _mode_combinations:
+        for m1, m2 in mode_combinations:
             multimode_sdict[f"{p1}@{m1}", f"{p2}@{m2}"] = value
     return multimode_sdict
 
 
-def _multimode_scoo(scoo: SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> SCoo:
+def _multimode_scoo(scoo: SCoo, modes: tuple[sax.Mode, ...] = ("TE", "TM")) -> SCoo:
     Si, Sj, Sx, port_map = scoo
     num_ports = len(port_map)
-    mode_map = (
-        {mode: i for i, mode in enumerate(modes)}
-        if not isinstance(modes, dict)
-        else cast(dict, modes)
-    )
+    mode_map = {mode: i for i, mode in enumerate(modes)}
 
-    _mode_combinations = mode_combinations(modes)
+    mode_combinations = _mode_combinations(modes)
 
     Si_m = jnp.concatenate(
-        [Si + mode_map[m] * num_ports for m, _ in _mode_combinations], -1,
+        [Si + mode_map[m] * num_ports for m, _ in mode_combinations],
+        -1,
     )
     Sj_m = jnp.concatenate(
-        [Sj + mode_map[m] * num_ports for _, m in _mode_combinations], -1,
+        [Sj + mode_map[m] * num_ports for _, m in mode_combinations],
+        -1,
     )
-    Sx_m = jnp.concatenate([Sx for _ in _mode_combinations], -1)
+    Sx_m = jnp.concatenate([Sx for _ in mode_combinations], -1)
     port_map_m = {
         f"{port}@{mode}": idx + mode_map[mode] * num_ports
         for mode in modes
@@ -136,23 +126,19 @@ def _multimode_sdense(sdense, modes=("TE", "TM")):
 
 
 @overload
-def singlemode(S: Model, mode: str = "TE") -> Model:
-    ...
+def singlemode(S: Model, mode: str = "TE") -> Model: ...
 
 
 @overload
-def singlemode(S: SDict, mode: str = "TE") -> SDict:
-    ...
+def singlemode(S: SDict, mode: str = "TE") -> SDict: ...
 
 
 @overload
-def singlemode(S: SCoo, mode: str = "TE") -> SCoo:
-    ...
+def singlemode(S: SCoo, mode: str = "TE") -> SCoo: ...
 
 
 @overload
-def singlemode(S: SDense, mode: str = "TE") -> SDense:
-    ...
+def singlemode(S: SDense, mode: str = "TE") -> SDense: ...
 
 
 def singlemode(S: SType | Model, mode: str = "TE") -> SType | Model:
@@ -213,3 +199,20 @@ def _singlemode_sdense(sdense: SDense, mode: str = "TE") -> SDense:
         if port.endswith(f"@{mode}")
     }
     return _consolidate_sdense(Sx, port_map)
+
+
+def _mode_combinations(
+    modes: Iterable[str], *, cross: bool = False
+) -> tuple[tuple[str, str], ...]:
+    if cross:
+        combinations = natsorted((m1, m2) for m1 in modes for m2 in modes)
+    else:
+        combinations = natsorted((m, m) for m in modes)
+    return tuple(combinations)
+
+
+def _consolidate_sdense(S, pm):
+    idxs = list(pm.values())
+    S = S[..., idxs, :][..., :, idxs]
+    pm = {p: i for i, p in enumerate(pm)}
+    return S, pm

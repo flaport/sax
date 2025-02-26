@@ -1,3 +1,3 @@
 """Constants and magic numbers."""
 
-EPS = 1e-12
+EPS: float = 1e-12

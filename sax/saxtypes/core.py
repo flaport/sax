@@ -53,11 +53,13 @@ __all__ = [
     "IntArray1DLike",
     "IntArrayLike",
     "IntLike",
+    "Mode",
     "Model",
     "ModelFactory",
     "Port",
     "PortCombination",
     "PortMap",
+    "PortMode",
     "SCoo",
     "SCooModel",
     "SCooModelFactory",
@@ -72,7 +74,7 @@ __all__ = [
     "SettingsValue",
 ]
 
-ArrayLike: TypeAlias = Array | np.ndarray | list | tuple
+ArrayLike: TypeAlias = Array | np.ndarray
 """Anything that can turn into an array with ndim>=1."""
 
 
@@ -577,6 +579,12 @@ ComplexArray1DLike: TypeAlias = Annotated[
 
 Port: TypeAlias = str
 """A port definition '{port}'."""
+
+Mode: TypeAlias = str
+"""A mode definition '{mode}'."""
+
+PortMode: TypeAlias = str
+"""A port-mode definition '{port}@{mode}'."""
 
 InstancePort: TypeAlias = str
 """An instance port definition '{inst},{port}'."""

@@ -80,7 +80,7 @@ exclude = []
 namespaces = true
 
 [tool.ruff.lint]  # see https://docs.astral.sh/ruff/rules
-ignore = ["COM819", "N803", "N806", "COM812", "SIM300"]
+ignore = ["COM819", "N803", "N806", "COM812", "SIM300", "PLW2901"]
 select = ["ALL"]
 
 [tool.ruff.lint.per-file-ignores]
