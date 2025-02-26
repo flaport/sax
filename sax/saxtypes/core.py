@@ -5,10 +5,11 @@ Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 
 from __future__ import annotations
 
+from collections.abc import Callable
 from contextlib import suppress
 from functools import partial, wraps
+from types import UnionType
 from typing import (
-    TYPE_CHECKING,
     Annotated,
     Any,
     Literal,
@@ -27,10 +28,6 @@ import numpy as np
 from jaxtyping import Array
 from pydantic import PlainValidator
 from pydantic_core import PydanticCustomError
-
-if TYPE_CHECKING:
-    from collections.abc import Callable
-    from types import UnionType
 
 __all__ = [
     "ArrayLike",

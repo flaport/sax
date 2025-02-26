@@ -86,7 +86,7 @@ select = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
   "tests/*.py" = ["D", "INP001"]
   "sax/validators.py" = ["ANN401", "PLR2004"]
-  "sax/saxtypes/*.py" = ["ANN401", "PLR2004", "EM101"]
+  "sax/saxtypes/*.py" = ["ANN401", "PLR2004", "EM101", "TC003"]
   "sax/models.py" = ["PLR0913"]
 
 [tool.ruff.lint.pydocstyle]
