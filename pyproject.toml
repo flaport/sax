@@ -51,6 +51,7 @@ dev = [
     "ipykernel>=6.29.5",
     "ipympl>=0.9.6",
     "ipywidgets>=8.1.5",
+    "jupyterlab-myst>=2.4.2",
     "meow-sim>=0.11.1",
     "mkinit>=1.1.0",
     "mypy>=1.15.0",
@@ -63,6 +64,7 @@ dev = [
     "pyright>=1.1.0",
     "pytest>=8.3.4",
     "ruff>=0.9.0",
+    "scikit-learn>=1.6.1",
     "sphinx-book-theme>=1.0.1",
     "sphinx-copybutton>=0.5.2",
     "sphinx>=5.3.0",
@@ -84,7 +86,8 @@ select = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
   "tests/*.py" = ["D", "INP001"]
   "sax/validators.py" = ["ANN401", "PLR2004"]
-  "sax/saxtypes.py" = ["ANN401", "PLR2004", "EM101"]
+  "sax/saxtypes/*.py" = ["ANN401", "PLR2004", "EM101"]
+  "sax/models.py" = ["PLR0913"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

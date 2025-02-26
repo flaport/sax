@@ -32,7 +32,49 @@ if TYPE_CHECKING:
     from collections.abc import Callable
     from types import UnionType
 
-__all__ = []
+__all__ = [
+    "ArrayLike",
+    "Bool",
+    "BoolArray",
+    "BoolArrayLike",
+    "BoolLike",
+    "Complex",
+    "ComplexArray",
+    "ComplexArray1D",
+    "ComplexArray1DLike",
+    "ComplexArrayLike",
+    "ComplexLike",
+    "Float",
+    "FloatArray",
+    "FloatArray1D",
+    "FloatArray1DLike",
+    "FloatArrayLike",
+    "FloatLike",
+    "InstancePort",
+    "Int",
+    "IntArray",
+    "IntArray1D",
+    "IntArray1DLike",
+    "IntArrayLike",
+    "IntLike",
+    "Model",
+    "ModelFactory",
+    "Port",
+    "PortCombination",
+    "PortMap",
+    "SCoo",
+    "SCooModel",
+    "SCooModelFactory",
+    "SDense",
+    "SDenseModel",
+    "SDenseModelFactory",
+    "SDict",
+    "SDictModel",
+    "SDictModelFactory",
+    "SType",
+    "Settings",
+    "SettingsValue",
+]
 
 ArrayLike: TypeAlias = Array | np.ndarray | list | tuple
 """Anything that can turn into an array with ndim>=1."""
@@ -537,10 +579,16 @@ ComplexArray1DLike: TypeAlias = Annotated[
 ]
 """1-dimensional complex array."""
 
-PortMap: TypeAlias = dict[str, Int]
-"""A mapping from a port name (str) to a port index (int)."""
+Port: TypeAlias = str
+"""A port definition '{port}'."""
 
-PortCombination = tuple[str, str]
+InstancePort: TypeAlias = str
+"""An instance port definition '{inst},{port}'."""
+
+PortMap: TypeAlias = dict[Port, Int]
+"""A mapping from a port to an index."""
+
+PortCombination = tuple[InstancePort, InstancePort]
 """A combination of two port names (str, str)."""
 
 SDict = dict[PortCombination, ComplexArrayLike]
@@ -649,19 +697,19 @@ Model: TypeAlias = SDictModel | SDenseModel | SCooModel
 class SDictModelFactory(Protocol):
     """A keyword-only function producing an SDictModel."""
 
-    def __call__(self, **kwargs: SettingsValue) -> SDict: ...
+    def __call__(self, **kwargs: SettingsValue) -> SDictModel: ...
 
 
 class SDenseModelFactory(Protocol):
     """A keyword-only function producing an SDenseModel."""
 
-    def __call__(self, **kwargs: SettingsValue) -> SDense: ...
+    def __call__(self, **kwargs: SettingsValue) -> SDenseModel: ...
 
 
 class SCooModelFactory(Protocol):
     """A keyword-only function producing an ScooModel."""
 
-    def __call__(self, **kwargs: SettingsValue) -> SCoo: ...
+    def __call__(self, **kwargs: SettingsValue) -> SCooModel: ...
 
 
 ModelFactory: TypeAlias = SDictModelFactory | SDenseModelFactory | SCooModelFactory

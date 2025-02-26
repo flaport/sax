@@ -7,21 +7,19 @@ from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
+from pydantic import validate_call
 
 from .utils import get_inputs_outputs, reciprocal
-
-if TYPE_CHECKING:
-    from .saxtypes import FloatArrayND, Model, SCoo, SDict
 
 
 def straight(
     *,
-    wl: FloatArrayND | float = 1.55,
-    wl0: float = 1.55,
-    neff: float = 2.34,
-    ng: float = 3.4,
-    length: float = 10.0,
-    loss: float = 0.0,
+    wl: FloatArrayLike = 1.55,
+    wl0: Float = 1.55,
+    neff: Float = 2.34,
+    ng: Float = 3.4,
+    length: Float = 10.0,
+    loss: Float = 0.0,
 ) -> SDict:
     """A simple straight waveguide model.
 
@@ -34,7 +32,7 @@ def straight(
         loss: loss in dB/cm.
 
     """
-    dwl = wl - wl0
+    dwl: FloatArray = val_float_array(wl) - wl0
     dneff_dwl = (ng - neff) / wl0
     _neff = neff - dwl * dneff_dwl
     phase = 2 * jnp.pi * _neff * length / wl
@@ -62,7 +60,10 @@ def coupler(*, coupling: float = 0.5) -> SDict:
 
 
 def _validate_ports(
-    ports, num_inputs, num_outputs, diagonal,
+    ports,
+    num_inputs,
+    num_outputs,
+    diagonal,
 ) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
     """Validate the ports and return the input and output ports."""
     if ports is None:
@@ -132,7 +133,10 @@ def unitary(
 
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal,
+        ports,
+        num_inputs,
+        num_outputs,
+        diagonal,
     )
     assert num_inputs is not None
     assert num_outputs is not None
@@ -145,7 +149,8 @@ def unitary(
         S = S.at[:N, N:].set(1)
     else:
         r = jnp.arange(
-            N, dtype=int,
+            N,
+            dtype=int,
         )  # reciprocal only works if num_inputs == num_outputs!
         S = S.at[r, N + r].set(1)
 
@@ -154,7 +159,8 @@ def unitary(
             S = S.at[N:, :N].set(1)
         else:
             r = jnp.arange(
-                N, dtype=int,
+                N,
+                dtype=int,
             )  # reciprocal only works if num_inputs == num_outputs!
             S = S.at[N + r, r].set(1)
 
@@ -164,7 +170,8 @@ def unitary(
 
     # Now create subset of this matrix we're interested in:
     r = jnp.concatenate(
-        [jnp.arange(num_inputs, dtype=int), N + jnp.arange(num_outputs, dtype=int)], 0,
+        [jnp.arange(num_inputs, dtype=int), N + jnp.arange(num_outputs, dtype=int)],
+        0,
     )
     S = S[r, :][:, r]
 
@@ -209,7 +216,10 @@ def copier(
         diagonal: whether the model is diagonal.
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal,
+        ports,
+        num_inputs,
+        num_outputs,
+        diagonal,
     )
     assert num_inputs is not None
     assert num_outputs is not None
@@ -221,7 +231,8 @@ def copier(
         S = S.at[:num_inputs, num_inputs:].set(1)
     else:
         r = jnp.arange(
-            num_inputs, dtype=int,
+            num_inputs,
+            dtype=int,
         )  # == range(num_outputs) # reciprocal only works if num_inputs == num_outputs!
         S = S.at[r, num_inputs + r].set(1)
 
@@ -270,7 +281,12 @@ def passthru(
         reciprocal: whether the model is reciprocal.
     """
     passthru = unitary(
-        num_links, num_links, ports, jit=jit, reciprocal=reciprocal, diagonal=True,
+        num_links,
+        num_links,
+        ports,
+        jit=jit,
+        reciprocal=reciprocal,
+        diagonal=True,
     )
     passthru.__name__ = f"passthru_{num_links}_{num_links}"
     passthru.__qualname__ = f"passthru_{num_links}_{num_links}"
