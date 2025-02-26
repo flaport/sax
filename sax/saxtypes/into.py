@@ -53,13 +53,13 @@ from sax.saxtypes.core import (
 )
 
 __all__ = [
-    "Into",
+    "into",
 ]
 
 T = TypeVar("T")
 
 
-class _IntoMeta(type):
+class Into(type):
     @overload
     def __getitem__(cls, key: Literal["Bool"]) -> Callable[..., Bool]: ...
 
@@ -165,7 +165,7 @@ class _IntoMeta(type):
         return TypeAdapter(key).validate_python
 
 
-class Into(metaclass=_IntoMeta):
+class into(metaclass=Into):  # noqa: N801
     """Type caster utility."""
 
     Bool = val_bool
@@ -190,11 +190,3 @@ class Into(metaclass=_IntoMeta):
     IntArray1DLike = val_int_array_1d
     IntArrayLike = val_int_array
     IntLike = val_int
-
-
-if __name__ == "__main__":
-    x = 3
-    y: Float = Into.Float(x)
-    print(f"{x} [{type(x)}] {y} [{type(y)}]")
-    # print(Int)
-    # print(Float)

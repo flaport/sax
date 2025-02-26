@@ -14,7 +14,6 @@ from typing import (
     Any,
     Literal,
     LiteralString,
-    Protocol,
     TypeAlias,
     TypeVar,
     cast,
@@ -427,7 +426,7 @@ def val_complex_array(
     )
 
 
-ComplexArray = Annotated[
+ComplexArray: TypeAlias = Annotated[
     Array, np.complexfloating, _val(val_complex_array, strict=True)
 ]
 """N-dimensional Complex array."""
@@ -489,7 +488,7 @@ def val_float_array_1d(
     )
 
 
-FloatArray1D = Annotated[
+FloatArray1D: TypeAlias = Annotated[
     ArrayLike, np.floating, 1, _val(val_float_array_1d, strict=True)
 ]
 """1-dimensional Float array."""
@@ -520,7 +519,7 @@ def val_complex_array_1d(
     )
 
 
-ComplexArray1D = Annotated[
+ComplexArray1D: TypeAlias = Annotated[
     ArrayLike, np.complexfloating, 1, _val(val_complex_array_1d, strict=True)
 ]
 """1-dimensional Complex array."""
@@ -582,13 +581,13 @@ Port: TypeAlias = str
 InstancePort: TypeAlias = str
 """An instance port definition '{inst},{port}'."""
 
-PortMap: TypeAlias = dict[Port, Int]
+PortMap: TypeAlias = dict[Port, int]
 """A mapping from a port to an index."""
 
-PortCombination = tuple[InstancePort, InstancePort]
+PortCombination: TypeAlias = tuple[InstancePort, InstancePort]
 """A combination of two port names (str, str)."""
 
-SDict = dict[PortCombination, ComplexArrayLike]
+SDict: TypeAlias = dict[PortCombination, ComplexArrayLike]
 """A sparse dictionary-based S-matrix representation.
 
 A mapping from a port combination to an S-parameter or an array of S-parameters.
@@ -603,7 +602,7 @@ Example:
 
 """
 
-SDense = tuple[ComplexArrayLike, PortMap]
+SDense: TypeAlias = tuple[ComplexArrayLike, PortMap]
 """A dense S-matrix representation.
 
 S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
@@ -619,7 +618,7 @@ Example:
 
 """
 
-SCoo = tuple[IntArray1D, IntArray1D, ComplexArrayLike, PortMap]
+SCoo: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArrayLike, PortMap]
 """A sparse S-matrix in COO format (recommended for internal library use only).
 
 An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three
@@ -646,7 +645,7 @@ Note:
 
 """
 
-Settings = dict[str, "SettingsValue"]
+Settings: TypeAlias = dict[str, "SettingsValue"]
 """A (possibly nested) settings mapping.
 
 Example:
@@ -662,51 +661,36 @@ Example:
 
 """
 
-SettingsValue = Settings | ComplexArrayLike | str | None
+SettingsValue: TypeAlias = Settings | ComplexArrayLike | str | None
 """Anything that can be used as value in a settings dict."""
 
-SType = SDict | SCoo | SDense
+SType: TypeAlias = SDict | SCoo | SDense
 """Any S-Matrix type [SDict, SDense, SCOO]."""
 
 
-class SDictModel(Protocol):
-    """A keyword-only function producing an SDict."""
+SDictModel: TypeAlias = Callable[..., SDict]
+"""A keyword-only function producing an SDict."""
 
-    def __call__(self, **kwargs: SettingsValue) -> SDict: ...
-
-
-class SDenseModel(Protocol):
-    """A keyword-only function producing an SDense."""
-
-    def __call__(self, **kwargs: SettingsValue) -> SDense: ...
+SDenseModel: TypeAlias = Callable[..., SDense]
+"""A keyword-only function producing an SDense."""
 
 
-class SCooModel(Protocol):
-    """A keyword-only function producing an Scoo."""
-
-    def __call__(self, **kwargs: SettingsValue) -> SCoo: ...
+SCooModel: TypeAlias = Callable[..., SCoo]
+"""A keyword-only function producing an Scoo."""
 
 
 Model: TypeAlias = SDictModel | SDenseModel | SCooModel
 """A keyword-only function producing an SType."""
 
-
-class SDictModelFactory(Protocol):
-    """A keyword-only function producing an SDictModel."""
-
-    def __call__(self, **kwargs: SettingsValue) -> SDictModel: ...
+SDictModelFactory: TypeAlias = Callable[..., SDictModel]
+"""A keyword-only function producing an SDictModel."""
 
 
-class SDenseModelFactory(Protocol):
-    """A keyword-only function producing an SDenseModel."""
+SDenseModelFactory: TypeAlias = Callable[..., SDenseModel]
+"""A keyword-only function producing an SDenseModel."""
 
-    def __call__(self, **kwargs: SettingsValue) -> SDenseModel: ...
-
-
-class SCooModelFactory(Protocol):
-    """A keyword-only function producing an ScooModel."""
-
-    def __call__(self, **kwargs: SettingsValue) -> SCooModel: ...
+SCooModelFactory: TypeAlias = Callable[..., SCooModel]
+"""A keyword-only function producing an ScooModel."""
 
 
 ModelFactory: TypeAlias = SDictModelFactory | SDenseModelFactory | SCooModelFactory

@@ -44,7 +44,7 @@ from .core import (
     SType,
 )
 from .into import (
-    Into,
+    into,
 )
 
 __all__ = [
@@ -72,7 +72,6 @@ __all__ = [
     "IntArray1DLike",
     "IntArrayLike",
     "IntLike",
-    "Into",
     "Model",
     "ModelFactory",
     "Port",
@@ -90,4 +89,5 @@ __all__ = [
     "SType",
     "Settings",
     "SettingsValue",
+    "into",
 ]
