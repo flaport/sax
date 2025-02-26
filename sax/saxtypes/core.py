@@ -28,6 +28,8 @@ from jaxtyping import Array
 from pydantic import PlainValidator
 from pydantic_core import PydanticCustomError
 
+from ..utils import maybe
+
 __all__ = [
     "ArrayLike",
     "Bool",
@@ -74,6 +76,8 @@ __all__ = [
     "SettingsValue",
 ]
 
+T = TypeVar("T")
+
 ArrayLike: TypeAlias = Array | np.ndarray
 """Anything that can turn into an array with ndim>=1."""
 
@@ -98,34 +102,18 @@ def _val(fun: Callable, **val_kwargs: Any) -> PlainValidator:
     return PlainValidator(new)
 
 
-_T = TypeVar("_T")
-
-
-def _try(
-    func: Callable[..., _T], /, exc: type[Exception] = Exception
-) -> Callable[..., _T | None]:
-    @wraps(func)
-    def new_func(*args: Any, **kwargs: Any) -> _T | None:
-        try:
-            return func(*args, **kwargs)
-        except exc:
-            return None
-
-    return new_func
-
-
 def _val_item_type(  # noqa: PLR0913
     obj: Any,
     *,
     strict: bool,
     cast: bool,
-    type_cast: Callable[..., _T],
+    type_cast: Callable[..., T],
     type_def: Any,
     type_name: str,
-) -> _T:
+) -> T:
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
-        arr = _try(np.asarray)(item)
+        arr = maybe(np.asarray)(item)
         if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):  # type: ignore[reportArgumentType]
             msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
             raise TypeError(msg)
@@ -177,7 +165,7 @@ def val_int(
 
 
 def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
-    if strict and _try(partial(val_bool, strict=True, cast=False))(obj) is not None:
+    if strict and maybe(partial(val_bool, strict=True, cast=False))(obj) is not None:
         msg = (
             f"NOT_INT: Strict validation does not allow casting {obj} [bool] into Int. "
         )

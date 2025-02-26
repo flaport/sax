@@ -47,6 +47,7 @@ from .core import (
 )
 from .into import (
     into,
+    try_into,
 )
 
 __all__ = [
@@ -94,4 +95,5 @@ __all__ = [
     "Settings",
     "SettingsValue",
     "into",
+    "try_into",
 ]

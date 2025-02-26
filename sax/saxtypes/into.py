@@ -52,9 +52,9 @@ from sax.saxtypes.core import (
     val_int_array_1d,
 )
 
-__all__ = [
-    "into",
-]
+from ..utils import maybe
+
+__all__ = ["into", "try_into"]
 
 T = TypeVar("T")
 
@@ -190,3 +190,39 @@ class into(metaclass=Into):  # noqa: N801
     IntArray1DLike = val_int_array_1d
     IntArrayLike = val_int_array
     IntLike = val_int
+
+
+class TryInto(type):
+    Bool = maybe(val_bool)
+    BoolArray = maybe(val_bool_array)
+    BoolArrayLike = maybe(val_bool_array)
+    BoolLike = maybe(val_bool)
+    Complex = maybe(val_complex)
+    ComplexArray = maybe(val_complex_array)
+    ComplexArray1D = maybe(val_complex_array_1d)
+    ComplexArray1DLike = maybe(val_complex_array_1d)
+    ComplexArrayLike = maybe(val_complex_array)
+    ComplexLike = maybe(val_complex)
+    Float = maybe(val_float)
+    FloatArray = maybe(val_float_array)
+    FloatArray1D = maybe(val_complex_array_1d)
+    FloatArray1DLike = maybe(val_complex_array_1d)
+    FloatArrayLike = maybe(val_float_array)
+    FloatLike = maybe(val_float)
+    Int = maybe(val_int)
+    IntArray = maybe(val_int_array)
+    IntArray1D = maybe(val_int_array_1d)
+    IntArray1DLike = maybe(val_int_array_1d)
+    IntArrayLike = maybe(val_int_array)
+    IntLike = maybe(val_int)
+
+    def __getitem__(cls, key: type[T] | _AnnotatedAlias | str):  # noqa: ANN204
+        return maybe(into[key])
+
+
+class try_into(metaclass=TryInto):  # noqa: N801
+    """Type caster utility."""
+
+
+if __name__ == "__main__":
+    x: Float = try_into["Float"](3.0)
