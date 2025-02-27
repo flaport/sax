@@ -31,14 +31,20 @@ __all__ = [
     "SettingsValue",
 ]
 
+import inspect
+from ast import TypeVar
 from collections.abc import Callable
 from typing import (
     Annotated,
     Any,
     TypeAlias,
+    get_args,
+    get_origin,
 )
 
 from sax.saxtypes.core import ComplexArrayLike, IntArray1D, val
+
+T = TypeVar("T")
 
 
 def _cast_string(obj: Any) -> str:
@@ -212,35 +218,133 @@ SType: TypeAlias = SDict | SCoo | SDense
 """Any S-Matrix type [SDict, SDense, SCOO]."""
 
 
-SDictModel: TypeAlias = Callable[..., SDict]
+def _val_sax_callable(model: Any) -> Callable:
+    if not callable(model):
+        msg = f"NOT_CALLABLE: A SAX model should be callable. Got: {model!r}."
+        raise TypeError(msg)
+
+    model_name = getattr(model, "__name__", str(model))
+    try:
+        sig = inspect.signature(model)
+    except Exception as e:
+        msg = (
+            f"NO_SIGNATURE: Function '{model_name}' cannot be used as a SAX model. "
+            "It has no function signature."
+        )
+        raise TypeError(msg) from e
+    for name, param in sig.parameters.items():
+        if param.kind == param.POSITIONAL_ONLY:
+            msg = (
+                f"NO_POSITIONAL_ONLY: A SAX model should not have positional-only"
+                f"arguments. Got: '{model_name}' with param '{name!r}'"
+            )
+            raise TypeError(msg)
+        if param.kind == param.VAR_POSITIONAL:
+            msg = (
+                f"NO_VAR_POSITIONAL: A SAX model should not have var-positional "
+                f"arguments. Got: '{model_name}' with var-param '*{name}'."
+            )
+            raise TypeError(msg)
+        if param.kind == param.VAR_KEYWORD:
+            msg = (
+                f"NO_VAR_KEYWORD: A SAX model should not have var-keyword "
+                f"arguments. Got: '{model_name}' with var-keyword '**{name}'."
+            )
+            raise TypeError(msg)
+        if param.default is inspect.Parameter.empty:
+            msg = (
+                "NO_DEFAULT: A SAX model should not have arguments without defaults. "
+                f"Got: '{model_name}' with param '{name}'."
+            )
+            raise TypeError(msg)
+    return model
+
+
+def _has_callable_return_annotation(model: Callable) -> bool:
+    annot = inspect.signature(model).return_annotation
+    if isinstance(annot, str) and (
+        annot.startswith("Callable") or annot.endswith("Model")
+    ):
+        return True
+    return get_origin(annot) is Callable
+
+
+def _val_not_model_factory(model: Callable) -> Callable:
+    annot = inspect.signature(model).return_annotation
+    if _has_callable_return_annotation(model):
+        model_name = getattr(model, "__name__", str(model))
+        msg = (
+            "IS_MODEL_FACTORY: A SAX model should return an SDict, "
+            f"SDense, SCoo or SType. Got '{model_name}' returning {annot}. This indicates "
+            "That this is in fact a ModelFactory."
+        )
+        raise TypeError(msg)
+    return model
+
+
+def _val_model_factory(model: Callable) -> Callable:
+    annot = inspect.signature(model).return_annotation
+    if not _has_callable_return_annotation(model):
+        model_name = getattr(model, "__name__", str(model))
+        msg = (
+            "NOT_ANNOTATED: A SAX ModelFactory should be annotated with a Callable "
+            "return annotation to make sure it's not mistaken as a Model. "
+            f"Got: '{model_name}' returning {annot}."
+        )
+        raise TypeError(msg)
+    return model
+
+
+def val_model(model: Any) -> Model:
+    return _val_not_model_factory(_val_sax_callable(model))
+
+
+SDictModel: TypeAlias = Annotated[Callable[..., SDict], val(val_model)]
 """A keyword-only function producing an SDict."""
 
-SDenseModel: TypeAlias = Callable[..., SDense]
+SDenseModel: TypeAlias = Annotated[Callable[..., SDense], val(val_model)]
 """A keyword-only function producing an SDense."""
 
 
-SCooModel: TypeAlias = Callable[..., SCoo]
+SCooModel: TypeAlias = Annotated[Callable[..., SCoo], val(val_model)]
 """A keyword-only function producing an Scoo."""
 
 
-Model: TypeAlias = SDictModel | SDenseModel | SCooModel
+Model: TypeAlias = Annotated[SDictModel | SDenseModel | SCooModel, val(val_model)]
 """A keyword-only function producing an SType."""
 
-SDictModelFactory: TypeAlias = Callable[..., SDictModel]
+
+def val_model_factory(model: Any) -> ModelFactory:
+    return _val_model_factory(_val_sax_callable(model))
+
+
+SDictModelFactory: TypeAlias = Annotated[
+    Callable[..., SDictModel], val(val_model_factory)
+]
 """A keyword-only function producing an SDictModel."""
 
 
-SDenseModelFactory: TypeAlias = Callable[..., SDenseModel]
+SDenseModelFactory: TypeAlias = Annotated[
+    Callable[..., SDenseModel], val(val_model_factory)
+]
 """A keyword-only function producing an SDenseModel."""
 
-SCooModelFactory: TypeAlias = Callable[..., SCooModel]
+SCooModelFactory: TypeAlias = Annotated[
+    Callable[..., SCooModel], val(val_model_factory)
+]
 """A keyword-only function producing an ScooModel."""
 
 
-ModelFactory: TypeAlias = SDictModelFactory | SDenseModelFactory | SCooModelFactory
+ModelFactory: TypeAlias = Annotated[
+    SDictModelFactory | SDenseModelFactory | SCooModelFactory, val(val_model_factory)
+]
 """A keyword-only function producing a Model."""
 
 if __name__ == "__main__":
     import sax
 
-    x = sax.into[SDict]({"a": 3})
+    def func(*, x=2) -> Callable:
+        return x
+
+    f = sax.into[ModelFactory](func)
+    print(f)
