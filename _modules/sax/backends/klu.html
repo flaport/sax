@@ -344,23 +344,28 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for sax.backends.klu</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; SAX KLU Backend &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;SAX KLU Backend&quot;&quot;&quot;</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">__future__</span><span class="w"> </span><span class="kn">import</span> <span class="n">annotations</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">time</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">typing</span><span class="w"> </span><span class="kn">import</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Dict</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">klujax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">klujax</span><span class="w"> </span><span class="kn">import</span> <span class="n">solve</span> <span class="k">as</span> <span class="n">_solve_klu</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">natsort</span><span class="w"> </span><span class="kn">import</span> <span class="n">natsorted</span>
 
 <span class="kn">from</span><span class="w"> </span><span class="nn">..netlist</span><span class="w"> </span><span class="kn">import</span> <span class="n">Component</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">..saxtypes</span><span class="w"> </span><span class="kn">import</span> <span class="n">Model</span><span class="p">,</span> <span class="n">SCoo</span><span class="p">,</span> <span class="n">SDense</span><span class="p">,</span> <span class="n">SType</span><span class="p">,</span> <span class="n">scoo</span>
 
-<span class="n">solve_klu</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">solve</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
-<span class="n">mul_coo</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">coo_mul_vec</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="k">try</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">klujax</span><span class="w"> </span><span class="kn">import</span> <span class="n">dot</span> <span class="k">as</span> <span class="n">_dot</span>
+<span class="k">except</span> <span class="ne">ImportError</span><span class="p">:</span>
+    <span class="kn">from</span><span class="w"> </span><span class="nn">klujax</span><span class="w"> </span><span class="kn">import</span> <span class="n">coo_mul_vec</span> <span class="k">as</span> <span class="n">_dot</span>
+
+<span class="n">solve_klu</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_solve_klu</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">mul_coo</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">_dot</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 
 
 <div class="viewcode-block" id="analyze_instances_klu"><a class="viewcode-back" href="../../../sax.backends.klu.html#sax.backends.analyze_instances_klu">[docs]</a><span class="k">def</span><span class="w"> </span><span class="nf">analyze_instances_klu</span><span class="p">(</span>
