@@ -24,7 +24,7 @@ __all__ = [
 
 from typing import TypeAlias
 
-from .multimode import (
+from sax.saxtypes.multimode import (
     ModelFactoryMM,
     ModelMM,
     PortCombinationMM,
@@ -40,7 +40,7 @@ from .multimode import (
     SDictModelMM,
     STypeMM,
 )
-from .singlemode import (
+from sax.saxtypes.singlemode import (
     ModelFactorySM,
     ModelSM,
     PortCombinationSM,
@@ -71,3 +71,9 @@ SDict: TypeAlias = SDictSM | SDictMM
 SDictModel: TypeAlias = SDictModelSM | SDictModelMM
 SDictModelFactory: TypeAlias = SDictModelFactorySM | SDictModelFactoryMM
 SType: TypeAlias = STypeSM | STypeMM
+
+if __name__ == "__main__":
+    import sax
+
+    s = sax.into[SDict]({("a3", "a4"): 4, ("a5@te", "a6@te"): 5})
+    print(s)

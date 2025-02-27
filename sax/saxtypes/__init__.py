@@ -46,6 +46,7 @@ from .into import (
     try_into,
 )
 from .multimode import (
+    Mode,
     ModelFactoryMM,
     ModelMM,
     PortCombinationMM,
@@ -112,6 +113,7 @@ __all__ = [
     "IntArray1DLike",
     "IntArrayLike",
     "IntLike",
+    "Mode",
     "Model",
     "ModelFactory",
     "ModelFactoryMM",

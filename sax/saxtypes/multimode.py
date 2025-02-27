@@ -30,7 +30,7 @@ from typing import (
     TypeAlias,
 )
 
-from .core import ComplexArrayLike, IntArray1D, val
+from .core import ComplexArray, IntArray1D, val
 from .singlemode import (
     cast_string,
     val_callable_annotated,
@@ -52,7 +52,7 @@ Mode: TypeAlias = Annotated[str, val(val_mode)]
 def val_port_mode(obj: Any) -> PortMode:
     s = cast_string(obj)
     parts = s.split("@")
-    if len(parts) > 2:
+    if len(parts) != 2:
         msg = f"a PortMode should have exactly one '@'-separator. Got: {obj!r}"
         raise TypeError(msg)
     port, mode = parts
@@ -73,7 +73,7 @@ PortCombinationMM: TypeAlias = tuple[PortMode, PortMode]
 """A combination of two port names."""
 
 
-SDictMM: TypeAlias = dict[PortCombinationMM, ComplexArrayLike]
+SDictMM: TypeAlias = dict[PortCombinationMM, ComplexArray]
 """A sparse dictionary-based S-matrix representation.
 
 A mapping from a port combination to an S-parameter or an array of S-parameters.
@@ -88,7 +88,7 @@ Example:
 
 """
 
-SDenseMM: TypeAlias = tuple[ComplexArrayLike, PortMapMM]
+SDenseMM: TypeAlias = tuple[ComplexArray, PortMapMM]
 """A dense S-matrix representation.
 
 S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
@@ -104,7 +104,7 @@ Example:
 
 """
 
-SCooMM: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArrayLike, PortMapMM]
+SCooMM: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArray, PortMapMM]
 """A sparse S-matrix in COO format (recommended for internal library use only).
 
 An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three
