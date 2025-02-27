@@ -1,20 +1,25 @@
-""" SAX KLU Backend """
+"""SAX KLU Backend"""
 
 from __future__ import annotations
-import time
 
+import time
 from typing import Any, Dict
 
 import jax
 import jax.numpy as jnp
-import klujax
+from klujax import solve as _solve_klu
 from natsort import natsorted
 
 from ..netlist import Component
 from ..saxtypes import Model, SCoo, SDense, SType, scoo
 
-solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
-mul_coo = jax.vmap(klujax.coo_mul_vec, (None, None, 0, 0), 0)
+try:
+    from klujax import dot as _dot
+except ImportError:
+    from klujax import coo_mul_vec as _dot
+
+solve_klu = jax.vmap(_solve_klu, (None, None, 0, None), 0)
+mul_coo = jax.vmap(_dot, (None, None, 0, 0), 0)
 
 
 def analyze_instances_klu(
