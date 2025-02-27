@@ -18,6 +18,7 @@ from typing import (
 )
 
 from pydantic import PlainValidator, TypeAdapter
+from pydantic_core._pydantic_core import ValidationError
 
 from sax.saxtypes.core import (
     Bool,
@@ -61,112 +62,96 @@ T = TypeVar("T")
 
 class Into(type):
     @overload
-    def __getitem__(cls, key: Literal["Bool"]) -> Callable[..., Bool]:
-        ...
+    def __getitem__(cls, key: Literal["Bool"]) -> Callable[..., Bool]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["BoolArray"]) -> Callable[..., BoolArray]:
-        ...
+    def __getitem__(cls, key: Literal["BoolArray"]) -> Callable[..., BoolArray]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["BoolArrayLike"]) -> Callable[..., BoolArrayLike]:
-        ...
+    def __getitem__(
+        cls, key: Literal["BoolArrayLike"]
+    ) -> Callable[..., BoolArrayLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["BoolLike"]) -> Callable[..., BoolLike]:
-        ...
+    def __getitem__(cls, key: Literal["BoolLike"]) -> Callable[..., BoolLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["Complex"]) -> Callable[..., Complex]:
-        ...
+    def __getitem__(cls, key: Literal["Complex"]) -> Callable[..., Complex]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["ComplexArray"]) -> Callable[..., ComplexArray]:
-        ...
+    def __getitem__(
+        cls, key: Literal["ComplexArray"]
+    ) -> Callable[..., ComplexArray]: ...
 
     @overload
     def __getitem__(
         cls, key: Literal["ComplexArray1D"]
-    ) -> Callable[..., ComplexArray1D]:
-        ...
+    ) -> Callable[..., ComplexArray1D]: ...
 
     @overload
     def __getitem__(
         cls, key: Literal["ComplexArray1DLike"]
-    ) -> Callable[..., ComplexArray1DLike]:
-        ...
+    ) -> Callable[..., ComplexArray1DLike]: ...
 
     @overload
     def __getitem__(
         cls, key: Literal["ComplexArrayLike"]
-    ) -> Callable[..., ComplexArrayLike]:
-        ...
+    ) -> Callable[..., ComplexArrayLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["ComplexLike"]) -> Callable[..., ComplexLike]:
-        ...
+    def __getitem__(cls, key: Literal["ComplexLike"]) -> Callable[..., ComplexLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["Float"]) -> Callable[..., Float]:
-        ...
+    def __getitem__(cls, key: Literal["Float"]) -> Callable[..., Float]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["FloatArray"]) -> Callable[..., FloatArray]:
-        ...
+    def __getitem__(cls, key: Literal["FloatArray"]) -> Callable[..., FloatArray]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["FloatArray1D"]) -> Callable[..., FloatArray1D]:
-        ...
+    def __getitem__(
+        cls, key: Literal["FloatArray1D"]
+    ) -> Callable[..., FloatArray1D]: ...
 
     @overload
     def __getitem__(
         cls, key: Literal["FloatArray1DLike"]
-    ) -> Callable[..., FloatArray1DLike]:
-        ...
+    ) -> Callable[..., FloatArray1DLike]: ...
 
     @overload
     def __getitem__(
         cls, key: Literal["FloatArrayLike"]
-    ) -> Callable[..., FloatArrayLike]:
-        ...
+    ) -> Callable[..., FloatArrayLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["FloatLike"]) -> Callable[..., FloatLike]:
-        ...
+    def __getitem__(cls, key: Literal["FloatLike"]) -> Callable[..., FloatLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["Int"]) -> Callable[..., Int]:
-        ...
+    def __getitem__(cls, key: Literal["Int"]) -> Callable[..., Int]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["IntArray"]) -> Callable[..., IntArray]:
-        ...
+    def __getitem__(cls, key: Literal["IntArray"]) -> Callable[..., IntArray]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["IntArray1D"]) -> Callable[..., IntArray1D]:
-        ...
+    def __getitem__(cls, key: Literal["IntArray1D"]) -> Callable[..., IntArray1D]: ...
 
     @overload
     def __getitem__(
         cls, key: Literal["IntArray1DLike"]
-    ) -> Callable[..., IntArray1DLike]:
-        ...
+    ) -> Callable[..., IntArray1DLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["IntArrayLike"]) -> Callable[..., IntArrayLike]:
-        ...
+    def __getitem__(
+        cls, key: Literal["IntArrayLike"]
+    ) -> Callable[..., IntArrayLike]: ...
 
     @overload
-    def __getitem__(cls, key: Literal["IntLike"]) -> Callable[..., IntLike]:
-        ...
+    def __getitem__(cls, key: Literal["IntLike"]) -> Callable[..., IntLike]: ...
 
     @overload
-    def __getitem__(cls, key: type[T]) -> Callable[..., T]:
-        ...
+    def __getitem__(cls, key: type[T]) -> Callable[..., T]: ...
 
     @overload
-    def __getitem__(cls, key: _AnnotatedAlias) -> Callable[..., Any]:
-        ...
+    def __getitem__(cls, key: _AnnotatedAlias) -> Callable[..., Any]: ...
 
     def __getitem__(
         cls, key: type[T] | _AnnotatedAlias | str
@@ -178,7 +163,17 @@ class Into(type):
             validator = get_args(key)[-1]
             if isinstance(validator, PlainValidator):
                 return getattr(validator.func, "__wrapped__", validator.func)
-        return TypeAdapter(key).validate_python
+        return _wrapped_validator(key)
+
+
+def _wrapped_validator(key: type[T]) -> Callable[..., T]:
+    def into_type(obj: Any, /, *, strict: bool | None = None) -> T:
+        try:
+            return TypeAdapter(key).validate_python(obj, strict=strict)
+        except ValidationError as e:
+            raise TypeError(str(e)) from e
+
+    return into_type
 
 
 class into(metaclass=Into):  # noqa: N801
@@ -238,7 +233,3 @@ class TryInto(type):
 
 class try_into(metaclass=TryInto):  # noqa: N801
     """Type caster utility."""
-
-
-if __name__ == "__main__":
-    x: Float = try_into["Float"](3.0)
