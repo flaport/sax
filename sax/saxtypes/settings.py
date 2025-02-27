@@ -11,7 +11,7 @@ from typing import (
     TypeAlias,
 )
 
-from sax.saxtypes.core import ComplexArrayLike
+from .core import ComplexArrayLike
 
 Settings: TypeAlias = dict[str, "SettingsValue"]
 """A (possibly nested) settings mapping.

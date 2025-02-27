@@ -30,19 +30,19 @@ from typing import (
     TypeAlias,
 )
 
-from sax.saxtypes.core import ComplexArrayLike, IntArray1D, val
-from sax.saxtypes.singlemode import (
-    _cast_string,
-    _val_identifier,
-    _val_model_factory,
-    _val_not_model_factory,
-    _val_sax_callable,
+from .core import ComplexArrayLike, IntArray1D, val
+from .singlemode import (
+    cast_string,
+    val_callable_annotated,
+    val_identifier,
+    val_not_callable_annotated,
     val_port,
+    val_sax_callable,
 )
 
 
 def val_mode(obj: Any) -> Mode:
-    return _val_identifier(obj, type_name="Mode")
+    return val_identifier(obj, type_name="Mode")
 
 
 Mode: TypeAlias = Annotated[str, val(val_mode)]
@@ -50,7 +50,7 @@ Mode: TypeAlias = Annotated[str, val(val_mode)]
 
 
 def val_port_mode(obj: Any) -> PortMode:
-    s = _cast_string(obj)
+    s = cast_string(obj)
     parts = s.split("@")
     if len(parts) > 2:
         msg = f"a PortMode should have exactly one '@'-separator. Got: {obj!r}"
@@ -136,7 +136,7 @@ STypeMM: TypeAlias = SDictMM | SCooMM | SDenseMM
 
 
 def val_model(model: Any) -> ModelMM:
-    return _val_not_model_factory(_val_sax_callable(model))
+    return val_not_callable_annotated(val_sax_callable(model))
 
 
 SDictModelMM: TypeAlias = Annotated[Callable[..., SDictMM], val(val_model)]
@@ -157,7 +157,7 @@ ModelMM: TypeAlias = Annotated[
 
 
 def val_model_factory(model: Any) -> ModelFactoryMM:
-    return _val_model_factory(_val_sax_callable(model))
+    return val_callable_annotated(val_sax_callable(model))
 
 
 SDictModelFactoryMM: TypeAlias = Annotated[

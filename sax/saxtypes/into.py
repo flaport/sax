@@ -13,6 +13,7 @@ from typing import (
     Literal,
     TypeVar,
     _AnnotatedAlias,  # type: ignore[reportAttributeAccessIssue]
+    cast,
     get_args,
     overload,
 )
@@ -20,7 +21,8 @@ from typing import (
 from pydantic import PlainValidator, TypeAdapter
 from pydantic_core._pydantic_core import ValidationError
 
-from sax.saxtypes.core import (
+from ..utils import maybe
+from .core import (
     Bool,
     BoolArray,
     BoolArrayLike,
@@ -54,8 +56,6 @@ from sax.saxtypes.core import (
     val_int_array,
     val_int_array_1d,
 )
-
-from ..utils import maybe
 
 T = TypeVar("T")
 
@@ -163,7 +163,7 @@ class Into(type):
             validator = get_args(key)[-1]
             if isinstance(validator, PlainValidator):
                 return getattr(validator.func, "__wrapped__", validator.func)
-        return _wrapped_validator(key)
+        return _wrapped_validator(cast(type[T], key))
 
 
 def _wrapped_validator(key: type[T]) -> Callable[..., T]:

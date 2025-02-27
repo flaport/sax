@@ -32,19 +32,19 @@ from typing import (
     get_origin,
 )
 
-from sax.saxtypes.core import ComplexArrayLike, IntArray1D, val
+from .core import ComplexArrayLike, IntArray1D, val
 
 T = TypeVar("T")
 
 
-def _cast_string(obj: Any) -> str:
+def cast_string(obj: Any) -> str:
     if isinstance(obj, bytes):
         obj = obj.decode()
     return str(obj)
 
 
-def _val_identifier(obj: Any, *, type_name: str) -> str:
-    s = _cast_string(obj)
+def val_identifier(obj: Any, *, type_name: str) -> str:
+    s = cast_string(obj)
     if not s.isidentifier():
         msg = (
             f"A {type_name!r} string should be a valid python identifier. Got: {s!r}. "
@@ -56,14 +56,14 @@ def _val_identifier(obj: Any, *, type_name: str) -> str:
 
 
 def val_instance_name(obj: Any) -> Port:
-    return _val_identifier(obj, type_name="InstanceName")
+    return val_identifier(obj, type_name="InstanceName")
 
 
 InstanceName: TypeAlias = Annotated[str, val(val_instance_name)]
 
 
 def val_port(obj: Any) -> Port:
-    return _val_identifier(obj, type_name="Port")
+    return val_identifier(obj, type_name="Port")
 
 
 Port: TypeAlias = Annotated[str, val(val_port)]
@@ -71,7 +71,7 @@ Port: TypeAlias = Annotated[str, val(val_port)]
 
 
 def val_instance_port(obj: Any) -> InstancePort:
-    s = _cast_string(obj)
+    s = cast_string(obj)
     parts = s.split(",")
     if len(parts) > 2:
         msg = f"an InstancePort should have exactly one ','-separator. Got: {obj!r}"
@@ -156,7 +156,7 @@ STypeSM: TypeAlias = SDictSM | SCooSM | SDenseSM
 """Any S-Matrix type [SDict, SDense, SCOO]."""
 
 
-def _val_sax_callable(model: Any) -> Callable:
+def val_sax_callable(model: Any) -> Callable:
     if not callable(model):
         msg = f"NOT_CALLABLE: A SAX model should be callable. Got: {model!r}."
         raise TypeError(msg)
@@ -198,7 +198,7 @@ def _val_sax_callable(model: Any) -> Callable:
     return model
 
 
-def _has_callable_return_annotation(model: Callable) -> bool:
+def has_callable_return_annotation(model: Callable) -> bool:
     annot = inspect.signature(model).return_annotation
     if isinstance(annot, str) and (
         annot.startswith("Callable") or annot.endswith("Model")
@@ -207,9 +207,9 @@ def _has_callable_return_annotation(model: Callable) -> bool:
     return get_origin(annot) is Callable
 
 
-def _val_not_model_factory(model: Callable) -> Callable:
+def val_not_callable_annotated(model: Callable) -> Callable:
     annot = inspect.signature(model).return_annotation
-    if _has_callable_return_annotation(model):
+    if has_callable_return_annotation(model):
         model_name = getattr(model, "__name__", str(model))
         msg = (
             "IS_MODEL_FACTORY: A SAX model should return an SDict, "
@@ -220,9 +220,9 @@ def _val_not_model_factory(model: Callable) -> Callable:
     return model
 
 
-def _val_model_factory(model: Callable) -> Callable:
+def val_callable_annotated(model: Callable) -> Callable:
     annot = inspect.signature(model).return_annotation
-    if not _has_callable_return_annotation(model):
+    if not has_callable_return_annotation(model):
         model_name = getattr(model, "__name__", str(model))
         msg = (
             "NOT_ANNOTATED: A SAX ModelFactory should be annotated with a Callable "
@@ -234,7 +234,7 @@ def _val_model_factory(model: Callable) -> Callable:
 
 
 def val_model(model: Any) -> ModelSM:
-    return _val_not_model_factory(_val_sax_callable(model))
+    return val_not_callable_annotated(val_sax_callable(model))
 
 
 SDictModelSM: TypeAlias = Annotated[Callable[..., SDictSM], val(val_model)]
@@ -255,7 +255,7 @@ ModelSM: TypeAlias = Annotated[
 
 
 def val_model_factory(model: Any) -> ModelFactorySM:
-    return _val_model_factory(_val_sax_callable(model))
+    return val_callable_annotated(val_sax_callable(model))
 
 
 SDictModelFactorySM: TypeAlias = Annotated[
