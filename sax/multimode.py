@@ -2,7 +2,7 @@
 
 from collections.abc import Iterable
 from functools import wraps
-from typing import cast, overload
+from typing import Any, cast, overload
 
 import jax.numpy as jnp
 from natsort import natsorted
@@ -45,18 +45,17 @@ def multimode(
     modes: tuple[str, ...] = ("TE", "TM"),
 ) -> sax.SType | sax.Model:
     """Convert a single mode model to a multimode model."""
-    if is_model(S):
-        model = cast(Model, S)
+    if (model := sax.try_into[sax.Model](S)) is not None:
 
         @wraps(model)
-        def new_model(**params):
+        def new_model(**params) -> sax.SType:
             return multimode(model(**params), modes=modes)
 
-        return cast(Model, new_model)
+        return cast(sax.Model, new_model)
 
-    S = cast(SType, S)
+    s: sax.SType = sax.into[sax.SType](S)
 
-    validate_not_mixedmode(S)
+    validate_not_mixedmode(s)
     if is_multimode(S):
         validate_multimode(S, modes=modes)
         return S

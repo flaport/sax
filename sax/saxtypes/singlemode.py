@@ -1,34 +1,25 @@
-"""SAX Types and type coercions.
-
-Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
-"""
+"""SAX SingleMode Types and type coercions."""
 
 from __future__ import annotations
 
 __all__ = [
-    "GeneralPortMap",
     "InstanceName",
     "InstancePort",
-    "Mode",
-    "Model",
-    "ModelFactory",
+    "ModelFactorySM",
+    "ModelSM",
     "Port",
-    "PortCombination",
-    "PortMap",
-    "PortMode",
-    "PortModeMap",
-    "SCoo",
-    "SCooModel",
-    "SCooModelFactory",
-    "SDense",
-    "SDenseModel",
-    "SDenseModelFactory",
-    "SDict",
-    "SDictModel",
-    "SDictModelFactory",
-    "SType",
-    "Settings",
-    "SettingsValue",
+    "PortCombinationSM",
+    "PortMapSM",
+    "SCooModelFactorySM",
+    "SCooModelSM",
+    "SCooSM",
+    "SDenseModelFactorySM",
+    "SDenseModelSM",
+    "SDenseSM",
+    "SDictModelFactorySM",
+    "SDictModelSM",
+    "SDictSM",
+    "STypeSM",
 ]
 
 import inspect
@@ -38,7 +29,6 @@ from typing import (
     Annotated,
     Any,
     TypeAlias,
-    get_args,
     get_origin,
 )
 
@@ -65,26 +55,6 @@ def _val_identifier(obj: Any, *, type_name: str) -> str:
     return s
 
 
-Settings: TypeAlias = dict[str, "SettingsValue"]
-"""A (possibly nested) settings mapping.
-
-Example:
-
-.. code-block::
-
-    mzi_settings: sax.Settings = {
-        "wl": 1.5,  # global settings
-        "lft": {"coupling": 0.5},  # settings for the left coupler
-        "top": {"neff": 3.4},  # settings for the top waveguide
-        "rgt": {"coupling": 0.3},  # settings for the right coupler
-    }
-
-"""
-
-SettingsValue: TypeAlias = Settings | ComplexArrayLike | str | None
-"""Anything that can be used as value in a settings dict."""
-
-
 def val_instance_name(obj: Any) -> Port:
     return _val_identifier(obj, type_name="InstanceName")
 
@@ -98,30 +68,6 @@ def val_port(obj: Any) -> Port:
 
 Port: TypeAlias = Annotated[str, val(val_port)]
 """A port definition '{port}'."""
-
-
-def val_mode(obj: Any) -> Mode:
-    return _val_identifier(obj, type_name="Mode")
-
-
-Mode: TypeAlias = Annotated[str, val(val_mode)]
-"""A mode definition '{mode}'."""
-
-
-def val_port_mode(obj: Any) -> PortMode:
-    s = _cast_string(obj)
-    parts = s.split("@")
-    if len(parts) > 2:
-        msg = f"a PortMode should have exactly one '@'-separator. Got: {obj!r}"
-        raise TypeError(msg)
-    port, mode = parts
-    port = val_port(port)
-    mode = val_mode(mode)
-    return f"{port}@{mode}"
-
-
-PortMode: TypeAlias = Annotated[str, val(val_port_mode)]
-"""A port-mode definition '{port}@{mode}'."""
 
 
 def val_instance_port(obj: Any) -> InstancePort:
@@ -140,23 +86,15 @@ InstancePort: TypeAlias = Annotated[str, val(val_instance_port)]
 """An instance port definition '{inst},{port}'."""
 
 
-PortMap: TypeAlias = dict[Port, int]
+PortMapSM: TypeAlias = dict[Port, int]
 """A mapping from a port to an index."""
 
 
-PortModeMap: TypeAlias = dict[Port, int]
-"""A mapping from a port-mode to an index."""
-
-
-GeneralPortMap: TypeAlias = PortMap | PortModeMap
-"""Either a regular port map or a port-mode map."""
-
-
-PortCombination: TypeAlias = tuple[InstancePort, InstancePort]
+PortCombinationSM: TypeAlias = tuple[Port, Port]
 """A combination of two port names."""
 
 
-SDict: TypeAlias = dict[PortCombination, ComplexArrayLike]
+SDictSM: TypeAlias = dict[PortCombinationSM, ComplexArrayLike]
 """A sparse dictionary-based S-matrix representation.
 
 A mapping from a port combination to an S-parameter or an array of S-parameters.
@@ -171,7 +109,7 @@ Example:
 
 """
 
-SDense: TypeAlias = tuple[ComplexArrayLike, PortMap]
+SDenseSM: TypeAlias = tuple[ComplexArrayLike, PortMapSM]
 """A dense S-matrix representation.
 
 S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
@@ -187,7 +125,7 @@ Example:
 
 """
 
-SCoo: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArrayLike, PortMap]
+SCooSM: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArrayLike, PortMapSM]
 """A sparse S-matrix in COO format (recommended for internal library use only).
 
 An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three
@@ -214,7 +152,7 @@ Note:
 
 """
 
-SType: TypeAlias = SDict | SCoo | SDense
+STypeSM: TypeAlias = SDictSM | SCooSM | SDenseSM
 """Any S-Matrix type [SDict, SDense, SCOO]."""
 
 
@@ -275,8 +213,8 @@ def _val_not_model_factory(model: Callable) -> Callable:
         model_name = getattr(model, "__name__", str(model))
         msg = (
             "IS_MODEL_FACTORY: A SAX model should return an SDict, "
-            f"SDense, SCoo or SType. Got '{model_name}' returning {annot}. This indicates "
-            "That this is in fact a ModelFactory."
+            f"SDense, SCoo or SType. Got '{model_name}' returning {annot}. "
+            "This indicates that this is in fact a ModelFactory."
         )
         raise TypeError(msg)
     return model
@@ -295,56 +233,50 @@ def _val_model_factory(model: Callable) -> Callable:
     return model
 
 
-def val_model(model: Any) -> Model:
+def val_model(model: Any) -> ModelSM:
     return _val_not_model_factory(_val_sax_callable(model))
 
 
-SDictModel: TypeAlias = Annotated[Callable[..., SDict], val(val_model)]
+SDictModelSM: TypeAlias = Annotated[Callable[..., SDictSM], val(val_model)]
 """A keyword-only function producing an SDict."""
 
-SDenseModel: TypeAlias = Annotated[Callable[..., SDense], val(val_model)]
+SDenseModelSM: TypeAlias = Annotated[Callable[..., SDenseSM], val(val_model)]
 """A keyword-only function producing an SDense."""
 
 
-SCooModel: TypeAlias = Annotated[Callable[..., SCoo], val(val_model)]
+SCooModelSM: TypeAlias = Annotated[Callable[..., SCooSM], val(val_model)]
 """A keyword-only function producing an Scoo."""
 
 
-Model: TypeAlias = Annotated[SDictModel | SDenseModel | SCooModel, val(val_model)]
+ModelSM: TypeAlias = Annotated[
+    SDictModelSM | SDenseModelSM | SCooModelSM, val(val_model)
+]
 """A keyword-only function producing an SType."""
 
 
-def val_model_factory(model: Any) -> ModelFactory:
+def val_model_factory(model: Any) -> ModelFactorySM:
     return _val_model_factory(_val_sax_callable(model))
 
 
-SDictModelFactory: TypeAlias = Annotated[
-    Callable[..., SDictModel], val(val_model_factory)
+SDictModelFactorySM: TypeAlias = Annotated[
+    Callable[..., SDictModelSM], val(val_model_factory)
 ]
 """A keyword-only function producing an SDictModel."""
 
 
-SDenseModelFactory: TypeAlias = Annotated[
-    Callable[..., SDenseModel], val(val_model_factory)
+SDenseModelFactorySM: TypeAlias = Annotated[
+    Callable[..., SDenseModelSM], val(val_model_factory)
 ]
 """A keyword-only function producing an SDenseModel."""
 
-SCooModelFactory: TypeAlias = Annotated[
-    Callable[..., SCooModel], val(val_model_factory)
+SCooModelFactorySM: TypeAlias = Annotated[
+    Callable[..., SCooModelSM], val(val_model_factory)
 ]
 """A keyword-only function producing an ScooModel."""
 
 
-ModelFactory: TypeAlias = Annotated[
-    SDictModelFactory | SDenseModelFactory | SCooModelFactory, val(val_model_factory)
+ModelFactorySM: TypeAlias = Annotated[
+    SDictModelFactorySM | SDenseModelFactorySM | SCooModelFactorySM,
+    val(val_model_factory),
 ]
 """A keyword-only function producing a Model."""
-
-if __name__ == "__main__":
-    import sax
-
-    def func(*, x=2) -> Callable:
-        return x
-
-    f = sax.into[ModelFactory](func)
-    print(f)
