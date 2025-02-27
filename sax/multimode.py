@@ -9,6 +9,8 @@ from natsort import natsorted
 
 import sax
 
+from .s import block_diag
+
 
 @overload
 def multimode(
@@ -203,8 +205,6 @@ def _singlemode_scoo(scoo: sax.SCooMM, mode: str = "TE") -> sax.SCooSM:
 
 def _singlemode_sdense(sdense: sax.SDenseMM, mode: str = "TE") -> sax.SDenseSM:
     Sx, port_map = sdense
-    # no need to touch the data...
-    # just removing some ports from the port map should be enough
     port_map = {
         port.split("@")[0]: idx
         for port, idx in port_map.items()
