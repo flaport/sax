@@ -18,13 +18,21 @@ from .core import (
     FloatArray1DLike,
     FloatArrayLike,
     FloatLike,
-    InstancePort,
     Int,
     IntArray,
     IntArray1D,
     IntArray1DLike,
     IntArrayLike,
     IntLike,
+)
+from .into import (
+    into,
+    try_into,
+)
+from .s import (
+    GeneralPortMap,
+    InstanceName,
+    InstancePort,
     Mode,
     Model,
     ModelFactory,
@@ -32,6 +40,7 @@ from .core import (
     PortCombination,
     PortMap,
     PortMode,
+    PortModeMap,
     SCoo,
     SCooModel,
     SCooModelFactory,
@@ -44,10 +53,6 @@ from .core import (
     Settings,
     SettingsValue,
     SType,
-)
-from .into import (
-    into,
-    try_into,
 )
 
 __all__ = [
@@ -68,6 +73,8 @@ __all__ = [
     "FloatArray1DLike",
     "FloatArrayLike",
     "FloatLike",
+    "GeneralPortMap",
+    "InstanceName",
     "InstancePort",
     "Int",
     "IntArray",
@@ -82,6 +89,7 @@ __all__ = [
     "PortCombination",
     "PortMap",
     "PortMode",
+    "PortModeMap",
     "SCoo",
     "SCooModel",
     "SCooModelFactory",

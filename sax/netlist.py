@@ -26,6 +26,8 @@ from pydantic import BaseModel as _BaseModel
 
 from .utils import clean_string, hash_dict
 
+X: bool = "hey"
+
 
 class NetlistDict(TypedDict):
     instances: dict
@@ -229,7 +231,9 @@ AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
 
 
 def netlist(
-    netlist: Any, with_unconnected_instances: bool = True, with_placements=True,
+    netlist: Any,
+    with_unconnected_instances: bool = True,
+    with_placements=True,
 ) -> RecursiveNetlist:
     """Return a netlist from a given dictionary."""
     if isinstance(netlist, RecursiveNetlist):
@@ -346,7 +350,8 @@ def get_component_instances(
 
     # Should only be one in a netlist-to-digraph. Can always be very specified.
     top_level_prefixes = get_netlist_instances_by_prefix(
-        recursive_netlist, prefix=top_level_prefix,
+        recursive_netlist,
+        prefix=top_level_prefix,
     )
     top_level_prefix = top_level_prefixes[0]
     for key in recursive_netlist_root[top_level_prefix]["instances"]:
@@ -452,14 +457,16 @@ def _flatten_netlist(recnet, net, sep) -> None:
                 del net["connections"][ip1]
                 if p1 not in ports:
                     warnings.warn(
-                        f"Port {ip1} not found. Connection {ip1}<->{ip2} ignored.", stacklevel=2,
+                        f"Port {ip1} not found. Connection {ip1}<->{ip2} ignored.",
+                        stacklevel=2,
                     )
                     continue
                 net["connections"][ports[p1]] = ip2
             elif n2 == name:
                 if p2 not in ports:
                     warnings.warn(
-                        f"Port {ip2} not found. Connection {ip1}<->{ip2} ignored.", stacklevel=2,
+                        f"Port {ip2} not found. Connection {ip1}<->{ip2} ignored.",
+                        stacklevel=2,
                     )
                     continue
                 net["connections"][ip1] = ports[p2]
@@ -469,7 +476,9 @@ def _flatten_netlist(recnet, net, sep) -> None:
             try:
                 n2, p2 = ip2.split(",")
             except ValueError:
-                warnings.warn(f"Unconventional port definition ignored: {p}->{ip2}.", stacklevel=2)
+                warnings.warn(
+                    f"Unconventional port definition ignored: {p}->{ip2}.", stacklevel=2
+                )
                 continue
             if n2 == name:
                 if p2 in ports:
@@ -485,7 +494,8 @@ def rename_instances(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
 
 @overload
 def rename_instances(
-    netlist: RecursiveNetlist, mapping: dict[str, str],
+    netlist: RecursiveNetlist,
+    mapping: dict[str, str],
 ) -> RecursiveNetlist:
     ...
 
@@ -497,7 +507,8 @@ def rename_instances(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDi
 
 @overload
 def rename_instances(
-    netlist: RecursiveNetlistDict, mapping: dict[str, str],
+    netlist: RecursiveNetlistDict,
+    mapping: dict[str, str],
 ) -> RecursiveNetlistDict:
     ...
 
@@ -559,7 +570,8 @@ def rename_models(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
 
 @overload
 def rename_models(
-    netlist: RecursiveNetlist, mapping: dict[str, str],
+    netlist: RecursiveNetlist,
+    mapping: dict[str, str],
 ) -> RecursiveNetlist:
     ...
 
@@ -571,7 +583,8 @@ def rename_models(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict:
 
 @overload
 def rename_models(
-    netlist: RecursiveNetlistDict, mapping: dict[str, str],
+    netlist: RecursiveNetlistDict,
+    mapping: dict[str, str],
 ) -> RecursiveNetlistDict:
     ...
 
@@ -615,7 +628,8 @@ def rename_models(
             instance = instance.model_dump()
         assert isinstance(instance, dict)
         instance["component"] = mapping.get(
-            instance["component"], instance["component"],
+            instance["component"],
+            instance["component"],
         )
         if given_as_str:
             instances[k] = instance["component"]

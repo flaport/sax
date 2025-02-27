@@ -5,6 +5,8 @@ Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 
 from __future__ import annotations
 
+__all__ = ["into", "try_into"]
+
 from collections.abc import Callable
 from typing import (
     Any,
@@ -54,103 +56,117 @@ from sax.saxtypes.core import (
 
 from ..utils import maybe
 
-__all__ = ["into", "try_into"]
-
 T = TypeVar("T")
 
 
 class Into(type):
     @overload
-    def __getitem__(cls, key: Literal["Bool"]) -> Callable[..., Bool]: ...
+    def __getitem__(cls, key: Literal["Bool"]) -> Callable[..., Bool]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["BoolArray"]) -> Callable[..., BoolArray]: ...
+    def __getitem__(cls, key: Literal["BoolArray"]) -> Callable[..., BoolArray]:
+        ...
 
     @overload
-    def __getitem__(
-        cls, key: Literal["BoolArrayLike"]
-    ) -> Callable[..., BoolArrayLike]: ...
+    def __getitem__(cls, key: Literal["BoolArrayLike"]) -> Callable[..., BoolArrayLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["BoolLike"]) -> Callable[..., BoolLike]: ...
+    def __getitem__(cls, key: Literal["BoolLike"]) -> Callable[..., BoolLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["Complex"]) -> Callable[..., Complex]: ...
+    def __getitem__(cls, key: Literal["Complex"]) -> Callable[..., Complex]:
+        ...
 
     @overload
-    def __getitem__(
-        cls, key: Literal["ComplexArray"]
-    ) -> Callable[..., ComplexArray]: ...
+    def __getitem__(cls, key: Literal["ComplexArray"]) -> Callable[..., ComplexArray]:
+        ...
 
     @overload
     def __getitem__(
         cls, key: Literal["ComplexArray1D"]
-    ) -> Callable[..., ComplexArray1D]: ...
+    ) -> Callable[..., ComplexArray1D]:
+        ...
 
     @overload
     def __getitem__(
         cls, key: Literal["ComplexArray1DLike"]
-    ) -> Callable[..., ComplexArray1DLike]: ...
+    ) -> Callable[..., ComplexArray1DLike]:
+        ...
 
     @overload
     def __getitem__(
         cls, key: Literal["ComplexArrayLike"]
-    ) -> Callable[..., ComplexArrayLike]: ...
+    ) -> Callable[..., ComplexArrayLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["ComplexLike"]) -> Callable[..., ComplexLike]: ...
+    def __getitem__(cls, key: Literal["ComplexLike"]) -> Callable[..., ComplexLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["Float"]) -> Callable[..., Float]: ...
+    def __getitem__(cls, key: Literal["Float"]) -> Callable[..., Float]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["FloatArray"]) -> Callable[..., FloatArray]: ...
+    def __getitem__(cls, key: Literal["FloatArray"]) -> Callable[..., FloatArray]:
+        ...
 
     @overload
-    def __getitem__(
-        cls, key: Literal["FloatArray1D"]
-    ) -> Callable[..., FloatArray1D]: ...
+    def __getitem__(cls, key: Literal["FloatArray1D"]) -> Callable[..., FloatArray1D]:
+        ...
 
     @overload
     def __getitem__(
         cls, key: Literal["FloatArray1DLike"]
-    ) -> Callable[..., FloatArray1DLike]: ...
+    ) -> Callable[..., FloatArray1DLike]:
+        ...
 
     @overload
     def __getitem__(
         cls, key: Literal["FloatArrayLike"]
-    ) -> Callable[..., FloatArrayLike]: ...
+    ) -> Callable[..., FloatArrayLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["FloatLike"]) -> Callable[..., FloatLike]: ...
+    def __getitem__(cls, key: Literal["FloatLike"]) -> Callable[..., FloatLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["Int"]) -> Callable[..., Int]: ...
+    def __getitem__(cls, key: Literal["Int"]) -> Callable[..., Int]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["IntArray"]) -> Callable[..., IntArray]: ...
+    def __getitem__(cls, key: Literal["IntArray"]) -> Callable[..., IntArray]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["IntArray1D"]) -> Callable[..., IntArray1D]: ...
+    def __getitem__(cls, key: Literal["IntArray1D"]) -> Callable[..., IntArray1D]:
+        ...
 
     @overload
     def __getitem__(
         cls, key: Literal["IntArray1DLike"]
-    ) -> Callable[..., IntArray1DLike]: ...
+    ) -> Callable[..., IntArray1DLike]:
+        ...
 
     @overload
-    def __getitem__(
-        cls, key: Literal["IntArrayLike"]
-    ) -> Callable[..., IntArrayLike]: ...
+    def __getitem__(cls, key: Literal["IntArrayLike"]) -> Callable[..., IntArrayLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: Literal["IntLike"]) -> Callable[..., IntLike]: ...
+    def __getitem__(cls, key: Literal["IntLike"]) -> Callable[..., IntLike]:
+        ...
 
     @overload
-    def __getitem__(cls, key: type[T]) -> Callable[..., T]: ...
+    def __getitem__(cls, key: type[T]) -> Callable[..., T]:
+        ...
 
     @overload
-    def __getitem__(cls, key: _AnnotatedAlias) -> Callable[..., Any]: ...
+    def __getitem__(cls, key: _AnnotatedAlias) -> Callable[..., Any]:
+        ...
 
     def __getitem__(
         cls, key: type[T] | _AnnotatedAlias | str

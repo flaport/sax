@@ -5,6 +5,32 @@ Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 
 from __future__ import annotations
 
+__all__ = [
+    "ArrayLike",
+    "Bool",
+    "BoolArray",
+    "BoolArrayLike",
+    "BoolLike",
+    "Complex",
+    "ComplexArray",
+    "ComplexArray1D",
+    "ComplexArray1DLike",
+    "ComplexArrayLike",
+    "ComplexLike",
+    "Float",
+    "FloatArray",
+    "FloatArray1D",
+    "FloatArray1DLike",
+    "FloatArrayLike",
+    "FloatLike",
+    "Int",
+    "IntArray",
+    "IntArray1D",
+    "IntArray1DLike",
+    "IntArrayLike",
+    "IntLike",
+]
+
 from collections.abc import Callable
 from contextlib import suppress
 from functools import partial, wraps
@@ -30,59 +56,13 @@ from pydantic_core import PydanticCustomError
 
 from ..utils import maybe
 
-__all__ = [
-    "ArrayLike",
-    "Bool",
-    "BoolArray",
-    "BoolArrayLike",
-    "BoolLike",
-    "Complex",
-    "ComplexArray",
-    "ComplexArray1D",
-    "ComplexArray1DLike",
-    "ComplexArrayLike",
-    "ComplexLike",
-    "Float",
-    "FloatArray",
-    "FloatArray1D",
-    "FloatArray1DLike",
-    "FloatArrayLike",
-    "FloatLike",
-    "InstancePort",
-    "Int",
-    "IntArray",
-    "IntArray1D",
-    "IntArray1DLike",
-    "IntArrayLike",
-    "IntLike",
-    "Mode",
-    "Model",
-    "ModelFactory",
-    "Port",
-    "PortCombination",
-    "PortMap",
-    "PortMode",
-    "SCoo",
-    "SCooModel",
-    "SCooModelFactory",
-    "SDense",
-    "SDenseModel",
-    "SDenseModelFactory",
-    "SDict",
-    "SDictModel",
-    "SDictModelFactory",
-    "SType",
-    "Settings",
-    "SettingsValue",
-]
-
 T = TypeVar("T")
 
 ArrayLike: TypeAlias = Array | np.ndarray
 """Anything that can turn into an array with ndim>=1."""
 
 
-def _val(fun: Callable, **val_kwargs: Any) -> PlainValidator:
+def val(fun: Callable, **val_kwargs: Any) -> PlainValidator:
     @wraps(fun)
     def new(*args: Any, **kwargs: Any) -> Any:
         kwargs.update(val_kwargs)
@@ -130,13 +110,13 @@ def _val_item_type(  # noqa: PLR0913
 
 
 @overload
-def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Bool: ...
+def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Bool:
+    ...
 
 
 @overload
-def val_bool(
-    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> BoolLike: ...
+def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[False] = False) -> BoolLike:
+    ...
 
 
 def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
@@ -150,18 +130,18 @@ def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
     )
 
 
-Bool: TypeAlias = Annotated[bool | np.bool_, _val(val_bool, strict=True)]
+Bool: TypeAlias = Annotated[bool | np.bool_, val(val_bool, strict=True)]
 """Any boolean."""
 
 
 @overload
-def val_int(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Int: ...
+def val_int(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Int:
+    ...
 
 
 @overload
-def val_int(
-    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntLike: ...
+def val_int(obj: Any, *, strict: bool = ..., cast: Literal[False] = False) -> IntLike:
+    ...
 
 
 def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
@@ -180,18 +160,20 @@ def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
     )
 
 
-Int: TypeAlias = Annotated[int | np.signedinteger, _val(val_int, strict=True)]
+Int: TypeAlias = Annotated[int | np.signedinteger, val(val_int, strict=True)]
 """Any signed integer."""
 
 
 @overload
-def val_float(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Float: ...
+def val_float(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Float:
+    ...
 
 
 @overload
 def val_float(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatLike: ...
+) -> FloatLike:
+    ...
 
 
 def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike:
@@ -205,20 +187,20 @@ def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike
     )
 
 
-Float: TypeAlias = Annotated[float | np.floating, _val(val_float, strict=True)]
+Float: TypeAlias = Annotated[float | np.floating, val(val_float, strict=True)]
 """Any float."""
 
 
 @overload
-def val_complex(
-    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> Complex: ...
+def val_complex(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Complex:
+    ...
 
 
 @overload
 def val_complex(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexLike: ...
+) -> ComplexLike:
+    ...
 
 
 def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> ComplexLike:
@@ -233,7 +215,7 @@ def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> Complex
 
 
 Complex: TypeAlias = Annotated[
-    complex | np.complexfloating, _val(val_complex, strict=True)
+    complex | np.complexfloating, val(val_complex, strict=True)
 ]
 """Any complex number."""
 
@@ -305,13 +287,15 @@ def _val_array_type(  # noqa: C901,PLR0913
 @overload
 def val_bool_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> BoolArray: ...
+) -> BoolArray:
+    ...
 
 
 @overload
 def val_bool_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> BoolArrayLike: ...
+) -> BoolArrayLike:
+    ...
 
 
 def val_bool_array(
@@ -327,20 +311,22 @@ def val_bool_array(
     )
 
 
-BoolArray: TypeAlias = Annotated[Array, np.bool_, _val(val_bool_array, strict=True)]
+BoolArray: TypeAlias = Annotated[Array, np.bool_, val(val_bool_array, strict=True)]
 """N-dimensional Bool array."""
 
 
 @overload
 def val_int_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> IntArray: ...
+) -> IntArray:
+    ...
 
 
 @overload
 def val_int_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntArrayLike: ...
+) -> IntArrayLike:
+    ...
 
 
 def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntArrayLike:
@@ -355,7 +341,7 @@ def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntAr
 
 
 IntArray: TypeAlias = Annotated[
-    Array, np.signedinteger, _val(val_int_array, strict=True)
+    Array, np.signedinteger, val(val_int_array, strict=True)
 ]
 """N-dimensional Int array."""
 
@@ -363,13 +349,15 @@ IntArray: TypeAlias = Annotated[
 @overload
 def val_float_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> FloatArray: ...
+) -> FloatArray:
+    ...
 
 
 @overload
 def val_float_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatArrayLike: ...
+) -> FloatArrayLike:
+    ...
 
 
 def val_float_array(
@@ -385,22 +373,22 @@ def val_float_array(
     )
 
 
-FloatArray: TypeAlias = Annotated[
-    Array, np.floating, _val(val_float_array, strict=True)
-]
+FloatArray: TypeAlias = Annotated[Array, np.floating, val(val_float_array, strict=True)]
 """N-dimensional Float array."""
 
 
 @overload
 def val_complex_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> ComplexArray: ...
+) -> ComplexArray:
+    ...
 
 
 @overload
 def val_complex_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexArrayLike: ...
+) -> ComplexArrayLike:
+    ...
 
 
 def val_complex_array(
@@ -417,7 +405,7 @@ def val_complex_array(
 
 
 ComplexArray: TypeAlias = Annotated[
-    Array, np.complexfloating, _val(val_complex_array, strict=True)
+    Array, np.complexfloating, val(val_complex_array, strict=True)
 ]
 """N-dimensional Complex array."""
 
@@ -425,13 +413,15 @@ ComplexArray: TypeAlias = Annotated[
 @overload
 def val_int_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> IntArray1D: ...
+) -> IntArray1D:
+    ...
 
 
 @overload
 def val_int_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntArray1DLike: ...
+) -> IntArray1DLike:
+    ...
 
 
 def val_int_array_1d(
@@ -448,7 +438,7 @@ def val_int_array_1d(
 
 
 IntArray1D: TypeAlias = Annotated[
-    ArrayLike, np.signedinteger, 1, _val(val_int_array_1d, strict=True)
+    ArrayLike, np.signedinteger, 1, val(val_int_array_1d, strict=True)
 ]
 """1-dimensional Int array."""
 
@@ -456,13 +446,15 @@ IntArray1D: TypeAlias = Annotated[
 @overload
 def val_float_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> FloatArray1D: ...
+) -> FloatArray1D:
+    ...
 
 
 @overload
 def val_float_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatArray1DLike: ...
+) -> FloatArray1DLike:
+    ...
 
 
 def val_float_array_1d(
@@ -479,7 +471,7 @@ def val_float_array_1d(
 
 
 FloatArray1D: TypeAlias = Annotated[
-    ArrayLike, np.floating, 1, _val(val_float_array_1d, strict=True)
+    ArrayLike, np.floating, 1, val(val_float_array_1d, strict=True)
 ]
 """1-dimensional Float array."""
 
@@ -487,13 +479,15 @@ FloatArray1D: TypeAlias = Annotated[
 @overload
 def val_complex_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> ComplexArray1D: ...
+) -> ComplexArray1D:
+    ...
 
 
 @overload
 def val_complex_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexArray1DLike: ...
+) -> ComplexArray1DLike:
+    ...
 
 
 def val_complex_array_1d(
@@ -510,187 +504,60 @@ def val_complex_array_1d(
 
 
 ComplexArray1D: TypeAlias = Annotated[
-    ArrayLike, np.complexfloating, 1, _val(val_complex_array_1d, strict=True)
+    ArrayLike, np.complexfloating, 1, val(val_complex_array_1d, strict=True)
 ]
 """1-dimensional Complex array."""
 
-BoolLike: TypeAlias = Annotated[bool | np.bool_, _val(val_bool, cast=False)]
+BoolLike: TypeAlias = Annotated[bool | np.bool_, val(val_bool, cast=False)]
 """Anything that can be cast into an Int without loss of data."""
 
-IntLike: TypeAlias = Annotated[int | np.integer, _val(val_int, cast=False)]
+IntLike: TypeAlias = Annotated[int | np.integer, val(val_int, cast=False)]
 """Anything that can be cast into an Int without loss of data."""
 
 FloatLike: TypeAlias = Annotated[
-    IntLike | float | np.floating, _val(val_float, cast=False)
+    IntLike | float | np.floating, val(val_float, cast=False)
 ]
 """Anything that can be cast into a Float without loss of data."""
 
 ComplexLike: TypeAlias = Annotated[
-    FloatLike | complex | np.inexact, _val(val_complex, cast=False)
+    FloatLike | complex | np.inexact, val(val_complex, cast=False)
 ]
 """Anything that can be cast into a Complex without loss of data."""
 
 BoolArrayLike: TypeAlias = Annotated[
-    ArrayLike | BoolLike, np.bool_, _val(val_bool_array, cast=False)
+    ArrayLike | BoolLike, np.bool_, val(val_bool_array, cast=False)
 ]
 """Anything that can be cast into a N-dimensional Int array without loss of data."""
 
 IntArrayLike: TypeAlias = Annotated[
-    ArrayLike | IntLike, np.integer, _val(val_int_array, cast=False)
+    ArrayLike | IntLike, np.integer, val(val_int_array, cast=False)
 ]
 """Anything that can be cast into a N-dimensional Int array without loss of data."""
 
 FloatArrayLike: TypeAlias = Annotated[
-    ArrayLike | FloatLike, np.floating, _val(val_float_array, cast=False)
+    ArrayLike | FloatLike, np.floating, val(val_float_array, cast=False)
 ]
 """Anything that can be cast into a N-dimensional Float array without loss of data."""
 
 ComplexArrayLike: TypeAlias = Annotated[
-    ArrayLike | ComplexLike, np.inexact, _val(val_complex_array, cast=False)
+    ArrayLike | ComplexLike, np.inexact, val(val_complex_array, cast=False)
 ]
 """Anything that can be cast into a N-dimensional Complex array without loss of data."""
 
 IntArray1DLike: TypeAlias = Annotated[
-    IntArrayLike, np.integer, 1, _val(val_int_array_1d, cast=False)
+    IntArrayLike, np.integer, 1, val(val_int_array_1d, cast=False)
 ]
 """1-dimensional integer array."""
 
 FloatArray1DLike: TypeAlias = Annotated[
-    FloatArrayLike, np.floating, 1, _val(val_float_array_1d, cast=False)
+    FloatArrayLike, np.floating, 1, val(val_float_array_1d, cast=False)
 ]
 """1-dimensional float array."""
 
 ComplexArray1DLike: TypeAlias = Annotated[
-    ComplexArrayLike, np.inexact, 1, _val(val_complex_array_1d, cast=False)
+    ComplexArrayLike, np.inexact, 1, val(val_complex_array_1d, cast=False)
 ]
 """1-dimensional complex array."""
-
-Port: TypeAlias = str
-"""A port definition '{port}'."""
-
-Mode: TypeAlias = str
-"""A mode definition '{mode}'."""
-
-PortMode: TypeAlias = str
-"""A port-mode definition '{port}@{mode}'."""
-
-InstancePort: TypeAlias = str
-"""An instance port definition '{inst},{port}'."""
-
-PortMap: TypeAlias = dict[Port, int]
-"""A mapping from a port to an index."""
-
-PortCombination: TypeAlias = tuple[InstancePort, InstancePort]
-"""A combination of two port names (str, str)."""
-
-SDict: TypeAlias = dict[PortCombination, ComplexArrayLike]
-"""A sparse dictionary-based S-matrix representation.
-
-A mapping from a port combination to an S-parameter or an array of S-parameters.
-
-Example:
-
-.. code-block::
-
-    sdict: sax.SDict = {
-        ("in0", "out0"): 3.0,
-    }
-
-"""
-
-SDense: TypeAlias = tuple[ComplexArrayLike, PortMap]
-"""A dense S-matrix representation.
-
-S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
-If (N+2)-D array then the S-matrix dimensions are the last two.
-
-Example:
-
-.. code-block::
-
-    Sd = jnp.arange(9, dtype=float).reshape(3, 3)
-    port_map = {"in0": 0, "in1": 2, "out0": 1}
-    sdense = Sd, port_map
-
-"""
-
-SCoo: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArrayLike, PortMap]
-"""A sparse S-matrix in COO format (recommended for internal library use only).
-
-An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three
-arrays and a port map. The three arrays represent the input port indices [`int`],
-output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse
-matrix. The port map maps a port name [`str`] to a port index [`int`].
-
-Only these four arrays **together** and in this specific **order** are considered a
-valid `SCoo` representation!
-
-Example:
-
-.. code-block::
-
-    Si = jnp.arange(3, dtype=int)
-    Sj = jnp.array([0, 1, 0], dtype=int)
-    Sx = jnp.array([3.0, 4.0, 1.0])
-    port_map = {"in0": 0, "in1": 2, "out0": 1}
-    scoo: sax.SCoo = (Si, Sj, Sx, port_map)
-
-Note:
-    This representation is only recommended for internal library use. Please don't
-    write user-facing code using this representation.
-
-"""
-
-Settings: TypeAlias = dict[str, "SettingsValue"]
-"""A (possibly nested) settings mapping.
-
-Example:
-
-.. code-block::
-
-    mzi_settings: sax.Settings = {
-        "wl": 1.5,  # global settings
-        "lft": {"coupling": 0.5},  # settings for the left coupler
-        "top": {"neff": 3.4},  # settings for the top waveguide
-        "rgt": {"coupling": 0.3},  # settings for the right coupler
-    }
-
-"""
-
-SettingsValue: TypeAlias = Settings | ComplexArrayLike | str | None
-"""Anything that can be used as value in a settings dict."""
-
-SType: TypeAlias = SDict | SCoo | SDense
-"""Any S-Matrix type [SDict, SDense, SCOO]."""
-
-
-SDictModel: TypeAlias = Callable[..., SDict]
-"""A keyword-only function producing an SDict."""
-
-SDenseModel: TypeAlias = Callable[..., SDense]
-"""A keyword-only function producing an SDense."""
-
-
-SCooModel: TypeAlias = Callable[..., SCoo]
-"""A keyword-only function producing an Scoo."""
-
-
-Model: TypeAlias = SDictModel | SDenseModel | SCooModel
-"""A keyword-only function producing an SType."""
-
-SDictModelFactory: TypeAlias = Callable[..., SDictModel]
-"""A keyword-only function producing an SDictModel."""
-
-
-SDenseModelFactory: TypeAlias = Callable[..., SDenseModel]
-"""A keyword-only function producing an SDenseModel."""
-
-SCooModelFactory: TypeAlias = Callable[..., SCooModel]
-"""A keyword-only function producing an ScooModel."""
-
-
-ModelFactory: TypeAlias = SDictModelFactory | SDenseModelFactory | SCooModelFactory
-"""A keyword-only function producing a Model."""
 
 
 def _get_annotated_type(annotated: Annotated) -> type | UnionType:
