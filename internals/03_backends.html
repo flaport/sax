@@ -481,7 +481,7 @@ document.write(`
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-background">Theoretical Background</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.solve"><code class="docutils literal notranslate"><span class="pre">solve()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.coo_mul_vec"><code class="docutils literal notranslate"><span class="pre">coo_mul_vec()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.dot"><code class="docutils literal notranslate"><span class="pre">dot()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>
@@ -886,13 +886,13 @@ document.write(`
 </div>
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(&#39;dc2,in0&#39;,
- &#39;dc2,in1&#39;,
  &#39;dc2,out0&#39;,
  &#39;dc2,out1&#39;,
+ &#39;dc2,in1&#39;,
  &#39;dc1,out1&#39;,
  &#39;dc1,out0&#39;,
- &#39;dc1,in1&#39;,
- &#39;dc1,in0&#39;)
+ &#39;dc1,in0&#39;,
+ &#39;dc1,in1&#39;)
 </pre></div>
 </div>
 </div>
@@ -1013,20 +1013,20 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;dc2,out0&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc2,out0&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc2,out0&#39;, &#39;dc1,in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;dc2,out0&#39;, &#39;dc1,in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc2,out0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc2,out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
  (&#39;dc2,out1&#39;, &#39;dc1,in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc2,out1&#39;, &#39;dc1,in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc2,out0&#39;): Array(0.25+0.433015j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc2,out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;dc1,in0&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;dc1,in0&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;dc1,in1&#39;, &#39;dc2,out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc2,out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;dc1,in1&#39;, &#39;dc1,in1&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1046,20 +1046,20 @@ document.write(`
 <div class="cell_output docutils container">
 <div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>{(&#39;out0&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;out0&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;out0&#39;, &#39;in0&#39;): Array(0.25+0.433015j, dtype=complex128),
+ (&#39;out0&#39;, &#39;in1&#39;): Array(-0.433015+0.25j, dtype=complex128),
  (&#39;out1&#39;, &#39;out0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;out1&#39;, &#39;out1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
  (&#39;out1&#39;, &#39;in0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
- (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
- (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;out1&#39;, &#39;in1&#39;): Array(-0.25-0.433015j, dtype=complex128),
  (&#39;in0&#39;, &#39;out0&#39;): Array(0.25+0.433015j, dtype=complex128),
  (&#39;in0&#39;, &#39;out1&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
  (&#39;in0&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128),
- (&#39;in0&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128)}
+ (&#39;in1&#39;, &#39;out0&#39;): Array(-0.433015+0.25j, dtype=complex128),
+ (&#39;in1&#39;, &#39;out1&#39;): Array(-0.25-0.433015j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in0&#39;): Array(0.+0.j, dtype=complex128),
+ (&#39;in1&#39;, &#39;in1&#39;): Array(0.+0.j, dtype=complex128)}
 </pre></div>
 </div>
 </div>
@@ -1200,20 +1200,20 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="klujax.coo_mul_vec">
-<span class="sig-name descname"><span class="pre">coo_mul_vec</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/klujax.html#coo_mul_vec"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#klujax.coo_mul_vec" title="Permalink to this definition">#</a></dt>
-<dd><p>Multiply a sparse matrix with a vector: Ax=b</p>
+<dt class="sig sig-object py" id="klujax.dot">
+<span class="sig-name descname"><span class="pre">dot</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">Ai</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Aj</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">Ax</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">x</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="../_modules/klujax.html#dot"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#klujax.dot" title="Permalink to this definition">#</a></dt>
+<dd><p>Multiply a sparse matrix with a vector: Ax=b.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
 <li><p><strong>Ai</strong> (<em>Array</em>) – [n_nz; int32]: the row indices of the sparse matrix A</p></li>
 <li><p><strong>Aj</strong> (<em>Array</em>) – [n_nz; int32]: the column indices of the sparse matrix A</p></li>
 <li><p><strong>Ax</strong> (<em>Array</em>) – [n_lhs? x n_nz; float64|complex128]: the values of the sparse matrix A</p></li>
-<li><p><strong>x</strong> (<em>Array</em>) – [n_lhs? x n_col x n_rhs?; float64|complex128]: the vector that’s being multiplied by A</p></li>
+<li><p><strong>x</strong> (<em>Array</em>) – [n_lhs? x n_col x n_rhs?; float64|complex128]: the vector multiplied by A</p></li>
 </ul>
 </dd>
 <dt class="field-even">Returns<span class="colon">:</span></dt>
-<dd class="field-even"><p>the result of the multiplication (b=Ax)</p>
+<dd class="field-even"><p>the result (b=A&#64;x)</p>
 </dd>
 <dt class="field-odd">Return type<span class="colon">:</span></dt>
 <dd class="field-odd"><p>b</p>
@@ -1311,7 +1311,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <div class="cell docutils container">
 <div class="cell_input docutils container">
 <div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">mul_coo</span> <span class="o">=</span> <span class="kc">None</span>
-<span class="n">mul_coo</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">coo_mul_vec</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
+<span class="n">mul_coo</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">klujax</span><span class="o">.</span><span class="n">dot</span><span class="p">,</span> <span class="p">(</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="mi">0</span><span class="p">,</span> <span class="mi">0</span><span class="p">),</span> <span class="mi">0</span><span class="p">)</span>
 </pre></div>
 </div>
 </div>
@@ -2027,7 +2027,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5653: ComplexWarning: Casting complex values to real discards the imaginary part
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5566: ComplexWarning: Casting complex values to real discards the imaginary part
   out_array: Array = lax_internal._convert_element_type(
 </pre></div>
 </div>
@@ -2257,7 +2257,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 </div>
 </div>
 <div class="cell_output docutils container">
-<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5653: ComplexWarning: Casting complex values to real discards the imaginary part
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>/home/runner/work/sax/sax/.venv/lib/python3.12/site-packages/jax/_src/numpy/lax_numpy.py:5566: ComplexWarning: Casting complex values to real discards the imaginary part
   out_array: Array = lax_internal._convert_element_type(
 </pre></div>
 </div>
@@ -2365,7 +2365,7 @@ S = C^T_{ext} \texttt{mul}\_\texttt{coo}\left(S_{bd},~~\texttt{solve}\_\texttt{k
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#theoretical-background">Theoretical Background</a></li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#sparse-helper-functions">Sparse Helper Functions</a><ul class="nav section-nav flex-column">
 <li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.solve"><code class="docutils literal notranslate"><span class="pre">solve()</span></code></a></li>
-<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.coo_mul_vec"><code class="docutils literal notranslate"><span class="pre">coo_mul_vec()</span></code></a></li>
+<li class="toc-h4 nav-item toc-entry"><a class="reference internal nav-link" href="#klujax.dot"><code class="docutils literal notranslate"><span class="pre">dot()</span></code></a></li>
 </ul>
 </li>
 <li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#id1">Example</a></li>

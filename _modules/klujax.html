@@ -344,38 +344,47 @@ document.write(`
                 <article class="bd-article">
                   
   <h1>Source code for klujax</h1><div class="highlight"><pre>
-<span></span><span class="sd">&quot;&quot;&quot; klujax: a KLU solver for JAX &quot;&quot;&quot;</span>
+<span></span><span class="sd">&quot;&quot;&quot;klujax: a KLU solver for JAX.&quot;&quot;&quot;</span>
 
 <span class="c1"># Metadata ============================================================================</span>
 
-<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.3.1&quot;</span>
+<span class="n">__version__</span> <span class="o">=</span> <span class="s2">&quot;0.4.0&quot;</span>
 <span class="n">__author__</span> <span class="o">=</span> <span class="s2">&quot;Floris Laporte&quot;</span>
-<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;solve&quot;</span><span class="p">,</span> <span class="s2">&quot;coo_mul_vec&quot;</span><span class="p">]</span>
+<span class="n">__all__</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;coalesce&quot;</span><span class="p">,</span> <span class="s2">&quot;dot&quot;</span><span class="p">,</span> <span class="s2">&quot;solve&quot;</span><span class="p">]</span>
 
 <span class="c1"># Imports =============================================================================</span>
 
+<span class="kn">import</span><span class="w"> </span><span class="nn">os</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">sys</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">functools</span><span class="w"> </span><span class="kn">import</span> <span class="n">partial</span>
 
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax</span>
-<span class="kn">import</span><span class="w"> </span><span class="nn">jax.extend</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">jax.extend.core</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">jax.numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">jnp</span>
+<span class="kn">import</span><span class="w"> </span><span class="nn">klujax_cpp</span>
 <span class="kn">import</span><span class="w"> </span><span class="nn">numpy</span><span class="w"> </span><span class="k">as</span><span class="w"> </span><span class="nn">np</span>
-<span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">core</span><span class="p">,</span> <span class="n">lax</span>
+<span class="kn">from</span><span class="w"> </span><span class="nn">jax</span><span class="w"> </span><span class="kn">import</span> <span class="n">lax</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jax.core</span><span class="w"> </span><span class="kn">import</span> <span class="n">ShapedArray</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jax.interpreters</span><span class="w"> </span><span class="kn">import</span> <span class="n">ad</span><span class="p">,</span> <span class="n">batching</span><span class="p">,</span> <span class="n">mlir</span>
 <span class="kn">from</span><span class="w"> </span><span class="nn">jaxtyping</span><span class="w"> </span><span class="kn">import</span> <span class="n">Array</span>
 
-<span class="kn">import</span><span class="w"> </span><span class="nn">klujax_cpp</span>
-
 <span class="c1"># Config ==============================================================================</span>
 
-<span class="n">DEBUG</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="kc">True</span><span class="p">)</span>
-<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="s2">&quot;jax_platform_name&quot;</span><span class="p">,</span> <span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
-<span class="n">_log</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">DEBUG</span> <span class="k">else</span> <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>  <span class="c1"># noqa: E731</span>
+<span class="n">DEBUG</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s2">&quot;KLUJAX_DEBUG&quot;</span><span class="p">,</span> <span class="kc">False</span><span class="p">)</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;jax_enable_x64&quot;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">config</span><span class="o">.</span><span class="n">update</span><span class="p">(</span><span class="n">name</span><span class="o">=</span><span class="s2">&quot;jax_platform_name&quot;</span><span class="p">,</span> <span class="n">val</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">)</span>
+<span class="n">debug</span> <span class="o">=</span> <span class="k">lambda</span> <span class="n">s</span><span class="p">:</span> <span class="kc">None</span> <span class="k">if</span> <span class="ow">not</span> <span class="n">DEBUG</span> <span class="k">else</span> <span class="nb">print</span><span class="p">(</span><span class="n">s</span><span class="p">,</span> <span class="n">file</span><span class="o">=</span><span class="n">sys</span><span class="o">.</span><span class="n">stderr</span><span class="p">)</span>  <span class="c1"># noqa: E731,T201</span>
+<span class="n">debug</span><span class="p">(</span><span class="s2">&quot;KLUJAX DEBUG MODE.&quot;</span><span class="p">)</span>
 
-<span class="c1"># The main functions ==================================================================</span>
+<span class="c1"># Constants ===========================================================================</span>
+
+<span class="n">COMPLEX_DTYPES</span> <span class="o">=</span> <span class="p">(</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
+    <span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="c1"># Main Functions ======================================================================</span>
 
 
 <div class="viewcode-block" id="solve"><a class="viewcode-back" href="../internals/03_backends.html#klujax.solve">[docs]</a><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
@@ -390,437 +399,590 @@ document.write(`
 
 <span class="sd">    Returns:</span>
 <span class="sd">        x: the result (x≈A^-1b)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;solve&quot;</span><span class="p">)</span>
+    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">validate_args</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s2">&quot;b&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="n">COMPLEX_DTYPES</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">solve_c128</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;solve-complex128&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">solve_c128</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
             <span class="n">Ai</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Aj</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Ax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">),</span>
             <span class="n">b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">solve_f64</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;solve-float64&quot;</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">solve_f64</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
             <span class="n">Ai</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Aj</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Ax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
             <span class="n">b</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
         <span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">result</span>  <span class="c1"># type: ignore</span></div>
+    <span class="k">return</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span></div>
 
 
-<div class="viewcode-block" id="coo_mul_vec"><a class="viewcode-back" href="../internals/03_backends.html#klujax.coo_mul_vec">[docs]</a><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
-<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply a sparse matrix with a vector: Ax=b</span>
+<div class="viewcode-block" id="dot"><a class="viewcode-back" href="../internals/03_backends.html#klujax.dot">[docs]</a><span class="nd">@jax</span><span class="o">.</span><span class="n">jit</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Multiply a sparse matrix with a vector: Ax=b.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        Ai: [n_nz; int32]: the row indices of the sparse matrix A</span>
 <span class="sd">        Aj: [n_nz; int32]: the column indices of the sparse matrix A</span>
 <span class="sd">        Ax: [n_lhs? x n_nz; float64|complex128]: the values of the sparse matrix A</span>
-<span class="sd">        x:  [n_lhs? x n_col x n_rhs?; float64|complex128]: the vector that&#39;s being multiplied by A</span>
+<span class="sd">        x:  [n_lhs? x n_col x n_rhs?; float64|complex128]: the vector multiplied by A</span>
 
 <span class="sd">    Returns:</span>
-<span class="sd">        b: the result of the multiplication (b=Ax)</span>
+<span class="sd">        b: the result (b=A@x)</span>
+
 <span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;dot&quot;</span><span class="p">)</span>
+    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">validate_args</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">x_name</span><span class="o">=</span><span class="s2">&quot;x&quot;</span><span class="p">)</span>
     <span class="k">if</span> <span class="nb">any</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span> <span class="ow">in</span> <span class="n">COMPLEX_DTYPES</span> <span class="k">for</span> <span class="n">x</span> <span class="ow">in</span> <span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)):</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">coo_mul_vec_c128</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;dot-complex128&quot;</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">dot_c128</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
             <span class="n">Ai</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Aj</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Ax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">),</span>
             <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">),</span>
         <span class="p">)</span>
     <span class="k">else</span><span class="p">:</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">coo_mul_vec_f64</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
+        <span class="n">debug</span><span class="p">(</span><span class="s2">&quot;dot-float64&quot;</span><span class="p">)</span>
+        <span class="n">b</span> <span class="o">=</span> <span class="n">dot_f64</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span>
             <span class="n">Ai</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Aj</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">int32</span><span class="p">),</span>
             <span class="n">Ax</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
             <span class="n">x</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="n">jnp</span><span class="o">.</span><span class="n">float64</span><span class="p">),</span>
         <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span>  <span class="c1"># type: ignore</span></div>
+    <span class="k">return</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span></div>
 
 
-<span class="c1"># Constants ===========================================================================</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">coalesce</span><span class="p">(</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span>
+    <span class="n">Aj</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ax</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">,</span> <span class="n">jax</span><span class="o">.</span><span class="n">Array</span><span class="p">]:</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Coalesce a sparse matrix by summing duplicate indices.</span>
 
-<span class="n">COMPLEX_DTYPES</span> <span class="o">=</span> <span class="p">(</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
-    <span class="n">np</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
-    <span class="c1"># np.complex256,</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">complex64</span><span class="p">,</span>
-    <span class="n">jnp</span><span class="o">.</span><span class="n">complex128</span><span class="p">,</span>
-<span class="p">)</span>
+<span class="sd">    Args:</span>
+<span class="sd">        Ai: [n_nz; int32]: the row indices of the sparse matrix A</span>
+<span class="sd">        Aj: [n_nz; int32]: the column indices of the sparse matrix A</span>
+<span class="sd">        Ax: [... x n_nz; float64|complex128]: the values of the sparse matrix A</span>
+
+<span class="sd">    Returns:</span>
+<span class="sd">        coalesced Ai, Aj, Ax</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="k">with</span> <span class="n">jax</span><span class="o">.</span><span class="n">ensure_compile_time_eval</span><span class="p">():</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span>
+
+        <span class="n">order</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">lexsort</span><span class="p">((</span><span class="n">Aj</span><span class="p">,</span> <span class="n">Ai</span><span class="p">))</span>
+        <span class="n">Ai</span> <span class="o">=</span> <span class="n">Ai</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+        <span class="n">Aj</span> <span class="o">=</span> <span class="n">Aj</span><span class="p">[</span><span class="n">order</span><span class="p">]</span>
+
+        <span class="c1"># Compute unique indices</span>
+        <span class="n">unique_mask</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">concatenate</span><span class="p">(</span>
+            <span class="p">[</span><span class="n">jnp</span><span class="o">.</span><span class="n">array</span><span class="p">([</span><span class="kc">True</span><span class="p">]),</span> <span class="p">(</span><span class="n">Ai</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">Ai</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span> <span class="o">|</span> <span class="p">(</span><span class="n">Aj</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span> <span class="o">!=</span> <span class="n">Aj</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">])],</span>
+        <span class="p">)</span>
+        <span class="n">unique_idxs</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">unique_mask</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span>
+
+        <span class="c1"># Assign each entry to a unique group</span>
+        <span class="n">groups</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">cumsum</span><span class="p">(</span><span class="n">unique_mask</span><span class="p">)</span> <span class="o">-</span> <span class="mi">1</span>
+
+        <span class="c1"># Sum Ax values over groups</span>
+        <span class="n">Ai</span> <span class="o">=</span> <span class="n">Ai</span><span class="p">[</span><span class="n">unique_idxs</span><span class="p">]</span>
+        <span class="n">Aj</span> <span class="o">=</span> <span class="n">Aj</span><span class="p">[</span><span class="n">unique_idxs</span><span class="p">]</span>
+
+    <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">shape</span><span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">])</span>
+    <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="p">[:,</span> <span class="n">order</span><span class="p">]</span>
+    <span class="n">Ax</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">vmap</span><span class="p">(</span><span class="n">jax</span><span class="o">.</span><span class="n">ops</span><span class="o">.</span><span class="n">segment_sum</span><span class="p">,</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="kc">None</span><span class="p">],</span> <span class="mi">0</span><span class="p">)(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">groups</span><span class="p">)</span>
+
+    <span class="k">return</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">[:</span><span class="o">-</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+
 
 <span class="c1"># Primitives ==========================================================================</span>
 
-<span class="n">solve_f64</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_f64&quot;</span><span class="p">)</span>
-<span class="n">solve_c128</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_c128&quot;</span><span class="p">)</span>
-<span class="n">coo_mul_vec_f64</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;coo_mul_vec_f64&quot;</span><span class="p">)</span>
-<span class="n">coo_mul_vec_c128</span> <span class="o">=</span> <span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;coo_mul_vec_c128&quot;</span><span class="p">)</span>
-
-<span class="c1"># Register XLA extensions ==============================================================</span>
-
-<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
-    <span class="s2">&quot;_solve_f64&quot;</span><span class="p">,</span>
-    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_f64</span><span class="p">(),</span>
-    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
-    <span class="s2">&quot;_coo_mul_vec_f64&quot;</span><span class="p">,</span>
-    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">coo_mul_vec_f64</span><span class="p">(),</span>
-    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
-    <span class="s2">&quot;_solve_c128&quot;</span><span class="p">,</span>
-    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_c128</span><span class="p">(),</span>
-    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
-    <span class="s2">&quot;_coo_mul_vec_c128&quot;</span><span class="p">,</span>
-    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">coo_mul_vec_c128</span><span class="p">(),</span>
-    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
-<span class="p">)</span>
-
-<span class="c1"># Helper Decorators ===================================================================</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">ad_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">ad</span><span class="o">.</span><span class="n">primitive_jvps</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">fun</span>
-        <span class="k">return</span> <span class="n">fun</span>
-
-    <span class="k">return</span> <span class="n">decorator</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">transpose_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">ad</span><span class="o">.</span><span class="n">primitive_transposes</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">fun</span>
-        <span class="k">return</span> <span class="n">fun</span>
-
-    <span class="k">return</span> <span class="n">decorator</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">vmap_register</span><span class="p">(</span><span class="n">primitive</span><span class="p">,</span> <span class="n">operation</span><span class="p">):</span>
-    <span class="k">def</span><span class="w"> </span><span class="nf">decorator</span><span class="p">(</span><span class="n">fun</span><span class="p">):</span>
-        <span class="n">batching</span><span class="o">.</span><span class="n">primitive_batchers</span><span class="p">[</span><span class="n">primitive</span><span class="p">]</span> <span class="o">=</span> <span class="n">partial</span><span class="p">(</span><span class="n">fun</span><span class="p">,</span> <span class="n">operation</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">fun</span>
-
-    <span class="k">return</span> <span class="n">decorator</span>
-
+<span class="n">dot_f64</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;dot_f64&quot;</span><span class="p">)</span>
+<span class="n">dot_c128</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;dot_c128&quot;</span><span class="p">)</span>
+<span class="n">solve_f64</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_f64&quot;</span><span class="p">)</span>
+<span class="n">solve_c128</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">(</span><span class="s2">&quot;solve_c128&quot;</span><span class="p">)</span>
 
 <span class="c1"># Implementations =====================================================================</span>
 
 
-<span class="nd">@solve_f64</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">solve_f64_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="nd">@dot_f64</span><span class="o">.</span><span class="n">def_impl</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_f64_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">general_impl</span><span class="p">(</span><span class="s2">&quot;dot_f64&quot;</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="n">_b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
-        <span class="s2">&quot;_solve_f64&quot;</span><span class="p">,</span>
-        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_b</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
-        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">Ai</span><span class="p">,</span>
-        <span class="n">Aj</span><span class="p">,</span>
-        <span class="n">Ax</span><span class="p">,</span>
-        <span class="n">_b</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
+
+<span class="nd">@dot_c128</span><span class="o">.</span><span class="n">def_impl</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_c128_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">general_impl</span><span class="p">(</span><span class="s2">&quot;dot_c128&quot;</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+
+<span class="nd">@solve_f64</span><span class="o">.</span><span class="n">def_impl</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_f64_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">general_impl</span><span class="p">(</span><span class="s2">&quot;solve_f64&quot;</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
 
 <span class="nd">@solve_c128</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">solve_c128_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_c128_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="k">return</span> <span class="n">general_impl</span><span class="p">(</span><span class="s2">&quot;solve_c128&quot;</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
-    <span class="n">_b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
-        <span class="s2">&quot;_solve_c128&quot;</span><span class="p">,</span>
-        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_b</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
-        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">general_impl</span><span class="p">(</span><span class="n">name</span><span class="p">:</span> <span class="nb">str</span><span class="p">,</span> <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Array</span><span class="p">:</span>
+    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
+        <span class="n">name</span><span class="p">,</span>
+        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
     <span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">Ai</span><span class="p">,</span>
-        <span class="n">Aj</span><span class="p">,</span>
-        <span class="n">Ax</span><span class="p">,</span>
-        <span class="n">_b</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-
-<span class="nd">@coo_mul_vec_f64</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_f64_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
-        <span class="s2">&quot;_coo_mul_vec_f64&quot;</span><span class="p">,</span>
-        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_x</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
-        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">Ai</span><span class="p">,</span>
-        <span class="n">Aj</span><span class="p">,</span>
-        <span class="n">Ax</span><span class="p">,</span>
-        <span class="n">_x</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-
-<span class="nd">@coo_mul_vec_c128</span><span class="o">.</span><span class="n">def_impl</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_c128_impl</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">jnp</span><span class="o">.</span><span class="n">ndarray</span><span class="p">:</span>
-    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span> <span class="o">=</span> <span class="n">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">_x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
-    <span class="n">call</span> <span class="o">=</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">ffi_call</span><span class="p">(</span>
-        <span class="s2">&quot;_coo_mul_vec_c128&quot;</span><span class="p">,</span>
-        <span class="n">jax</span><span class="o">.</span><span class="n">ShapeDtypeStruct</span><span class="p">(</span><span class="n">_x</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">_x</span><span class="o">.</span><span class="n">dtype</span><span class="p">),</span>
-        <span class="n">vmap_method</span><span class="o">=</span><span class="s2">&quot;broadcast_all&quot;</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="n">result</span> <span class="o">=</span> <span class="n">call</span><span class="p">(</span>  <span class="c1"># type: ignore</span>
-        <span class="n">Ai</span><span class="p">,</span>
-        <span class="n">Aj</span><span class="p">,</span>
-        <span class="n">Ax</span><span class="p">,</span>
-        <span class="n">_x</span><span class="p">,</span>
-    <span class="p">)</span>
-    <span class="k">return</span> <span class="n">result</span><span class="o">.</span><span class="n">transpose</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>  <span class="c1"># type: ignore</span>
-
-
-<span class="k">def</span><span class="w"> </span><span class="nf">_prepare_arguments</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">):</span>
-    <span class="n">Ai</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
-    <span class="n">Aj</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
-    <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">asarray</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
-    <span class="n">shape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
-
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ai</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Aj</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ai</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Aj</span><span class="o">.</span><span class="n">max</span><span class="p">()</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">dtype</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="n">prefer_x_rhs_over_lhs</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&lt;</span> <span class="mi">2</span><span class="p">)</span> <span class="ow">or</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">prefer_x_rhs_over_lhs</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;Ax should be at most 2D with shape: (n_lhs, n_nz). Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="s2">&quot;Note: jax.vmap is supported. Use it if needed.&quot;</span>
-        <span class="p">)</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">atleast_2d</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
-
-    <span class="n">a_n_lhs</span><span class="p">,</span> <span class="n">n_nz</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span>
-    <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="n">n_nz</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_nz</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">prefer_x_rhs_over_lhs</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">False</span>
-    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="ow">not</span> <span class="n">prefer_x_rhs_over_lhs</span><span class="p">:</span>
-        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">elif</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-        <span class="n">x_n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
-        <span class="n">shape_includes_lhs</span> <span class="o">=</span> <span class="kc">True</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-            <span class="sa">f</span><span class="s2">&quot;x should be at most 3D with shape: (n_lhs, n_col, n_rhs). Got: </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">. &quot;</span>
-            <span class="s2">&quot;Note: jax.vmap is supported. Use it if needed.&quot;</span>
-        <span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_col</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_rhs</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="k">if</span> <span class="n">a_n_lhs</span> <span class="o">==</span> <span class="n">x_n_lhs</span><span class="p">:</span>
-        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">a_n_lhs</span>
-    <span class="k">elif</span> <span class="n">a_n_lhs</span> <span class="o">&gt;</span> <span class="n">x_n_lhs</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">x_n_lhs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot broadcast n_lhs for x into n_lhs for Ax. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Got: n_lhs[x]=</span><span class="si">{</span><span class="n">x_n_lhs</span><span class="si">}</span><span class="s2">; n_lhs[Ax]=</span><span class="si">{</span><span class="n">a_n_lhs</span><span class="si">}</span><span class="s2">.&quot;</span>
-            <span class="p">)</span>
-        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">a_n_lhs</span>
-        <span class="k">if</span> <span class="n">shape_includes_lhs</span><span class="p">:</span>
-            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,)</span> <span class="o">+</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:]</span>
-        <span class="k">else</span><span class="p">:</span>
-            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,)</span> <span class="o">+</span> <span class="n">shape</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="k">if</span> <span class="ow">not</span> <span class="n">a_n_lhs</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span>
-                <span class="sa">f</span><span class="s2">&quot;Cannot broadcast n_lhs for Ax into n_lhs for x. &quot;</span>
-                <span class="sa">f</span><span class="s2">&quot;Got: n_lhs[x]=</span><span class="si">{</span><span class="n">x_n_lhs</span><span class="si">}</span><span class="s2">; n_lhs[Ax]=</span><span class="si">{</span><span class="n">a_n_lhs</span><span class="si">}</span><span class="s2">.&quot;</span>
-            <span class="p">)</span>
-        <span class="n">n_lhs</span> <span class="o">=</span> <span class="n">x_n_lhs</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">n_lhs</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="n">n_nz</span><span class="p">))</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="n">n_col</span><span class="p">,</span> <span class="n">n_rhs</span><span class="p">))</span>
-
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-    <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-
-    <span class="c1"># We retain the old shape of b so the result of the primitive can be</span>
-    <span class="c1"># reshaped to the expected shape.</span>
-    <span class="k">return</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span>
+    <span class="k">if</span> <span class="ow">not</span> <span class="nb">callable</span><span class="p">(</span><span class="n">call</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;jax.ffi.ffi_call did not return a callable.&quot;</span>
+        <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>  <span class="c1"># noqa: TRY004</span>
+    <span class="k">return</span> <span class="n">call</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
 
 
 <span class="c1"># Lowerings ===========================================================================</span>
 
-<span class="n">solve_f64_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">solve_f64_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">solve_f64_lowering</span><span class="p">)</span>
-
-<span class="n">solve_c128_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">solve_c128_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">solve_c128_lowering</span><span class="p">)</span>
-
-<span class="n">coo_mul_vec_f64_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">coo_mul_vec_f64_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
-<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">,</span> <span class="n">coo_mul_vec_f64_lowering</span><span class="p">)</span>
-
-<span class="n">coo_mul_vec_c128_lowering</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span>
-    <span class="n">coo_mul_vec_c128_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span>
+<span class="n">jax</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;dot_f64&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">dot_f64</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
 <span class="p">)</span>
-<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">,</span> <span class="n">coo_mul_vec_c128_lowering</span><span class="p">)</span>
 
-<span class="c1"># Abstract Evaluations ================================================================</span>
+<span class="n">dot_f64_low</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">dot_f64_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">dot_f64</span><span class="p">,</span> <span class="n">dot_f64_low</span><span class="p">)</span>
+
+<span class="n">jax</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;dot_c128&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">dot_c128</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">dot_c128_low</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">dot_c128_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">dot_c128</span><span class="p">,</span> <span class="n">dot_c128_low</span><span class="p">)</span>
+
+<span class="n">jax</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;solve_f64&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_f64</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">solve_f64_low</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">solve_f64_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">solve_f64_low</span><span class="p">)</span>
+
+<span class="n">jax</span><span class="o">.</span><span class="n">ffi</span><span class="o">.</span><span class="n">register_ffi_target</span><span class="p">(</span>
+    <span class="s2">&quot;solve_c128&quot;</span><span class="p">,</span>
+    <span class="n">klujax_cpp</span><span class="o">.</span><span class="n">solve_c128</span><span class="p">(),</span>
+    <span class="n">platform</span><span class="o">=</span><span class="s2">&quot;cpu&quot;</span><span class="p">,</span>
+<span class="p">)</span>
+
+<span class="n">solve_c128_low</span> <span class="o">=</span> <span class="n">mlir</span><span class="o">.</span><span class="n">lower_fun</span><span class="p">(</span><span class="n">solve_c128_impl</span><span class="p">,</span> <span class="n">multiple_results</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">mlir</span><span class="o">.</span><span class="n">register_lowering</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">solve_c128_low</span><span class="p">)</span>
+
+<span class="c1"># Abstract Evals ======================================================================</span>
 
 
+<span class="nd">@dot_f64</span><span class="o">.</span><span class="n">def_abstract_eval</span>
+<span class="nd">@dot_c128</span><span class="o">.</span><span class="n">def_abstract_eval</span>
 <span class="nd">@solve_f64</span><span class="o">.</span><span class="n">def_abstract_eval</span>
 <span class="nd">@solve_c128</span><span class="o">.</span><span class="n">def_abstract_eval</span>
-<span class="nd">@coo_mul_vec_f64</span><span class="o">.</span><span class="n">def_abstract_eval</span>
-<span class="nd">@coo_mul_vec_c128</span><span class="o">.</span><span class="n">def_abstract_eval</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">coo_vec_operation_abstract_eval</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">general_abstract_eval</span><span class="p">(</span><span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">b</span><span class="p">:</span> <span class="n">Array</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">ShapedArray</span><span class="p">:</span>  <span class="c1"># noqa: ARG001</span>
     <span class="k">return</span> <span class="n">ShapedArray</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="n">b</span><span class="o">.</span><span class="n">dtype</span><span class="p">)</span>
 
 
-<span class="c1"># Forward Gradients ===================================================================</span>
+<span class="c1"># Forward Differentiation =============================================================</span>
 
 
-<span class="nd">@ad_register</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">)</span>
-<span class="nd">@ad_register</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">solve_value_and_jvp</span><span class="p">(</span><span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_f64_value_and_jvp</span><span class="p">(</span>
+    <span class="n">arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">arg_tangents</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">dot_value_and_jvp</span><span class="p">(</span><span class="n">dot_f64</span><span class="p">,</span> <span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_jvps</span><span class="p">[</span><span class="n">dot_f64</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot_f64_value_and_jvp</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_c128_value_and_jvp</span><span class="p">(</span>
+    <span class="n">arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">arg_tangents</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">dot_value_and_jvp</span><span class="p">(</span><span class="n">dot_c128</span><span class="p">,</span> <span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_jvps</span><span class="p">[</span><span class="n">dot_c128</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot_c128_value_and_jvp</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_f64_value_and_jvp</span><span class="p">(</span>
+    <span class="n">arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">arg_tangents</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">solve_value_and_jvp</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">dot_f64</span><span class="p">,</span> <span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_jvps</span><span class="p">[</span><span class="n">solve_f64</span><span class="p">]</span> <span class="o">=</span> <span class="n">solve_f64_value_and_jvp</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_c128_value_and_jvp</span><span class="p">(</span>
+    <span class="n">arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">arg_tangents</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">solve_value_and_jvp</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">dot_c128</span><span class="p">,</span> <span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_jvps</span><span class="p">[</span><span class="n">solve_c128</span><span class="p">]</span> <span class="o">=</span> <span class="n">solve_c128_value_and_jvp</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_value_and_jvp</span><span class="p">(</span>
+    <span class="n">prim_solve</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">,</span>
+    <span class="n">prim_dot</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">,</span>
+    <span class="n">arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">arg_tangents</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
     <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">arg_values</span>
     <span class="n">dAi</span><span class="p">,</span> <span class="n">dAj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">arg_tangents</span>
     <span class="n">dAx</span> <span class="o">=</span> <span class="n">dAx</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAx</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
     <span class="n">dAi</span> <span class="o">=</span> <span class="n">dAi</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAi</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
     <span class="n">dAj</span> <span class="o">=</span> <span class="n">dAj</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAj</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">db</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">dA_x</span> <span class="o">=</span> <span class="n">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
-    <span class="n">invA_dA_x</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">dA_x</span><span class="p">)</span>
-    <span class="n">invA_db</span> <span class="o">=</span> <span class="n">solve</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">prim_solve</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">dA_x</span> <span class="o">=</span> <span class="n">prim_dot</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+    <span class="n">invA_dA_x</span> <span class="o">=</span> <span class="n">prim_solve</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">dA_x</span><span class="p">)</span>
+    <span class="n">invA_db</span> <span class="o">=</span> <span class="n">prim_solve</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="o">-</span><span class="n">invA_dA_x</span> <span class="o">+</span> <span class="n">invA_db</span>
 
 
-<span class="nd">@ad_register</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">)</span>
-<span class="nd">@ad_register</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_value_and_jvp</span><span class="p">(</span><span class="n">arg_values</span><span class="p">,</span> <span class="n">arg_tangents</span><span class="p">):</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_value_and_jvp</span><span class="p">(</span>
+    <span class="n">prim</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">,</span>
+    <span class="n">arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">arg_tangents</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
     <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">arg_values</span>
     <span class="n">dAi</span><span class="p">,</span> <span class="n">dAj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">db</span> <span class="o">=</span> <span class="n">arg_tangents</span>
     <span class="n">dAx</span> <span class="o">=</span> <span class="n">dAx</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAx</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
     <span class="n">dAi</span> <span class="o">=</span> <span class="n">dAi</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAi</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
     <span class="n">dAj</span> <span class="o">=</span> <span class="n">dAj</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">dAj</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
     <span class="n">db</span> <span class="o">=</span> <span class="n">db</span> <span class="k">if</span> <span class="ow">not</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">db</span><span class="p">,</span> <span class="n">ad</span><span class="o">.</span><span class="n">Zero</span><span class="p">)</span> <span class="k">else</span> <span class="n">lax</span><span class="o">.</span><span class="n">zeros_like_array</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-    <span class="n">x</span> <span class="o">=</span> <span class="n">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">dA_b</span> <span class="o">=</span> <span class="n">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-    <span class="n">A_db</span> <span class="o">=</span> <span class="n">coo_mul_vec</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">dA_b</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">dAx</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+    <span class="n">A_db</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">db</span><span class="p">)</span>
     <span class="k">return</span> <span class="n">x</span><span class="p">,</span> <span class="n">dA_b</span> <span class="o">+</span> <span class="n">A_db</span>
 
 
-<span class="c1"># Backward Gradients through Transposition ============================================</span>
+<span class="c1"># Batching (vmap) =====================================================================</span>
 
 
-<span class="nd">@transpose_register</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">)</span>
-<span class="nd">@transpose_register</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">solve_transpose</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>
-    <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">solve</span><span class="p">(</span><span class="n">Aj</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Ax</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">ct</span><span class="p">)</span>  <span class="c1"># = inv(A).H@ct [= ct@inv(A)]</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_f64_vmap</span><span class="p">(</span>
+    <span class="n">vector_arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">batch_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">general_vmap</span><span class="p">(</span><span class="n">dot_f64</span><span class="p">,</span> <span class="n">vector_arg_values</span><span class="p">,</span> <span class="n">batch_axes</span><span class="p">)</span>
 
 
-<span class="nd">@transpose_register</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">)</span>
-<span class="nd">@transpose_register</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">coo_mul_vec_transpose</span><span class="p">(</span><span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">):</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="ow">not</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Aj</span><span class="p">)</span>
-    <span class="k">assert</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ax</span><span class="p">)</span> <span class="o">!=</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">b</span><span class="p">)</span>  <span class="c1"># xor</span>
+<span class="n">batching</span><span class="o">.</span><span class="n">primitive_batchers</span><span class="p">[</span><span class="n">dot_f64</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot_f64_vmap</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_c128_vmap</span><span class="p">(</span>
+    <span class="n">vector_arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">batch_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">general_vmap</span><span class="p">(</span><span class="n">dot_c128</span><span class="p">,</span> <span class="n">vector_arg_values</span><span class="p">,</span> <span class="n">batch_axes</span><span class="p">)</span>
+
+
+<span class="n">batching</span><span class="o">.</span><span class="n">primitive_batchers</span><span class="p">[</span><span class="n">dot_c128</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot_c128_vmap</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_f64_vmap</span><span class="p">(</span>
+    <span class="n">vector_arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">batch_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">general_vmap</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">vector_arg_values</span><span class="p">,</span> <span class="n">batch_axes</span><span class="p">)</span>
+
+
+<span class="n">batching</span><span class="o">.</span><span class="n">primitive_batchers</span><span class="p">[</span><span class="n">solve_f64</span><span class="p">]</span> <span class="o">=</span> <span class="n">solve_f64_vmap</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_c128_vmap</span><span class="p">(</span>
+    <span class="n">vector_arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">batch_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">general_vmap</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">vector_arg_values</span><span class="p">,</span> <span class="n">batch_axes</span><span class="p">)</span>
+
+
+<span class="n">batching</span><span class="o">.</span><span class="n">primitive_batchers</span><span class="p">[</span><span class="n">solve_c128</span><span class="p">]</span> <span class="o">=</span> <span class="n">solve_c128_vmap</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">general_vmap</span><span class="p">(</span>
+    <span class="n">prim</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">,</span>
+    <span class="n">vector_arg_values</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">],</span>
+    <span class="n">batch_axes</span><span class="p">:</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">,</span> <span class="nb">int</span> <span class="o">|</span> <span class="kc">None</span><span class="p">],</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="nb">int</span><span class="p">]:</span>
+    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span> <span class="o">=</span> <span class="n">vector_arg_values</span>
+    <span class="n">aAi</span><span class="p">,</span> <span class="n">aAj</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">batch_axes</span>
+
+    <span class="k">if</span> <span class="n">aAi</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Ai cannot be vectorized.&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">aAj</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Aj cannot be vectorized.&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">aAx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Ax and x should be 3D and 4D respectively when vectorizing &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;over them simultaneously. Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">; </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1"># vectorize over n_lhs</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">),</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">aAx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Ax and x should both be 3D when vectorizing &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;over Ax. Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">; </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1"># vectorize over n_lhs</span>
+        <span class="n">ax</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">),</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">ax</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
+        <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">4</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="s2">&quot;Ax and x should both be 2D and 4D respectively when vectorizing &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;over x. Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">; </span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">.&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="c1"># vectorize over n_rhs</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="mi">3</span><span class="p">)</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">3</span><span class="p">])</span>
+        <span class="k">return</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">),</span> <span class="mi">3</span>
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;vmap failed. Please select an axis to vectorize over.&quot;</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="c1"># Transposition =======================================================================</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_f64_transpose</span><span class="p">(</span>
+    <span class="n">ct</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">dot_transpose</span><span class="p">(</span><span class="n">dot_f64</span><span class="p">,</span> <span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_transposes</span><span class="p">[</span><span class="n">dot_f64</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot_f64_transpose</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_c128_transpose</span><span class="p">(</span>
+    <span class="n">ct</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">dot_transpose</span><span class="p">(</span><span class="n">dot_c128</span><span class="p">,</span> <span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_transposes</span><span class="p">[</span><span class="n">dot_c128</span><span class="p">]</span> <span class="o">=</span> <span class="n">dot_c128_transpose</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_f64_transpose</span><span class="p">(</span>
+    <span class="n">ct</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">solve_transpose</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_transposes</span><span class="p">[</span><span class="n">solve_f64</span><span class="p">]</span> <span class="o">=</span> <span class="n">solve_f64_transpose</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_c128_transpose</span><span class="p">(</span>
+    <span class="n">ct</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">return</span> <span class="n">solve_transpose</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">ct</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
+
+
+<span class="n">ad</span><span class="o">.</span><span class="n">primitive_transposes</span><span class="p">[</span><span class="n">solve_c128</span><span class="p">]</span> <span class="o">=</span> <span class="n">solve_c128_transpose</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">dot_transpose</span><span class="p">(</span>
+    <span class="n">prim</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">,</span>
+    <span class="n">ct</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Aj</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Sparse indices Ai and Aj should not require gradients.&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">x</span><span class="p">):</span>
+        <span class="c1"># replace x by ct</span>
+        <span class="k">return</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Aj</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">ct</span><span class="p">)</span>
+
+    <span class="k">if</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ax</span><span class="p">):</span>
+        <span class="c1"># replace Ax by ct</span>
+        <span class="c1"># not really sure what I&#39;m doing here, but this makes test_3d_jacrev pass.</span>
+        <span class="k">return</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="p">(</span><span class="n">ct</span><span class="p">[:,</span> <span class="n">Ai</span><span class="p">]</span> <span class="o">*</span> <span class="n">x</span><span class="p">[:,</span> <span class="n">Aj</span><span class="p">,</span> <span class="p">:])</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">),</span> <span class="n">x</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No undefined primals in transpose.&quot;</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+
+
+<span class="k">def</span><span class="w"> </span><span class="nf">solve_transpose</span><span class="p">(</span>
+    <span class="n">prim</span><span class="p">:</span> <span class="n">jax</span><span class="o">.</span><span class="n">extend</span><span class="o">.</span><span class="n">core</span><span class="o">.</span><span class="n">Primitive</span><span class="p">,</span>
+    <span class="n">ct</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+    <span class="n">b</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">]:</span>
+    <span class="k">if</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ai</span><span class="p">)</span> <span class="ow">or</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Aj</span><span class="p">):</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;Sparse indices Ai and Aj should not require gradients.&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
     <span class="k">if</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">b</span><span class="p">):</span>
-        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">coo_mul_vec</span><span class="p">(</span><span class="n">Aj</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Ax</span><span class="o">.</span><span class="n">conj</span><span class="p">(),</span> <span class="n">ct</span><span class="p">)</span>  <span class="c1"># = A.T@ct [= ct@A]</span>
-    <span class="k">else</span><span class="p">:</span>
-        <span class="n">dA</span> <span class="o">=</span> <span class="n">ct</span><span class="p">[</span><span class="n">Ai</span><span class="p">]</span> <span class="o">*</span> <span class="n">b</span><span class="p">[</span><span class="n">Aj</span><span class="p">]</span>
-        <span class="n">dA</span> <span class="o">=</span> <span class="n">dA</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">dA</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># not sure about this...</span>
-        <span class="k">return</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="n">dA</span><span class="p">,</span> <span class="kc">None</span>
+        <span class="n">b_bar</span> <span class="o">=</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Aj</span><span class="p">,</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">ct</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b_bar</span>
+
+    <span class="k">if</span> <span class="n">ad</span><span class="o">.</span><span class="n">is_undefined_primal</span><span class="p">(</span><span class="n">Ax</span><span class="p">):</span>
+        <span class="n">Ax_bar</span> <span class="o">=</span> <span class="o">-</span><span class="p">(</span><span class="n">ct</span> <span class="o">*</span> <span class="n">prim</span><span class="o">.</span><span class="n">bind</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">))</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="o">-</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">return</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax_bar</span><span class="p">,</span> <span class="n">b</span>
+
+    <span class="n">msg</span> <span class="o">=</span> <span class="s2">&quot;No undefined primals in transpose.&quot;</span>
+    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
 
-<span class="c1"># Vectorization (vmap) ================================================================</span>
+<span class="c1"># Validators ==========================================================================</span>
 
 
-<span class="nd">@vmap_register</span><span class="p">(</span><span class="n">solve_f64</span><span class="p">,</span> <span class="n">solve</span><span class="p">)</span>
-<span class="nd">@vmap_register</span><span class="p">(</span><span class="n">solve_c128</span><span class="p">,</span> <span class="n">solve</span><span class="p">)</span>
-<span class="nd">@vmap_register</span><span class="p">(</span><span class="n">coo_mul_vec_f64</span><span class="p">,</span> <span class="n">coo_mul_vec</span><span class="p">)</span>
-<span class="nd">@vmap_register</span><span class="p">(</span><span class="n">coo_mul_vec_c128</span><span class="p">,</span> <span class="n">coo_mul_vec</span><span class="p">)</span>
-<span class="k">def</span><span class="w"> </span><span class="nf">coo_vec_operation_vmap</span><span class="p">(</span><span class="n">operation</span><span class="p">,</span> <span class="n">vector_arg_values</span><span class="p">,</span> <span class="n">batch_axes</span><span class="p">):</span>
-    <span class="n">aAi</span><span class="p">,</span> <span class="n">aAj</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="n">ab</span> <span class="o">=</span> <span class="n">batch_axes</span>
-    <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span> <span class="o">=</span> <span class="n">vector_arg_values</span>
+<span class="k">def</span><span class="w"> </span><span class="nf">validate_args</span><span class="p">(</span>  <span class="c1"># noqa: C901,PLR0912</span>
+    <span class="n">Ai</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Aj</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Ax</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x</span><span class="p">:</span> <span class="n">Array</span><span class="p">,</span> <span class="n">x_name</span><span class="p">:</span> <span class="nb">str</span> <span class="o">=</span> <span class="s2">&quot;x&quot;</span>
+<span class="p">)</span> <span class="o">-&gt;</span> <span class="nb">tuple</span><span class="p">[</span><span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="n">Array</span><span class="p">,</span> <span class="nb">tuple</span><span class="p">[</span><span class="nb">int</span><span class="p">,</span> <span class="o">...</span><span class="p">]]:</span>
+    <span class="c1"># cases:</span>
+    <span class="c1"># - (n_lhs, n_nz) x (n_lhs, n_col, n_rhs)</span>
+    <span class="c1"># - (n_lhs, n_nz) x (n_lhs, n_col) --&gt; (n_lhs, n_nz) x (n_lhs, n_col, 1)</span>
+    <span class="c1"># - (n_nz,) x (n_lhs, n_col, n_rhs) --&gt; (n_lhs, n_nz) x (n_lhs, n_col, n_rhs)</span>
+    <span class="c1"># - (n_nz,) x (n_col, n_rhs) --&gt; (1, n_nz) x (1, n_col, n_rhs)</span>
+    <span class="c1"># - (n_nz,) x (n_col,) --&gt; (1, n_nz) x (1, n_col, 1)</span>
+    <span class="k">if</span> <span class="n">Ai</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Ai should be 1D with shape (n_nz). Got: </span><span class="si">{</span><span class="n">Ai</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">.&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">Aj</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;Aj should be 1D with shape (n_nz,). Got: </span><span class="si">{</span><span class="n">Aj</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">.&quot;</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">2</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="s2">&quot;Ax should be 1D with shape (n_nz,) &quot;</span>
+            <span class="s2">&quot;or 2D with shape (n_lhs, n_nz). &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">&gt;</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2"> should be 1D with shape (n_col,) &quot;</span>
+            <span class="s2">&quot;or 2D with shape (n_col, n_rhs) &quot;</span>
+            <span class="s2">&quot;or 3D with shape (n_lhs, n_col, n_rhs). &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Got: </span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">.shape=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="k">assert</span> <span class="n">aAi</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Ai cannot be vectorized.&quot;</span>
-    <span class="k">assert</span> <span class="n">aAj</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">,</span> <span class="s2">&quot;Aj cannot be vectorized.&quot;</span>
+    <span class="n">shape</span> <span class="o">=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span>
 
-    <span class="k">if</span> <span class="n">aAx</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span> <span class="ow">and</span> <span class="n">ab</span> <span class="ow">is</span> <span class="ow">not</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">aAx</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span> <span class="ow">and</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># treat as lhs</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># treat as lhs</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># expand Ax and b dims</span>
+        <span class="n">debug</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;assuming (n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">,) x (n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">,)&quot;</span><span class="p">)</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+    <span class="k">elif</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># expand Ax and b dims</span>
+        <span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;assuming (n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">,) x &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_rhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
+    <span class="k">elif</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>  <span class="c1"># expand A dim (broadcast will happen in base)</span>
+        <span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;assuming (n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">,) x &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(n_lhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_rhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+        <span class="n">Ax</span> <span class="o">=</span> <span class="n">Ax</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
+    <span class="k">elif</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>  <span class="c1"># expand dims to base case</span>
+        <span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;assuming (n_lhs:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) x &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">,)&quot;</span>
+        <span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># we need to expand the shape here.</span>
+    <span class="k">elif</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>  <span class="c1"># expand dims to base case</span>
+        <span class="n">debug</span><span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;assuming (n_lhs:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) x &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(n_lhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+        <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+            <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+                <span class="sa">f</span><span class="s2">&quot;Ax (2D) and </span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2"> (2D) should have their first shape &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;index `n_lhs` match. Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">; </span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">.shape=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">. &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;assuming (n_lhs:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) x &quot;</span>
+                <span class="sa">f</span><span class="s2">&quot;(n_lhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+            <span class="p">)</span>
+            <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+        <span class="n">x</span> <span class="o">=</span> <span class="n">x</span><span class="p">[:,</span> <span class="p">:,</span> <span class="kc">None</span><span class="p">]</span>
+        <span class="k">if</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">&gt;</span> <span class="mi">0</span><span class="p">:</span>
+            <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">:])</span>
 
-    <span class="k">if</span> <span class="n">ab</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">aAx</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-        <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="n">aAx</span><span class="p">,</span> <span class="mi">0</span><span class="p">)</span>  <span class="c1"># treat as lhs</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">],</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="o">*</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">))</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="mi">0</span>
+    <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">2</span> <span class="ow">or</span> <span class="n">x</span><span class="o">.</span><span class="n">ndim</span> <span class="o">!=</span> <span class="mi">3</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Invalid shapes for Ax and </span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">; </span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">.shape=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">. &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;Expected: Ax.shape=([n_lhs],n_nz); &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">.shape=([n_lhs],n_col,[n_rhs]).&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
 
-    <span class="k">if</span> <span class="n">aAx</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>
-        <span class="k">assert</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">ab</span><span class="p">,</span> <span class="nb">int</span><span class="p">)</span>
-        <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vmap: </span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">b</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">moveaxis</span><span class="p">(</span><span class="n">b</span><span class="p">,</span> <span class="n">ab</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>  <span class="c1"># treat as rhs</span>
-        <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vmap: </span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="n">shape</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span>
-        <span class="k">if</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">0</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>
-        <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">1</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">,</span> <span class="p">:]</span>
-        <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">2</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="p">:,</span> <span class="p">:]</span>
-        <span class="k">elif</span> <span class="n">b</span><span class="o">.</span><span class="n">ndim</span> <span class="o">==</span> <span class="mi">3</span><span class="p">:</span>
-            <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="p">[:,</span> <span class="p">:,</span> <span class="p">:]</span>
-
-        <span class="n">b</span> <span class="o">=</span> <span class="n">b</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="o">-</span><span class="mi">1</span><span class="p">)</span>
-
-        <span class="n">_log</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;vmap: </span><span class="si">{</span><span class="n">b</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">&quot;</span><span class="p">)</span>
-        <span class="c1"># b is now guaranteed to have shape (n_lhs, n_col, n_rhs)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">operation</span><span class="p">(</span><span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">b</span><span class="p">)</span>
-        <span class="n">result</span> <span class="o">=</span> <span class="n">result</span><span class="o">.</span><span class="n">reshape</span><span class="p">(</span><span class="o">*</span><span class="n">shape</span><span class="p">)</span>
-        <span class="k">return</span> <span class="n">result</span><span class="p">,</span> <span class="o">-</span><span class="mi">1</span>
-
-    <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s2">&quot;invalid arguments for vmap&quot;</span><span class="p">)</span>
+    <span class="c1"># base case</span>
+    <span class="n">debug</span><span class="p">(</span>
+        <span class="sa">f</span><span class="s2">&quot;assuming (n_lhs:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) x &quot;</span>
+        <span class="sa">f</span><span class="s2">&quot;(n_lhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_rhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+    <span class="p">)</span>
+    <span class="k">if</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="ow">and</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span> <span class="ow">and</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="mi">1</span><span class="p">:</span>
+        <span class="n">msg</span> <span class="o">=</span> <span class="p">(</span>
+            <span class="sa">f</span><span class="s2">&quot;Ax (2D) and </span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2"> (3D) should have their first shape &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;index `n_lhs` match. Got: </span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="si">=}</span><span class="s2">; </span><span class="si">{</span><span class="n">x_name</span><span class="si">}</span><span class="s2">.shape=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">.&quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;assuming (n_lhs:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_nz:=</span><span class="si">{</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">) x &quot;</span>
+            <span class="sa">f</span><span class="s2">&quot;(n_lhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_col:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span><span class="si">}</span><span class="s2">, n_rhs:=</span><span class="si">{</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]</span><span class="si">}</span><span class="s2">)&quot;</span>
+        <span class="p">)</span>
+        <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="n">msg</span><span class="p">)</span>
+    <span class="n">n_lhs</span> <span class="o">=</span> <span class="nb">max</span><span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span>  <span class="c1"># handle broadcastable 1-index</span>
+    <span class="n">Ax</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">Ax</span><span class="p">,</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">]))</span>
+    <span class="n">x</span> <span class="o">=</span> <span class="n">jnp</span><span class="o">.</span><span class="n">broadcast_to</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="p">(</span><span class="n">n_lhs</span><span class="p">,</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">]))</span>
+    <span class="k">if</span> <span class="nb">len</span><span class="p">(</span><span class="n">shape</span><span class="p">)</span> <span class="o">==</span> <span class="mi">3</span> <span class="ow">and</span> <span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">!=</span> <span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]:</span>
+        <span class="n">shape</span> <span class="o">=</span> <span class="p">(</span><span class="n">Ax</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">],</span> <span class="n">shape</span><span class="p">[</span><span class="mi">2</span><span class="p">])</span>
+    <span class="k">return</span> <span class="n">Ai</span><span class="p">,</span> <span class="n">Aj</span><span class="p">,</span> <span class="n">Ax</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">shape</span>
 </pre></div>
 
                 </article>
