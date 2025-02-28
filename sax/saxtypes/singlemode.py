@@ -32,38 +32,20 @@ from typing import (
     get_origin,
 )
 
-from .core import ComplexArray, IntArray1D, val
+from .core import ComplexArray, IntArray1D, cast_string, val, val_name
 
 T = TypeVar("T")
 
 
-def cast_string(obj: Any) -> str:
-    if isinstance(obj, bytes):
-        obj = obj.decode()
-    return str(obj)
-
-
-def val_identifier(obj: Any, *, type_name: str) -> str:
-    s = cast_string(obj)
-    if not s.isidentifier():
-        msg = (
-            f"A {type_name!r} string should be a valid python identifier. Got: {s!r}. "
-            "note: python identifiers should only contain letters, numbers or "
-            "underscores. The first character should not be a number."
-        )
-        raise TypeError(msg)
-    return s
-
-
 def val_instance_name(obj: Any) -> Port:
-    return val_identifier(obj, type_name="InstanceName")
+    return val_name(obj, type_name="InstanceName")
 
 
 InstanceName: TypeAlias = Annotated[str, val(val_instance_name)]
 
 
 def val_port(obj: Any) -> Port:
-    return val_identifier(obj, type_name="Port")
+    return val_name(obj, type_name="Port")
 
 
 Port: TypeAlias = Annotated[str, val(val_port)]

@@ -110,13 +110,13 @@ def _val_item_type(  # noqa: PLR0913
 
 
 @overload
-def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Bool:
-    ...
+def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Bool: ...
 
 
 @overload
-def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[False] = False) -> BoolLike:
-    ...
+def val_bool(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> BoolLike: ...
 
 
 def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
@@ -135,13 +135,13 @@ Bool: TypeAlias = Annotated[bool | np.bool_, val(val_bool, strict=True)]
 
 
 @overload
-def val_int(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Int:
-    ...
+def val_int(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Int: ...
 
 
 @overload
-def val_int(obj: Any, *, strict: bool = ..., cast: Literal[False] = False) -> IntLike:
-    ...
+def val_int(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> IntLike: ...
 
 
 def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
@@ -165,15 +165,13 @@ Int: TypeAlias = Annotated[int | np.signedinteger, val(val_int, strict=True)]
 
 
 @overload
-def val_float(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Float:
-    ...
+def val_float(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Float: ...
 
 
 @overload
 def val_float(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatLike:
-    ...
+) -> FloatLike: ...
 
 
 def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike:
@@ -192,15 +190,15 @@ Float: TypeAlias = Annotated[float | np.floating, val(val_float, strict=True)]
 
 
 @overload
-def val_complex(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Complex:
-    ...
+def val_complex(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> Complex: ...
 
 
 @overload
 def val_complex(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexLike:
-    ...
+) -> ComplexLike: ...
 
 
 def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> ComplexLike:
@@ -287,15 +285,13 @@ def _val_array_type(  # noqa: C901,PLR0913
 @overload
 def val_bool_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> BoolArray:
-    ...
+) -> BoolArray: ...
 
 
 @overload
 def val_bool_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> BoolArrayLike:
-    ...
+) -> BoolArrayLike: ...
 
 
 def val_bool_array(
@@ -318,15 +314,13 @@ BoolArray: TypeAlias = Annotated[Array, np.bool_, val(val_bool_array, strict=Tru
 @overload
 def val_int_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> IntArray:
-    ...
+) -> IntArray: ...
 
 
 @overload
 def val_int_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntArrayLike:
-    ...
+) -> IntArrayLike: ...
 
 
 def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntArrayLike:
@@ -349,15 +343,13 @@ IntArray: TypeAlias = Annotated[
 @overload
 def val_float_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> FloatArray:
-    ...
+) -> FloatArray: ...
 
 
 @overload
 def val_float_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatArrayLike:
-    ...
+) -> FloatArrayLike: ...
 
 
 def val_float_array(
@@ -380,15 +372,13 @@ FloatArray: TypeAlias = Annotated[Array, np.floating, val(val_float_array, stric
 @overload
 def val_complex_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> ComplexArray:
-    ...
+) -> ComplexArray: ...
 
 
 @overload
 def val_complex_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexArrayLike:
-    ...
+) -> ComplexArrayLike: ...
 
 
 def val_complex_array(
@@ -413,15 +403,13 @@ ComplexArray: TypeAlias = Annotated[
 @overload
 def val_int_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> IntArray1D:
-    ...
+) -> IntArray1D: ...
 
 
 @overload
 def val_int_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntArray1DLike:
-    ...
+) -> IntArray1DLike: ...
 
 
 def val_int_array_1d(
@@ -446,15 +434,13 @@ IntArray1D: TypeAlias = Annotated[
 @overload
 def val_float_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> FloatArray1D:
-    ...
+) -> FloatArray1D: ...
 
 
 @overload
 def val_float_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatArray1DLike:
-    ...
+) -> FloatArray1DLike: ...
 
 
 def val_float_array_1d(
@@ -479,15 +465,13 @@ FloatArray1D: TypeAlias = Annotated[
 @overload
 def val_complex_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> ComplexArray1D:
-    ...
+) -> ComplexArray1D: ...
 
 
 @overload
 def val_complex_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexArray1DLike:
-    ...
+) -> ComplexArray1DLike: ...
 
 
 def val_complex_array_1d(
@@ -558,6 +542,28 @@ ComplexArray1DLike: TypeAlias = Annotated[
     ComplexArrayLike, np.inexact, 1, val(val_complex_array_1d, cast=False)
 ]
 """1-dimensional complex array."""
+
+
+def cast_string(obj: Any) -> str:
+    if isinstance(obj, bytes):
+        obj = obj.decode()
+    return str(obj)
+
+
+def val_name(obj: Any, *, type_name: str = "Name") -> str:
+    s = cast_string(obj)
+    if not s.isidentifier():
+        msg = (
+            f"A {type_name!r} string should be a valid python identifier. Got: {s!r}. "
+            "note: python identifiers should only contain letters, numbers or "
+            "underscores. The first character should not be a number."
+        )
+        raise TypeError(msg)
+    return s
+
+
+Name: TypeAlias = Annotated[str, val(val_name)]
+""" A valid python name (identifier)."""
 
 
 def _get_annotated_type(annotated: Annotated) -> type | UnionType:

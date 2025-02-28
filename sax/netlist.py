@@ -1,235 +1,3 @@
-"""SAX netlist parsing and utilities."""
-
-from __future__ import annotations
-
-import os
-import re
-import warnings
-from copy import deepcopy
-from functools import lru_cache, partial
-from typing import Annotated, Any, Literal, TypedDict, overload
-
-import black
-import networkx as nx
-import numpy as np
-import yaml
-from natsort import natsorted
-from pydantic import (
-    AfterValidator,
-    BeforeValidator,
-    ConfigDict,
-    Field,
-    RootModel,
-    model_validator,
-)
-from pydantic import BaseModel as _BaseModel
-
-from .utils import clean_string, hash_dict
-
-X: bool = "hey"
-
-
-class NetlistDict(TypedDict):
-    instances: dict
-    connections: dict[str, str]
-    ports: dict[str, str]
-    settings: dict[str, Any]
-
-
-RecursiveNetlistDict = dict[str, NetlistDict]
-
-
-class BaseModel(_BaseModel):
-    model_config = ConfigDict(
-        extra="ignore",
-        json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
-    )
-
-    def __repr__(self) -> str:
-        s = super().__repr__()
-        return black.format_str(s, mode=black.Mode())
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __hash__(self):
-        return hash_dict(self.model_dump())
-
-
-def _validate_str(s: str, what="component"):
-    if "," in s:
-        msg = f"Invalid {what} string. Should not contain ','. Got: {s}"
-        raise ValueError(msg)
-    s = s.split("$")[0]
-    return clean_string(s)
-
-
-ComponentStr = Annotated[str, AfterValidator(_validate_str)]
-
-
-class Component(BaseModel):
-    component: ComponentStr
-    settings: dict[str, Any] = Field(default_factory=dict)
-
-
-PortPlacement = Literal["ce", "cw", "nc", "ne", "nw", "sc", "se", "sw", "cc", "center"]
-
-
-class Placement(BaseModel):
-    x: str | float = 0.0
-    y: str | float = 0.0
-    dx: str | float = 0.0
-    dy: str | float = 0.0
-    rotation: float = 0.0
-    mirror: bool = False
-    xmin: str | float | None = None
-    xmax: str | float | None = None
-    ymin: str | float | None = None
-    ymax: str | float | None = None
-    port: str | PortPlacement | None = None
-
-
-def _component_from_partial(p: partial):
-    settings = {}
-    f: Any = p
-    while isinstance(f, partial):
-        if f.args:
-            msg = (
-                "SAX circuits and netlists don't support partials "
-                "with positional arguments."
-            )
-            raise ValueError(
-                msg,
-            )
-        settings = {**f.keywords, **settings}
-        f = f.func
-    if not callable(f):
-        msg = "partial of non-callable."
-        raise ValueError(msg)
-    return Component(component=f.__name__, settings=settings)
-
-
-def _coerce_component(obj: Any) -> Component:
-    if isinstance(obj, str):
-        return Component(component=obj)
-    if isinstance(obj, partial):
-        return _component_from_partial(obj)
-    if callable(obj):
-        return _coerce_component(obj.__name__)
-    if isinstance(obj, dict) and "info" in obj:
-        info = obj.pop("info", {})
-        settings = obj.pop("settings", {})
-        obj["settings"] = {**settings, **info}
-    return Component.model_validate(obj)
-
-
-CoercingComponent = Annotated[Component, BeforeValidator(_coerce_component)]
-
-
-_validate_instance_str = partial(_validate_str, what="instance")
-_validate_port_str = partial(_validate_str, what="port")
-
-
-def _validate_instance_port_str(s: str) -> str:
-    parts = s.split(",")
-    if len(parts) != 2:
-        msg = f"Invalid instance,port string. Should contain exactly one ','. Got: {s}"
-        raise ValueError(
-            msg,
-        )
-    i, p = parts
-    i = _validate_instance_str(i)
-    p = _validate_port_str(p)
-    return f"{i},{p}"
-
-
-InstanceStr = Annotated[str, AfterValidator(_validate_instance_str)]
-PortStr = Annotated[str, AfterValidator(_validate_port_str)]
-InstancePortStr = Annotated[str, AfterValidator(_validate_instance_port_str)]
-
-
-def _nets_to_connections(nets: list[dict], connections: dict):
-    connections = dict(connections.items())
-    inverse_connections = {v: k for k, v in connections.items()}
-
-    def _is_connected(p):
-        return (p in connections) or (p in inverse_connections)
-
-    def _add_connection(p, q) -> None:
-        connections[p] = q
-        inverse_connections[q] = p
-
-    def _get_connected_port(p):
-        if p in connections:
-            return connections[p]
-        return inverse_connections[p]
-
-    for net in nets:
-        p = net["p1"]
-        q = net["p2"]
-        if _is_connected(p):
-            _q = _get_connected_port(p)
-            msg = (
-                "SAX currently does not support multiply connected ports. "
-                f"Got {p}<->{q} and {p}<->{_q}"
-            )
-            raise ValueError(
-                msg,
-            )
-        if _is_connected(q):
-            _p = _get_connected_port(q)
-            msg = (
-                "SAX currently does not support multiply connected ports. "
-                f"Got {p}<->{q} and {_p}<->{q}"
-            )
-            raise ValueError(
-                msg,
-            )
-        _add_connection(p, q)
-    return connections
-
-
-class Netlist(BaseModel):
-    instances: dict[InstanceStr, CoercingComponent] = Field(default_factory=dict)
-    connections: dict[InstancePortStr, InstancePortStr] = Field(default_factory=dict)
-    ports: dict[PortStr, InstancePortStr] = Field(default_factory=dict)
-    placements: dict[InstanceStr, Placement] = Field(default_factory=dict)
-    settings: dict[str, Any] = Field(default_factory=dict)  # TODO: use this
-
-    @model_validator(mode="before")
-    @classmethod
-    def coerce_nets_into_connections(cls, netlist: dict):
-        if not isinstance(netlist, dict):
-            return netlist
-        if "nets" in netlist:
-            nets = netlist.pop("nets", [])
-            connections = netlist.pop("connections", {})
-            connections = _nets_to_connections(nets, connections)
-            netlist["connections"] = connections
-        return netlist
-
-
-class RecursiveNetlist(RootModel):
-    root: dict[str, Netlist]
-
-    model_config = ConfigDict(
-        json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
-    )
-
-    def __repr__(self) -> str:
-        s = super().__repr__()
-        return black.format_str(s, mode=black.Mode())
-
-    def __str__(self) -> str:
-        return self.__repr__()
-
-    def __hash__(self):
-        return hash_dict(self.model_dump())
-
-
-AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
-
-
 def netlist(
     netlist: Any,
     with_unconnected_instances: bool = True,
@@ -488,29 +256,25 @@ def _flatten_netlist(recnet, net, sep) -> None:
 
 
 @overload
-def rename_instances(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
-    ...
+def rename_instances(netlist: Netlist, mapping: dict[str, str]) -> Netlist: ...
 
 
 @overload
 def rename_instances(
     netlist: RecursiveNetlist,
     mapping: dict[str, str],
-) -> RecursiveNetlist:
-    ...
+) -> RecursiveNetlist: ...
 
 
 @overload
-def rename_instances(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict:
-    ...
+def rename_instances(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict: ...
 
 
 @overload
 def rename_instances(
     netlist: RecursiveNetlistDict,
     mapping: dict[str, str],
-) -> RecursiveNetlistDict:
-    ...
+) -> RecursiveNetlistDict: ...
 
 
 def rename_instances(
@@ -564,29 +328,25 @@ def rename_instances(
 
 
 @overload
-def rename_models(netlist: Netlist, mapping: dict[str, str]) -> Netlist:
-    ...
+def rename_models(netlist: Netlist, mapping: dict[str, str]) -> Netlist: ...
 
 
 @overload
 def rename_models(
     netlist: RecursiveNetlist,
     mapping: dict[str, str],
-) -> RecursiveNetlist:
-    ...
+) -> RecursiveNetlist: ...
 
 
 @overload
-def rename_models(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict:
-    ...
+def rename_models(netlist: NetlistDict, mapping: dict[str, str]) -> NetlistDict: ...
 
 
 @overload
 def rename_models(
     netlist: RecursiveNetlistDict,
     mapping: dict[str, str],
-) -> RecursiveNetlistDict:
-    ...
+) -> RecursiveNetlistDict: ...
 
 
 def rename_models(
@@ -644,3 +404,44 @@ def rename_models(
         settings=netlist.settings,
     )
     return net if not given_as_dict else net.model_dump()
+
+
+def _nets_to_connections(nets: list[dict], connections: dict):
+    connections = dict(connections.items())
+    inverse_connections = {v: k for k, v in connections.items()}
+
+    def _is_connected(p):
+        return (p in connections) or (p in inverse_connections)
+
+    def _add_connection(p, q) -> None:
+        connections[p] = q
+        inverse_connections[q] = p
+
+    def _get_connected_port(p):
+        if p in connections:
+            return connections[p]
+        return inverse_connections[p]
+
+    for net in nets:
+        p = net["p1"]
+        q = net["p2"]
+        if _is_connected(p):
+            _q = _get_connected_port(p)
+            msg = (
+                "SAX currently does not support multiply connected ports. "
+                f"Got {p}<->{q} and {p}<->{_q}"
+            )
+            raise ValueError(
+                msg,
+            )
+        if _is_connected(q):
+            _p = _get_connected_port(q)
+            msg = (
+                "SAX currently does not support multiply connected ports. "
+                f"Got {p}<->{q} and {_p}<->{q}"
+            )
+            raise ValueError(
+                msg,
+            )
+        _add_connection(p, q)
+    return connections
