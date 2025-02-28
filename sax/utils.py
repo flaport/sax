@@ -2,7 +2,7 @@
 
 import re
 from collections.abc import Callable
-from functools import cache, wraps
+from functools import wraps
 from pathlib import Path
 from typing import Any, TypeVar
 
@@ -66,7 +66,7 @@ def load_recursive_netlist(
     return recnet
 
 
-def clean_string(s: str, dot="p", minus="m", other="_") -> str:
+def clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") -> str:
     """Clean a string such that it is a valid python identifier."""
     s = s.strip()
     s = s.replace(".", dot)  # dot

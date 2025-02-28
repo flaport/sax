@@ -57,7 +57,9 @@ def circuit(
 
     instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(
-        netlist, with_unconnected_instances=False, with_placements=False,
+        netlist,
+        with_unconnected_instances=False,
+        with_placements=False,
     )
     _validate_netlist_ports(recnet)
     dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
@@ -154,17 +156,26 @@ def get_required_circuit_models(
     """
     instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(
-        netlist, with_unconnected_instances=False, with_placements=False,
+        netlist,
+        with_unconnected_instances=False,
+        with_placements=False,
     )
     dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
     _, required, _ = _find_missing_models(
-        models, dependency_dag, extra_models=instance_models,
+        models,
+        dependency_dag,
+        extra_models=instance_models,
     )
     return required
 
 
 def _flat_circuit(
-    instances, connections, ports, models, backend, ignore_missing_ports=False,
+    instances,
+    connections,
+    ports,
+    models,
+    backend,
+    ignore_missing_ports=False,
 ):
     analyze_insts_fn, analyze_fn, evaluate_fn = circuit_backends[backend]
     dummy_instances = analyze_insts_fn(instances, models)
@@ -172,10 +183,14 @@ def _flat_circuit(
         k: _port_modes_dict(get_ports(s)) for k, s in dummy_instances.items()
     }
     connections = _get_multimode_connections(
-        connections, inst_port_mode, ignore_missing_ports=ignore_missing_ports,
+        connections,
+        inst_port_mode,
+        ignore_missing_ports=ignore_missing_ports,
     )
     ports = _get_multimode_ports(
-        ports, inst_port_mode, ignore_missing_ports=ignore_missing_ports,
+        ports,
+        inst_port_mode,
+        ignore_missing_ports=ignore_missing_ports,
     )
 
     inst2model = {}
@@ -246,7 +261,9 @@ def _find_leaves(g):
 
 
 def _find_missing_models(
-    models: dict | None, dag: nx.DiGraph, extra_models: dict | None = None,
+    models: dict | None,
+    dag: nx.DiGraph,
+    extra_models: dict | None = None,
 ) -> tuple[dict[str, Callable], list[str], list[str]]:
     if extra_models is None:
         extra_models = {}
@@ -259,10 +276,14 @@ def _find_missing_models(
 
 
 def _validate_models(
-    models: dict | None, dag: nx.DiGraph, extra_models: dict | None = None,
+    models: dict | None,
+    dag: nx.DiGraph,
+    extra_models: dict | None = None,
 ) -> dict[str, Model]:
     models, required_models, missing_models = _find_missing_models(
-        models, dag, extra_models,
+        models,
+        dag,
+        extra_models,
     )
     if missing_models:
         model_diff = {
@@ -382,9 +403,7 @@ def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
             for net in netlist.values():
                 models.update(_extract_instance_models(net))  # type: ignore
             return models
-        callable_instances = [
-            f for f in netlist["instances"].values() if callable(f)
-        ]
+        callable_instances = [f for f in netlist["instances"].values() if callable(f)]
         models = {}
         for f in callable_instances:
             while isinstance(f, partial):
