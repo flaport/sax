@@ -50,7 +50,7 @@ def val_instance(obj: Any) -> Instance:
             "component": component,
             "settings": settings,
         }
-    msg = "Cannot coerce {obj} [{type(obj)}] into a component dictionary."
+    msg = f"Cannot coerce {obj} [{type(obj)}] into a component dictionary."
     raise TypeError(msg)
 
 
@@ -68,7 +68,18 @@ Instances: TypeAlias = dict[InstanceName, Instance]
 Connections: TypeAlias = dict[InstancePort, InstancePort]
 """A mapping between connected ports."""
 
-Ports: TypeAlias = dict[Port, InstancePort]
+
+def val_ports(obj: Any) -> Ports:
+    from .into import into
+
+    ports: dict[str, InstancePort] = into[dict[str, InstancePort]](obj)
+    if len(ports) < 2:
+        msg = "A sax netlist needs to have at least two ports defined."
+        raise TypeError(msg)
+    return ports
+
+
+Ports: TypeAlias = Annotated[dict[Port, InstancePort], val(val_ports)]
 """A mapping from circuit outport ports to instance ports."""
 
 

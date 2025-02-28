@@ -23,6 +23,7 @@ __all__ = [
     "FloatArray1DLike",
     "FloatArrayLike",
     "FloatLike",
+    "IOLike",
     "Int",
     "IntArray",
     "IntArray1D",
@@ -40,6 +41,7 @@ from typing import (
     Any,
     Literal,
     LiteralString,
+    Protocol,
     TypeAlias,
     TypeVar,
     cast,
@@ -564,6 +566,12 @@ def val_name(obj: Any, *, type_name: str = "Name") -> str:
 
 Name: TypeAlias = Annotated[str, val(val_name)]
 """ A valid python name (identifier)."""
+
+
+class IOLike(Protocol):
+    """An buffer like object implementing 'read'."""
+
+    def read(self, size: int | None = -1, /) -> str: ...
 
 
 def _get_annotated_type(annotated: Annotated) -> type | UnionType:
