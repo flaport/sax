@@ -8,6 +8,7 @@ from __future__ import annotations
 __all__ = [
     "ModelFactoryMM",
     "ModelMM",
+    "ModelsMM",
     "PortCombinationMM",
     "PortMapMM",
     "PortMode",
@@ -30,7 +31,7 @@ from typing import (
     TypeAlias,
 )
 
-from .core import ComplexArray, IntArray1D, val
+from .core import ComplexArray, IntArray1D, Name, val
 from .singlemode import (
     cast_string,
     val_callable_annotated,
@@ -182,3 +183,6 @@ ModelFactoryMM: TypeAlias = Annotated[
     val(val_model_factory),
 ]
 """A keyword-only function producing a Model."""
+
+ModelsMM: TypeAlias = dict[Name, ModelMM]
+"""A mapping between model names and multimode model functions."""

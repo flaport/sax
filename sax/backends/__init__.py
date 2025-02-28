@@ -1,9 +1,11 @@
-""" SAX Backends """
+"""SAX Backends"""
 
 from __future__ import annotations
 
 import warnings
 from typing import Any, Dict
+
+import sax
 
 from ..netlist import Component
 from ..saxtypes import Model, SType
@@ -24,11 +26,6 @@ from .forward_only import (
 )
 
 circuit_backends = {
-    "fg": (
-        analyze_instances_fg,
-        analyze_circuit_fg,
-        evaluate_circuit_fg,
-    ),
     "filipsson_gunnar": (
         analyze_instances_fg,
         analyze_circuit_fg,
@@ -101,3 +98,18 @@ def evaluate_circuit(
     instances: Dict[str, SType],
 ) -> SType:
     return circuit_backends["default"][2](analyzed, instances)
+
+
+def validate_circuit_backend(backend: str) -> sax.Backend:
+    backend = backend.lower()
+    backend = backend_map.get(backend, backend)
+    # assert valid circuit_backend
+    if backend not in circuit_backends:
+        msg = (
+            f"circuit backend {backend} not found. Allowed circuit backends: "
+            f"{', '.join(circuit_backends.keys())}."
+        )
+        raise KeyError(
+            msg,
+        )
+    return backend

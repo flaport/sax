@@ -5,44 +5,32 @@ from __future__ import annotations
 import os
 import shutil
 import sys
+from collections.abc import Callable
 from functools import partial
-from typing import TYPE_CHECKING, NamedTuple
+from typing import Any, Literal
 
-import black
 import networkx as nx
 import numpy as np
 
-from .backends import backend_map, circuit_backends
-from .netlist import AnyNetlist, Netlist, RecursiveNetlist, is_recursive
-from .netlist import netlist as parse_netlist
-from .saxtypes import Model, Settings, SType, scoo, sdense, sdict
-from .utils import (
-    _replace_kwargs,
-    get_ports,
-    get_settings,
-    merge_dicts,
-    update_settings,
-)
+import sax
 
-if TYPE_CHECKING:
-    from collections.abc import Callable
+from .backends import circuit_backends, validate_circuit_backend
+from .netlist import convert_nets_to_connections, remove_unused_instances
+from .netlist import netlist as into_recnet
+from .utils import get_ports
+
+__all__ = ["circuit"]
 
 
-class CircuitInfo(NamedTuple):
-    """Information about the circuit function you created."""
-
-    dag: nx.DiGraph[str]
-    models: dict[str, Model]
-    backend: str
-
-
-def circuit(
-    netlist: AnyNetlist,
-    models: dict[str, Model] | None = None,
-    backend: str = "default",
-    return_type: str = "sdict",
-    ignore_missing_ports: bool = False,
-) -> tuple[Model, CircuitInfo]:
+def circuit(  # noqa: PLR0913
+    netlist: sax.AnyNetlist,
+    models: sax.Models | None = None,
+    backend: sax.Backend | Literal["default"] = "default",
+    return_type: Literal["SDict", "SDense", "SCOO"] = "SDense",
+    *,
+    top_level_name: str = "top_level",
+    ignore_impossible_connections: bool = False,
+) -> tuple[sax.Model, sax.CircuitInfo]:
     """Create a circuit function for a given netlist.
 
     Args:
@@ -50,19 +38,23 @@ def circuit(
         models: A dictionary of models to use in the circuit.
         backend: The backend to use for the circuit.
         return_type: The type of the circuit function to return.
-        ignore_missing_ports: Ignore missing ports in the netlist.
+        top_level_name: select a circuit from the recnet to be considered 'top level'.
+            Ignored when no matching name found in recursive netlist.
+        ignore_impossible_connections: Ignore connections to missing instance ports
+            in stead of erroring out.
 
     """
-    backend = _validate_circuit_backend(backend)
+    backend = validate_circuit_backend(backend)
 
     instance_models = _extract_instance_models(netlist)
-    recnet: RecursiveNetlist = parse_netlist(
+    recnet = into_recnet(
         netlist,
-        with_unconnected_instances=False,
-        with_placements=False,
+        top_level_name=top_level_name,
     )
+    recnet = convert_nets_to_connections(recnet)
+    recnet = remove_unused_instances(recnet)
     _validate_netlist_ports(recnet)
-    dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
+    dependency_dag = _create_dag(recnet, models, validate=True)
     models = _validate_models(models, dependency_dag, extra_models=instance_models)
 
     circuit = None
@@ -74,41 +66,40 @@ def circuit(
             new_models[model_name] = models[model_name]
             continue
 
-        flatnet = recnet.root[model_name]
+        flatnet = recnet[model_name]
         current_models |= new_models
         new_models = {}
 
         current_models[model_name] = circuit = _flat_circuit(
-            flatnet.instances,
-            flatnet.connections,
-            flatnet.ports,
+            flatnet["instances"],
+            flatnet.get("connections", {}),
+            flatnet["ports"],
             current_models,
             backend,
-            ignore_missing_ports=ignore_missing_ports,
+            ignore_impossible_connections=ignore_impossible_connections,
         )
 
-    assert circuit is not None
     circuit = _enforce_return_type(circuit, return_type)
-    return circuit, CircuitInfo(
+    return circuit, sax.CircuitInfo(
         dag=dependency_dag,
         models=current_models,
-        backend=backend_map.get(backend, backend),
+        backend=backend,
     )
 
 
 def _create_dag(
-    netlist: RecursiveNetlist,
-    models: dict[str, Model] | None = None,
+    netlist: sax.RecursiveNetlist,
+    models: sax.Models | None = None,
+    *,
     validate: bool = False,
-) -> nx.DiGraph[str]:
+) -> nx.DiGraph[Any]:
     if models is None:
         models = {}
-    assert isinstance(models, dict)
 
     all_models = {}
     g = nx.DiGraph()
 
-    for model_name, subnetlist in netlist.model_dump().items():
+    for model_name, subnetlist in netlist.items():
         if model_name not in all_models:
             all_models[model_name] = models.get(model_name, subnetlist)
             g.add_node(model_name)
@@ -122,16 +113,15 @@ def _create_dag(
             g.add_edge(model_name, component)
 
     # we only need the nodes that depend on the parent...
-    parent_node = next(iter(netlist.root.keys()))
+    parent_node = next(iter(netlist.keys()))
     nodes = [parent_node, *nx.descendants(g, parent_node)]
     g = nx.induced_subgraph(g, nodes)
-    assert isinstance(g, nx.DiGraph)
     if validate:
         g = _validate_dag(g)
     return g
 
 
-def draw_dag(dag, with_labels=True, **kwargs):
+def draw_dag(dag: nx.DiGraph, *, with_labels: bool = True, **kwargs) -> None:
     _patch_path()
     if shutil.which("dot"):
         return nx.draw(
@@ -144,8 +134,8 @@ def draw_dag(dag, with_labels=True, **kwargs):
 
 
 def get_required_circuit_models(
-    netlist: AnyNetlist,
-    models: dict[str, Model] | None = None,
+    netlist: sax.AnyNetlist,
+    models: dict[str, sax.Model] | None = None,
 ) -> list[str]:
     """Figure out which models are needed for a given netlist.
 
@@ -155,12 +145,11 @@ def get_required_circuit_models(
 
     """
     instance_models = _extract_instance_models(netlist)
-    recnet: RecursiveNetlist = parse_netlist(
+    recnet: sax.RecursiveNetlist = into_recnet(
         netlist,
-        with_unconnected_instances=False,
-        with_placements=False,
     )
-    dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
+    recnet = remove_unused_instances(recnet)
+    dependency_dag = _create_dag(recnet, models, validate=True)
     _, required, _ = _find_missing_models(
         models,
         dependency_dag,
@@ -169,14 +158,15 @@ def get_required_circuit_models(
     return required
 
 
-def _flat_circuit(
-    instances,
-    connections,
-    ports,
-    models,
-    backend,
-    ignore_missing_ports=False,
-):
+def _flat_circuit(  # noqa: PLR0913
+    instances: sax.Instances,
+    connections: sax.Connections,
+    ports: sax.Ports,
+    models: sax.Models,
+    backend: sax.Backend,
+    *,
+    ignore_impossible_connections: bool = False,
+) -> sax.Model:
     analyze_insts_fn, analyze_fn, evaluate_fn = circuit_backends[backend]
     dummy_instances = analyze_insts_fn(instances, models)
     inst_port_mode = {
@@ -185,12 +175,12 @@ def _flat_circuit(
     connections = _get_multimode_connections(
         connections,
         inst_port_mode,
-        ignore_missing_ports=ignore_missing_ports,
+        ignore_impossible_connections=ignore_impossible_connections,
     )
     ports = _get_multimode_ports(
         ports,
         inst_port_mode,
-        ignore_missing_ports=ignore_missing_ports,
+        ignore_impossible_connections=ignore_impossible_connections,
     )
 
     inst2model = {}
@@ -321,7 +311,9 @@ def _port_modes_dict(port_modes):
     return result
 
 
-def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports=False):
+def _get_multimode_connections(
+    connections, inst_port_mode, ignore_impossible_connections=False
+):
     mm_connections = {}
     for inst_port1, inst_port2 in connections.items():
         inst1, port1 = inst_port1.split(",")
@@ -329,7 +321,7 @@ def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports
         try:
             modes1 = inst_port_mode[inst1][port1]
         except KeyError:
-            if ignore_missing_ports:
+            if ignore_impossible_connections:
                 continue
             msg = f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}."
             raise RuntimeError(
@@ -338,7 +330,7 @@ def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports
         try:
             modes2 = inst_port_mode[inst2][port2]
         except KeyError:
-            if ignore_missing_ports:
+            if ignore_impossible_connections:
                 continue
             msg = f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}."
             raise RuntimeError(
@@ -362,14 +354,14 @@ def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports
     return mm_connections
 
 
-def _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=False):
+def _get_multimode_ports(ports, inst_port_mode, ignore_impossible_connections=False):
     mm_ports = {}
     for port, inst_port2 in ports.items():
         inst2, port2 = inst_port2.split(",")
         try:
             modes2 = inst_port_mode[inst2][port2]
         except KeyError:
-            if ignore_missing_ports:
+            if ignore_impossible_connections:
                 continue
             msg = f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}"
             raise RuntimeError(
@@ -413,21 +405,7 @@ def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
     return {}
 
 
-def _validate_circuit_backend(backend):
-    backend = backend.lower()
-    # assert valid circuit_backend
-    if backend not in circuit_backends:
-        msg = (
-            f"circuit backend {backend} not found. Allowed circuit backends: "
-            f"{', '.join(circuit_backends.keys())}."
-        )
-        raise KeyError(
-            msg,
-        )
-    return backend
-
-
-def _validate_dag(dag):
+def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
     nodes = _find_root(dag)
     if len(nodes) > 1:
         msg = f"Multiple top_levels found in netlist: {nodes}"

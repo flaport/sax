@@ -7,6 +7,7 @@ __all__ = [
     "InstancePort",
     "ModelFactorySM",
     "ModelSM",
+    "ModelsSM",
     "Port",
     "PortCombinationSM",
     "PortMapSM",
@@ -32,7 +33,7 @@ from typing import (
     get_origin,
 )
 
-from .core import ComplexArray, IntArray1D, cast_string, val, val_name
+from .core import ComplexArray, IntArray1D, Name, cast_string, val, val_name
 
 T = TypeVar("T")
 
@@ -262,3 +263,6 @@ ModelFactorySM: TypeAlias = Annotated[
     val(val_model_factory),
 ]
 """A keyword-only function producing a Model."""
+
+ModelsSM: TypeAlias = dict[Name, ModelSM]
+"""A mapping between model names and singlemode model functions."""

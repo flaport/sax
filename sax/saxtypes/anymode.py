@@ -6,8 +6,11 @@ Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 from __future__ import annotations
 
 __all__ = [
+    "Backends",
+    "CircuitInfo",
     "Model",
     "ModelFactory",
+    "Models",
     "PortCombination",
     "PortMap",
     "SCoo",
@@ -22,11 +25,15 @@ __all__ = [
     "SType",
 ]
 
-from typing import TypeAlias
+from typing import Literal, NamedTuple, TypeAlias
 
+import networkx as nx
+
+from sax.saxtypes.core import Name
 from sax.saxtypes.multimode import (
     ModelFactoryMM,
     ModelMM,
+    ModelsMM,
     PortCombinationMM,
     PortMapMM,
     SCooMM,
@@ -43,6 +50,7 @@ from sax.saxtypes.multimode import (
 from sax.saxtypes.singlemode import (
     ModelFactorySM,
     ModelSM,
+    ModelsSM,
     PortCombinationSM,
     PortMapSM,
     SCooModelFactorySM,
@@ -71,9 +79,13 @@ SDict: TypeAlias = SDictSM | SDictMM
 SDictModel: TypeAlias = SDictModelSM | SDictModelMM
 SDictModelFactory: TypeAlias = SDictModelFactorySM | SDictModelFactoryMM
 SType: TypeAlias = STypeSM | STypeMM
+Backend: TypeAlias = Literal["filipsson_gunnar", "additive", "forward", "klu"]
+Models: TypeAlias = ModelsSM | ModelsMM
 
-if __name__ == "__main__":
-    import sax
 
-    s = sax.into[SDict]({("a3", "a4"): 4, ("a5@te", "a6@te"): 5})
-    print(s)
+class CircuitInfo(NamedTuple):
+    """Information about the circuit function you created."""
+
+    dag: nx.DiGraph[str]
+    models: dict[Name, Model]
+    backend: Backend

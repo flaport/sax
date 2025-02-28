@@ -21,21 +21,15 @@ def netlist(
     netlist: sax.AnyNetlist,
     *,
     top_level_name: str = "top_level",
-    nets_into_connections: bool = True,
 ) -> sax.RecursiveNetlist:
     """Return a netlist from a given dictionary."""
     if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
-        if nets_into_connections:
-            recnet = convert_nets_to_connections(recnet)
         top_level = recnet.get(top_level_name, None)
         if top_level is None:
             return recnet
         return {top_level_name: top_level, **recnet}
     if (net := sax.try_into[sax.Netlist](netlist)) is not None:
-        recnet = {top_level_name: net}
-        if nets_into_connections:
-            return convert_nets_to_connections(recnet)
-        return recnet
+        return {top_level_name: net}
     msg = (
         "Invalid argument for `netlist`. "
         "Expected type: dict | Netlist | RecursiveNetlist. "
