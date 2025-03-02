@@ -11,6 +11,8 @@ from natsort import natsorted
 
 import sax
 
+from ..s import scoo
+
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
 dot_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 
@@ -19,6 +21,7 @@ def analyze_instances_klu(
     instances: sax.Instances,
     models: sax.Models,
 ) -> dict[str, sax.SCoo]:
+    """KLU Instances analysis."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
         instances[k] = sax.into[sax.Instance](v)
@@ -28,15 +31,16 @@ def analyze_instances_klu(
     dummy_models = {k: scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
-        dummy_instances[k] = dummy_models[i.component]
+        dummy_instances[k] = dummy_models[i["component"]]
     return dummy_instances
 
 
 def analyze_circuit_klu(
-    analyzed_instances: dict[str, SCoo],
-    connections: dict[str, str],
-    ports: dict[str, str],
-) -> Any:
+    analyzed_instances: dict[str, sax.SCoo],
+    connections: sax.Connections,
+    ports: sax.Ports,
+) -> Any:  # noqa: ANN401
+    """KLU Circuit Analysis."""
     connections = {**connections, **{v: k for k, v in connections.items()}}
     inverse_ports = {v: k for k, v in ports.items()}
     port_map = {k: i for i, k in enumerate(ports)}
@@ -92,7 +96,8 @@ def analyze_circuit_klu(
     )
 
 
-def evaluate_circuit_klu(analyzed: Any, instances: dict[str, SType]) -> SDense:
+def evaluate_circuit_klu(analyzed: Any, instances: dict[str, sax.SType]) -> sax.SDense:  # noqa: ANN401
+    """Evaluate a circuit with KLU."""
     (
         n_col,
         mask,
@@ -110,7 +115,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: dict[str, SType]) -> SDense:
     idx = 0
     Sx = []
     batch_shape = ()
-    for name, pm_ in dummy_pms:
+    for name, _ in dummy_pms:
         _, _, sx, ports_map = scoo(instances[name])
         Sx.append(sx)
         if len(sx.shape[:-1]) > len(batch_shape):
@@ -137,7 +142,9 @@ def evaluate_circuit_klu(analyzed: Any, instances: dict[str, SType]) -> SDense:
     return S, {p: i for i, p in enumerate(port_map)}
 
 
-def _get_instance_ports(connections: dict[str, str], ports: dict[str, str]):
+def _get_instance_ports(
+    connections: dict[str, str], ports: dict[str, str]
+) -> dict[sax.InstanceName, list[sax.Port]]:
     instance_ports = {}
     for connection in connections.items():
         for ip in connection:
@@ -151,17 +158,3 @@ def _get_instance_ports(connections: dict[str, str], ports: dict[str, str]):
             instance_ports[i] = set()
         instance_ports[i].add(p)
     return {k: natsorted(v) for k, v in instance_ports.items()}
-
-
-def _get_dummy_instances(connections, ports):
-    """no longer used. deprecated by analyze_instances_klu."""
-    instance_ports = _get_instance_ports(connections, ports)
-    dummy_instances = {}
-    for name, ports in instance_ports.items():
-        num_ports = len(ports)
-        pm = {p: i for i, p in enumerate(ports)}
-        ij = jnp.mgrid[:num_ports, :num_ports]
-        i = ij[0].ravel()
-        j = ij[1].ravel()
-        dummy_instances[name] = (i, j, None, pm)
-    return dummy_instances

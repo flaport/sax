@@ -1,47 +1,48 @@
-""" SAX forward_only Backend """
+"""SAX forward_only Backend."""
 
 from __future__ import annotations
-from typing import Any, Dict
+
+from typing import Any, cast
 
 import jax.numpy as jnp
 import networkx as nx
 
-from ..netlist import Component
-from ..saxtypes import Model, SCoo, scoo, SDict, sdict
+import sax
+
+from ..s import scoo, sdict
 
 
 def analyze_instances_forward(
-    instances: Dict[str, Component],
-    models: Dict[str, Model],
-) -> Dict[str, SCoo]:
+    instances: sax.Instances,
+    models: sax.Models,
+) -> dict[str, sax.SCoo]:
+    """Analyze instances for forward algorithm."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
-        if not isinstance(v, Component):
-            v = Component(**v)
-        instances[k] = v
+        instances[k] = sax.into[sax.Instance](v)
     model_names = set()
     for i in instances.values():
-        model_names.add(i.component)
+        model_names.add(i["component"])
     dummy_models = {k: scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
-        dummy_instances[k] = dummy_models[i.component]
+        dummy_instances[k] = dummy_models[i["component"]]
     return dummy_instances
 
 
 def analyze_circuit_forward(
-    analyzed_instances: Dict[str, SDict],
-    connections: Dict[str, str],
-    ports: Dict[str, str],
-) -> Any:
+    analyzed_instances: dict[str, sax.SDict],  # noqa: ARG001
+    connections: sax.Connections,
+    ports: sax.Ports,
+) -> Any:  # noqa: ANN401
+    """Analyze circuit for forward algorithm."""
     return connections, ports
 
 
-# import matplotlib.pyplot as plt
 def evaluate_circuit_forward(
-    analyzed: Any,
-    instances: Dict[str, SDict],
-) -> SDict:
+    analyzed: Any,  # noqa: ANN401
+    instances: dict[sax.InstanceName, sax.SDict],
+) -> sax.SDict:
     """Evaluate a circuit for the given sdicts using simple matrix multiplication."""
     connections, ports = analyzed
     edges = _graph_edges_directed(instances, connections, ports)
@@ -51,7 +52,7 @@ def evaluate_circuit_forward(
 
     # Dictionary to store signals at each node
     circuit_sdict = {}
-    for in_port in ports.keys():
+    for in_port in ports:
         if in_port.startswith("in"):
             node_signals = {("", in_port): 1}
             bfs_output = nx.bfs_layers(graph, ("", in_port))
@@ -61,7 +62,9 @@ def evaluate_circuit_forward(
                     if node in node_signals:
                         signal = node_signals[node]
                         for neighbor in graph.successors(node):
-                            transmission = graph[node][neighbor]["transmission"]
+                            transmission = cast(
+                                int, graph[node][neighbor]["transmission"]
+                            )
                             if neighbor in layer_signals:
                                 layer_signals[neighbor] += signal * transmission
                             else:
@@ -76,7 +79,7 @@ def evaluate_circuit_forward(
     return circuit_sdict
 
 
-def _split_port(port: str) -> Tuple[str, str]:
+def _split_port(port: str) -> tuple[str, str]:
     try:
         instance, port = port.split(",")
     except ValueError:
@@ -86,10 +89,10 @@ def _split_port(port: str) -> Tuple[str, str]:
 
 
 def _graph_edges_directed(
-    instances: Dict[str, SDict],
-    connections: Dict[str, str],
-    ports: Dict[str, str],
-):
+    instances: dict[str, sax.SDict],
+    connections: sax.Connections,
+    ports: sax.Ports,
+) -> Any:  # noqa: ANN401
     one = jnp.array([1.0], dtype=float)
     edges_dict = {}
     edges_dict.update({_split_port(k): _split_port(v) for k, v in connections.items()})
@@ -101,8 +104,7 @@ def _graph_edges_directed(
         else:
             edges += [(n1, n2, {"transmission": one})]
 
-    for instance in instances:
-        s = instances[instance]
+    for instance, s in instances.items():
         for (p1, p2), w in sdict(s).items():
             if p1.startswith("in") and p2.startswith("out"):
                 edges += [
