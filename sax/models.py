@@ -37,7 +37,7 @@ def straight(
         loss: loss in dB/cm.
 
     """
-    dwl = sax.into.FloatArray(wl) - wl0
+    dwl: sax.FloatArray = sax.into[sax.FloatArray](wl) - wl0
     dneff_dwl = (ng - neff) / wl0
     _neff = neff - dwl * dneff_dwl
     phase = 2 * jnp.pi * _neff * length / wl

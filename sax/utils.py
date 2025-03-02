@@ -115,7 +115,7 @@ def replace_kwargs(func: Callable, **kwargs: sax.SettingsValue) -> None:
         inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, default=v)
         for k, v in kwargs.items()
     ]
-    func.__signature__ = sig.replace(parameters=settings)
+    func.__signature__ = sig.replace(parameters=settings)  # type: ignore # noqa: PGH003
 
 
 def update_settings(

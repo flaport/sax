@@ -41,14 +41,6 @@ def block_diag(*arrs: Array) -> Array:
     return block_diag.reshape(*batch_shape, N, N)
 
 
-@overload
-def get_ports(S: sax.STypeSM) -> tuple[sax.Port, ...]: ...
-
-
-@overload
-def get_ports(S: sax.STypeMM) -> tuple[sax.PortMode, ...]: ...
-
-
 def get_ports(S: sax.SType) -> tuple[sax.Port, ...] | tuple[sax.PortMode]:
     """Get port names of a model or an stype."""
     if callable(S):
