@@ -2,7 +2,7 @@
 
 import inspect
 import re
-from collections.abc import Callable
+from collections.abc import Callable, Iterator
 from functools import wraps
 from pathlib import Path
 from typing import Any, TypeVar
@@ -90,3 +90,83 @@ def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
         if v.default is not inspect.Parameter.empty
     }
     return sax.into[sax.Settings](settings)
+
+
+def merge_dicts(*dicts: dict) -> dict:
+    """Merge (possibly deeply nested) dictionaries."""
+    num_dicts = len(dicts)
+
+    if num_dicts < 1:
+        return {}
+
+    if num_dicts == 1:
+        return dict(_generate_merged_dict(dicts[0], {}))
+
+    if len(dicts) == 2:  # noqa: PLR2004
+        return dict(_generate_merged_dict(dicts[0], dicts[1]))
+
+    return merge_dicts(dicts[0], merge_dicts(*dicts[1:]))
+
+
+def replace_kwargs(func: Callable, **kwargs: sax.SettingsValue) -> None:
+    """Change the kwargs signature of a function."""
+    sig = inspect.signature(func)
+    settings = [
+        inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, default=v)
+        for k, v in kwargs.items()
+    ]
+    func.__signature__ = sig.replace(parameters=settings)
+
+
+def update_settings(
+    settings: sax.Settings,
+    *compnames: str,
+    **kwargs: sax.SettingsValue,
+) -> sax.Settings:
+    """Update a nested settings dictionary."""
+    _settings = {}
+
+    if compnames:
+        for k, v in settings.items():
+            if isinstance(v, dict):
+                if k == compnames[0]:
+                    _settings[k] = update_settings(v, *compnames[1:], **kwargs)
+                else:
+                    _settings[k] = sax.try_into[sax.SettingsValue](v)
+            else:
+                _settings[k] = sax.try_into[sax.SettingsValue](v)
+    else:
+        for k, v in settings.items():
+            if isinstance(v, dict):
+                _settings[k] = update_settings(v, **kwargs)
+            elif k in kwargs:
+                _settings[k] = sax.try_into[sax.SettingsValue](kwargs[k])
+            else:
+                _settings[k] = sax.try_into[sax.SettingsValue](v)
+    return {k: v for k, v in settings.items() if v is not None}
+
+
+def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]:
+    # inspired by https://stackoverflow.com/questions/7204805/how-to-merge-dictionaries-of-dictionaries
+    keys = {
+        **{k: None for k in dict1},
+        **{k: None for k in dict2},
+    }  # keep key order, values irrelevant
+    for k in keys:
+        if k in dict1 and k in dict2:
+            v1, v2 = dict1[k], dict2[k]
+            if isinstance(v1, dict) and isinstance(v2, dict):
+                v = dict(_generate_merged_dict(v1, v2))
+            else:
+                # If one of the values is not a dict, you can't continue merging it.
+                # Value from second dict overrides one in first and we move on.
+                v = v2
+        elif k in dict1:
+            v = dict1[k]
+        else:  # k in dict2:
+            v = dict2[k]
+
+        if isinstance(v, dict):
+            yield (k, {**v})  # shallow copy of dict
+        else:
+            yield (k, v)
