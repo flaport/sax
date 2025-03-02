@@ -1,5 +1,6 @@
 """General SAX Utilities."""
 
+import inspect
 import re
 from collections.abc import Callable
 from functools import wraps
@@ -78,3 +79,14 @@ def clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") -> 
         msg = f"failed to clean string to a valid python identifier: {s}"
         raise ValueError(msg)
     return s
+
+
+def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
+    """Get the parameters of a SAX model function."""
+    signature = inspect.signature(model)
+    settings: sax.Settings = {
+        k: (v.default if not isinstance(v, dict) else v)
+        for k, v in signature.parameters.items()
+        if v.default is not inspect.Parameter.empty
+    }
+    return sax.into[sax.Settings](settings)

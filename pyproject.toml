@@ -74,6 +74,7 @@ dev = [
     "tqdm>=4.0.0",
     "types-pyyaml>=6.0.12.20241230",
     "types-networkx>=3.4.2.20250227",
+    "pylsp-mypy>=0.7.0",
 ]
 
 [tool.setuptools.packages.find]
@@ -94,6 +95,12 @@ select = ["ALL"]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"
+
+[tool.pylsp-mypy]
+enabled = true
+live_mode = true
+strict = true
+exclude = ["tests/*"]
 
 [tool.tbump]
 

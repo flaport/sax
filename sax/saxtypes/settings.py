@@ -7,13 +7,19 @@ __all__ = [
     "SettingsValue",
 ]
 
-from typing import (
-    TypeAlias,
-)
+from typing import Annotated, Any, TypeAlias
 
-from .core import ComplexArrayLike
+from .core import ComplexArrayLike, val, val_complex_array
 
-Settings: TypeAlias = dict[str, "SettingsValue"]
+
+def val_settings(settings: dict) -> Settings:
+    if not isinstance(settings, dict):
+        msg = "Settings should be a dictionary. Got: {settings!r}."
+        raise TypeError(msg)
+    return {k: val_settings_value(v) for k, v in settings.items()}
+
+
+Settings: TypeAlias = Annotated[dict[str, "SettingsValue"], val(val_settings)]
 """A (possibly nested) settings mapping.
 
 Example:
@@ -29,5 +35,18 @@ Example:
 
 """
 
-SettingsValue: TypeAlias = Settings | ComplexArrayLike | str | None
+
+def val_settings_value(value: Any) -> SettingsValue:
+    """Validate a parameter dictionary"""
+    if isinstance(value, str) or value is None:
+        return value
+    elif isinstance(value, dict):
+        return {k: val_settings_value(v) for k, v in value.items()}
+    else:
+        return val_complex_array(value, strict=False, cast=False)
+
+
+SettingsValue: TypeAlias = Annotated[
+    Settings | ComplexArrayLike | str | None, val(val_settings_value)
+]
 """Anything that can be used as value in a settings dict."""

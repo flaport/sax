@@ -6,7 +6,7 @@ Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 from __future__ import annotations
 
 __all__ = [
-    "Backends",
+    "Backend",
     "CircuitInfo",
     "Model",
     "ModelFactory",
@@ -25,7 +25,7 @@ __all__ = [
     "SType",
 ]
 
-from typing import Literal, NamedTuple, TypeAlias
+from typing import Any, Literal, NamedTuple, TypeAlias
 
 import networkx as nx
 
@@ -86,6 +86,6 @@ Models: TypeAlias = ModelsSM | ModelsMM
 class CircuitInfo(NamedTuple):
     """Information about the circuit function you created."""
 
-    dag: nx.DiGraph[str]
+    dag: nx.Graph[Any]
     models: dict[Name, Model]
     backend: Backend

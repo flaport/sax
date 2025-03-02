@@ -86,4 +86,4 @@ if __name__ == "__main__":
     from .core import Float, Int
 
     x = 3
-    y: Int = into[Float](x)
+    y: Int = into[float](x)

@@ -5,9 +5,8 @@ from __future__ import annotations
 import os
 import shutil
 import sys
-from collections.abc import Callable
 from functools import partial
-from typing import Any, Literal
+from typing import TYPE_CHECKING, Any, Literal, cast
 
 import networkx as nx
 import numpy as np
@@ -17,7 +16,10 @@ import sax
 from .backends import circuit_backends, validate_circuit_backend
 from .netlist import convert_nets_to_connections, remove_unused_instances
 from .netlist import netlist as into_recnet
-from .utils import get_ports
+from .s import get_ports
+
+if TYPE_CHECKING:
+    from collections.abc import Callable
 
 __all__ = ["circuit"]
 
@@ -115,13 +117,13 @@ def _create_dag(
     # we only need the nodes that depend on the parent...
     parent_node = next(iter(netlist.keys()))
     nodes = [parent_node, *nx.descendants(g, parent_node)]
-    g = nx.induced_subgraph(g, nodes)
+    g = cast(nx.DiGraph[Any], nx.induced_subgraph(g, nodes))
     if validate:
         g = _validate_dag(g)
     return g
 
 
-def draw_dag(dag: nx.DiGraph, *, with_labels: bool = True, **kwargs) -> None:
+def draw_dag(dag: nx.DiGraph[Any], *, with_labels: bool = True, **kwargs) -> None:
     _patch_path()
     if shutil.which("dot"):
         return nx.draw(
@@ -185,7 +187,7 @@ def _flat_circuit(  # noqa: PLR0913
 
     inst2model = {}
     for k, inst in instances.items():
-        inst2model[k] = models[inst.component]
+        inst2model[k] = models[inst["component"]]
 
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
     netlist_settings = {
@@ -252,7 +254,7 @@ def _find_leaves(g):
 
 def _find_missing_models(
     models: dict | None,
-    dag: nx.DiGraph,
+    dag: nx.DiGraph[Any],
     extra_models: dict | None = None,
 ) -> tuple[dict[str, Callable], list[str], list[str]]:
     if extra_models is None:
@@ -267,7 +269,7 @@ def _find_missing_models(
 
 def _validate_models(
     models: dict | None,
-    dag: nx.DiGraph,
+    dag: nx.DiGraph[Any],
     extra_models: dict | None = None,
 ) -> dict[str, Model]:
     models, required_models, missing_models = _find_missing_models(
@@ -405,7 +407,7 @@ def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
     return {}
 
 
-def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
+def _validate_dag(dag: nx.DiGraph[Any]) -> nx.DiGraph[Any]:
     nodes = _find_root(dag)
     if len(nodes) > 1:
         msg = f"Multiple top_levels found in netlist: {nodes}"
