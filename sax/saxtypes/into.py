@@ -65,10 +65,17 @@ class into(metaclass=Into):  # noqa: N801
 
 
 class TryInto(type):
-    def __getitem__(
-        cls, key: type[T] | _AnnotatedAlias[T] | str
-    ) -> Callable[..., T | None]:
-        return cast(Callable[..., T | None], maybe(into[key]))
+    @overload
+    def __getitem__(cls, key: type[T]) -> Callable[..., T | None]: ...
+
+    @overload
+    def __getitem__(cls, key: str) -> Callable[..., Any | None]: ...
+
+    @overload
+    def __getitem__(cls, key: Any) -> Callable[..., Any | None]: ...
+
+    def __getitem__(cls, key: type[T] | str | Any) -> Callable[..., T | Any | None]:
+        return maybe(into[key])
 
 
 class try_into(metaclass=TryInto):  # noqa: N801
@@ -79,4 +86,4 @@ if __name__ == "__main__":
     from .core import Float, Int
 
     x = 3
-    y: Float = into[Float](x)
+    y: Int = into[Float](x)
