@@ -3765,6 +3765,7 @@ dependencies = [
     { name = "orjson" },
     { name = "pydantic" },
     { name = "pyyaml" },
+    { name = "typing-extensions" },
 ]
 
 [package.optional-dependencies]
@@ -3800,6 +3801,8 @@ dev = [
     { name = "tbump" },
     { name = "tmm" },
     { name = "tqdm" },
+    { name = "types-networkx" },
+    { name = "types-pyyaml" },
 ]
 
 [package.metadata]
@@ -3848,6 +3851,9 @@ requires-dist = [
     { name = "tbump", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "tmm", marker = "extra == 'dev'", specifier = ">=0.2.0" },
     { name = "tqdm", marker = "extra == 'dev'", specifier = ">=4.0.0" },
+    { name = "types-networkx", marker = "extra == 'dev'", specifier = ">=3.4.2.20250227" },
+    { name = "types-pyyaml", marker = "extra == 'dev'", specifier = ">=6.0.12.20241230" },
+    { name = "typing-extensions", specifier = ">=4.12.2" },
 ]
 
 [[package]]
@@ -4619,6 +4625,18 @@ dependencies = [
 sdist = { url = "https://files.pythonhosted.org/packages/cb/ce/dca7b219718afd37a0068f4f2530a727c2b74a8b6e8e0c0080a4c0de4fcd/typer-0.15.1.tar.gz", hash = "sha256:a0588c0a7fa68a1978a069818657778f86abe6ff5ea6abf472f940a08bfe4f0a", size = 99789 }
 wheels = [
     { url = "https://files.pythonhosted.org/packages/d0/cc/0a838ba5ca64dc832aa43f727bd586309846b0ffb2ce52422543e6075e8a/typer-0.15.1-py3-none-any.whl", hash = "sha256:7994fb7b8155b64d3402518560648446072864beefd44aa2dc36972a5972e847", size = 44908 },
+]
+
+[[package]]
+name = "types-networkx"
+version = "3.4.2.20250227"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "numpy" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/d8/63/a6924a14d564bb7c7dd249007601b421a1d6f5e00e93cfd36eb8b6dce5fe/types_networkx-3.4.2.20250227.tar.gz", hash = "sha256:cf690e08ac91d40ab07983dd06928f2090b3b7f8ee99f53c865f77b605d8a690", size = 55016 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/97/f0/f35c82ab5136d5e64c2c9662977bafda63189d092454704e85b2e3d6b112/types_networkx-3.4.2.20250227-py3-none-any.whl", hash = "sha256:9ef12b5e74efc3150772300a5b6cba2deff0d17895d46d227939dc490ec7527f", size = 137428 },
 ]
 
 [[package]]
