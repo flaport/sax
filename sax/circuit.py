@@ -6,7 +6,7 @@ import json
 import shutil
 from collections.abc import Iterable, Iterator
 from functools import partial
-from typing import Any, Literal, cast
+from typing import Any, Literal, cast, overload
 
 import networkx as nx
 import numpy as np
@@ -16,17 +16,53 @@ import sax
 from .backends import circuit_backends, validate_circuit_backend
 from .netlist import convert_nets_to_connections, remove_unused_instances
 from .netlist import netlist as into_recnet
-from .s import get_ports
+from .s import get_ports, scoo, sdense, sdict
 from .utils import get_settings, merge_dicts, replace_kwargs, update_settings
 
 __all__ = ["circuit"]
+
+
+@overload
+def circuit(
+    netlist: sax.AnyNetlist,
+    models: sax.Models | None = None,
+    backend: sax.Backend | Literal["default"] = "default",
+    return_type: Literal["SDict"] = "SDict",
+    *,
+    top_level_name: str = "top_level",
+    ignore_impossible_connections: bool = False,
+) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
+
+
+@overload
+def circuit(
+    netlist: sax.AnyNetlist,
+    models: sax.Models | None = None,
+    backend: sax.Backend | Literal["default"] = "default",
+    return_type: Literal["SDense"] = "SDense",
+    *,
+    top_level_name: str = "top_level",
+    ignore_impossible_connections: bool = False,
+) -> tuple[sax.SDenseModel, sax.CircuitInfo]: ...
+
+
+@overload
+def circuit(
+    netlist: sax.AnyNetlist,
+    models: sax.Models | None = None,
+    backend: sax.Backend | Literal["default"] = "default",
+    return_type: Literal["SCoo"] = "SCoo",
+    *,
+    top_level_name: str = "top_level",
+    ignore_impossible_connections: bool = False,
+) -> tuple[sax.SCooModel, sax.CircuitInfo]: ...
 
 
 def circuit(  # noqa: PLR0913
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
     backend: sax.Backend | Literal["default"] = "default",
-    return_type: Literal["SDict", "SDense", "SCOO"] = "SDense",
+    return_type: Literal["SDict", "SDense", "SCoo"] = "SDense",
     *,
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
@@ -398,22 +434,22 @@ def _get_multimode_ports(
 
 def _enforce_return_type(model: sax.Model, return_type: Any) -> sax.Model:  # noqa: ANN401
     stypes = {
-        "default": None,
-        "stype": None,
-        "sdict": sax.SDictModel,
-        "scoo": sax.SCooModel,
-        "sdense": sax.SDenseModel,
-        sax.SDict: sax.SDictModel,
-        sax.SDense: sax.SDenseModel,
-        sax.SCoo: sax.SCooModel,
-        sax.SDictModel: sax.SDictModel,
-        sax.SDenseModel: sax.SDenseModel,
-        sax.SCooModel: sax.SCooModel,
+        "sdict": sdict,
+        "scoo": scoo,
+        "sdense": sdense,
+        sax.SDict: sdict,
+        sax.SDense: sdense,
+        sax.SCoo: scoo,
+        sax.SDictModel: sdict,
+        sax.SDenseModel: sdense,
+        sax.SCooModel: scoo,
     }
+    if isinstance(return_type, str):
+        return_type = return_type.lower()
     stype = stypes.get(return_type)
     if stype is None:
         return model
-    return sax.into[stype](model)
+    return stype(model)
 
 
 def _extract_instance_models(netlist: sax.AnyNetlist) -> sax.Models:

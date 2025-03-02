@@ -1,34 +1,30 @@
-"""SAX KLU Backend"""
+"""SAX KLU Backend."""
 
 from __future__ import annotations
 
-import time
-from typing import Any, Dict
+from typing import Any
 
 import jax
 import jax.numpy as jnp
 import klujax
 from natsort import natsorted
 
-from ..netlist import Component
-from ..saxtypes import Model, SCoo, SDense, SType, scoo
+import sax
 
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
 dot_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 
 
 def analyze_instances_klu(
-    instances: Dict[str, Component],
-    models: Dict[str, Model],
-) -> Dict[str, SCoo]:
+    instances: sax.Instances,
+    models: sax.Models,
+) -> dict[str, sax.SCoo]:
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
-        if not isinstance(v, Component):
-            v = Component(**v)
-        instances[k] = v
+        instances[k] = sax.into[sax.Instance](v)
     model_names = set()
     for i in instances.values():
-        model_names.add(i.component)
+        model_names.add(i["component"])
     dummy_models = {k: scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
@@ -37,9 +33,9 @@ def analyze_instances_klu(
 
 
 def analyze_circuit_klu(
-    analyzed_instances: Dict[str, SCoo],
-    connections: Dict[str, str],
-    ports: Dict[str, str],
+    analyzed_instances: dict[str, SCoo],
+    connections: dict[str, str],
+    ports: dict[str, str],
 ) -> Any:
     connections = {**connections, **{v: k for k, v in connections.items()}}
     inverse_ports = {v: k for k, v in ports.items()}
@@ -96,7 +92,7 @@ def analyze_circuit_klu(
     )
 
 
-def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
+def evaluate_circuit_klu(analyzed: Any, instances: dict[str, SType]) -> SDense:
     (
         n_col,
         mask,
@@ -141,7 +137,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: Dict[str, SType]) -> SDense:
     return S, {p: i for i, p in enumerate(port_map)}
 
 
-def _get_instance_ports(connections: Dict[str, str], ports: Dict[str, str]):
+def _get_instance_ports(connections: dict[str, str], ports: dict[str, str]):
     instance_ports = {}
     for connection in connections.items():
         for ip in connection:
