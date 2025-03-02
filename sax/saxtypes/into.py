@@ -15,19 +15,13 @@ from __future__ import annotations
 __all__ = ["into", "try_into"]
 
 from collections.abc import Callable
-from typing import (
-    Any,
-    TypeVar,
-    _AnnotatedAlias,  # type: ignore[reportAttributeAccessIssue]
-    cast,
-    get_args,
-    overload,
-)
+from typing import Any, TypeVar, cast, get_args, overload
 
 from pydantic import PlainValidator, TypeAdapter
 from pydantic_core._pydantic_core import ValidationError
+from typing_extensions import _AnnotatedAlias
 
-from ..utils import maybe
+from sax.utils import maybe
 
 T = TypeVar("T")
 
@@ -36,11 +30,15 @@ class Into(type):
     @overload
     def __getitem__(cls, key: type[T]) -> Callable[..., T]: ...
 
-    @overload  # FIXME: why do type checkers think this returns Callable[..., Any]?
-    def __getitem__(cls, key: _AnnotatedAlias[T]) -> Callable[..., T]: ...
+    @overload
+    def __getitem__(cls, key: str) -> Callable[..., Any]: ...
+
+    @overload
+    def __getitem__(cls, key: Any) -> Callable[..., Any]: ...
 
     def __getitem__(
-        cls, key: type[T] | _AnnotatedAlias[T] | str
+        cls,
+        key: type[T] | str | Any,
     ) -> Callable[..., T | Any]:
         if isinstance(key, str) and hasattr(cls, key):
             return getattr(cls, key)
@@ -75,3 +73,10 @@ class TryInto(type):
 
 class try_into(metaclass=TryInto):  # noqa: N801
     """Type caster utility."""
+
+
+if __name__ == "__main__":
+    from .core import Float, Int
+
+    x = 3
+    y: Float = into[Float](x)

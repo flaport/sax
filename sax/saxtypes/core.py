@@ -96,7 +96,7 @@ def _val_item_type(  # noqa: PLR0913
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
         arr = maybe(np.asarray)(item)
-        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):  # type: ignore[reportArgumentType]
+        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):  # type: ignore[arg-type]
             msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
             raise TypeError(msg)
         if strict:
@@ -574,15 +574,15 @@ class IOLike(Protocol):
     def read(self, size: int | None = -1, /) -> str: ...
 
 
-def _get_annotated_type(annotated: Annotated) -> type | UnionType:
+def _get_annotated_type(annotated: Any) -> type | UnionType:
     return get_args(annotated)[0]
 
 
-def _get_annotated_dtype(annotated: Annotated) -> Any:
+def _get_annotated_dtype(annotated: Any) -> Any:
     return get_args(annotated)[1]
 
 
-def _get_annotated_ndim(annotated: Annotated) -> Any:
+def _get_annotated_ndim(annotated: Any) -> Any:
     with suppress(Exception):
         return int(get_args(annotated)[2])
     return None

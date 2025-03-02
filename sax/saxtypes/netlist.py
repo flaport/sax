@@ -139,7 +139,7 @@ AnyNetlist: TypeAlias = Netlist | RecursiveNetlist
 
 
 def _instance_from_partial(p: partial) -> Instance:
-    settings = {}
+    settings: Settings = {}
     f: Any = p
     while isinstance(f, partial):
         if f.args:
