@@ -80,6 +80,31 @@ except ImportError:
         "better performance during circuit evaluation!"
     )
 
+try:
+    from .cuda import (
+        analyze_circuit_cuda,
+        analyze_instances_cuda,
+        evaluate_circuit_cuda,
+    )
+
+    circuit_backends["cuda"] = (
+        analyze_instances_cuda,
+        analyze_circuit_cuda,
+        evaluate_circuit_cuda,
+    )
+    circuit_backends["default"] = (
+        analyze_instances_cuda,
+        analyze_circuit_cuda,
+        evaluate_circuit_cuda,
+    )
+except ImportError:
+    default_backend = "klu" if "klu" in circuit_backends else "fg"
+    circuit_backends["default"] = circuit_backends[default_backend]
+    warnings.warn(
+        "cupy not found. Please install cupy for "
+        "better performance during circuit evaluation!"
+    )
+
 
 def analyze_instances(
     instances: Dict[str, Component],

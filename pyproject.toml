@@ -74,6 +74,11 @@ dev = [
     "tqdm>=4.0.0",
 ]
 
+cuda = [
+  "jax[cuda12]",
+  "cupy",
+]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["sax", "sax.backends"]
