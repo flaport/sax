@@ -28,7 +28,7 @@ dependencies = [
     "jax>=0.5.0",
     "jaxlib>=0.5.0",
     "jaxtyping>=0.2.38",
-    "klujax>=0.4.0",
+    "klujax>=0.4.1",
     "matplotlib>=3.0.0",
     "natsort>=8.0.0",
     "networkx>=3.0.0",
@@ -36,6 +36,7 @@ dependencies = [
     "orjson>=3.0.0",
     "pydantic>=2.10.0",
     "pyyaml>=6.0.0",
+    "xarray>=2025.1.2",
 ]
 
 [project.optional-dependencies]

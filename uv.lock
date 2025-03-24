@@ -1,4 +1,5 @@
 version = 1
+revision = 1
 requires-python = ">=3.11.0"
 resolution-markers = [
     "python_full_version >= '3.13'",
@@ -1839,7 +1840,7 @@ wheels = [
 
 [[package]]
 name = "klujax"
-version = "0.4.0"
+version = "0.4.1"
 source = { registry = "https://pypi.org/simple" }
 dependencies = [
     { name = "jax" },
@@ -1848,15 +1849,15 @@ dependencies = [
     { name = "numpy" },
 ]
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/f3/e8/2d6ae598762854702180b4e28baf664159b5e9e103001f2f5beb037fff63/klujax-0.4.0-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:03da19e414f4727f83d391ae736fab59294a6514e38971b4086fc9b4129e3b94", size = 199427 },
-    { url = "https://files.pythonhosted.org/packages/0e/27/29cc5381edfc042f91827436e40b94cfcf17a6568c3dfd1b9246d50ea50f/klujax-0.4.0-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:9f4f1929a202e9f248a35177a983c36f76c5e1cc0b9fbe1f5c415e2a3b1201a9", size = 2043297 },
-    { url = "https://files.pythonhosted.org/packages/95/62/1a20edf57e36e26511cacfcc058f781a9e5b0a495357bb4cd6f9dca63cc9/klujax-0.4.0-cp311-cp311-win_amd64.whl", hash = "sha256:644e592a48259d751487a71461c9f317b210df9b572cae57c1eabaf55db493d2", size = 137058 },
-    { url = "https://files.pythonhosted.org/packages/80/2a/ae18e62d011a21558d2bad3223218123a536cdfca9a27ece1f8e59862a4a/klujax-0.4.0-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:c1659b58804033d0e0bf41cc39000bdef88d2a3578807f81edcbb7a96c7202df", size = 198140 },
-    { url = "https://files.pythonhosted.org/packages/5b/3f/19c1bfd8705510b0138f0aaffc0e03f67a4d9b683d8031ae7aa7910087a2/klujax-0.4.0-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e331a292ab3e36e309906758a5aac15c2546b3482e6eb02f3b78ab3ffa33504e", size = 2046783 },
-    { url = "https://files.pythonhosted.org/packages/a7/fa/0ed84d342b6daa1de5b31529a401376283dbb55f260be2d3444facaf8fe0/klujax-0.4.0-cp312-cp312-win_amd64.whl", hash = "sha256:0defb316e487dd45c3bca9f8086d646fc2ccc703c6cb834788eb324c81be4c10", size = 137323 },
-    { url = "https://files.pythonhosted.org/packages/6b/f4/5173b6192cb0eec5fd281b2a9df205e3a169bcfa2f5e9547917547ad3e34/klujax-0.4.0-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:70e105ea072a3df6fb8cbb224ca13f40d1e7b9d76960a2593cddef63a6fde98c", size = 198210 },
-    { url = "https://files.pythonhosted.org/packages/f0/70/de9ddad120a4698eaf2f06ba8aaca1fcb9d29714117d1065836c87e3a278/klujax-0.4.0-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:a62b9713eb4cad59ef0f135a6bb8baf2bfcf95e1ffb3982f601988991acd9e64", size = 2047052 },
-    { url = "https://files.pythonhosted.org/packages/53/87/d2db85ec8044d8cc3bf07c891e1acf88f661d99e7d20b70967e13cca23eb/klujax-0.4.0-cp313-cp313-win_amd64.whl", hash = "sha256:e22e3ae61c2e240960018fda5c01bdc70a0534b3909eb26da86f1182c9c0b576", size = 137338 },
+    { url = "https://files.pythonhosted.org/packages/a9/17/c32c8bfc54dedc413bbb441d6a8ffc212aaf017d10b9f32cd1b6469fb699/klujax-0.4.1-cp311-cp311-macosx_11_0_arm64.whl", hash = "sha256:32b0dcacaca3609b032c082ff53e15812e174bb663e07fd2955a731d471ba87d", size = 199431 },
+    { url = "https://files.pythonhosted.org/packages/43/3e/9062e9d3594d3b48422cb388aa7c3f28d610a793583e713a685439753af5/klujax-0.4.1-cp311-cp311-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:83b43a6975d85c6fa866f00d45498b40c38ece5aaac670b1698cd6ffec5040e5", size = 2043295 },
+    { url = "https://files.pythonhosted.org/packages/76/4b/64a389bf85d7a972787dcf92e854bbae74492f3d7f93c3601cd5d297082d/klujax-0.4.1-cp311-cp311-win_amd64.whl", hash = "sha256:5021291ee866209adda01bca8ca417ecd789b0c8673746ee1d02498ee6c61d57", size = 139206 },
+    { url = "https://files.pythonhosted.org/packages/96/bf/a98babad40da2b7ea36a7f7d277a4c93903ad4b0b4d04c2d73d16cab47bd/klujax-0.4.1-cp312-cp312-macosx_11_0_arm64.whl", hash = "sha256:2b1d2da1745e45711fa9aa4e1348eb1a2a4f22586cff0890052180c0c6a45c60", size = 198146 },
+    { url = "https://files.pythonhosted.org/packages/57/f5/3a911205fda8248dab7d96411dfda039cb960b601657aa5e8f2bd2e83328/klujax-0.4.1-cp312-cp312-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:6cf1dcca3c2d15f5ee62d7bbb755788321a91d5e0e000aeebf0edf1aa4167b74", size = 2046784 },
+    { url = "https://files.pythonhosted.org/packages/d8/09/7a3510a1ff46c65e18aa83634a1ff160c78928ec12d3f8276495d3abfebb/klujax-0.4.1-cp312-cp312-win_amd64.whl", hash = "sha256:feb52cf1d932c4af2ceda1d1c56bbfd59e1b5e12697d7f3c8386d424cc5590ba", size = 139696 },
+    { url = "https://files.pythonhosted.org/packages/b4/3a/34d16b3b497744b47af2defa9cae4856382e753c286a28e081971b386bf3/klujax-0.4.1-cp313-cp313-macosx_11_0_arm64.whl", hash = "sha256:e1a446db0cf70e754bb99f157dca64523fb6d822a0db649af028fff5d15ac39c", size = 198209 },
+    { url = "https://files.pythonhosted.org/packages/a9/24/456468fce588a38d73da746e90c13d1b01a83993dfd2ea46b7dc9ea3b983/klujax-0.4.1-cp313-cp313-manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:cd85152975282f9e85c38fd6cc16c4da23562bff166c2e8c75a9b473a47d9429", size = 2047052 },
+    { url = "https://files.pythonhosted.org/packages/52/b7/32fcb0aa90ea97e977d81cdc21cb8ae01a80409c6a475f9646fcc6eb4b51/klujax-0.4.1-cp313-cp313-win_amd64.whl", hash = "sha256:29aef61fec1fb427cc6a16cf09b63c06ba676c590aa1ea76ff90c768c1037209", size = 139689 },
 ]
 
 [[package]]
@@ -3733,7 +3734,7 @@ wheels = [
 
 [[package]]
 name = "sax"
-version = "0.14.2"
+version = "0.14.3"
 source = { editable = "." }
 dependencies = [
     { name = "black" },
@@ -3749,6 +3750,7 @@ dependencies = [
     { name = "orjson" },
     { name = "pydantic" },
     { name = "pyyaml" },
+    { name = "xarray" },
 ]
 
 [package.optional-dependencies]
@@ -3805,7 +3807,7 @@ requires-dist = [
     { name = "jaxlib", specifier = ">=0.5.0" },
     { name = "jaxtyping", specifier = ">=0.2.38" },
     { name = "jupyterlab-myst", marker = "extra == 'dev'", specifier = ">=2.4.2" },
-    { name = "klujax", specifier = ">=0.4.0" },
+    { name = "klujax", specifier = ">=0.4.1" },
     { name = "matplotlib", specifier = ">=3.0.0" },
     { name = "meow-sim", marker = "extra == 'dev'", specifier = ">=0.12.0" },
     { name = "mkinit", marker = "extra == 'dev'", specifier = ">=1.1.0" },
@@ -3832,7 +3834,9 @@ requires-dist = [
     { name = "tbump", marker = "extra == 'dev'", specifier = ">=6.0.0" },
     { name = "tmm", marker = "extra == 'dev'", specifier = ">=0.2.0" },
     { name = "tqdm", marker = "extra == 'dev'", specifier = ">=4.0.0" },
+    { name = "xarray", specifier = ">=2025.1.2" },
 ]
+provides-extras = ["dev"]
 
 [[package]]
 name = "schema"
