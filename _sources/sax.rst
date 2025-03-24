@@ -16,6 +16,7 @@ Submodules
    :maxdepth: 4
 
    sax.circuit
+   sax.interpolation
    sax.loss
    sax.models
    sax.multimode

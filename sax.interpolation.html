@@ -9,7 +9,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.19: https://docutils.sourceforge.io/" />
 
-    <title>sax.backends.additive module &#8212; sax 0.14.4 documentation</title>
+    <title>sax.interpolation module &#8212; sax 0.14.4 documentation</title>
   
   
   
@@ -51,11 +51,11 @@
     <script src="_static/clipboard.min.js"></script>
     <script src="_static/copybutton.js"></script>
     <script src="_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
-    <script>DOCUMENTATION_OPTIONS.pagename = 'sax.backends.additive';</script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'sax.interpolation';</script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="sax.backends.filipsson_gunnar module" href="sax.backends.filipsson_gunnar.html" />
-    <link rel="prev" title="sax.backends package" href="sax.backends.html" />
+    <link rel="next" title="sax.loss module" href="sax.loss.html" />
+    <link rel="prev" title="sax.circuit module" href="sax.circuit.html" />
   <meta name="viewport" content="width=device-width, initial-scale=1"/>
   <meta name="docsearch:language" content="en"/>
   </head>
@@ -179,15 +179,15 @@
 <p aria-level="2" class="caption" role="heading"><span class="caption-text">API Docs</span></p>
 <ul class="current nav bd-sidenav">
 <li class="toctree-l1 current active has-children"><a class="reference internal" href="sax.html">sax package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l2 current active has-children"><a class="reference internal" href="sax.backends.html">sax.backends package</a><details open="open"><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul class="current">
-<li class="toctree-l3 current active"><a class="current reference internal" href="#">sax.backends.additive module</a></li>
+<li class="toctree-l2 has-children"><a class="reference internal" href="sax.backends.html">sax.backends package</a><details><summary><span class="toctree-toggle" role="presentation"><i class="fa-solid fa-chevron-down"></i></span></summary><ul>
+<li class="toctree-l3"><a class="reference internal" href="sax.backends.additive.html">sax.backends.additive module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sax.backends.filipsson_gunnar.html">sax.backends.filipsson_gunnar module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sax.backends.forward_only.html">sax.backends.forward_only module</a></li>
 <li class="toctree-l3"><a class="reference internal" href="sax.backends.klu.html">sax.backends.klu module</a></li>
 </ul>
 </details></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.circuit.html">sax.circuit module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="sax.interpolation.html">sax.interpolation module</a></li>
+<li class="toctree-l2 current active"><a class="current reference internal" href="#">sax.interpolation module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.loss.html">sax.loss module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.models.html">sax.models module</a></li>
 <li class="toctree-l2"><a class="reference internal" href="sax.multimode.html">sax.multimode module</a></li>
@@ -267,7 +267,7 @@
       
       
       
-      <li><a href="https://github.com/flaport/sax/edit/main/docs/sax.backends.additive.rst" target="_blank"
+      <li><a href="https://github.com/flaport/sax/edit/main/docs/sax.interpolation.rst" target="_blank"
    class="btn btn-sm btn-source-edit-button dropdown-item"
    title="Suggest edit"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -284,7 +284,7 @@
       
       
       
-      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fsax.backends.additive.html&body=Your%20issue%20content%20here." target="_blank"
+      <li><a href="https://github.com/flaport/sax/issues/new?title=Issue%20on%20page%20%2Fsax.interpolation.html&body=Your%20issue%20content%20here." target="_blank"
    class="btn btn-sm btn-source-issues-button dropdown-item"
    title="Open an issue"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -314,7 +314,7 @@
       
       
       
-      <li><a href="_sources/sax.backends.additive.rst" target="_blank"
+      <li><a href="_sources/sax.interpolation.rst" target="_blank"
    class="btn btn-sm btn-download-source-button dropdown-item"
    title="Download source file"
    data-bs-placement="left" data-bs-toggle="tooltip"
@@ -398,7 +398,7 @@ document.write(`
               
 
 <div id="jb-print-docs-body" class="onlyprint">
-    <h1>sax.backends.additive module</h1>
+    <h1>sax.interpolation module</h1>
     <!-- Table of contents -->
     <div id="print-main-content">
         <div id="jb-print-toc">
@@ -408,9 +408,9 @@ document.write(`
             </div>
             <nav aria-label="Page">
                 <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.additive.analyze_instances_additive"><code class="docutils literal notranslate"><span class="pre">analyze_instances_additive()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.additive.analyze_circuit_additive"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_additive()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.additive.evaluate_circuit_additive"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_additive()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.interpolation.interpolate_xarray"><code class="docutils literal notranslate"><span class="pre">interpolate_xarray()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.interpolation.evaluate_general_corner_model"><code class="docutils literal notranslate"><span class="pre">evaluate_general_corner_model()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.interpolation.to_hypercube"><code class="docutils literal notranslate"><span class="pre">to_hypercube()</span></code></a></li>
 </ul>
             </nav>
         </div>
@@ -422,55 +422,75 @@ document.write(`
 <div id="searchbox"></div>
                 <article class="bd-article">
                   
-  <section id="module-sax.backends.additive">
-<span id="sax-backends-additive-module"></span><h1>sax.backends.additive module<a class="headerlink" href="#module-sax.backends.additive" title="Permalink to this heading">#</a></h1>
-<p>SAX Additive Backend</p>
+  <section id="module-sax.interpolation">
+<span id="sax-interpolation-module"></span><h1>sax.interpolation module<a class="headerlink" href="#module-sax.interpolation" title="Permalink to this heading">#</a></h1>
+<p>Simulation utilitites.</p>
 <dl class="py function">
-<dt class="sig sig-object py" id="sax.backends.additive.analyze_instances_additive">
-<span class="sig-name descname"><span class="pre">analyze_instances_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">models</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/backends/additive.html#analyze_instances_additive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.additive.analyze_instances_additive" title="Permalink to this definition">#</a></dt>
+<dt class="sig sig-object py" id="sax.interpolation.interpolate_xarray">
+<span class="sig-name descname"><span class="pre">interpolate_xarray</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">xarr</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">*</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">f</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/interpolation.html#interpolate_xarray"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.interpolation.interpolate_xarray" title="Permalink to this definition">#</a></dt>
 <dd><dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><a class="reference internal" href="sax.netlist.html#sax.netlist.Component" title="sax.netlist.Component"><em>Component</em></a><em>]</em>) – </p></li>
-<li><p><strong>models</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>Model</em><em>]</em>) – </p></li>
+<li><p><strong>xarr</strong> (<em>DataArray</em>) – </p></li>
+<li><p><strong>f</strong> (<em>Array</em>) – </p></li>
+<li><p><strong>kwargs</strong> (<em>Array</em>) – </p></li>
 </ul>
 </dd>
 <dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Dict</em>[str, SDict]</p>
+<dd class="field-even"><p>dict[str, jax.Array]</p>
 </dd>
 </dl>
 </dd></dl>
 
 <dl class="py function">
-<dt class="sig sig-object py" id="sax.backends.additive.analyze_circuit_additive">
-<span class="sig-name descname"><span class="pre">analyze_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed_instances</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">connections</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">ports</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/backends/additive.html#analyze_circuit_additive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.additive.analyze_circuit_additive" title="Permalink to this definition">#</a></dt>
-<dd><dl class="field-list simple">
-<dt class="field-odd">Parameters<span class="colon">:</span></dt>
-<dd class="field-odd"><ul class="simple">
-<li><p><strong>analyzed_instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SDict</em><em>]</em>) – </p></li>
-<li><p><strong>connections</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
-<li><p><strong>ports</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>str</em><em>]</em>) – </p></li>
-</ul>
-</dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p><em>Any</em></p>
-</dd>
-</dl>
-</dd></dl>
-
-<dl class="py function">
-<dt class="sig sig-object py" id="sax.backends.additive.evaluate_circuit_additive">
-<span class="sig-name descname"><span class="pre">evaluate_circuit_additive</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">analyzed</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">instances</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/backends/additive.html#evaluate_circuit_additive"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.backends.additive.evaluate_circuit_additive" title="Permalink to this definition">#</a></dt>
-<dd><p>evaluate a circuit for the given sdicts.</p>
+<dt class="sig sig-object py" id="sax.interpolation.evaluate_general_corner_model">
+<span class="sig-name descname"><span class="pre">evaluate_general_corner_model</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">params</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">strings</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">/</span></span></em>, <em class="sig-param"><span class="o"><span class="pre">**</span></span><span class="n"><span class="pre">kwargs</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/interpolation.html#evaluate_general_corner_model"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.interpolation.evaluate_general_corner_model" title="Permalink to this definition">#</a></dt>
+<dd><p>Hypercube representation interpolator.</p>
 <dl class="field-list simple">
 <dt class="field-odd">Parameters<span class="colon">:</span></dt>
 <dd class="field-odd"><ul class="simple">
-<li><p><strong>analyzed</strong> (<em>Any</em>) – </p></li>
-<li><p><strong>instances</strong> (<em>Dict</em><em>[</em><em>str</em><em>, </em><em>SDict</em><em>]</em>) – </p></li>
+<li><p><strong>data</strong> (<em>Array</em>) – the data to interpolate (output of to_hypercube)</p></li>
+<li><p><strong>params</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>jax.Array</em><em>]</em>) – the parameter sample points (output of to_hypercube)</p></li>
+<li><p><strong>strings</strong> (<em>dict</em><em>[</em><em>str</em><em>, </em><em>dict</em><em>[</em><em>str</em><em>, </em><em>int</em><em>]</em><em>]</em>) – non-interpolatable parameters (like strings)
+with their values (output of to_hypercube)</p></li>
+<li><p><strong>**kwargs</strong> (<em>Array</em>) – the values at which to interpolate the s-parameter.
+These values should be broadcastable into each other.</p></li>
 </ul>
 </dd>
-<dt class="field-even">Return type<span class="colon">:</span></dt>
-<dd class="field-even"><p>SDict</p>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the interpolated S-matrix at the values of <a href="#id1"><span class="problematic" id="id2">**</span></a>kwargs</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>tuple[jax.Array, dict[str, int], dict[str, dict[str, int]]]</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py function">
+<dt class="sig sig-object py" id="sax.interpolation.to_hypercube">
+<span class="sig-name descname"><span class="pre">to_hypercube</span></span><span class="sig-paren">(</span><em class="sig-param"><span class="n"><span class="pre">stacked_data</span></span></em>, <em class="sig-param"><span class="n"><span class="pre">wl_key</span></span><span class="o"><span class="pre">=</span></span><span class="default_value"><span class="pre">'wl'</span></span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/sax/interpolation.html#to_hypercube"><span class="viewcode-link"><span class="pre">[source]</span></span></a><a class="headerlink" href="#sax.interpolation.to_hypercube" title="Permalink to this definition">#</a></dt>
+<dd><p>Converts a stacked dataframe into ‘hypercube’ representation.</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters<span class="colon">:</span></dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>stacked_data</strong> (<em>DataFrame</em>) – the data to convert</p></li>
+<li><p><strong>wl_key</strong> (<em>str</em>) – the main wavelength key.</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p><p>the data to interpolate (output of to_hypercube)
+params: the parameter sample points (output of to_hypercube)
+strings: non-interpolatable parameters (like strings)</p>
+<blockquote>
+<div><p>with their values (output of to_hypercube)</p>
+</div></blockquote>
+</p>
+</dd>
+<dt class="field-odd">Return type<span class="colon">:</span></dt>
+<dd class="field-odd"><p>data</p>
+</dd>
+<dt class="field-even">Returns<span class="colon">:</span></dt>
+<dd class="field-even"><p>the interpolated S-matrix at the values of <a href="#id3"><span class="problematic" id="id4">**</span></a>kwargs</p>
 </dd>
 </dl>
 </dd></dl>
@@ -489,20 +509,20 @@ document.write(`
                   
 <div class="prev-next-area">
     <a class="left-prev"
-       href="sax.backends.html"
+       href="sax.circuit.html"
        title="previous page">
       <i class="fa-solid fa-angle-left"></i>
       <div class="prev-next-info">
         <p class="prev-next-subtitle">previous</p>
-        <p class="prev-next-title">sax.backends package</p>
+        <p class="prev-next-title">sax.circuit module</p>
       </div>
     </a>
     <a class="right-next"
-       href="sax.backends.filipsson_gunnar.html"
+       href="sax.loss.html"
        title="next page">
       <div class="prev-next-info">
         <p class="prev-next-subtitle">next</p>
-        <p class="prev-next-title">sax.backends.filipsson_gunnar module</p>
+        <p class="prev-next-title">sax.loss module</p>
       </div>
       <i class="fa-solid fa-angle-right"></i>
     </a>
@@ -522,9 +542,9 @@ document.write(`
   </div>
   <nav class="bd-toc-nav page-toc">
     <ul class="visible nav section-nav flex-column">
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.additive.analyze_instances_additive"><code class="docutils literal notranslate"><span class="pre">analyze_instances_additive()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.additive.analyze_circuit_additive"><code class="docutils literal notranslate"><span class="pre">analyze_circuit_additive()</span></code></a></li>
-<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.backends.additive.evaluate_circuit_additive"><code class="docutils literal notranslate"><span class="pre">evaluate_circuit_additive()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.interpolation.interpolate_xarray"><code class="docutils literal notranslate"><span class="pre">interpolate_xarray()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.interpolation.evaluate_general_corner_model"><code class="docutils literal notranslate"><span class="pre">evaluate_general_corner_model()</span></code></a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#sax.interpolation.to_hypercube"><code class="docutils literal notranslate"><span class="pre">to_hypercube()</span></code></a></li>
 </ul>
   </nav></div>
 
