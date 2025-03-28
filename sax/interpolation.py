@@ -1,6 +1,6 @@
 """Simulation utilitites."""
 
-from collections.abc import Sequence
+from collections.abc import Iterable, Sequence
 from functools import partial
 from typing import cast
 
@@ -11,21 +11,71 @@ import pandas as pd
 import xarray as xr
 from jaxtyping import Array
 from numpy.typing import NDArray
-from scipy.constants import c
+
+
+def to_xarray(
+    stacked_data: pd.DataFrame,
+    *,
+    wl_name: str = "f",
+    target_names: Iterable[str] = ("amp", "phi"),
+) -> xr.DataArray:
+    """Converts a stacked dataframe into a multi-dimensional xarray.
+
+    Args:
+        stacked_data: the data to convert
+        wl_name: the name of the wavelength (or frequency) column.
+        target_names: the names of the target columns.
+    """
+    df = stacked_data.copy()
+    if wl_name not in df.columns:
+        msg = (
+            f"wl_name {wl_name!r} not found in dataframe. "
+            f"Got a dataframe with columns: {df.columns}."
+        )
+        raise ValueError(msg)
+    for name in target_names:
+        if name not in df.columns:
+            msg = (
+                f"target name {name!r} not found in dataframe. "
+                f"Got a dataframe with columns: {df.columns}."
+            )
+            raise ValueError(msg)
+    param_names = [c for c in df.columns if c not in [*target_names, wl_name]]
+    param_names = [wl_name, *param_names]
+    df = cast(pd.DataFrame, df[[*param_names, *target_names]])
+    df = df.sort_values(by=param_names).reset_index(drop=True)
+    params: dict[str, Array | NDArray] = {
+        c: np.asarray(df[c].unique()) for c in param_names
+    }
+    params["targets"] = np.array(list(target_names), dtype=object)
+    data = df[target_names].to_numpy()
+    data = data.reshape(*(v.shape[0] for v in params.values()))
+    data = jnp.asarray(data)
+    coords, strings = _extract_strings(params)
+    coords["targets"] = np.asarray(list(strings.pop("targets")), dtype=object)  # type: ignore[reportArgumentType]
+    if strings:
+        msg = f"Found non-float columns in the dataframe: {strings}."
+        raise ValueError(msg)
+    return xr.DataArray(data=data, coords=coords)
 
 
 def interpolate_xarray(
     xarr: xr.DataArray,
     /,
-    *,
-    f: Array,
     **kwargs: Array,
 ) -> dict[str, Array]:
+    """Interpolate a multi-dimensional xarray with JAX.
+
+    Args:
+        xarr: the xarray to do a grid-interpolation over
+        **kwargs: the other parameters to interpolate over
+    """
     with jax.ensure_compile_time_eval():
         data = jnp.asarray(xarr)
 
         # don't use jnp.asarray here as values can be strings!
         params = {k: np.asarray(xarr[k]) for k in xarr.dims}
+
         strings: dict[str, dict[str, int]] = kwargs.pop("strings", {})  # type: ignore[reportAssignmentType]
         target_name = xarr.dims[-1]
         params.pop(target_name, None)
@@ -36,7 +86,7 @@ def interpolate_xarray(
             str(k): i for i, k in enumerate(np.asarray(xarr.coords[target_name]))
         }
 
-        params["targets"] = np.arange(0, len(targets), 1, dtype=np.uint8)  # type: ignore
+        params["targets"] = np.arange(0, len(targets), 1, dtype=np.uint8)
         strings = {**strings, "targets": targets}
 
     S, axs, pos = evaluate_general_corner_model(
@@ -44,7 +94,6 @@ def interpolate_xarray(
         params,  # type: ignore[reportArgumentType]
         strings,
         **kwargs,
-        f=f,
     )
     return {k: S.take(pos["targets"][k], axs["targets"]) for k in targets}
 
@@ -119,56 +168,6 @@ def _get_coordinate(arr1d: Array, value: Array) -> Array:
 def _get_coordinates(arrs1d: Sequence[Array], values: jnp.ndarray) -> list[Array]:
     # don't use vmap as arrays in arrs1d could have different shapes...
     return [_get_coordinate(a, v) for a, v in zip(arrs1d, values, strict=True)]
-
-
-def to_hypercube(
-    stacked_data: pd.DataFrame, wl_key: str = "wl"
-) -> tuple[Array, dict[str, Array], dict[str, dict[str, int]]]:
-    """Converts a stacked dataframe into 'hypercube' representation.
-
-    Args:
-        stacked_data: the data to convert
-        wl_key: the main wavelength key.
-
-    Returns:
-        data: the data to interpolate (output of to_hypercube)
-        params: the parameter sample points (output of to_hypercube)
-        strings: non-interpolatable parameters (like strings)
-            with their values (output of to_hypercube)
-
-    Returns:
-        the interpolated S-matrix at the values of **kwargs
-    """
-    if wl_key not in ["f", "wl"]:
-        msg = f"Unsupported wl_key. Valid choices: 'wl', 'f'. Got: {wl_key}."
-        raise ValueError(msg)
-    df = stacked_data.copy()
-    df["f"] = c / df["wl"].to_numpy()
-    value_columns = [c for c in ["amp", "phi"] if c in df.columns]
-    param_columns = [c for c in df.columns if c not in [*value_columns, "wl", "f"]]
-    param_columns = [c for c in [*param_columns, wl_key] if c in df.columns]
-    value_columns = ["amp", "phi"] if len(value_columns) > 2 else value_columns
-    df = _sort_rows(
-        cast(pd.DataFrame, df[[*param_columns, *value_columns]]),
-        not_by=tuple(value_columns),
-        wl_key=wl_key,
-    )
-    params: dict[str, Array | NDArray] = {
-        c: np.asarray(df[c].unique()) for c in param_columns
-    }
-    data = df[value_columns].to_numpy()
-    data = data.reshape(*(v.shape[0] for v in params.values()), len(value_columns))
-    data = jnp.asarray(data)
-    params["targets"] = np.array(value_columns, dtype=object)
-    float_params, string_params = _extract_strings(params)
-    return data, float_params, string_params
-
-
-def _sort_rows(
-    df: pd.DataFrame, not_by: tuple[str, ...] = ("amp", "phi"), wl_key: str = "wl"
-) -> pd.DataFrame:
-    by = [c for c in df.columns if c not in ["wl", "f", *not_by]] + [wl_key]
-    return df.sort_values(by=by).reset_index(drop=True)
 
 
 def _extract_strings(

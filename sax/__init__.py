@@ -18,6 +18,7 @@ from . import utils as utils
 from .circuit import circuit as circuit
 from .circuit import get_required_circuit_models as get_required_circuit_models
 from .interpolation import interpolate_xarray as interpolate_xarray
+from .interpolation import to_xarray as to_xarray
 from .loss import huber_loss as huber_loss
 from .loss import l2_reg as l2_reg
 from .loss import mse as mse
