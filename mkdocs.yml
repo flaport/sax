@@ -1,0 +1,112 @@
+site_name: SAX
+repo_url: https://github.com/falport/sax
+site_url: https://flaport.github.io/sax
+site_description: Autograd and XLA for S-parameters
+site_author: Floris Laporte
+repo_name: flaport/SAX
+copyright: Copyright © 2025, Floris Laporte, Apache-2.0
+
+theme:
+  name: material
+  font:
+    text: Merriweather Sans
+    code: Merriweather Mono
+  # icon:
+  #   logo: simple/materialformkdocs # https://squidfunk.github.io/mkdocs-material/reference/icons-emojis
+  logo: assets/logo.svg
+  favicon: assets/logo.ico
+  features:
+    - navigation.footer
+  search: true
+  palette:
+    - media: "(prefers-color-scheme)"
+      toggle:
+        icon: material/brightness-auto
+        name: Switch to light mode
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      toggle:
+        icon: material/weather-sunny
+        name: switch to dark mode
+      primary: blue
+      accent: deep purple
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      toggle:
+        icon: material/weather-night
+        name: switch to system default
+      primary: blue
+      accent: deep purple
+
+nav:
+  - home: index.md
+  - api: api.md
+  - quick start: nbs/examples/01_quick_start.md
+  - all pass: nbs/examples/02_all_pass_filter.md
+  - circuit from yaml: nbs/examples/03_circuit_from_yaml.md
+  - multimode: nbs/examples/04_multimode_simulations.md
+  - thin film:  nbs/examples/05_thinfilm.md
+  - additive: nbs/examples/06_additive_backend.md
+  - layout aware: nbs/examples/07_layout_aware.md
+  - sparse (coo): nbs/examples/08_sparse_coo.md
+  - neff dispersion: nbs/examples/10_wavelength_dependent_neff.md
+  - forward only:  nbs/examples/09_forward_only_backend.md
+  - backends: nbs/internals/03_backends.md
+  - circuit: nbs/internals/02_circuit.md
+  - models: nbs/internals/01_models.md
+
+plugins:
+  - search
+  - autorefs
+  - mkdocstrings:
+      handlers:
+        python:
+          paths:
+            - src
+          inventories:
+            - https://docs.python.org/3/objects.inv
+            - https://www.mkdocs.org/objects.inv
+            - https://python-markdown.github.io/objects.inv
+          options:
+            docstring_style: google
+            docstring_options:
+              ignore_init_summary: true
+            docstring_section_style: table # table | list | spacy
+            filters: ["!^_"]
+            heading_level: 1
+            inherited_members: true
+            merge_init_into_class: true
+            separate_signature: true
+            show_root_heading: true
+            show_root_full_path: false
+            show_signature_annotations: true
+            show_source: true
+            show_symbol_type_heading: true
+            show_symbol_type_toc: true
+            signature_crossrefs: true
+            summary: true
+
+markdown_extensions:
+  - attr_list
+  - toc:
+      permalink: true
+  - pymdownx.emoji
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  - pymdownx.magiclink
+  - pymdownx.tabbed:
+      alternate_style: true
+  - admonition
+  - pymdownx.details
+  - pymdownx.arithmatex:
+      generic: true
+  - pymdownx.superfences
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/flaport
