@@ -40,20 +40,24 @@ theme:
 
 nav:
   - home: index.md
-  - api: api.md
-  - quick start: nbs/examples/01_quick_start.md
-  - all pass: nbs/examples/02_all_pass_filter.md
-  - circuit from yaml: nbs/examples/03_circuit_from_yaml.md
-  - multimode: nbs/examples/04_multimode_simulations.md
-  - thin film:  nbs/examples/05_thinfilm.md
-  - additive: nbs/examples/06_additive_backend.md
-  - layout aware: nbs/examples/07_layout_aware.md
-  - sparse (coo): nbs/examples/08_sparse_coo.md
-  - neff dispersion: nbs/examples/10_wavelength_dependent_neff.md
-  - forward only:  nbs/examples/09_forward_only_backend.md
-  - backends: nbs/internals/03_backends.md
-  - circuit: nbs/internals/02_circuit.md
-  - models: nbs/internals/01_models.md
+  - api:
+    - circuit: api/circuit.md
+    - netlist: api/netlist.md
+  - examples:
+    - quick start: nbs/examples/01_quick_start.md
+    - all pass: nbs/examples/02_all_pass_filter.md
+    - circuit from yaml: nbs/examples/03_circuit_from_yaml.md
+    - multimode: nbs/examples/04_multimode_simulations.md
+    - thin film:  nbs/examples/05_thinfilm.md
+    - additive: nbs/examples/06_additive_backend.md
+    - layout aware: nbs/examples/07_layout_aware.md
+    - sparse (coo): nbs/examples/08_sparse_coo.md
+    - forward only:  nbs/examples/09_forward_only_backend.md
+    - neff dispersion: nbs/examples/10_wavelength_dependent_neff.md
+  - internals:
+    - backends: nbs/internals/03_backends.md
+    - circuit: nbs/internals/02_circuit.md
+    - models: nbs/internals/01_models.md
 
 plugins:
   - search
