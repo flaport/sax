@@ -7,18 +7,18 @@ build:
 
 docker:
 	docker build . -t flaport/sax:latest -f Dockerfile.dev
-	docker build . -t flaport/sax:0.14.2 -f Dockerfile.dev
+	docker build . -t flaport/sax:0.14.5 -f Dockerfile.dev
 
 pre-commit:
 	pre-commit install
 
 nbrun:
-	find . -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" | xargs parallel -j `nproc --all` uv run papermill {} {} -k python3 :::
-	rm -rf modes
+	find examples -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" -not -path "./.venv/*" | xargs parallel uv run papermill {} {} -k python3 --cwd examples ':::'
+	find internals -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" -not -path "./.venv/*" | xargs parallel uv run papermill {} {} -k python3 --cwd internals ':::'
 
 dockerpush:
 	docker push flaport/sax:latest
-	docker push flaport/sax:0.14.2
+	docker push flaport/sax:0.14.5
 
 .PHONY: docs
 docs:

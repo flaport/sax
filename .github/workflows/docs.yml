@@ -18,7 +18,7 @@ jobs:
       - name: Create Venv
         run: uv sync --all-extras
       - name: Run notebooks
-        run: find . -name "*.ipynb" -not -path "*/tests/*" -not -path "*/.ipynb_checkpoints/*" | xargs parallel uv run papermill {} {} -k python3 ':::'
+        run: make nbrun
       - name: Upload artifacts [internals]
         uses: actions/upload-artifact@v4
         with:
