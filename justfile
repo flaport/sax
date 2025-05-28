@@ -11,10 +11,10 @@ uv:
 	curl -LsSf https://astral.sh/uv/0.4.30/install.sh | sh
 
 inits:
-	cd src/dotemplate && uv run mkinit --relative --recursive --write && uv run ruff format __init__.py
+	cd src/sax && uv run mkinit --relative --recursive --write && uv run ruff format __init__.py
 
 ipykernel:
-	uv run python -m ipykernel install --user --name DoTemplate --display-name DoTemplate
+	uv run python -m ipykernel install --user --name sax --display-name sax
 
 test:
 	uv run pytest -s -n logical
@@ -26,7 +26,7 @@ serve:
 	uv run mkdocs serve -a localhost:8080
 
 nbrun:
-	find nbs -maxdepth 2 -mindepth 1 -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" -not -path "./.venv/*" | xargs parallel -j `nproc --all` uv run papermill {} {} -k DoTemplate :::
+	find nbs -maxdepth 2 -mindepth 1 -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" -not -path "./.venv/*" | xargs parallel -j `nproc --all` uv run papermill {} {} -k sax :::
 
 nbdocs:
 	rm -rf docs/nbs/examples
