@@ -77,7 +77,7 @@ def evaluate_circuit_forward(
     return circuit_sdict
 
 
-def _split_port(port: str) -> Tuple[str, str]:
+def _split_port(port: str) -> tuple[str, str]:
     try:
         instance, port = port.split(",")
     except ValueError:

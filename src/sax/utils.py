@@ -126,7 +126,7 @@ def _flatten_dict(
     return dict(items)
 
 
-def unflatten_dict(dic, sep=","):
+def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
     """Unflatten a flattened dictionary"""
     # from: https://gist.github.com/fmder/494aaa2dd6f8c428cede
     items = dict()
@@ -382,7 +382,7 @@ def rename_params(
         old_settings = get_settings(model)
 
         @wraps(old_model_factory)
-        def new_model_factory(**settings):
+        def new_model_factory(**settings: Any) -> Model:
             old_settings = {
                 reversed_renamings.get(k, k): v for k, v in settings.items()
             }
@@ -399,7 +399,7 @@ def rename_params(
         old_settings = get_settings(model)
 
         @wraps(old_model)
-        def new_model(**settings):
+        def new_model(**settings: Any) -> SType:
             old_settings = {
                 reversed_renamings.get(k, k): v for k, v in settings.items()
             }
@@ -415,7 +415,7 @@ def rename_params(
     )
 
 
-def _replace_kwargs(func: Callable, **kwargs: Any):
+def _replace_kwargs(func: Callable, **kwargs: Any) -> None:
     """Change the kwargs signature of a function"""
     sig = inspect.signature(func)
     settings = [
@@ -468,7 +468,7 @@ def rename_ports(
         old_model = cast(Model, S)
 
         @wraps(old_model)
-        def new_model(**settings) -> SType:
+        def new_model(**settings: Any) -> SType:
             return rename_ports(old_model(**settings), renamings)
 
         return new_model
@@ -476,7 +476,7 @@ def rename_ports(
         old_model_factory = cast(ModelFactory, S)
 
         @wraps(old_model_factory)
-        def new_model_factory(**settings) -> Callable[..., SType]:
+        def new_model_factory(**settings: Any) -> Callable[..., SType]:
             return rename_ports(old_model_factory(**settings), renamings)
 
         return new_model_factory
@@ -516,7 +516,7 @@ def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Setti
     return _settings
 
 
-def validate_not_mixedmode(S: SType):
+def validate_not_mixedmode(S: SType) -> None:
     """Validate that an stype is not 'mixed mode' (i.e. invalid)
 
     Args:
@@ -530,7 +530,7 @@ def validate_not_mixedmode(S: SType):
         )
 
 
-def validate_multimode(S: SType, modes=("te", "tm")) -> None:
+def validate_multimode(S: SType, modes: tuple[str, ...] = ("te", "tm")) -> None:
     """Validate that an stype is multimode and that the given modes are present."""
     try:
         current_modes = set(p.split("@")[1] for p in get_ports(S))
@@ -558,7 +558,9 @@ def validate_sdict(sdict: Any) -> None:
             )
 
 
-def get_inputs_outputs(ports: tuple[str, ...]):
+def get_inputs_outputs(
+    ports: tuple[str, ...],
+) -> tuple[tuple[str, ...], tuple[str, ...]]:
     inputs = tuple(p for p in ports if p.lower().startswith("in"))
     outputs = tuple(p for p in ports if not p.lower().startswith("in"))
     if not inputs:
@@ -578,7 +580,7 @@ def hash_dict(dic: dict) -> int:
     )
 
 
-def _numpyfy(obj: Any):
+def _numpyfy(obj: Any) -> Any:
     if not isinstance(obj, dict):
         return np.asarray(obj)
     return {k: _numpyfy(v) for k, v in obj.items()}
@@ -589,7 +591,7 @@ class Normalization(NamedTuple):
     std: ComplexArrayND
 
 
-def normalization(x: ComplexArrayND, axis=None):
+def normalization(x: ComplexArrayND, axis: int | None = None) -> Normalization:
     if axis is None:
         return Normalization(x.mean(), x.std())
     return Normalization(x.mean(axis), x.std(axis))
@@ -606,7 +608,7 @@ def cartesian_product(*arrays: ComplexArrayND) -> ComplexArrayND:
     return product
 
 
-def normalize(x: ComplexArrayND, normalization: Normalization) -> tuple[ComplexArrayND]:
+def normalize(x: ComplexArrayND, normalization: Normalization) -> ComplexArrayND:
     """Normalize an array with a given mean and standard deviation"""
     mean, std = normalization
     return (x - mean) / std

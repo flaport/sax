@@ -59,7 +59,10 @@ def coupler(*, coupling: float = 0.5) -> SDict:
 
 
 def _validate_ports(
-    ports, num_inputs, num_outputs, diagonal
+    ports: tuple[str, ...] | None,
+    num_inputs: int | None,
+    num_outputs: int | None,
+    diagonal: bool,
 ) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
     """Validate the ports and return the input and output ports."""
     if ports is None:
@@ -107,9 +110,9 @@ def unitary(
     num_outputs: int | None = None,
     ports: tuple[str, ...] | None = None,
     *,
-    jit=True,
-    reciprocal=True,
-    diagonal=False,
+    jit: bool = True,
+    reciprocal: bool = True,
+    diagonal: bool = False,
 ) -> Model:
     """A unitary model.
 
@@ -184,9 +187,9 @@ def copier(
     num_outputs: int | None = None,
     ports: tuple[str, ...] | None = None,
     *,
-    jit=True,
-    reciprocal=True,
-    diagonal=False,
+    jit: bool = True,
+    reciprocal: bool = True,
+    diagonal: bool = False,
 ) -> Model:
     """A copier model.
 
@@ -247,8 +250,8 @@ def passthru(
     num_links: int | None = None,
     ports: tuple[str, ...] | None = None,
     *,
-    jit=True,
-    reciprocal=True,
+    jit: bool = True,
+    reciprocal: bool = True,
 ) -> Model:
     """A passthru model.
 
@@ -275,5 +278,5 @@ models = {
 }
 
 
-def get_models(copy: bool = True):
+def get_models(copy: bool = True) -> dict[str, Model]:
     return {**models} if copy else models

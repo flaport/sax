@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 from functools import wraps
-from typing import cast, overload
+from typing import Any, cast, overload
 
 import jax.numpy as jnp
 
@@ -51,7 +51,7 @@ def multimode(S: SType | Model, modes: tuple[str, ...] = ("TE", "TM")) -> SType 
         model = cast(Model, S)
 
         @wraps(model)
-        def new_model(**params):
+        def new_model(**params: Any) -> SType:
             return multimode(model(**params), modes=modes)
 
         return cast(Model, new_model)
@@ -108,7 +108,7 @@ def _multimode_scoo(scoo: SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> SCoo:
     return Si_m, Sj_m, Sx_m, port_map_m
 
 
-def _multimode_sdense(sdense, modes=("TE", "TM")):
+def _multimode_sdense(sdense: SDense, modes: tuple[str, ...] = ("TE", "TM")) -> SDense:
     Sx, port_map = sdense
     num_ports = len(port_map)
     mode_map = (
@@ -150,7 +150,7 @@ def singlemode(S: SType | Model, mode: str = "TE") -> SType | Model:
         model = cast(Model, S)
 
         @wraps(model)
-        def new_model(**params):
+        def new_model(**params: Any) -> SType:
             return singlemode(model(**params), mode=mode)
 
         return cast(Model, new_model)

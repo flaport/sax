@@ -90,6 +90,8 @@ def circuit(
             backend,
             ignore_missing_ports=ignore_missing_ports,
         )
+    if circuit is None:
+        raise ValueError("No circuit was created")
     circuit = _enforce_return_type(circuit, return_type)
     return circuit, CircuitInfo(
         dag=dependency_dag,
@@ -126,10 +128,10 @@ def _create_dag(
     # we only need the nodes that depend on the parent...
     parent_node = next(iter(netlist.root.keys()))
     nodes = [parent_node, *nx.descendants(g, parent_node)]
-    g = nx.induced_subgraph(g, nodes)
+    g = cast(nx.DiGraph, nx.induced_subgraph(g, nodes))
     if validate:
         g = _validate_dag(g)
-    return cast(nx.DiGraph, g)
+    return g
 
 
 def draw_dag(
@@ -305,7 +307,7 @@ def _forward_global_settings(
     return settings
 
 
-def _port_modes_dict(port_modes: dict[str, Any]):
+def _port_modes_dict(port_modes: tuple[str, ...]) -> dict[str, set[str]]:
     result = {}
     for port_mode in port_modes:
         port, mode = port_mode.split("@") if "@" in port_mode else (port_mode, None)
@@ -316,7 +318,11 @@ def _port_modes_dict(port_modes: dict[str, Any]):
     return result
 
 
-def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports=False):
+def _get_multimode_connections(
+    connections: dict[str, str],
+    inst_port_mode: dict[str, dict[str, set[str]]],
+    ignore_missing_ports: bool = False,
+) -> dict[str, str]:
     mm_connections = {}
     for inst_port1, inst_port2 in connections.items():
         inst1, port1 = inst_port1.split(",")
@@ -352,7 +358,11 @@ def _get_multimode_connections(connections, inst_port_mode, ignore_missing_ports
     return mm_connections
 
 
-def _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=False):
+def _get_multimode_ports(
+    ports: dict[str, str],
+    inst_port_mode: dict[str, dict[str, set[str]]],
+    ignore_missing_ports: bool = False,
+) -> dict[str, str]:
     mm_ports = {}
     for port, inst_port2 in ports.items():
         inst2, port2 = inst_port2.split(",")
@@ -372,7 +382,7 @@ def _get_multimode_ports(ports, inst_port_mode, ignore_missing_ports=False):
     return mm_ports
 
 
-def _enforce_return_type(model, return_type):
+def _enforce_return_type(model: Model, return_type: str) -> Model:
     stype_func = {
         "default": lambda x: x,
         "stype": lambda x: x,
@@ -402,7 +412,7 @@ def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
     return {}
 
 
-def _validate_circuit_backend(backend):
+def _validate_circuit_backend(backend: str) -> str:
     backend = backend.lower()
     # assert valid circuit_backend
     if backend not in circuit_backends:
@@ -413,7 +423,7 @@ def _validate_circuit_backend(backend):
     return backend
 
 
-def _validate_dag(dag):
+def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
     nodes = _find_root(dag)
     if len(nodes) > 1:
         raise ValueError(f"Multiple top_levels found in netlist: {nodes}")
@@ -424,7 +434,7 @@ def _validate_dag(dag):
     return dag
 
 
-def _validate_netlist_ports(netlist: RecursiveNetlist):
+def _validate_netlist_ports(netlist: RecursiveNetlist) -> None:
     if len(netlist.root) < 1:
         raise ValueError("Cannot create circuit: empty netlist")
     net: Netlist = netlist.root[list(netlist.root)[0]]

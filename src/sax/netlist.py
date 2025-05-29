@@ -86,7 +86,7 @@ class Placement(BaseModel):
     port: str | PortPlacement | None = None
 
 
-def _component_from_partial(p: partial):
+def _component_from_partial(p: partial) -> Component:
     settings = {}
     f: Any = p
     while isinstance(f, partial):
@@ -123,7 +123,7 @@ _validate_instance_str = partial(_validate_str, what="instance")
 _validate_port_str = partial(_validate_str, what="port")
 
 
-def _validate_instance_port_str(s: str):
+def _validate_instance_port_str(s: str) -> str:
     parts = s.split(",")
     if len(parts) != 2:
         raise ValueError(
@@ -140,18 +140,20 @@ PortStr = Annotated[str, AfterValidator(_validate_port_str)]
 InstancePortStr = Annotated[str, AfterValidator(_validate_instance_port_str)]
 
 
-def _nets_to_connections(nets: list[dict], connections: dict):
+def _nets_to_connections(
+    nets: list[dict[str, str]], connections: dict[str, str]
+) -> dict[str, str]:
     connections = {k: v for k, v in connections.items()}
     inverse_connections = {v: k for k, v in connections.items()}
 
-    def _is_connected(p):
+    def _is_connected(p: str) -> bool:
         return (p in connections) or (p in inverse_connections)
 
-    def _add_connection(p, q):
+    def _add_connection(p: str, q: str) -> None:
         connections[p] = q
         inverse_connections[q] = p
 
-    def _get_connected_port(p):
+    def _get_connected_port(p: str) -> str:
         if p in connections:
             return connections[p]
         return inverse_connections[p]
@@ -217,7 +219,7 @@ AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
 
 
 def netlist(
-    netlist: Any, with_unconnected_instances: bool = True, with_placements=True
+    netlist: Any, with_unconnected_instances: bool = True, with_placements: bool = True
 ) -> RecursiveNetlist:
     """Return a netlist from a given dictionary"""
     if isinstance(netlist, RecursiveNetlist):
@@ -245,7 +247,7 @@ def netlist(
     return net
 
 
-def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~"):
+def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~") -> NetlistDict:
     first_name = list(recnet.keys())[0]
     net = _copy_netlist(recnet[first_name])
     _flatten_netlist(recnet, net, sep)
@@ -260,7 +262,7 @@ def load_netlist(pic_path: str) -> Netlist:
 
 
 @lru_cache
-def load_recursive_netlist(pic_path: str, ext: str = ".yml"):
+def load_recursive_netlist(pic_path: str, ext: str = ".yml") -> RecursiveNetlist:
     folder_path = os.path.dirname(os.path.abspath(pic_path))
 
     def _clean_string(path: str) -> str:
@@ -278,7 +280,7 @@ def load_recursive_netlist(pic_path: str, ext: str = ".yml"):
     return RecursiveNetlist.model_validate(netlists)
 
 
-def is_recursive(netlist: AnyNetlist):
+def is_recursive(netlist: AnyNetlist) -> bool:
     if isinstance(netlist, RecursiveNetlist):
         return True
     if isinstance(netlist, dict):
@@ -286,14 +288,14 @@ def is_recursive(netlist: AnyNetlist):
     return False
 
 
-def is_not_recursive(netlist: AnyNetlist):
+def is_not_recursive(netlist: AnyNetlist) -> bool:
     return not is_recursive(netlist)
 
 
 def get_netlist_instances_by_prefix(
     recursive_netlist: RecursiveNetlist,
     prefix: str,
-):
+) -> list[str]:
     """Returns a list of all instances with a given prefix in a recursive netlist.
 
     Args:
@@ -315,7 +317,7 @@ def get_component_instances(
     recursive_netlist: RecursiveNetlist,
     top_level_prefix: str,
     component_name_prefix: str,
-):
+) -> dict[str, list[str]]:
     """Returns a dictionary of all instances of a given component in a recursive netlist.
 
     Args:
@@ -343,7 +345,9 @@ def get_component_instances(
     return {component_name_prefix: instance_names}
 
 
-def _remove_unused_instances(recursive_netlist: RecursiveNetlistDict):
+def _remove_unused_instances(
+    recursive_netlist: RecursiveNetlistDict,
+) -> RecursiveNetlistDict:
     recursive_netlist = {**recursive_netlist}
 
     for name, flat_netlist in recursive_netlist.items():
@@ -352,7 +356,7 @@ def _remove_unused_instances(recursive_netlist: RecursiveNetlistDict):
     return recursive_netlist
 
 
-def _get_connectivity_netlist(netlist):
+def _get_connectivity_netlist(netlist: NetlistDict) -> dict[str, Any]:
     connectivity_netlist = {
         "instances": natsorted(netlist["instances"]),
         "connections": [
@@ -364,7 +368,7 @@ def _get_connectivity_netlist(netlist):
     return connectivity_netlist
 
 
-def _get_connectivity_graph(netlist):
+def _get_connectivity_graph(netlist: NetlistDict) -> nx.Graph:
     graph = nx.Graph()
     connectivity_netlist = _get_connectivity_netlist(netlist)
     for name in connectivity_netlist["instances"]:
@@ -376,7 +380,7 @@ def _get_connectivity_graph(netlist):
     return graph
 
 
-def _get_nodes_to_remove(graph, netlist):
+def _get_nodes_to_remove(graph: nx.Graph, netlist: NetlistDict) -> list[str]:
     nodes = set()
     for port in netlist["ports"]:
         nodes |= nx.descendants(graph, port)
@@ -412,7 +416,7 @@ def _remove_unused_instances_flat(flat_netlist: NetlistDict) -> NetlistDict:
     return flat_netlist
 
 
-def _copy_netlist(net):
+def _copy_netlist(net: NetlistDict) -> NetlistDict:
     net = {
         k: deepcopy(v)
         for k, v in net.items()
@@ -421,7 +425,7 @@ def _copy_netlist(net):
     return net
 
 
-def _flatten_netlist(recnet, net, sep):
+def _flatten_netlist(recnet: RecursiveNetlistDict, net: NetlistDict, sep: str) -> None:
     for name, instance in list(net["instances"].items()):
         component = instance["component"]
         if component not in recnet:
