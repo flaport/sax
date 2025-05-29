@@ -7,7 +7,8 @@ import re
 import warnings
 from copy import deepcopy
 from functools import lru_cache, partial
-from typing import Annotated, Any, Literal, TypedDict, overload
+from pathlib import Path
+from typing import Annotated, Any, Literal, TypedDict, cast, overload
 
 import networkx as nx
 import numpy as np
@@ -186,7 +187,8 @@ class Netlist(BaseModel):
 
     @model_validator(mode="before")
     @classmethod
-    def coerce_nets_into_connections(cls, netlist: dict):
+    def coerce_nets_into_connections(cls, netlist: dict) -> dict[str, str]:
+        """Convert nets into connections."""
         if not isinstance(netlist, dict):
             return netlist
         if "nets" in netlist:
@@ -248,7 +250,7 @@ def netlist(
 
 
 def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~") -> NetlistDict:
-    first_name = list(recnet.keys())[0]
+    first_name = next(iter(recnet.keys()))
     net = _copy_netlist(recnet[first_name])
     _flatten_netlist(recnet, net, sep)
     return net
@@ -256,8 +258,7 @@ def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~") -> NetlistDict
 
 @lru_cache
 def load_netlist(pic_path: str) -> Netlist:
-    with open(pic_path) as file:
-        net = yaml.safe_load(file.read())
+    net = yaml.safe_load(Path(pic_path).read_text())
     return Netlist.model_validate(net)
 
 
@@ -307,7 +308,7 @@ def get_netlist_instances_by_prefix(
     """
     recursive_netlist_root = recursive_netlist.model_dump()
     result = []
-    for key in recursive_netlist_root.keys():
+    for key in recursive_netlist_root:
         if key.startswith(prefix):
             result.append(key)
     return result
@@ -417,12 +418,12 @@ def _remove_unused_instances_flat(flat_netlist: NetlistDict) -> NetlistDict:
 
 
 def _copy_netlist(net: NetlistDict) -> NetlistDict:
-    net = {
+    new = {
         k: deepcopy(v)
         for k, v in net.items()
         if k in ["instances", "connections", "ports"]
     }
-    return net
+    return cast(NetlistDict, new)
 
 
 def _flatten_netlist(recnet: RecursiveNetlistDict, net: NetlistDict, sep: str) -> None:
@@ -443,14 +444,16 @@ def _flatten_netlist(recnet: RecursiveNetlistDict, net: NetlistDict, sep: str) -
                 del net["connections"][ip1]
                 if p1 not in ports:
                     warnings.warn(
-                        f"Port {ip1} not found. Connection {ip1}<->{ip2} ignored."
+                        f"Port {ip1} not found. Connection {ip1}<->{ip2} ignored.",
+                        stacklevel=2,
                     )
                     continue
                 net["connections"][ports[p1]] = ip2
             elif n2 == name:
                 if p2 not in ports:
                     warnings.warn(
-                        f"Port {ip2} not found. Connection {ip1}<->{ip2} ignored."
+                        f"Port {ip2} not found. Connection {ip1}<->{ip2} ignored.",
+                        stacklevel=2,
                     )
                     continue
                 net["connections"][ip1] = ports[p2]
@@ -460,7 +463,9 @@ def _flatten_netlist(recnet: RecursiveNetlistDict, net: NetlistDict, sep: str) -
             try:
                 n2, p2 = ip2.split(",")
             except ValueError:
-                warnings.warn(f"Unconventional port definition ignored: {p}->{ip2}.")
+                warnings.warn(
+                    f"Unconventional port definition ignored: {p}->{ip2}.", stacklevel=2
+                )
                 continue
             if n2 == name:
                 if p2 in ports:

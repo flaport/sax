@@ -111,7 +111,7 @@ def _multimode_scoo(scoo: SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> SCoo:
 def _multimode_sdense(sdense: SDense, modes: tuple[str, ...] = ("TE", "TM")) -> SDense:
     Sx, port_map = sdense
     num_ports = len(port_map)
-    mode_map = (
+    mode_map: dict[str, int] = (
         {mode: i for i, mode in enumerate(modes)}
         if not isinstance(modes, dict)
         else modes

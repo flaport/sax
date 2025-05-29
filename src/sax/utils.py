@@ -129,7 +129,7 @@ def _flatten_dict(
 def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
     """Unflatten a flattened dictionary"""
     # from: https://gist.github.com/fmder/494aaa2dd6f8c428cede
-    items = dict()
+    items = {}
 
     for k, v in dic.items():
         keys = k.split(sep)
@@ -138,7 +138,7 @@ def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
             if ki in sub_items:
                 sub_items = sub_items[ki]
             else:
-                sub_items[ki] = dict()
+                sub_items[ki] = {}
                 sub_items = sub_items[ki]
 
         sub_items[keys[-1]] = v

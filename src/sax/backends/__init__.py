@@ -3,10 +3,8 @@
 from __future__ import annotations
 
 import warnings
-from typing import Any
+from typing import TYPE_CHECKING, Any
 
-from ..netlist import Component
-from ..saxtypes import Model, SType
 from .additive import (
     analyze_circuit_additive,
     analyze_instances_additive,
@@ -22,6 +20,10 @@ from .forward_only import (
     analyze_instances_forward,
     evaluate_circuit_forward,
 )
+
+if TYPE_CHECKING:
+    from ..netlist import Component
+    from ..saxtypes import Model, SType
 
 circuit_backends = {
     "fg": (
@@ -77,7 +79,8 @@ except ImportError:
     backend_map["default"] = "filipsson_gunnar"
     warnings.warn(
         "klujax not found. Please install klujax for "
-        "better performance during circuit evaluation!"
+        "better performance during circuit evaluation!",
+        stacklevel=2,
     )
 
 

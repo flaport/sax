@@ -52,7 +52,7 @@ def evaluate_circuit_forward(
 
     # Dictionary to store signals at each node
     circuit_sdict = {}
-    for in_port in ports.keys():
+    for in_port in ports:
         if in_port.startswith("in"):
             node_signals = {("", in_port): 1}
             bfs_output = nx.bfs_layers(graph, ("", in_port))

@@ -77,7 +77,7 @@ def evaluate_circuit_fg(
         block_diag.update(_interconnect_ports(block_diag, current_ports, k, l))
 
         for i, j in list(block_diag.keys()):
-            is_connected = i == k or i == l or j == k or j == l
+            is_connected = j in (k, l) or i in (k, l)
             is_in_output_ports = i in reversed_ports and j in reversed_ports
             if is_connected and not is_in_output_ports:
                 del block_diag[

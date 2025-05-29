@@ -6,19 +6,14 @@ from typing import Any
 
 import jax
 import jax.numpy as jnp
-from klujax import solve as _solve_klu
+import klujax
 from natsort import natsorted
 
 from ..netlist import Component
 from ..saxtypes import Model, SCoo, SDense, SType, scoo
 
-try:
-    from klujax import dot as _dot
-except ImportError:
-    from klujax import coo_mul_vec as _dot
-
-solve_klu = jax.vmap(_solve_klu, (None, None, 0, None), 0)
-mul_coo = jax.vmap(_dot, (None, None, 0, 0), 0)
+solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
+mul_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 
 
 def analyze_instances_klu(
@@ -28,7 +23,7 @@ def analyze_instances_klu(
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
         if not isinstance(v, Component):
-            v = Component(**v)
+            v = Component(**v)  # noqa: PLW2901
         instances[k] = v
     model_names = set()
     for i in instances.values():
@@ -118,7 +113,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: dict[str, SType]) -> SDense:
     idx = 0
     Sx = []
     batch_shape = ()
-    for name, pm_ in dummy_pms:
+    for name, _ in dummy_pms:
         _, _, sx, ports_map = scoo(instances[name])
         Sx.append(sx)
         if len(sx.shape[:-1]) > len(batch_shape):
@@ -164,14 +159,15 @@ def _get_instance_ports(
 
 
 def _get_dummy_instances(
-    connections: dict[str, str], ports: dict[str, str]
+    connections: dict[str, str],
+    ports: dict[str, str],
 ) -> dict[str, tuple[Any, Any, None, dict[str, int]]]:
     """No longer used. deprecated by analyze_instances_klu."""
     instance_ports = _get_instance_ports(connections, ports)
     dummy_instances = {}
-    for name, ports in instance_ports.items():
-        num_ports = len(ports)
-        pm = {p: i for i, p in enumerate(ports)}
+    for name, _ports in instance_ports.items():
+        num_ports = len(_ports)
+        pm = {p: i for i, p in enumerate(_ports)}
         ij = jnp.mgrid[:num_ports, :num_ports]
         i = ij[0].ravel()
         j = ij[1].ravel()

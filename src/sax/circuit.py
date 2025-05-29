@@ -394,7 +394,7 @@ def _enforce_return_type(model: Model, return_type: str) -> Model:
 
 
 def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
-    if isinstance(netlist, Netlist) or isinstance(netlist, RecursiveNetlist):
+    if isinstance(netlist, (Netlist, RecursiveNetlist)):
         return {}
     if isinstance(netlist, dict):
         if is_recursive(netlist):
@@ -437,7 +437,7 @@ def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
 def _validate_netlist_ports(netlist: RecursiveNetlist) -> None:
     if len(netlist.root) < 1:
         raise ValueError("Cannot create circuit: empty netlist")
-    net: Netlist = netlist.root[list(netlist.root)[0]]
+    net: Netlist = netlist.root[next(iter(netlist.root))]
     ports_str = ", ".join(list(net.ports))
     if not ports_str:
         ports_str = "no ports given"

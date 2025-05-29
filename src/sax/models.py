@@ -3,12 +3,15 @@
 from __future__ import annotations
 
 from functools import lru_cache as cache
+from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 
-from .saxtypes import FloatArrayND, Model, SCoo, SDict
 from .utils import get_inputs_outputs, reciprocal
+
+if TYPE_CHECKING:
+    from .saxtypes import FloatArrayND, Model, SCoo, SDict
 
 
 def straight(
@@ -74,16 +77,14 @@ def _validate_ports(
         input_ports = [f"in{i}" for i in range(num_inputs)]
         output_ports = [f"out{i}" for i in range(num_outputs)]
     else:
-        if num_inputs is not None:
-            if num_outputs is None:
-                raise ValueError(
-                    "if num_inputs is given, num_outputs should be given as well."
-                )
-        if num_outputs is not None:
-            if num_inputs is None:
-                raise ValueError(
-                    "if num_outputs is given, num_inputs should be given as well."
-                )
+        if num_inputs is not None and num_outputs is None:
+            raise ValueError(
+                "if num_inputs is given, num_outputs should be given as well."
+            )
+        if num_outputs is not None and num_inputs is None:
+            raise ValueError(
+                "if num_outputs is given, num_inputs should be given as well."
+            )
         if num_inputs is not None and num_outputs is not None:
             if num_inputs + num_outputs != len(ports):
                 raise ValueError("num_inputs + num_outputs != len(ports)")
@@ -94,12 +95,11 @@ def _validate_ports(
             num_inputs = len(input_ports)
             num_outputs = len(output_ports)
 
-    if diagonal:
-        if num_inputs != num_outputs:
-            raise ValueError(
-                "Can only have a diagonal passthru if number "
-                "of input ports equals the number of output ports!"
-            )
+    if diagonal and num_inputs != num_outputs:
+        raise ValueError(
+            "Can only have a diagonal passthru if number "
+            "of input ports equals the number of output ports!"
+        )
 
     return tuple(input_ports), tuple(output_ports), num_inputs, num_outputs
 
@@ -128,7 +128,8 @@ def unitary(
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
         ports, num_inputs, num_outputs, diagonal
     )
-    assert num_inputs is not None and num_outputs is not None
+    assert num_inputs is not None
+    assert num_outputs is not None
 
     # let's create the squared S-matrix:
     N = max(num_inputs, num_outputs)
@@ -204,7 +205,8 @@ def copier(
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
         ports, num_inputs, num_outputs, diagonal
     )
-    assert num_inputs is not None and num_outputs is not None
+    assert num_inputs is not None
+    assert num_outputs is not None
 
     # let's create the squared S-matrix:
     S = jnp.zeros((num_inputs + num_outputs, num_inputs + num_outputs), dtype=float)

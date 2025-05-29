@@ -2,11 +2,12 @@
 
 from __future__ import annotations
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import jax.numpy as jnp
 
-from .saxtypes import ComplexArrayND
+if TYPE_CHECKING:
+    from .saxtypes import ComplexArrayND
 
 
 def mse(x: ComplexArrayND, y: ComplexArrayND) -> float:
