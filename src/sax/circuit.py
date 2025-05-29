@@ -36,7 +36,7 @@ from .utils import (
 class CircuitInfo(NamedTuple):
     """Information about the circuit function you created."""
 
-    dag: nx.DiGraph[str]
+    dag: nx.DiGraph
     models: dict[str, Model]
     backend: str
 
@@ -66,7 +66,7 @@ def circuit(
         netlist, with_unconnected_instances=False, with_placements=False
     )
     _validate_netlist_ports(recnet)
-    dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
+    dependency_dag: nx.DiGraph = _create_dag(recnet, models, validate=True)
     models = _validate_models(models, dependency_dag, extra_models=instance_models)
 
     circuit = None
@@ -103,7 +103,7 @@ def _create_dag(
     models: dict[str, Model] | None = None,
     *,
     validate: bool = False,
-) -> nx.DiGraph[str]:
+) -> nx.DiGraph:
     if models is None:
         models = {}
 
@@ -129,11 +129,11 @@ def _create_dag(
     g = nx.induced_subgraph(g, nodes)
     if validate:
         g = _validate_dag(g)
-    return cast(nx.DiGraph[str], g)
+    return cast(nx.DiGraph, g)
 
 
 def draw_dag(
-    dag: nx.DiGraph[str],
+    dag: nx.DiGraph,
     *,
     with_labels: bool = True,
     **kwargs: Any,
@@ -165,7 +165,7 @@ def get_required_circuit_models(
     recnet: RecursiveNetlist = parse_netlist(
         netlist, with_unconnected_instances=False, with_placements=False
     )
-    dependency_dag: nx.DiGraph[str] = _create_dag(recnet, models, validate=True)
+    dependency_dag: nx.DiGraph = _create_dag(recnet, models, validate=True)
     _, required, _ = _find_missing_models(
         models, dependency_dag, extra_models=instance_models
     )
@@ -230,7 +230,7 @@ def _patch_path() -> None:
     os.environ["PATH"] = os.pathsep.join(os_paths | sys_paths | other_paths)
 
 
-def _my_dag_pos(dag: nx.DiGraph[str]) -> dict[int, tuple[float, float]]:
+def _my_dag_pos(dag: nx.DiGraph) -> dict[int, tuple[float, float]]:
     # inferior to pydot
     in_degree = {}
     for k, v in dag.in_degree():  # type: ignore[reportGeneralTypeIssues]
@@ -252,11 +252,11 @@ def _my_dag_pos(dag: nx.DiGraph[str]) -> dict[int, tuple[float, float]]:
     return pos
 
 
-def _find_root(g: nx.DiGraph[str]) -> list[str]:
+def _find_root(g: nx.DiGraph) -> list[str]:
     return [n for n, d in g.in_degree() if d == 0]  # type: ignore[reportGeneralTypeIssues]
 
 
-def _find_leaves(g: nx.DiGraph[str]) -> list[str]:
+def _find_leaves(g: nx.DiGraph) -> list[str]:
     return [n for n, d in g.out_degree() if d == 0]  # type: ignore[reportGeneralTypeIssues]
 
 
