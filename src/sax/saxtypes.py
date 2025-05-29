@@ -194,7 +194,7 @@ def is_model_factory(model: Any) -> bool:
     return False
 
 
-def validate_model(model: Callable):
+def validate_model(model: Callable) -> None:
     """Validate the parameters of a model"""
     positional_arguments = []
     for param in inspect.signature(model).parameters.values():
@@ -222,7 +222,7 @@ def is_singlemode(S: Any) -> bool:
     return not any(("@" in p) for p in ports)
 
 
-def _get_ports(S: SType):
+def _get_ports(S: SType) -> tuple[str, ...]:
     if is_sdict(S):
         S = cast(SDict, S)
         ports_set = {p1 for p1, _ in S} | {p2 for _, p2 in S}
@@ -260,7 +260,7 @@ def sdict(S: Model | SType) -> Model | SType:
         model = cast(Model, S)
 
         @functools.wraps(model)
-        def wrapper(**kwargs):
+        def wrapper(**kwargs: Any) -> SDict:
             return sdict(model(**kwargs))
 
         return wrapper
@@ -315,7 +315,7 @@ def scoo(S: Callable | SType) -> Callable | SCoo:
         model = cast(Model, S)
 
         @functools.wraps(model)
-        def wrapper(**kwargs):
+        def wrapper(**kwargs: Any) -> SCoo:
             return scoo(model(**kwargs))
 
         return wrapper
@@ -332,7 +332,7 @@ def scoo(S: Callable | SType) -> Callable | SCoo:
     return S
 
 
-def _consolidate_sdense(S, pm):
+def _consolidate_sdense(S: Array, pm: dict[str, int]) -> tuple[Array, dict[str, int]]:
     idxs = list(pm.values())
     S = S[..., idxs, :][..., :, idxs]
     pm = {p: i for i, p in enumerate(pm)}
@@ -371,7 +371,7 @@ def sdense(S: Callable | SType) -> Callable | SDense:
         model = cast(Model, S)
 
         @functools.wraps(model)
-        def wrapper(**kwargs):
+        def wrapper(**kwargs: Any) -> SDense:
             return sdense(model(**kwargs))
 
         return wrapper
@@ -402,7 +402,7 @@ def _sdict_to_sdense(sdict: SDict) -> SDense:
     return _scoo_to_sdense(Si, Sj, Sx, ports_map)
 
 
-def modelfactory(func):
+def modelfactory(func: Callable) -> Callable:
     """Decorator that marks a function as `ModelFactory`"""
     sig = inspect.signature(func)
     if _is_callable_annotation(sig.return_annotation):  # already model factory

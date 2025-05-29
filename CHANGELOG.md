@@ -198,4 +198,3 @@
 
 ## 0.6.0 - 0.7.0
 - Initial commits with foundational code, refactoring, and early versioning.
-

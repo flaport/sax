@@ -74,7 +74,7 @@ def _graph_edges(
     instances: dict[str, SDict],
     connections: dict[str, str],
     ports: dict[str, str],
-):
+) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:
     zero = jnp.array([0.0], dtype=float)
     edges = {}
     edges.update({_split_port(k): _split_port(v) for k, v in connections.items()})
@@ -104,7 +104,7 @@ def _graph_edges(
     return edges
 
 
-def _prune_internal_output_nodes(graph):
+def _prune_internal_output_nodes(graph: nx.Graph) -> nx.Graph:
     broken = True
     while broken:
         broken = False
@@ -121,7 +121,9 @@ def _prune_internal_output_nodes(graph):
     return graph
 
 
-def _get_possible_paths(graph, source, target):
+def _get_possible_paths(
+    graph: nx.Graph, source: tuple[str, str], target: tuple[str, str]
+) -> list[list[tuple[tuple[str, str], tuple[str, str]]]]:
     paths = []
     default_props = {"type": "C", "length": 0.0}
     for path in nx.all_simple_edge_paths(graph, source, target):
@@ -136,7 +138,9 @@ def _get_possible_paths(graph, source, target):
     return paths
 
 
-def _path_lengths(graph, paths):
+def _path_lengths(
+    graph: nx.Graph, paths: list[list[tuple[tuple[str, str], tuple[str, str]]]]
+) -> list[Any]:
     lengths = []
     for path in paths:
         length = zero = jnp.array([0.0], dtype=float)

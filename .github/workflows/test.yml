@@ -30,4 +30,3 @@ jobs:
         with:
           name: tests
           path: ./tests
-

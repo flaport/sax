@@ -62,7 +62,7 @@ def block_diag(*arrs: ComplexArrayND) -> ComplexArrayND:
     return block_diag.reshape(*batch_shape, N, N)
 
 
-def clean_string(s: str, dot="p", minus="m", other="_") -> str:
+def clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") -> str:
     """Clean a string such that it is a valid python identifier"""
     s = s.strip()
     s = s.replace(".", dot)  # dot

@@ -90,7 +90,7 @@ def _graph_edges_directed(
     instances: dict[str, SDict],
     connections: dict[str, str],
     ports: dict[str, str],
-):
+) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:
     one = jnp.array([1.0], dtype=float)
     edges_dict = {}
     edges_dict.update({_split_port(k): _split_port(v) for k, v in connections.items()})

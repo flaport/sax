@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 import warnings
-from typing import Any, Dict
+from typing import Any
 
 from ..netlist import Component
 from ..saxtypes import Model, SType

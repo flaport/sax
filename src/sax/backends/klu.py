@@ -145,7 +145,9 @@ def evaluate_circuit_klu(analyzed: Any, instances: dict[str, SType]) -> SDense:
     return S, {p: i for i, p in enumerate(port_map)}
 
 
-def _get_instance_ports(connections: dict[str, str], ports: dict[str, str]):
+def _get_instance_ports(
+    connections: dict[str, str], ports: dict[str, str]
+) -> dict[str, list[str]]:
     instance_ports = {}
     for connection in connections.items():
         for ip in connection:
@@ -161,7 +163,9 @@ def _get_instance_ports(connections: dict[str, str], ports: dict[str, str]):
     return {k: natsorted(v) for k, v in instance_ports.items()}
 
 
-def _get_dummy_instances(connections, ports):
+def _get_dummy_instances(
+    connections: dict[str, str], ports: dict[str, str]
+) -> dict[str, tuple[Any, Any, None, dict[str, int]]]:
     """No longer used. deprecated by analyze_instances_klu."""
     instance_ports = _get_instance_ports(connections, ports)
     dummy_instances = {}

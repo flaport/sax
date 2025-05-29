@@ -92,7 +92,7 @@ def evaluate_circuit_fg(
     return circuit_sdict
 
 
-def _connections_sort_key(connection):
+def _connections_sort_key(connection: tuple[str, str]) -> tuple[str, str]:
     """Sort key for sorting a connection dictionary"""
     part1, part2 = connection
     name1, _ = part1.split(",")
@@ -100,7 +100,12 @@ def _connections_sort_key(connection):
     return (min(name1, name2), max(name1, name2))
 
 
-def _interconnect_ports(block_diag, current_ports, k, l):  # noqa: E741
+def _interconnect_ports(
+    block_diag: dict[tuple[str, str], Any],
+    current_ports: tuple[str, ...],
+    k: str,
+    l: str,
+) -> dict[tuple[str, str], Any]:
     """Interconnect two ports in a given model
 
     > Note: the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.
@@ -126,7 +131,17 @@ def _interconnect_ports(block_diag, current_ports, k, l):  # noqa: E741
 
 
 @jax.jit
-def _calculate_interconnected_value(vij, vik, vil, vkj, vkk, vkl, vlj, vlk, vll):
+def _calculate_interconnected_value(
+    vij: Any,
+    vik: Any,
+    vil: Any,
+    vkj: Any,
+    vkk: Any,
+    vkl: Any,
+    vlj: Any,
+    vlk: Any,
+    vll: Any,
+) -> Any:
     """Calculate an interconnected S-parameter value
 
     Note:

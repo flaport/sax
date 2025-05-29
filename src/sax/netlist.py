@@ -42,18 +42,18 @@ class BaseModel(_BaseModel):
         json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = super().__repr__()
         return s
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash_dict(self.model_dump())
 
 
-def _validate_str(s: str, what="component"):
+def _validate_str(s: str, what: str = "component") -> str:
     if "," in s:
         raise ValueError(f"Invalid {what} string. Should not contain ','. Got: {s}")
     s = s.split("$")[0]
@@ -204,14 +204,14 @@ class RecursiveNetlist(RootModel):
         json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
     )
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         s = super().__repr__()
         return s
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.__repr__()
 
-    def __hash__(self):
+    def __hash__(self) -> int:
         return hash_dict(self.model_dump())
 
 
