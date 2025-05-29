@@ -91,7 +91,15 @@ target-version = "py311"
 docstring-code-format = true
 
 [tool.ruff.lint]  # see https://docs.astral.sh/ruff/rules
-ignore = ["COM812"]
+ignore = [
+  "COM812",
+  "PD901",
+  "TC003",
+  "TC006",
+  "ANN401",
+  "PLR0913",
+  "C420"
+]
 per-file-ignores = {"src/tests/*.py" = ["D", "INP001"]}
 select = ["ALL"]
 

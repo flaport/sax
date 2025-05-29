@@ -1,4 +1,4 @@
-"""SAX netlist parsing and utilities"""
+"""SAX netlist parsing and utilities."""
 
 from __future__ import annotations
 
@@ -9,7 +9,6 @@ from copy import deepcopy
 from functools import lru_cache, partial
 from typing import Annotated, Any, Literal, TypedDict, overload
 
-import black
 import networkx as nx
 import numpy as np
 import yaml
@@ -45,7 +44,6 @@ class BaseModel(_BaseModel):
 
     def __repr__(self):
         s = super().__repr__()
-        s = black.format_str(s, mode=black.Mode())
         return s
 
     def __str__(self):
@@ -206,7 +204,6 @@ class RecursiveNetlist(RootModel):
 
     def __repr__(self):
         s = super().__repr__()
-        s = black.format_str(s, mode=black.Mode())
         return s
 
     def __str__(self):

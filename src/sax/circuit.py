@@ -1,4 +1,4 @@
-"""SAX Circuit Definition"""
+"""SAX Circuit Definition."""
 
 from __future__ import annotations
 
@@ -7,14 +7,21 @@ import shutil
 import sys
 from collections.abc import Callable
 from functools import partial
-from typing import NamedTuple
+from pathlib import Path
+from typing import Any, NamedTuple, cast
 
-import black
 import networkx as nx
 import numpy as np
 
 from .backends import backend_map, circuit_backends
-from .netlist import AnyNetlist, Netlist, RecursiveNetlist, is_recursive
+from .netlist import (
+    AnyNetlist,
+    CoercingComponent,
+    InstanceStr,
+    Netlist,
+    RecursiveNetlist,
+    is_recursive,
+)
 from .netlist import netlist as parse_netlist
 from .saxtypes import Model, Settings, SType, scoo, sdense, sdict
 from .utils import (
@@ -39,6 +46,7 @@ def circuit(
     models: dict[str, Model] | None = None,
     backend: str = "default",
     return_type: str = "sdict",
+    *,
     ignore_missing_ports: bool = False,
 ) -> tuple[Model, CircuitInfo]:
     """Create a circuit function for a given netlist.
@@ -82,8 +90,6 @@ def circuit(
             backend,
             ignore_missing_ports=ignore_missing_ports,
         )
-
-    assert circuit is not None
     circuit = _enforce_return_type(circuit, return_type)
     return circuit, CircuitInfo(
         dag=dependency_dag,
@@ -95,11 +101,11 @@ def circuit(
 def _create_dag(
     netlist: RecursiveNetlist,
     models: dict[str, Model] | None = None,
+    *,
     validate: bool = False,
 ) -> nx.DiGraph[str]:
     if models is None:
         models = {}
-    assert isinstance(models, dict)
 
     all_models = {}
     g = nx.DiGraph()
@@ -121,13 +127,18 @@ def _create_dag(
     parent_node = next(iter(netlist.root.keys()))
     nodes = [parent_node, *nx.descendants(g, parent_node)]
     g = nx.induced_subgraph(g, nodes)
-    assert isinstance(g, nx.DiGraph)
     if validate:
         g = _validate_dag(g)
-    return g
+    return cast(nx.DiGraph[str], g)
 
 
-def draw_dag(dag, with_labels=True, **kwargs):
+def draw_dag(
+    dag: nx.DiGraph[str],
+    *,
+    with_labels: bool = True,
+    **kwargs: Any,
+) -> None:
+    """Draw the dependency DAG of a netlist."""
     _patch_path()
     if shutil.which("dot"):
         return nx.draw(
@@ -162,8 +173,14 @@ def get_required_circuit_models(
 
 
 def _flat_circuit(
-    instances, connections, ports, models, backend, ignore_missing_ports=False
-):
+    instances: dict[InstanceStr, CoercingComponent],
+    connections: dict[str, str],
+    ports: dict[str, str],
+    models: dict[str, Model],
+    backend: str = "default",
+    *,
+    ignore_missing_ports: bool = False,
+) -> Model:
     analyze_insts_fn, analyze_fn, evaluate_fn = circuit_backends[backend]
     dummy_instances = analyze_insts_fn(instances, models)
     inst_port_mode = {
@@ -199,25 +216,24 @@ def _flat_circuit(
         for inst_name, model in inst2model.items():
             instances[inst_name] = model(**full_settings.get(inst_name, {}))
 
-        S = evaluate_fn(analyzed, instances)
-        return S
+        return evaluate_fn(analyzed, instances)
 
     _replace_kwargs(_circuit, **default_settings)
 
     return _circuit
 
 
-def _patch_path():
+def _patch_path() -> None:
     os_paths = {p: None for p in os.environ.get("PATH", "").split(os.pathsep)}
     sys_paths = {p: None for p in sys.path}
-    other_paths = {os.path.dirname(sys.executable): None}
+    other_paths = {str(Path(sys.executable).parent): None}
     os.environ["PATH"] = os.pathsep.join(os_paths | sys_paths | other_paths)
 
 
-def _my_dag_pos(dag):
+def _my_dag_pos(dag: nx.DiGraph[str]) -> dict[int, tuple[float, float]]:
     # inferior to pydot
     in_degree = {}
-    for k, v in dag.in_degree():
+    for k, v in dag.in_degree():  # type: ignore[reportGeneralTypeIssues]
         if v not in in_degree:
             in_degree[v] = []
         in_degree[v].append(k)
@@ -236,12 +252,12 @@ def _my_dag_pos(dag):
     return pos
 
 
-def _find_root(g):
-    return [n for n, d in g.in_degree() if d == 0]
+def _find_root(g: nx.DiGraph[str]) -> list[str]:
+    return [n for n, d in g.in_degree() if d == 0]  # type: ignore[reportGeneralTypeIssues]
 
 
-def _find_leaves(g):
-    return [n for n, d in g.out_degree() if d == 0]
+def _find_leaves(g: nx.DiGraph[str]) -> list[str]:
+    return [n for n, d in g.out_degree() if d == 0]  # type: ignore[reportGeneralTypeIssues]
 
 
 def _find_missing_models(
@@ -269,14 +285,18 @@ def _validate_models(
             "Given Models": list(models),
             "Required Models": required_models,
         }
-        raise ValueError(
+        msg = (
             "Missing models. The following models are still missing to build "
-            f"the circuit:\n{black.format_str(repr(model_diff), mode=black.Mode())}"
+            f"the circuit:\n{model_diff}"
         )
+        raise ValueError(msg)
     return models
 
 
-def _forward_global_settings(instances, settings):
+def _forward_global_settings(
+    instances: dict[InstanceStr, CoercingComponent],
+    settings: Settings,
+) -> Settings:
     global_settings = {
         k: settings.pop(k) for k in list(settings.keys()) if k not in instances
     }
@@ -285,7 +305,7 @@ def _forward_global_settings(instances, settings):
     return settings
 
 
-def _port_modes_dict(port_modes):
+def _port_modes_dict(port_modes: dict[str, Any]):
     result = {}
     for port_mode in port_modes:
         port, mode = port_mode.split("@") if "@" in port_mode else (port_mode, None)
