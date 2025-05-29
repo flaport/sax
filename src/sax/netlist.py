@@ -8,7 +8,7 @@ import warnings
 from copy import deepcopy
 from functools import lru_cache, partial
 from pathlib import Path
-from typing import Annotated, Any, Literal, TypedDict, cast, overload
+from typing import Annotated, Any, Literal, NotRequired, TypedDict, cast, overload
 
 import networkx as nx
 import numpy as np
@@ -31,7 +31,7 @@ class NetlistDict(TypedDict):
     instances: dict
     connections: dict[str, str]
     ports: dict[str, str]
-    settings: dict[str, Any]
+    settings: NotRequired[dict[str, Any]]
 
 
 RecursiveNetlistDict = dict[str, NetlistDict]
@@ -217,7 +217,7 @@ class RecursiveNetlist(RootModel):
         return hash_dict(self.model_dump())
 
 
-AnyNetlist = Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
+AnyNetlist = dict | Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistDict
 
 
 def netlist(
@@ -257,26 +257,28 @@ def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~") -> NetlistDict
 
 
 @lru_cache
-def load_netlist(pic_path: str) -> Netlist:
-    net = yaml.safe_load(Path(pic_path).read_text())
+def load_netlist(pic_path: str | Path) -> Netlist:
+    pic_path = Path(pic_path).resolve()
+    net = yaml.safe_load(pic_path.read_text())
     return Netlist.model_validate(net)
 
 
 @lru_cache
-def load_recursive_netlist(pic_path: str, ext: str = ".yml") -> RecursiveNetlist:
-    folder_path = os.path.dirname(os.path.abspath(pic_path))
+def load_recursive_netlist(pic_path: str | Path, ext: str = ".yml") -> RecursiveNetlist:
+    pic_path = Path(pic_path).resolve()
+    folder_path = pic_path.parent
 
     def _clean_string(path: str) -> str:
         return clean_string(re.sub(ext, "", os.path.split(path)[-1]))
 
     # the circuit we're interested in should come first:
-    netlists: dict[str, Netlist] = {_clean_string(pic_path): Netlist()}
+    netlists: dict[str, Netlist] = {_clean_string(str(pic_path)): Netlist()}
 
-    for filename in os.listdir(folder_path):
-        path = os.path.join(folder_path, filename)
-        if not os.path.isfile(path) or not path.endswith(ext):
+    for filename in folder_path.iterdir():
+        path = folder_path / filename
+        if not path.exists() or not str(path).endswith(ext):
             continue
-        netlists[_clean_string(path)] = load_netlist(path)
+        netlists[_clean_string(str(path))] = load_netlist(path)
 
     return RecursiveNetlist.model_validate(netlists)
 
@@ -310,7 +312,7 @@ def get_netlist_instances_by_prefix(
     result = []
     for key in recursive_netlist_root:
         if key.startswith(prefix):
-            result.append(key)
+            result.append(key)  # noqa: PERF401
     return result
 
 
@@ -342,7 +344,7 @@ def get_component_instances(
             "component"
         ].startswith(component_name_prefix):
             # Note priority encoding on match.
-            instance_names.append(key)
+            instance_names.append(key)  # noqa: PERF401
     return {component_name_prefix: instance_names}
 
 
@@ -426,7 +428,7 @@ def _copy_netlist(net: NetlistDict) -> NetlistDict:
     return cast(NetlistDict, new)
 
 
-def _flatten_netlist(recnet: RecursiveNetlistDict, net: NetlistDict, sep: str) -> None:
+def _flatten_netlist(recnet: RecursiveNetlistDict, net: NetlistDict, sep: str) -> None:  # noqa: PLR0912,C901
     for name, instance in list(net["instances"].items()):
         component = instance["component"]
         if component not in recnet:

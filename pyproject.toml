@@ -103,6 +103,7 @@ ignore = [
   "D105",
   "C416",
   "FIX002",
+  "PLW2901",
   # Type annotation issues that are acceptable
   "TRY003",  # Avoid specifying long messages outside the exception class - acceptable for simple error messages
   "EM101",  # Exception must not use a string literal - acceptable for simple error messages

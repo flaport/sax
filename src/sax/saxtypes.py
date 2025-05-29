@@ -103,7 +103,7 @@ Example:
 
 """
 
-SType = Union[SDict, SCoo, SDense]
+SType = SDict | SCoo | SDense
 """ An SDict, SDense or SCOO """
 
 Model = Callable[..., SType]
@@ -147,12 +147,12 @@ def is_sdict(x: Any) -> bool:
 
 def is_scoo(x: Any) -> bool:
     """Check if an object is an `SCoo` (a SAX sparse S representation in COO-format)"""
-    return isinstance(x, (tuple, list)) and len(x) == 4
+    return isinstance(x, tuple | list) and len(x) == 4
 
 
 def is_sdense(x: Any) -> bool:
     """Check if an object is an `SDense` (a SAX dense S-matrix representation)"""
-    return isinstance(x, (tuple, list)) and len(x) == 2
+    return isinstance(x, tuple | list) and len(x) == 2
 
 
 def is_model(model: Any) -> bool:
@@ -166,9 +166,7 @@ def is_model(model: Any) -> bool:
     for param in sig.parameters.values():
         if param.default is inspect.Parameter.empty:
             return False  # a proper SAX model does not have any positional arguments.
-    if _is_callable_annotation(sig.return_annotation):  # model factory
-        return False
-    return True
+    return not _is_callable_annotation(sig.return_annotation)  # model factory
 
 
 def _is_callable_annotation(annotation: Any) -> bool:
@@ -189,9 +187,7 @@ def is_model_factory(model: Any) -> bool:
     if not callable(model):
         return False
     sig = inspect.signature(model)
-    if _is_callable_annotation(sig.return_annotation):  # model factory
-        return True
-    return False
+    return not _is_callable_annotation(sig.return_annotation)  # model factory
 
 
 def validate_model(model: Callable) -> None:
@@ -199,7 +195,7 @@ def validate_model(model: Callable) -> None:
     positional_arguments = []
     for param in inspect.signature(model).parameters.values():
         if param.default is inspect.Parameter.empty:
-            positional_arguments.append(param.name)
+            positional_arguments.append(param.name)  # noqa: PERF401
     if positional_arguments:
         raise ValueError(
             f"model '{model}' takes positional "
@@ -407,5 +403,5 @@ def modelfactory(func: Callable) -> Callable:
     sig = inspect.signature(func)
     if _is_callable_annotation(sig.return_annotation):  # already model factory
         return func
-    func.__signature__ = sig.replace(return_annotation=Model)
+    func.__signature__ = sig.replace(return_annotation=Model)  # type: ignore[reportFunctionMemberAccess]
     return func

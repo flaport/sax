@@ -394,13 +394,13 @@ def _enforce_return_type(model: Model, return_type: str) -> Model:
 
 
 def _extract_instance_models(netlist: AnyNetlist) -> dict[str, Model]:
-    if isinstance(netlist, (Netlist, RecursiveNetlist)):
+    if isinstance(netlist, Netlist | RecursiveNetlist):
         return {}
     if isinstance(netlist, dict):
         if is_recursive(netlist):
             models = {}
             for net in netlist.values():
-                models.update(_extract_instance_models(net))  # type: ignore
+                models.update(_extract_instance_models(net))  # type: ignore[reportArgumentType]
             return models
         callable_instances = [f for f in netlist["instances"].values() if callable(f)]
         models = {}

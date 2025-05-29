@@ -22,8 +22,8 @@ SAMPLE_NETLIST = {
 }
 
 
-def test_circuit():
-    mzi, info = sax.circuit(
+def test_circuit() -> None:
+    _mzi, _info = sax.circuit(
         netlist=SAMPLE_NETLIST,
         models={
             "coupler": sax.models.coupler,

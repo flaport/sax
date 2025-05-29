@@ -120,7 +120,7 @@ def _multimode_sdense(sdense: SDense, modes: tuple[str, ...] = ("TE", "TM")) -> 
     Sx_m = block_diag(*(Sx for _ in modes))
 
     port_map_m = {
-        f"{port}@{mode}": idx + mode_map[mode] * num_ports
+        f"{port}@{mode}": idx + mode_map[mode] * num_ports  # type: ignore[reportCallIssue]
         for mode in modes
         for port, idx in port_map.items()
     }

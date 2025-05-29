@@ -100,9 +100,9 @@ def try_complex_float(f: Any) -> Any:
         except ComplexWarning:
             return jnp.asarray(f, dtype=complex)
         except (ValueError, TypeError):
-            return f
-        finally:
-            return f
+            pass
+
+    return f
 
 
 def flatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
@@ -422,7 +422,7 @@ def _replace_kwargs(func: Callable, **kwargs: Any) -> None:
         inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, default=v)
         for k, v in kwargs.items()
     ]
-    func.__signature__ = sig.replace(parameters=settings)
+    func.__signature__ = sig.replace(parameters=settings)  # type: ignore[reportFunctionMemberAccess]
 
 
 @overload
