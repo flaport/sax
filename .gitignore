@@ -79,3 +79,4 @@ venv.bak/
 venv/
 wheelhouse/
 wheels/
+failed/
