@@ -44,7 +44,7 @@ jobs:
       - name: Install Just
         uses: taiki-e/install-action@just
       - name: Build docs
-        run: just dev docs
+        run: just dev nbdocs docs
       - name: Upload artifact [site]
         uses: actions/upload-pages-artifact@v3
         with:
