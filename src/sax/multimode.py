@@ -1,4 +1,4 @@
-"""SAX Multimode support"""
+"""SAX Multimode support."""
 
 from __future__ import annotations
 
@@ -46,12 +46,12 @@ def multimode(S: SDense, modes: tuple[str, ...] = ("TE", "TM")) -> SDense: ...
 
 
 def multimode(S: SType | Model, modes: tuple[str, ...] = ("TE", "TM")) -> SType | Model:
-    """Convert a single mode model to a multimode model"""
+    """Convert a single mode model to a multimode model."""
     if is_model(S):
         model = cast(Model, S)
 
         @wraps(model)
-        def new_model(**params: Any) -> SType:
+        def new_model(**params: Any) -> SType:  # noqa: ANN401
             return multimode(model(**params), modes=modes)
 
         return cast(Model, new_model)
@@ -69,7 +69,9 @@ def multimode(S: SType | Model, modes: tuple[str, ...] = ("TE", "TM")) -> SType 
         return _multimode_scoo(cast(SCoo, S), modes=modes)
     if is_sdense(S):
         return _multimode_sdense(cast(SDense, S), modes=modes)
-    raise ValueError("cannot convert to multimode. Unknown stype.")
+
+    msg = "cannot convert to multimode. Unknown SType."
+    raise ValueError(msg)
 
 
 def _multimode_sdict(sdict: SDict, modes: tuple[str, ...] = ("TE", "TM")) -> SDict:
@@ -145,12 +147,12 @@ def singlemode(S: SDense, mode: str = "TE") -> SDense: ...
 
 
 def singlemode(S: SType | Model, mode: str = "TE") -> SType | Model:
-    """Convert multimode model to a singlemode model"""
+    """Convert multimode model to a singlemode model."""
     if is_model(S):
         model = cast(Model, S)
 
         @wraps(model)
-        def new_model(**params: Any) -> SType:
+        def new_model(**params: Any) -> SType:  # noqa: ANN401
             return singlemode(model(**params), mode=mode)
 
         return cast(Model, new_model)
@@ -166,7 +168,9 @@ def singlemode(S: SType | Model, mode: str = "TE") -> SType | Model:
         return _singlemode_scoo(cast(SCoo, S), mode=mode)
     if is_sdense(S):
         return _singlemode_sdense(cast(SDense, S), mode=mode)
-    raise ValueError("cannot convert to multimode. Unknown stype.")
+
+    msg = "cannot convert to multimode. Unknown SType."
+    raise ValueError(msg)
 
 
 def _singlemode_sdict(sdict: SDict, mode: str = "TE") -> SDict:

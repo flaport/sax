@@ -1,10 +1,11 @@
-"""SAX Filipsson Gunnar Backend"""
+"""SAX Filipsson Gunnar Backend."""
 
 from __future__ import annotations
 
 from typing import Any
 
 import jax
+from jaxtyping import Array
 
 from ..netlist import Component
 from ..saxtypes import Model, SDict, SType, sdict
@@ -14,6 +15,7 @@ def analyze_instances_fg(
     instances: dict[str, Component],
     models: dict[str, Model],
 ) -> dict[str, SDict]:
+    """Analyze instances for the Filipsson Gunnar backend."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
         if not isinstance(v, Component):
@@ -30,16 +32,16 @@ def analyze_instances_fg(
 
 
 def analyze_circuit_fg(
-    analyzed_instances: dict[str, SDict],
+    analyzed_instances: dict[str, SDict],  # noqa: ARG001
     connections: dict[str, str],
     ports: dict[str, str],
-) -> Any:
-    # skip analysis for now
-    return connections, ports
+) -> Any:  # noqa: ANN401
+    """Analyze a circuit for the Filipsson Gunnar backend."""
+    return connections, ports  # skip analysis for now
 
 
 def evaluate_circuit_fg(
-    analyzed: Any,
+    analyzed: Any,  # noqa: ANN401
     instances: dict[str, SType],
 ) -> SDict:
     """Evaluate a circuit for the given sdicts."""
@@ -57,7 +59,7 @@ def evaluate_circuit_fg(
     sorted_connections = sorted(connections.items(), key=_connections_sort_key)
     all_connected_instances = {k: {k} for k in instances}
 
-    for k, l in sorted_connections:  # noqa: E741
+    for k, l in sorted_connections:
         name1, _ = k.split(",")
         name2, _ = l.split(",")
 
@@ -93,7 +95,7 @@ def evaluate_circuit_fg(
 
 
 def _connections_sort_key(connection: tuple[str, str]) -> tuple[str, str]:
-    """Sort key for sorting a connection dictionary"""
+    """Sort key for sorting a connection dictionary."""
     part1, part2 = connection
     name1, _ = part1.split(",")
     name2, _ = part2.split(",")
@@ -106,11 +108,14 @@ def _interconnect_ports(
     k: str,
     l: str,
 ) -> dict[tuple[str, str], Any]:
-    """Interconnect two ports in a given model
+    """Interconnect two ports in a given model.
 
-    > Note: the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.
-      "A new general computer algorithm for S-matrix calculation of interconnected
-      multiports." 11th European Microwave Conference. IEEE, 1981.'
+    .. note ::
+
+        the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.
+        "A new general computer algorithm for S-matrix calculation of interconnected
+        multiports." 11th European Microwave Conference. IEEE, 1981.'
+
     """
     current_block_diag = {}
     for i in current_ports:
@@ -132,23 +137,25 @@ def _interconnect_ports(
 
 @jax.jit
 def _calculate_interconnected_value(
-    vij: Any,
-    vik: Any,
-    vil: Any,
-    vkj: Any,
-    vkk: Any,
-    vkl: Any,
-    vlj: Any,
-    vlk: Any,
-    vll: Any,
-) -> Any:
-    """Calculate an interconnected S-parameter value
+    vij: Array,
+    vik: Array,
+    vil: Array,
+    vkj: Array,
+    vkk: Array,
+    vkl: Array,
+    vlj: Array,
+    vlk: Array,
+    vll: Array,
+) -> Array:
+    """Calculate an interconnected S-parameter value.
 
-    Note:
-        The interconnect algorithm is based on equation 6 in the paper below::
+    .. note ::
 
-          Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
-          of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
+        The interconnect algorithm is based on equation 6 in the paper below
+
+        Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
+        of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
+
     """
     result = vij + (
         vkj * vil * (1 - vlk)

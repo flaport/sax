@@ -1,4 +1,4 @@
-"""SAX KLU Backend"""
+"""SAX KLU Backend."""
 
 from __future__ import annotations
 
@@ -20,6 +20,7 @@ def analyze_instances_klu(
     instances: dict[str, Component],
     models: dict[str, Model],
 ) -> dict[str, SCoo]:
+    """Analyze instances for the KLU backend."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
         if not isinstance(v, Component):
@@ -39,7 +40,8 @@ def analyze_circuit_klu(
     analyzed_instances: dict[str, SCoo],
     connections: dict[str, str],
     ports: dict[str, str],
-) -> Any:
+) -> Any:  # noqa: ANN401
+    """Analyze a circuit for the KLU backend."""
     connections = {**connections, **{v: k for k, v in connections.items()}}
     inverse_ports = {v: k for k, v in ports.items()}
     port_map = {k: i for i, k in enumerate(ports)}
@@ -95,7 +97,11 @@ def analyze_circuit_klu(
     )
 
 
-def evaluate_circuit_klu(analyzed: Any, instances: dict[str, SType]) -> SDense:
+def evaluate_circuit_klu(
+    analyzed: Any,  # noqa: ANN401
+    instances: dict[str, SType],
+) -> SDense:
+    """Evaluate a circuit for the KLU backend."""
     (
         n_col,
         mask,

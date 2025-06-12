@@ -1,4 +1,4 @@
-"""SAX General Utilities"""
+"""SAX General Utilities."""
 
 from __future__ import annotations
 
@@ -44,16 +44,18 @@ from .saxtypes import (
 
 
 def block_diag(*arrs: ComplexArrayND) -> ComplexArrayND:
-    """Create block diagonal matrix with arbitrary batch dimensions"""
+    """Create block diagonal matrix with arbitrary batch dimensions."""
     batch_shape = arrs[0].shape[:-2]
 
     N = 0
     for arr in arrs:
         if batch_shape != arr.shape[:-2]:
-            raise ValueError("batch dimensions for given arrays don't match.")
+            msg = "batch dimensions for given arrays don't match."
+            raise ValueError(msg)
         m, n = arr.shape[-2:]
         if m != n:
-            raise ValueError("given arrays are not square.")
+            msg = "given arrays are not square."
+            raise ValueError(msg)
         N += n
 
     arrs = tuple(arr.reshape(-1, arr.shape[-2], arr.shape[-1]) for arr in arrs)
@@ -63,7 +65,7 @@ def block_diag(*arrs: ComplexArrayND) -> ComplexArrayND:
 
 
 def clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") -> str:
-    """Clean a string such that it is a valid python identifier"""
+    """Clean a string such that it is a valid python identifier."""
     s = s.strip()
     s = s.replace(".", dot)  # dot
     s = s.replace("-", minus)  # minus
@@ -71,17 +73,18 @@ def clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") -> 
     if s[0] in "0123456789":
         s = "_" + s
     if not s.isidentifier():
-        raise ValueError(f"failed to clean string to a valid python identifier: {s}")
+        msg = f"failed to clean string to a valid python identifier: {s}"
+        raise ValueError(msg)
     return s
 
 
 def copy_settings(settings: Settings) -> Settings:
-    """Copy a parameter dictionary"""
+    """Copy a parameter dictionary."""
     return validate_settings(settings)  # validation also copies
 
 
 def validate_settings(settings: Settings) -> Settings:
-    """Validate a parameter dictionary"""
+    """Validate a parameter dictionary."""
     _settings = {}
     for k, v in settings.items():
         if isinstance(v, dict):
@@ -91,8 +94,8 @@ def validate_settings(settings: Settings) -> Settings:
     return _settings
 
 
-def try_complex_float(f: Any) -> Any:
-    """Try converting an object to float, return unchanged object on fail"""
+def try_complex_float(f: Any) -> Any:  # noqa: ANN401
+    """Try converting an object to float, return unchanged object on fail."""
     with warnings.catch_warnings():
         warnings.filterwarnings(action="error", category=ComplexWarning)
         try:
@@ -106,12 +109,12 @@ def try_complex_float(f: Any) -> Any:
 
 
 def flatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
-    """Flatten a nested dictionary"""
+    """Flatten a nested dictionary."""
     return _flatten_dict(dic, sep=sep)
 
 
 def _flatten_dict(
-    dic: dict[str, Any], sep: str = ",", frozen: bool = False, parent_key: str = ""
+    dic: dict[str, Any], sep: str = ",", *, frozen: bool = False, parent_key: str = ""
 ) -> dict[str, Any]:
     items = []
     for k, v in dic.items():
@@ -127,7 +130,7 @@ def _flatten_dict(
 
 
 def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
-    """Unflatten a flattened dictionary"""
+    """Unflatten a flattened dictionary."""
     # from: https://gist.github.com/fmder/494aaa2dd6f8c428cede
     items = {}
 
@@ -147,11 +150,17 @@ def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
 
 
 def get_ports(S: Model | SType) -> tuple[str, ...]:
-    """Get port names of a model or an stype
+    """Get port names of a model or an stype.
 
     .. note ::
 
-        if a `Model` function is given in stead of an `SDict`, the function will be traced by JAX to obtain the port combinations of the resulting `SType`. Although this tracing of the function is 'cheap' in comparison to evaluating the model/circuit. It is not for free!  Use this function sparingly on your large `Model` or `circuit`!
+        if a `Model` function is given in stead of an `SDict`,
+        the function will be traced by JAX to obtain the port
+        combinations of the resulting `SType`.
+        Although this tracing of the function is 'cheap' in
+        comparison to evaluating the model/circuit.
+        It is not for free!  Use this function sparingly on your large
+        `Model` or `circuit`!
     """
     if is_model(S):
         return _get_ports_from_model(cast(Model, S))
@@ -163,7 +172,8 @@ def get_ports(S: Model | SType) -> tuple[str, ...]:
         S = cast(SDense, S)
         *_, ports_map = S
         return tuple(natsorted(ports_map.keys()))
-    raise ValueError("Could not extract ports for given S")
+    msg = "Could not extract ports for given S"
+    raise ValueError(msg)
 
 
 @lru_cache(maxsize=4096)  # cache to prevent future tracing
@@ -173,7 +183,7 @@ def _get_ports_from_model(model: Model) -> tuple[str, ...]:
 
 
 def get_port_combinations(S: Model | SType) -> tuple[tuple[str, str], ...]:
-    """Get port combinations of a model or an stype"""
+    """Get port combinations of a model or an stype."""
     if is_model(S):
         S = cast(Model, S)
         return _get_port_combinations_from_model(S)
@@ -189,7 +199,8 @@ def get_port_combinations(S: Model | SType) -> tuple[tuple[str, str], ...]:
     if is_sdense(S):
         _, pm = cast(SDense, S)
         return tuple(natsorted((p1, p2) for p1 in pm for p2 in pm))
-    raise ValueError("Could not extract ports for given S")
+    msg = "Could not extract ports for given S"
+    raise ValueError(msg)
 
 
 @lru_cache(maxsize=4096)  # cache to prevent future tracing
@@ -199,7 +210,7 @@ def _get_port_combinations_from_model(model: Model) -> tuple[tuple[str, str], ..
 
 
 def get_settings(model: Model | ModelFactory) -> Settings:
-    """Get the parameters of a SAX model function"""
+    """Get the parameters of a SAX model function."""
     signature = inspect.signature(model)
 
     settings: Settings = {
@@ -216,7 +227,7 @@ def get_settings(model: Model | ModelFactory) -> Settings:
 def grouped_interp(
     wl: FloatArrayND, wls: FloatArrayND, phis: FloatArrayND
 ) -> FloatArrayND:
-    """Grouped phase interpolation
+    """Grouped phase interpolation.
 
     .. note ::
 
@@ -229,29 +240,6 @@ def grouped_interp(
         this interpolation is only accurate in the range
         `[wls[0], wls[-2])` (`wls[-2]` not included). Any extrapolation
         outside these bounds can yield unexpected results!
-
-    .. plot ::
-
-        import sax
-        import numpy as np
-        import matplotlib.pyplot as plt
-        wls = np.array([2.19999, 2.20001, 2.22499, 2.22501, 2.24999, 2.25001, 2.27499, 2.27501, 2.29999, 2.30001, 2.32499, 2.32501, 2.34999, 2.35001, 2.37499, 2.37501, 2.39999, 2.40001, 2.42499, 2.42501, 2.44999, 2.45001])
-        phis = np.array([5.17317336, 5.1219654, 4.71259842, 4.66252492, 5.65699608, 5.60817922, 2.03697377, 1.98936119, 6.010146, 5.96358061, 4.96336733, 4.91777933, 5.13912198, 5.09451137, 0.22347545, 0.17979684, 2.74501894, 2.70224092, 0.10403192, 0.06214664, 4.83328794, 4.79225525])
-        wl = np.linspace(wls.min(), wls.max(), 10000)
-        phi = np.array(sax.grouped_interp(wl, wls, phis))
-
-        _, ax = plt.subplots(2, 1, sharex=True, figsize=(14, 6))
-        plt.sca(ax[0])
-        plt.plot(1e3*wls, np.arange(wls.shape[0]), marker="o", ls="none")
-        plt.grid(True)
-        plt.ylabel("index")
-        plt.sca(ax[1])
-        plt.grid(True)
-        plt.plot(1e3*wls, phis, marker="o", c="C1")
-        plt.plot(1e3*wl, phi, c="C2")
-        plt.xlabel("λ [nm]")
-        plt.ylabel("φ")
-        plt.show()
 
     """
 
@@ -294,17 +282,20 @@ def grouped_interp(
     wls = jnp.asarray(wls)
     phis = jnp.asarray(phis) % (2 * jnp.pi)
     phis = jnp.where(phis > jnp.pi, phis - 2 * jnp.pi, phis)
-    if not wls.ndim == 1:
-        raise ValueError("grouped_interp: wls should be a 1D array")
-    if not phis.ndim == 1:
-        raise ValueError("grouped_interp: wls should be a 1D array")
-    if not wls.shape == phis.shape:
-        raise ValueError("grouped_interp: wls and phis shape does not match")
+    if wls.ndim != 1:
+        msg = "grouped_interp: wls should be a 1D array"
+        raise ValueError(msg)
+    if phis.ndim != 1:
+        msg = "grouped_interp: wls should be a 1D array"
+        raise ValueError(msg)
+    if wls.shape != phis.shape:
+        msg = "grouped_interp: wls and phis shape does not match"
+        raise ValueError(msg)
     return _grouped_interp(wl.reshape(-1), wls, phis).reshape(*wl.shape)
 
 
 def merge_dicts(*dicts: dict) -> dict:
-    """Merge (possibly deeply nested) dictionaries"""
+    """Merge (possibly deeply nested) dictionaries."""
     if len(dicts) == 1:
         return dict(_generate_merged_dict(dicts[0], {}))
     if len(dicts) == 2:
@@ -314,10 +305,7 @@ def merge_dicts(*dicts: dict) -> dict:
 
 def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]:
     # inspired by https://stackoverflow.com/questions/7204805/how-to-merge-dictionaries-of-dictionaries
-    keys = {
-        **{k: None for k in dict1},
-        **{k: None for k in dict2},
-    }  # keep key order, values irrelevant
+    keys = dict.fromkeys(dict1) | dict.fromkeys(dict2)
     for k in keys:
         if k in dict1 and k in dict2:
             v1, v2 = dict1[k], dict2[k]
@@ -339,9 +327,9 @@ def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]
 
 
 def mode_combinations(
-    modes: Iterable[str], cross: bool = False
+    modes: Iterable[str], *, cross: bool = False
 ) -> tuple[tuple[str, str], ...]:
-    """Create mode combinations for a collection of given modes"""
+    """Create mode combinations for a collection of given modes."""
     if cross:
         mode_combinations = natsorted((m1, m2) for m1 in modes for m2 in modes)
     else:
@@ -350,13 +338,14 @@ def mode_combinations(
 
 
 def reciprocal(sdict: SDict) -> SDict:
-    """Make an SDict reciprocal"""
+    """Make an SDict reciprocal."""
     if is_sdict(sdict):
         return {
             **{(p1, p2): v for (p1, p2), v in sdict.items()},
             **{(p2, p1): v for (p1, p2), v in sdict.items()},
         }
-    raise ValueError("sax.reciprocal is only valid for SDict types")
+    msg = "sax.reciprocal is only valid for SDict types"
+    raise ValueError(msg)
 
 
 @overload
@@ -370,19 +359,18 @@ def rename_params(model: Model, renamings: dict[str, str]) -> Model: ...
 def rename_params(
     model: Model | ModelFactory, renamings: dict[str, str]
 ) -> Model | ModelFactory:
-    """Rename the parameters of a `Model` or `ModelFactory` given
-    a renamings mapping old parameter names to new.
-    """
+    """Rename the parameters of a `Model` or `ModelFactory`."""
     reversed_renamings = {v: k for k, v in renamings.items()}
     if len(reversed_renamings) < len(renamings):
-        raise ValueError("Multiple old names point to the same new name!")
+        msg = "Multiple old names point to the same new name!"
+        raise ValueError(msg)
 
     if is_model_factory(model):
         old_model_factory = cast(ModelFactory, model)
         old_settings = get_settings(model)
 
         @wraps(old_model_factory)
-        def new_model_factory(**settings: Any) -> Model:
+        def new_model_factory(**settings: Any) -> Model:  # noqa: ANN401
             old_settings = {
                 reversed_renamings.get(k, k): v for k, v in settings.items()
             }
@@ -399,7 +387,7 @@ def rename_params(
         old_settings = get_settings(model)
 
         @wraps(old_model)
-        def new_model(**settings: Any) -> SType:
+        def new_model(**settings: Any) -> SType:  # noqa: ANN401
             old_settings = {
                 reversed_renamings.get(k, k): v for k, v in settings.items()
             }
@@ -410,13 +398,12 @@ def rename_params(
 
         return new_model
 
-    raise ValueError(
-        "rename_params should be used to decorate a Model or ModelFactory."
-    )
+    msg = "rename_params should be used to decorate a Model or ModelFactory."
+    raise ValueError(msg)
 
 
-def _replace_kwargs(func: Callable, **kwargs: Any) -> None:
-    """Change the kwargs signature of a function"""
+def _replace_kwargs(func: Callable, **kwargs: Any) -> None:  # noqa: ANN401
+    """Change the kwargs signature of a function."""
     sig = inspect.signature(func)
     settings = [
         inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, default=v)
@@ -448,9 +435,7 @@ def rename_ports(S: ModelFactory, renamings: dict[str, str]) -> ModelFactory: ..
 def rename_ports(
     S: SType | Model | ModelFactory, renamings: dict[str, str]
 ) -> SType | Model | ModelFactory:
-    """Rename the ports of an `SDict`, `Model` or `ModelFactory` given
-    a renamings mapping old port names to new.
-    """
+    """Rename the ports of an `SDict`, `Model` or `ModelFactory`."""
     if is_scoo(S):
         Si, Sj, Sx, ports_map = cast(SCoo, S)
         ports_map = {renamings[p]: i for p, i in ports_map.items()}
@@ -462,13 +447,15 @@ def rename_ports(
     if is_sdict(S):
         sdict = cast(SDict, S)
         original_ports = get_ports(sdict)
-        assert len(renamings) == len(original_ports)
+        if len(renamings) != len(original_ports):
+            msg = "Port renamings caused port duplication!"
+            raise ValueError(msg)
         return {(renamings[p1], renamings[p2]): v for (p1, p2), v in sdict.items()}
     if is_model(S):
         old_model = cast(Model, S)
 
         @wraps(old_model)
-        def new_model(**settings: Any) -> SType:
+        def new_model(**settings: Any) -> SType:  # noqa: ANN401
             return rename_ports(old_model(**settings), renamings)
 
         return new_model
@@ -476,15 +463,16 @@ def rename_ports(
         old_model_factory = cast(ModelFactory, S)
 
         @wraps(old_model_factory)
-        def new_model_factory(**settings: Any) -> Callable[..., SType]:
+        def new_model_factory(**settings: Any) -> Callable[..., SType]:  # noqa: ANN401
             return rename_ports(old_model_factory(**settings), renamings)
 
         return new_model_factory
-    raise ValueError("Cannot rename ports for type {type(S)}")
+    msg = f"Cannot rename ports for type {type(S)}"
+    raise ValueError(msg)
 
 
-def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Settings:
-    """Update a nested settings dictionary
+def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Settings:  # noqa: ANN401
+    """Update a nested settings dictionary.
 
     .. note ::
 
@@ -517,50 +505,55 @@ def update_settings(settings: Settings, *compnames: str, **kwargs: Any) -> Setti
 
 
 def validate_not_mixedmode(S: SType) -> None:
-    """Validate that an stype is not 'mixed mode' (i.e. invalid)
+    """Validate that an stype is not 'mixed mode' (i.e. invalid).
 
     Args:
         S: the stype to validate
     """
     if is_mixedmode(S):  # mixed mode
-        raise ValueError(
+        msg = (
             "Given SType is neither multimode or singlemode. Please check the port "
             "names: they should either ALL contain the '@' separator (multimode) "
             "or NONE should contain the '@' separator (singlemode)."
         )
+        raise ValueError(msg)
 
 
 def validate_multimode(S: SType, modes: tuple[str, ...] = ("te", "tm")) -> None:
     """Validate that an stype is multimode and that the given modes are present."""
     try:
-        current_modes = set(p.split("@")[1] for p in get_ports(S))
-    except IndexError:
-        raise ValueError("The given stype is not multimode.")
+        current_modes = {p.split("@")[1] for p in get_ports(S)}
+    except IndexError as err:
+        msg = "The given stype is not multimode."
+        raise ValueError(msg) from err
     for mode in modes:
         if mode not in current_modes:
-            raise ValueError(
-                f"Could not find mode '{mode}' in one of the multimode models."
-            )
+            msg = f"Could not find mode '{mode}' in one of the multimode models."
+            raise ValueError(msg)
 
 
-def validate_sdict(sdict: Any) -> None:
-    """Validate an `SDict`"""
+def validate_sdict(sdict: Any) -> None:  # noqa: ANN401
+    """Validate an `SDict`."""
     if not isinstance(sdict, dict):
-        raise ValueError("An SDict should be a dictionary.")
+        msg = "An SDict should be a dictionary."
+        raise TypeError(msg)
     for ports in sdict:
-        if not isinstance(ports, tuple) and not len(ports) == 2:
-            raise ValueError(f"SDict keys should be length-2 tuples. Got {ports}")
+        if not isinstance(ports, tuple) and len(ports) != 2:
+            msg = f"SDict keys should be length-2 tuples. Got {ports}"
+            raise TypeError(msg)
         p1, p2 = ports
         if not isinstance(p1, str) or not isinstance(p2, str):
-            raise ValueError(
+            msg = (
                 f"SDict ports should be strings. Got {ports} "
                 f"({type(ports[0])}, {type(ports[1])})"
             )
+            raise TypeError(msg)
 
 
 def get_inputs_outputs(
     ports: tuple[str, ...],
 ) -> tuple[tuple[str, ...], tuple[str, ...]]:
+    """Get input and output ports from a tuple of port names."""
     inputs = tuple(p for p in ports if p.lower().startswith("in"))
     outputs = tuple(p for p in ports if not p.lower().startswith("in"))
     if not inputs:
@@ -570,8 +563,9 @@ def get_inputs_outputs(
 
 
 def hash_dict(dic: dict) -> int:
+    """Hash a dictionary to an integer."""
     return int(
-        md5(
+        md5(  # noqa: S324
             orjson.dumps(
                 _numpyfy(dic), option=orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_SORT_KEYS
             )
@@ -580,41 +574,42 @@ def hash_dict(dic: dict) -> int:
     )
 
 
-def _numpyfy(obj: Any) -> Any:
+def _numpyfy(obj: Any) -> Any:  # noqa: ANN401
     if not isinstance(obj, dict):
         return np.asarray(obj)
     return {k: _numpyfy(v) for k, v in obj.items()}
 
 
 class Normalization(NamedTuple):
+    """Normalization parameters for an array."""
+
     mean: ComplexArrayND
     std: ComplexArrayND
 
 
 def normalization(x: ComplexArrayND, axis: int | None = None) -> Normalization:
+    """Calculate the mean and standard deviation of an array along a given axis."""
     if axis is None:
         return Normalization(x.mean(), x.std())
     return Normalization(x.mean(axis), x.std(axis))
 
 
 def cartesian_product(*arrays: ComplexArrayND) -> ComplexArrayND:
-    """Calculate the n-dimensional cartesian product of an arbitrary number of arrays"""
+    """Calculate the n-dimensional cartesian product the arrays."""
     ixarrays = jnp.ix_(*arrays)
     barrays = jnp.broadcast_arrays(*ixarrays)
     sarrays = jnp.stack(barrays, -1)
-    assert isinstance(sarrays, jnp.ndarray)
     product = sarrays.reshape(-1, sarrays.shape[-1])
-    assert isinstance(product, jnp.ndarray)
     return product
 
 
 def normalize(x: ComplexArrayND, normalization: Normalization) -> ComplexArrayND:
-    """Normalize an array with a given mean and standard deviation"""
+    """Normalize an array with a given mean and standard deviation."""
     mean, std = normalization
     return (x - mean) / std
 
 
 def denormalize(x: ComplexArrayND, normalization: Normalization) -> ComplexArrayND:
-    """Denormalize an array with a given mean and standard deviation"""
+    """Denormalize an array with a given mean and standard deviation."""
     mean, std = normalization
     return x * std + mean

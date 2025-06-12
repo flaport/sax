@@ -9,7 +9,7 @@ classifiers = [
   "Intended Audience :: Science/Research",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
-  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
   "Programming Language :: Python :: 3.14",
@@ -92,47 +92,42 @@ docstring-code-format = true
 
 [tool.ruff.lint]  # see https://docs.astral.sh/ruff/rules
 ignore = [
-  "COM812",
-  "PD901",
-  "TC003",
-  "TC006",
-  "ANN401",
-  "PLR0913",
-  "C420",
-  "TID252",
-  "D105",
-  "C416",
-  "FIX002",
-  "PLW2901",
-  # Type annotation issues that are acceptable
-  "TRY003",  # Avoid specifying long messages outside the exception class - acceptable for simple error messages
-  "EM101",  # Exception must not use a string literal - acceptable for simple error messages
-  "EM102",  # Exception must not use an f-string literal - acceptable for simple error messages
-  "TRY004",  # Prefer TypeError exception for invalid type - acceptable when ValueError is more appropriate
-  "B904",  # Within an except clause, raise exceptions with raise ... from err - acceptable for simple re-raises
-  "S101",  # Use of assert detected - acceptable in type checking and validation code
-  "S324",  # Probable use of insecure hash functions - acceptable for non-cryptographic hashing
-  "ERA001",  # Found commented-out code - acceptable for TODO comments and examples
-  "TD001",  # Invalid TODO tag - acceptable for FIXME tags
-  "TD002",  # Missing author in TODO - acceptable for simple TODOs
-  "TD003",  # Missing issue link for this TODO - acceptable for simple TODOs
-  "FIX001",  # Line contains FIXME - acceptable for development
-  "D415",  # First line should end with a period - acceptable for simple docstrings
-  "D205",  # 1 blank line required between summary line and description - acceptable for simple docstrings
-  "D103",  # Missing docstring in public function - acceptable for simple utility functions
-  "D101",  # Missing docstring in public class - acceptable for simple data classes
-  "N803",  # Argument name should be lowercase - acceptable for mathematical variables like S, Si, Sj
-  "N806",  # Variable in function should be lowercase - acceptable for mathematical variables
-  "PLR2004",  # Magic value used in comparison - acceptable for well-known constants like 2
-  "FBT001",  # Boolean-typed positional argument - acceptable for simple flags
-  "FBT002",  # Boolean default positional argument - acceptable for simple flags
-  "C401",  # Unnecessary generator - acceptable when generator is more readable
-  "RET504",  # Unnecessary assignment before return - acceptable for clarity
-  "E501",  # Line too long - handled by formatter
-  "PLC0414"  # Import alias does not rename original package - acceptable for explicit re-exports
+  "COM812",  # missing-trailing-comma
+  "D105",  # undocumented-magic-method
+  "E741",  # ambiguous-variable-name
+  "ERA001",  # commented-out-code
+  "FIX001",  # line-contains-fixme
+  "FIX002",  # line-contains-todo
+  "FIX004",  # line-contains-hack
+  "N803",  # invalid-argument-name
+  "N806",  # non-lowercase-variable-in-function
+  "PD901",  # pandas-df-variable-name
+  "PLC0414",  # useless-import-alias
+  "PLR0913",  # too-many-arguments
+  "PLR2004",  # magic-value-comparison
+  "PLW2901",  # redefined-loop-name
+  "RET504",  # unnecessary-assign
+  "TC001",  # typing-only-first-party-import
+  "TC002",  # typing-only-third-party-import
+  "TC003",  # typing-only-standard-library-import
+  "TC006",  # runtime-cast-value
+  "TD001",  # invalid-todo-tag
+  "TD002",  # missing-todo-author
+  "TD003",  # missing-todo-link
+  "TID252",  # relative-imports
+  "TRY003"  # raise-vanilla-args
 ]
-per-file-ignores = {"src/tests/*.py" = ["D", "INP001"]}
 select = ["ALL"]
+
+[tool.ruff.lint.per-file-ignores]
+"src/sax/saxtypes.py" = [
+  "ANN401"  # any-type
+]
+"src/tests/*.py" = [
+  "D",  # pydocstyle
+  "S101",  # assert
+  "INP001"  # implicit-namespace-package
+]
 
 [tool.ruff.lint.pydocstyle]
 convention = "google"

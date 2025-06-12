@@ -89,13 +89,13 @@ def interpolate_xarray(
         params["targets"] = np.arange(0, len(targets), 1, dtype=np.uint8)
         strings = {**strings, "targets": targets}
 
-    S, axs, pos = evaluate_general_corner_model(
+    s, axs, pos = evaluate_general_corner_model(
         data,
         params,  # type: ignore[reportArgumentType]
         strings,
         **kwargs,
     )
-    return {k: S.take(pos["targets"][k], axs["targets"]) for k in targets}
+    return {k: s.take(pos["targets"][k], axs["targets"]) for k in targets}
 
 
 def evaluate_general_corner_model(

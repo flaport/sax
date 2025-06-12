@@ -45,39 +45,39 @@ SAMPLE_NETLIST2 = {
 }
 
 
-def test_empty_netlist():
+def test_empty_netlist() -> None:
     net = sax.Netlist()
     assert isinstance(net, sax.Netlist)
 
 
-def test_coercing_instances():
+def test_coercing_instances() -> None:
     net = sax.Netlist.model_validate({"instances": {"mmi": "mmi"}})
     assert isinstance(net, sax.Netlist)
 
 
-def test_netlist():
+def test_netlist() -> None:
     recnet = sax.Netlist.model_validate(SAMPLE_NETLIST)
     assert isinstance(recnet, sax.Netlist)
 
 
-def test_recursive_netlist():
+def test_recursive_netlist() -> None:
     recnet = sax.RecursiveNetlist.model_validate({"top_level": SAMPLE_NETLIST})
     assert isinstance(recnet, sax.RecursiveNetlist)
 
 
-def test_netlist_function_from_dict():
+def test_netlist_function_from_dict() -> None:
     net = sax.netlist(SAMPLE_NETLIST)
     assert isinstance(net, sax.RecursiveNetlist)
     assert "top_level" in net.root
 
 
-def test_netlist_function_from_netlist():
+def test_netlist_function_from_netlist() -> None:
     net = sax.netlist(sax.Netlist.model_validate(SAMPLE_NETLIST))
     assert isinstance(net, sax.RecursiveNetlist)
     assert "top_level" in net.root
 
 
-def test_netlist_function_from_recursive_netlist():
+def test_netlist_function_from_recursive_netlist() -> None:
     net = sax.netlist(
         sax.RecursiveNetlist.model_validate({"top_level": SAMPLE_NETLIST})
     )
@@ -85,9 +85,8 @@ def test_netlist_function_from_recursive_netlist():
     assert "top_level" in net.root
 
 
-def test_netlist_using_instance_functions():
+def test_netlist_using_instance_functions() -> None:
     net = sax.netlist(SAMPLE_NETLIST2)
-    print(net)
     assert isinstance(net, sax.RecursiveNetlist)
 
 

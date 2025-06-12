@@ -1,4 +1,4 @@
-"""SAX forward_only Backend"""
+"""SAX forward_only Backend."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ def analyze_instances_forward(
     instances: dict[str, Component],
     models: dict[str, Model],
 ) -> dict[str, SCoo]:
+    """Analyze instances for the forward_only backend."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
         if not isinstance(v, Component):
@@ -31,16 +32,16 @@ def analyze_instances_forward(
 
 
 def analyze_circuit_forward(
-    analyzed_instances: dict[str, SDict],
+    analyzed_instances: dict[str, SDict],  # noqa: ARG001
     connections: dict[str, str],
     ports: dict[str, str],
-) -> Any:
+) -> Any:  # noqa: ANN401
+    """Analyze a circuit for the forward_only backend."""
     return connections, ports
 
 
-# import matplotlib.pyplot as plt
 def evaluate_circuit_forward(
-    analyzed: Any,
+    analyzed: Any,  # noqa: ANN401
     instances: dict[str, SDict],
 ) -> SDict:
     """Evaluate a circuit for the given sdicts using simple matrix multiplication."""
@@ -102,8 +103,7 @@ def _graph_edges_directed(
         else:
             edges += [(n1, n2, {"transmission": one})]
 
-    for instance in instances:
-        s = instances[instance]
+    for instance, s in instances.items():
         for (p1, p2), w in sdict(s).items():
             if p1.startswith("in") and p2.startswith("out"):
                 edges += [

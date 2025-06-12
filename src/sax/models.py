@@ -1,17 +1,14 @@
-"""SAX Default Models"""
+"""SAX Default Models."""
 
 from __future__ import annotations
 
 from functools import lru_cache as cache
-from typing import TYPE_CHECKING
 
 import jax
 import jax.numpy as jnp
 
+from .saxtypes import FloatArrayND, Model, SCoo, SDict
 from .utils import get_inputs_outputs, reciprocal
-
-if TYPE_CHECKING:
-    from .saxtypes import FloatArrayND, Model, SCoo, SDict
 
 
 def straight(
@@ -48,7 +45,7 @@ def straight(
 
 
 def coupler(*, coupling: float = 0.5) -> SDict:
-    """A simple coupler model"""
+    """A simple coupler model."""
     kappa = coupling**0.5
     tau = (1 - coupling) ** 0.5
     return reciprocal(
@@ -65,29 +62,30 @@ def _validate_ports(
     ports: tuple[str, ...] | None,
     num_inputs: int | None,
     num_outputs: int | None,
+    *,
     diagonal: bool,
 ) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
     """Validate the ports and return the input and output ports."""
     if ports is None:
         if num_inputs is None or num_outputs is None:
-            raise ValueError(
+            msg = (
                 "if not ports given, you must specify how many input ports "
                 "and how many output ports a model has."
             )
+            raise ValueError(msg)
         input_ports = [f"in{i}" for i in range(num_inputs)]
         output_ports = [f"out{i}" for i in range(num_outputs)]
     else:
         if num_inputs is not None and num_outputs is None:
-            raise ValueError(
-                "if num_inputs is given, num_outputs should be given as well."
-            )
+            msg = "if num_inputs is given, num_outputs should be given as well."
+            raise ValueError(msg)
         if num_outputs is not None and num_inputs is None:
-            raise ValueError(
-                "if num_outputs is given, num_inputs should be given as well."
-            )
+            msg = "if num_outputs is given, num_inputs should be given as well."
+            raise ValueError(msg)
         if num_inputs is not None and num_outputs is not None:
             if num_inputs + num_outputs != len(ports):
-                raise ValueError("num_inputs + num_outputs != len(ports)")
+                msg = "num_inputs + num_outputs != len(ports)"
+                raise ValueError(msg)
             input_ports = ports[:num_inputs]
             output_ports = ports[num_inputs:]
         else:
@@ -96,10 +94,11 @@ def _validate_ports(
             num_outputs = len(output_ports)
 
     if diagonal and num_inputs != num_outputs:
-        raise ValueError(
+        msg = (
             "Can only have a diagonal passthru if number "
             "of input ports equals the number of output ports!"
         )
+        raise ValueError(msg)
 
     return tuple(input_ports), tuple(output_ports), num_inputs, num_outputs
 
@@ -126,10 +125,15 @@ def unitary(
 
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal
+        ports, num_inputs, num_outputs, diagonal=diagonal
     )
-    assert num_inputs is not None
-    assert num_outputs is not None
+    if num_inputs is None:
+        msg = "num_inputs or ports must be given!"
+        raise ValueError(msg)
+
+    if num_outputs is None:
+        msg = "num_outputs or ports must be given!"
+        raise ValueError(msg)
 
     # let's create the squared S-matrix:
     N = max(num_inputs, num_outputs)
@@ -203,10 +207,16 @@ def copier(
         diagonal: whether the model is diagonal.
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal
+        ports, num_inputs, num_outputs, diagonal=diagonal
     )
-    assert num_inputs is not None
-    assert num_outputs is not None
+
+    if num_inputs is None:
+        msg = "num_inputs or ports must be given!"
+        raise ValueError(msg)
+
+    if num_outputs is None:
+        msg = "num_outputs or ports must be given!"
+        raise ValueError(msg)
 
     # let's create the squared S-matrix:
     S = jnp.zeros((num_inputs + num_outputs, num_inputs + num_outputs), dtype=float)
@@ -280,5 +290,6 @@ models = {
 }
 
 
-def get_models(copy: bool = True) -> dict[str, Model]:
-    return {**models} if copy else models
+def get_models(*, copy: bool = True) -> dict[str, Model]:
+    """Get the default sax models."""
+    return models if not copy else {**models}

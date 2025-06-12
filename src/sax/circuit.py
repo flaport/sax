@@ -2,12 +2,9 @@
 
 from __future__ import annotations
 
-import os
 import shutil
-import sys
 from collections.abc import Callable
 from functools import partial
-from pathlib import Path
 from typing import Any, NamedTuple, cast
 
 import networkx as nx
@@ -63,7 +60,9 @@ def circuit(
 
     instance_models = _extract_instance_models(netlist)
     recnet: RecursiveNetlist = parse_netlist(
-        netlist, with_unconnected_instances=False, with_placements=False
+        netlist,
+        with_unconnected_instances=False,
+        with_placements=False,
     )
     _validate_netlist_ports(recnet)
     dependency_dag: nx.DiGraph = _create_dag(recnet, models, validate=True)
@@ -91,7 +90,8 @@ def circuit(
             ignore_missing_ports=ignore_missing_ports,
         )
     if circuit is None:
-        raise ValueError("No circuit was created")
+        msg = "No circuit was created"
+        raise ValueError(msg)
     circuit = _enforce_return_type(circuit, return_type)
     return circuit, CircuitInfo(
         dag=dependency_dag,
@@ -138,10 +138,9 @@ def draw_dag(
     dag: nx.DiGraph,
     *,
     with_labels: bool = True,
-    **kwargs: Any,
+    **kwargs: Any,  # noqa: ANN401
 ) -> None:
     """Draw the dependency DAG of a netlist."""
-    _patch_path()
     if shutil.which("dot"):
         return nx.draw(
             dag,
@@ -223,13 +222,6 @@ def _flat_circuit(
     _replace_kwargs(_circuit, **default_settings)
 
     return _circuit
-
-
-def _patch_path() -> None:
-    os_paths = {p: None for p in os.environ.get("PATH", "").split(os.pathsep)}
-    sys_paths = {p: None for p in sys.path}
-    other_paths = {str(Path(sys.executable).parent): None}
-    os.environ["PATH"] = os.pathsep.join(os_paths | sys_paths | other_paths)
 
 
 def _my_dag_pos(dag: nx.DiGraph) -> dict[int, tuple[float, float]]:
@@ -321,6 +313,7 @@ def _port_modes_dict(port_modes: tuple[str, ...]) -> dict[str, set[str]]:
 def _get_multimode_connections(
     connections: dict[str, str],
     inst_port_mode: dict[str, dict[str, set[str]]],
+    *,
     ignore_missing_ports: bool = False,
 ) -> dict[str, str]:
     mm_connections = {}
@@ -329,28 +322,33 @@ def _get_multimode_connections(
         inst2, port2 = inst_port2.split(",")
         try:
             modes1 = inst_port_mode[inst1][port1]
-        except KeyError:
+        except KeyError as err:
             if ignore_missing_ports:
                 continue
-            raise RuntimeError(
-                f"Instance {inst1} does not contain port {port1}. Available ports: {list(inst_port_mode[inst1])}."
+            msg = (
+                f"Instance {inst1} does not contain port {port1}. "
+                f"Available ports: {list(inst_port_mode[inst1])}."
             )
+            raise RuntimeError(msg) from err
         try:
             modes2 = inst_port_mode[inst2][port2]
-        except KeyError:
+        except KeyError as err:
             if ignore_missing_ports:
                 continue
-            raise RuntimeError(
-                f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}."
+            msg = (
+                f"Instance {inst2} does not contain port {port2}. "
+                f"Available ports: {list(inst_port_mode[inst2])}."
             )
+            raise RuntimeError(msg) from err
         if not modes1 and not modes2:
             mm_connections[f"{inst1},{port1}"] = f"{inst2},{port2}"
         elif (not modes1) or (not modes2):
-            raise ValueError(
+            msg = (
                 "trying to connect a multimode model to single mode model.\n"
                 "Please update your models dictionary.\n"
                 f"Problematic connection: '{inst_port1}':'{inst_port2}'"
             )
+            raise ValueError(msg)
         else:
             common_modes = modes1.intersection(modes2)
             for mode in sorted(common_modes):
@@ -361,6 +359,7 @@ def _get_multimode_connections(
 def _get_multimode_ports(
     ports: dict[str, str],
     inst_port_mode: dict[str, dict[str, set[str]]],
+    *,
     ignore_missing_ports: bool = False,
 ) -> dict[str, str]:
     mm_ports = {}
@@ -368,12 +367,14 @@ def _get_multimode_ports(
         inst2, port2 = inst_port2.split(",")
         try:
             modes2 = inst_port_mode[inst2][port2]
-        except KeyError:
+        except KeyError as err:
             if ignore_missing_ports:
                 continue
-            raise RuntimeError(
-                f"Instance {inst2} does not contain port {port2}. Available ports: {list(inst_port_mode[inst2])}"
+            msg = (
+                f"Instance {inst2} does not contain port {port2}. "
+                f"Available ports: {list(inst_port_mode[inst2])}"
             )
+            raise RuntimeError(msg) from err
         if not modes2:
             mm_ports[port] = f"{inst2},{port2}"
         else:
@@ -416,33 +417,39 @@ def _validate_circuit_backend(backend: str) -> str:
     backend = backend.lower()
     # assert valid circuit_backend
     if backend not in circuit_backends:
-        raise KeyError(
+        msg = (
             f"circuit backend {backend} not found. Allowed circuit backends: "
             f"{', '.join(circuit_backends.keys())}."
         )
+        raise KeyError(msg)
     return backend
 
 
 def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
     nodes = _find_root(dag)
     if len(nodes) > 1:
-        raise ValueError(f"Multiple top_levels found in netlist: {nodes}")
+        msg = f"Multiple top_levels found in netlist: {nodes}"
+        raise ValueError(msg)
     if len(nodes) < 1:
-        raise ValueError("Netlist does not contain any nodes.")
+        msg = "Netlist does not contain any nodes."
+        raise ValueError(msg)
     if not dag.is_directed():
-        raise ValueError("Netlist dependency cycles detected!")
+        msg = "Netlist dependency cycles detected!"
+        raise ValueError(msg)
     return dag
 
 
 def _validate_netlist_ports(netlist: RecursiveNetlist) -> None:
     if len(netlist.root) < 1:
-        raise ValueError("Cannot create circuit: empty netlist")
+        msg = "Cannot create circuit: empty netlist"
+        raise ValueError(msg)
     net: Netlist = netlist.root[next(iter(netlist.root))]
     ports_str = ", ".join(list(net.ports))
     if not ports_str:
         ports_str = "no ports given"
     if len(net.ports) < 2:
-        raise ValueError(
+        msg = (
             "Cannot create circuit: "
             f"at least 2 ports need to be defined. Got {ports_str}."
         )
+        raise ValueError(msg)

@@ -1,4 +1,4 @@
-"""SAX Types and type coercions"""
+"""SAX Types and type coercions."""
 
 from __future__ import annotations
 
@@ -71,9 +71,12 @@ Example:
 SCoo = tuple[IntArray1D, IntArray1D, ComplexArrayND, PortMap]
 """ A sparse S-matrix in COO format (recommended for internal library use only)
 
-An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three arrays and a port map.
-The three arrays represent the input port indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse matrix.
-The port map maps a port name [`str`] to a port index [`int`]. Only these four arrays **together** and in this specific **order** are considered a valid `SCoo` representation!
+An `SCoo` is a sparse matrix based representation of an S-matrix consisting
+of three arrays and a port map. The three arrays represent the input port
+indices [`int`], output port indices [`int`] and the S-matrix values [`ComplexFloat`]
+of the sparse matrix. The port map maps a port name [`str`] to a port index [`int`].
+Only these four arrays **together** and in this specific **order** are considered a
+valid `SCoo` representation!
 
 Example:
 
@@ -88,7 +91,7 @@ Example:
 """
 
 Settings = dict[str, Union["Settings", FloatArrayND, ComplexArrayND]]
-""" A (possibly recursive) mapping from a setting name to a float or complex value or array
+""" A (maybe recursive) mapping from a setting name to a float or complex value or array
 
 Example:
 
@@ -114,7 +117,7 @@ ModelFactory = Callable[..., Model]
 
 
 def is_float(x: Any) -> bool:
-    """Check if an object is a `Float`"""
+    """Check if an object is a `Float`."""
     if isinstance(x, float):
         return True
     if isinstance(x, np.ndarray):
@@ -125,7 +128,7 @@ def is_float(x: Any) -> bool:
 
 
 def is_complex(x: Any) -> bool:
-    """Check if an object is a `ComplexFloat`"""
+    """Check if an object is a `ComplexFloat`."""
     if isinstance(x, complex):
         return True
     if isinstance(x, np.ndarray):
@@ -136,27 +139,27 @@ def is_complex(x: Any) -> bool:
 
 
 def is_complex_float(x: Any) -> bool:
-    """Check if an object is either a `ComplexFloat` or a `Float`"""
+    """Check if an object is either a `ComplexFloat` or a `Float`."""
     return is_float(x) or is_complex(x)
 
 
 def is_sdict(x: Any) -> bool:
-    """Check if an object is an `SDict` (a SAX S-dictionary)"""
+    """Check if an object is an `SDict` (a SAX S-dictionary)."""
     return isinstance(x, dict)
 
 
 def is_scoo(x: Any) -> bool:
-    """Check if an object is an `SCoo` (a SAX sparse S representation in COO-format)"""
+    """Check if an object is an `SCoo` (a SAX sparse S representation in COO-format)."""
     return isinstance(x, tuple | list) and len(x) == 4
 
 
 def is_sdense(x: Any) -> bool:
-    """Check if an object is an `SDense` (a SAX dense S-matrix representation)"""
+    """Check if an object is an `SDense` (a SAX dense S-matrix representation)."""
     return isinstance(x, tuple | list) and len(x) == 2
 
 
 def is_model(model: Any) -> bool:
-    """Check if a callable is a `Model` (a callable returning an `SType`)"""
+    """Check if a callable is a `Model` (a callable returning an `SType`)."""
     if not callable(model):
         return False
     try:
@@ -170,7 +173,7 @@ def is_model(model: Any) -> bool:
 
 
 def _is_callable_annotation(annotation: Any) -> bool:
-    """Check if an annotation is `Callable`-like"""
+    """Check if an annotation is `Callable`-like."""
     if isinstance(annotation, str):
         # happens when
         # was imported at the top of the file...
@@ -191,27 +194,28 @@ def is_model_factory(model: Any) -> bool:
 
 
 def validate_model(model: Callable) -> None:
-    """Validate the parameters of a model"""
+    """Validate the parameters of a model."""
     positional_arguments = []
     for param in inspect.signature(model).parameters.values():
         if param.default is inspect.Parameter.empty:
             positional_arguments.append(param.name)  # noqa: PERF401
     if positional_arguments:
-        raise ValueError(
+        msg = (
             f"model '{model}' takes positional "
             f"arguments {', '.join(positional_arguments)} "
             "and hence is not a valid SAX Model! "
             "A SAX model should ONLY take keyword arguments (or no arguments at all)."
         )
+        raise ValueError(msg)
 
 
 def is_stype(stype: Any) -> bool:
-    """Check if an object is an SDict, SCoo or SDense"""
+    """Check if an object is an SDict, SCoo or SDense."""
     return is_sdict(stype) or is_scoo(stype) or is_sdense(stype)
 
 
 def is_singlemode(S: Any) -> bool:
-    """Check if an stype is single mode"""
+    """Check if an stype is single mode."""
     if not is_stype(S):
         return False
     ports = _get_ports(S)
@@ -224,12 +228,15 @@ def _get_ports(S: SType) -> tuple[str, ...]:
         ports_set = {p1 for p1, _ in S} | {p2 for _, p2 in S}
         return tuple(natsorted(ports_set))
     *_, ports_map = S
-    assert isinstance(ports_map, dict)
+
+    if not isinstance(ports_map, dict):
+        msg = "Ports map is not a dictionary."
+        raise TypeError(msg)
     return tuple(natsorted(ports_map.keys()))
 
 
 def is_multimode(S: Any) -> bool:
-    """Check if an stype is single mode"""
+    """Check if an stype is single mode."""
     if not is_stype(S):
         return False
 
@@ -238,7 +245,7 @@ def is_multimode(S: Any) -> bool:
 
 
 def is_mixedmode(S: Any) -> bool:
-    """Check if an stype is neither single mode nor multimode (hence invalid)"""
+    """Check if an stype is neither single mode nor multimode (hence invalid)."""
     return not is_singlemode(S) and not is_multimode(S)
 
 
@@ -251,7 +258,7 @@ def sdict(S: SType) -> SDict: ...
 
 
 def sdict(S: Model | SType) -> Model | SType:
-    """Convert an `SCoo` or `SDense` to `SDict`"""
+    """Convert an `SCoo` or `SDense` to `SDict`."""
     if is_model(S):
         model = cast(Model, S)
 
@@ -268,7 +275,8 @@ def sdict(S: Model | SType) -> Model | SType:
     elif is_sdict(S):
         x_dict = cast(SDict, S)
     else:
-        raise ValueError("Could not convert arguments to sdict.")
+        msg = "Could not convert arguments to sdict."
+        raise ValueError(msg)
 
     return x_dict
 
@@ -306,7 +314,7 @@ def scoo(S: SType) -> SCoo: ...
 
 
 def scoo(S: Callable | SType) -> Callable | SCoo:
-    """Convert an `SDict` or `SDense` to `SCoo`"""
+    """Convert an `SDict` or `SDense` to `SCoo`."""
     if is_model(S):
         model = cast(Model, S)
 
@@ -323,7 +331,8 @@ def scoo(S: Callable | SType) -> Callable | SCoo:
     elif is_sdict(S):
         S = _sdict_to_scoo(cast(SDict, S))
     else:
-        raise ValueError("Could not convert arguments to scoo.")
+        msg = "Could not convert arguments to scoo."
+        raise ValueError(msg)
 
     return S
 
@@ -362,7 +371,7 @@ def sdense(S: SType) -> SDense: ...
 
 
 def sdense(S: Callable | SType) -> Callable | SDense:
-    """Convert an `SDict` or `SCoo` to `SDense`"""
+    """Convert an `SDict` or `SCoo` to `SDense`."""
     if is_model(S):
         model = cast(Model, S)
 
@@ -379,7 +388,8 @@ def sdense(S: Callable | SType) -> Callable | SDense:
     elif is_sdense(S):
         S = cast(SDense, S)
     else:
-        raise ValueError("Could not convert arguments to sdense.")
+        msg = "Could not convert arguments to sdense."
+        raise ValueError(msg)
 
     return S
 
@@ -399,7 +409,7 @@ def _sdict_to_sdense(sdict: SDict) -> SDense:
 
 
 def modelfactory(func: Callable) -> Callable:
-    """Decorator that marks a function as `ModelFactory`"""
+    """Decorator that marks a function as `ModelFactory`."""
     sig = inspect.signature(func)
     if _is_callable_annotation(sig.return_annotation):  # already model factory
         return func

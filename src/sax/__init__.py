@@ -1,4 +1,4 @@
-"""SAX: S + Autograd + XLA"""
+"""SAX: S + Autograd + XLA."""
 
 from __future__ import annotations
 

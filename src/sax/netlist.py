@@ -5,7 +5,7 @@ from __future__ import annotations
 import os
 import re
 import warnings
-from copy import deepcopy
+from copy import copy, deepcopy
 from functools import lru_cache, partial
 from pathlib import Path
 from typing import Annotated, Any, Literal, NotRequired, TypedDict, cast, overload
@@ -28,6 +28,8 @@ from .utils import clean_string, hash_dict
 
 
 class NetlistDict(TypedDict):
+    """A dictionary representation of a netlist."""
+
     instances: dict
     connections: dict[str, str]
     ports: dict[str, str]
@@ -38,6 +40,8 @@ RecursiveNetlistDict = dict[str, NetlistDict]
 
 
 class BaseModel(_BaseModel):
+    """Base model for SAX netlists and components."""
+
     model_config = ConfigDict(
         extra="ignore",
         json_encoders={np.ndarray: lambda arr: np.round(arr, 12).tolist()},
@@ -56,7 +60,8 @@ class BaseModel(_BaseModel):
 
 def _validate_str(s: str, what: str = "component") -> str:
     if "," in s:
-        raise ValueError(f"Invalid {what} string. Should not contain ','. Got: {s}")
+        msg = f"Invalid {what} string. Should not contain ','. Got: {s}"
+        raise ValueError(msg)
     s = s.split("$")[0]
     s = clean_string(s)
     return s
@@ -66,6 +71,8 @@ ComponentStr = Annotated[str, AfterValidator(_validate_str)]
 
 
 class Component(BaseModel):
+    """A component in a netlist."""
+
     component: ComponentStr
     settings: dict[str, Any] = Field(default_factory=dict)
 
@@ -74,6 +81,8 @@ PortPlacement = Literal["ce", "cw", "nc", "ne", "nw", "sc", "se", "sw", "cc", "c
 
 
 class Placement(BaseModel):
+    """A placement of a component in a netlist."""
+
     x: str | float = 0.0
     y: str | float = 0.0
     dx: str | float = 0.0
@@ -92,18 +101,20 @@ def _component_from_partial(p: partial) -> Component:
     f: Any = p
     while isinstance(f, partial):
         if f.args:
-            raise ValueError(
+            msg = (
                 "SAX circuits and netlists don't support partials "
                 "with positional arguments."
             )
+            raise ValueError(msg)
         settings = {**f.keywords, **settings}
         f = f.func
     if not callable(f):
-        raise ValueError("partial of non-callable.")
+        msg = "partial of non-callable."
+        raise TypeError(msg)
     return Component(component=f.__name__, settings=settings)
 
 
-def _coerce_component(obj: Any) -> Component:
+def _coerce_component(obj: Any) -> Component:  # noqa: ANN401
     if isinstance(obj, str):
         return Component(component=obj)
     if isinstance(obj, partial):
@@ -127,9 +138,8 @@ _validate_port_str = partial(_validate_str, what="port")
 def _validate_instance_port_str(s: str) -> str:
     parts = s.split(",")
     if len(parts) != 2:
-        raise ValueError(
-            f"Invalid instance,port string. Should contain exactly one ','. Got: {s}"
-        )
+        msg = f"Invalid instance,port string. Should contain exactly one ','. Got: {s}"
+        raise ValueError(msg)
     i, p = parts
     i = _validate_instance_str(i)
     p = _validate_port_str(p)
@@ -144,7 +154,7 @@ InstancePortStr = Annotated[str, AfterValidator(_validate_instance_port_str)]
 def _nets_to_connections(
     nets: list[dict[str, str]], connections: dict[str, str]
 ) -> dict[str, str]:
-    connections = {k: v for k, v in connections.items()}
+    connections = copy(connections)
     inverse_connections = {v: k for k, v in connections.items()}
 
     def _is_connected(p: str) -> bool:
@@ -164,21 +174,25 @@ def _nets_to_connections(
         q = net["p2"]
         if _is_connected(p):
             _q = _get_connected_port(p)
-            raise ValueError(
+            msg = (
                 "SAX currently does not support multiply connected ports. "
                 f"Got {p}<->{q} and {p}<->{_q}"
             )
+            raise ValueError(msg)
         if _is_connected(q):
             _p = _get_connected_port(q)
-            raise ValueError(
+            msg = (
                 "SAX currently does not support multiply connected ports. "
                 f"Got {p}<->{q} and {_p}<->{q}"
             )
+            raise ValueError(msg)
         _add_connection(p, q)
     return connections
 
 
 class Netlist(BaseModel):
+    """A netlist in SAX format."""
+
     instances: dict[InstanceStr, CoercingComponent] = Field(default_factory=dict)
     connections: dict[InstancePortStr, InstancePortStr] = Field(default_factory=dict)
     ports: dict[PortStr, InstancePortStr] = Field(default_factory=dict)
@@ -200,6 +214,8 @@ class Netlist(BaseModel):
 
 
 class RecursiveNetlist(RootModel):
+    """A recursive netlist in SAX format."""
+
     root: dict[str, Netlist]
 
     model_config = ConfigDict(
@@ -221,9 +237,12 @@ AnyNetlist = dict | Netlist | NetlistDict | RecursiveNetlist | RecursiveNetlistD
 
 
 def netlist(
-    netlist: Any, with_unconnected_instances: bool = True, with_placements: bool = True
+    netlist: Any,  # noqa: ANN401
+    *,
+    with_unconnected_instances: bool = True,
+    with_placements: bool = True,
 ) -> RecursiveNetlist:
-    """Return a netlist from a given dictionary"""
+    """Return a netlist from a given dictionary."""
     if isinstance(netlist, RecursiveNetlist):
         net = netlist
     elif isinstance(netlist, Netlist):
@@ -235,11 +254,12 @@ def netlist(
             flat_net = Netlist.model_validate(netlist)
             net = RecursiveNetlist.model_validate({"top_level": flat_net})
     else:
-        raise ValueError(
+        msg = (
             "Invalid argument for `netlist`. "
             "Expected type: dict | Netlist | RecursiveNetlist. "
             f"Got: {type(netlist)}."
         )
+        raise TypeError(msg)
     if not with_unconnected_instances:
         recnet_dict: RecursiveNetlistDict = _remove_unused_instances(net.model_dump())
         net = RecursiveNetlist.model_validate(recnet_dict)
@@ -250,6 +270,7 @@ def netlist(
 
 
 def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~") -> NetlistDict:
+    """Flatten a recursive netlist into a single netlist."""
     first_name = next(iter(recnet.keys()))
     net = _copy_netlist(recnet[first_name])
     _flatten_netlist(recnet, net, sep)
@@ -258,6 +279,7 @@ def flatten_netlist(recnet: RecursiveNetlistDict, sep: str = "~") -> NetlistDict
 
 @lru_cache
 def load_netlist(pic_path: str | Path) -> Netlist:
+    """Load a netlist from a YAML file."""
     pic_path = Path(pic_path).resolve()
     net = yaml.safe_load(pic_path.read_text())
     return Netlist.model_validate(net)
@@ -265,6 +287,7 @@ def load_netlist(pic_path: str | Path) -> Netlist:
 
 @lru_cache
 def load_recursive_netlist(pic_path: str | Path, ext: str = ".yml") -> RecursiveNetlist:
+    """Load a recursive netlist from a folder containing YAML files."""
     pic_path = Path(pic_path).resolve()
     folder_path = pic_path.parent
 
@@ -284,6 +307,7 @@ def load_recursive_netlist(pic_path: str | Path, ext: str = ".yml") -> Recursive
 
 
 def is_recursive(netlist: AnyNetlist) -> bool:
+    """Check if the given netlist is recursive."""
     if isinstance(netlist, RecursiveNetlist):
         return True
     if isinstance(netlist, dict):
@@ -292,6 +316,7 @@ def is_recursive(netlist: AnyNetlist) -> bool:
 
 
 def is_not_recursive(netlist: AnyNetlist) -> bool:
+    """Check if the given netlist is not recursive."""
     return not is_recursive(netlist)
 
 
@@ -321,7 +346,7 @@ def get_component_instances(
     top_level_prefix: str,
     component_name_prefix: str,
 ) -> dict[str, list[str]]:
-    """Returns a dictionary of all instances of a given component in a recursive netlist.
+    """Get all instances of a given component in a recursive netlist.
 
     Args:
         recursive_netlist: The recursive netlist to search.
@@ -500,6 +525,7 @@ def rename_instances(
     netlist: Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict,
     mapping: dict[str, str],
 ) -> Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict:
+    """Rename instances in a netlist according to a mapping."""
     given_as_dict = isinstance(netlist, dict)
 
     if is_recursive(netlist):
@@ -519,7 +545,8 @@ def rename_instances(
     # it's a sax.Netlist now:
     inverse_mapping = {v: k for k, v in mapping.items()}
     if len(inverse_mapping) != len(mapping):
-        raise ValueError("Duplicate names to map onto found.")
+        msg = "Duplicate names to map onto found."
+        raise ValueError(msg)
     instances = {mapping.get(k, k): v for k, v in netlist.instances.items()}
     connections = {}
     for ip1, ip2 in netlist.connections.items():
@@ -569,6 +596,7 @@ def rename_models(
     netlist: Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict,
     mapping: dict[str, str],
 ) -> Netlist | RecursiveNetlist | NetlistDict | RecursiveNetlistDict:
+    """Rename models in a netlist according to a mapping."""
     given_as_dict = isinstance(netlist, dict)
 
     if is_recursive(netlist):
@@ -588,7 +616,8 @@ def rename_models(
     # it's a sax.Netlist now:
     inverse_mapping = {v: k for k, v in mapping.items()}
     if len(inverse_mapping) != len(mapping):
-        raise ValueError("Duplicate names to map onto found.")
+        msg = "Duplicate names to map onto found."
+        raise ValueError(msg)
 
     instances = {}
     for k, instance in netlist.instances.items():
@@ -601,7 +630,14 @@ def rename_models(
             }
         elif isinstance(instance, Component):
             instance = instance.model_dump()
-        assert isinstance(instance, dict)
+
+        if not isinstance(instance, dict):
+            msg = (
+                "Expected instance to be a dictionary or a Component. "
+                f"Got: {type(instance)}."
+            )
+            raise TypeError(msg)
+
         instance["component"] = mapping.get(
             instance["component"], instance["component"]
         )

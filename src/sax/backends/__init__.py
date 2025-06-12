@@ -1,29 +1,39 @@
-"""SAX Backends"""
+"""SAX Backends."""
 
 from __future__ import annotations
 
 import warnings
-from typing import TYPE_CHECKING, Any
+from typing import Any
 
+from ..netlist import Component
+from ..saxtypes import Model, SType
 from .additive import (
-    analyze_circuit_additive,
-    analyze_instances_additive,
-    evaluate_circuit_additive,
+    analyze_circuit_additive as analyze_circuit_additive,
+)
+from .additive import (
+    analyze_instances_additive as analyze_instances_additive,
+)
+from .additive import (
+    evaluate_circuit_additive as evaluate_circuit_additive,
 )
 from .filipsson_gunnar import (
-    analyze_circuit_fg,
-    analyze_instances_fg,
-    evaluate_circuit_fg,
+    analyze_circuit_fg as analyze_circuit_fg,
+)
+from .filipsson_gunnar import (
+    analyze_instances_fg as analyze_instances_fg,
+)
+from .filipsson_gunnar import (
+    evaluate_circuit_fg as evaluate_circuit_fg,
 )
 from .forward_only import (
-    analyze_circuit_forward,
-    analyze_instances_forward,
-    evaluate_circuit_forward,
+    analyze_circuit_forward as analyze_circuit_forward,
 )
-
-if TYPE_CHECKING:
-    from ..netlist import Component
-    from ..saxtypes import Model, SType
+from .forward_only import (
+    analyze_instances_forward as analyze_instances_forward,
+)
+from .forward_only import (
+    evaluate_circuit_forward as evaluate_circuit_forward,
+)
 
 circuit_backends = {
     "fg": (
@@ -87,20 +97,23 @@ except ImportError:
 def analyze_instances(
     instances: dict[str, Component],
     models: dict[str, Model],
-) -> Any:
+) -> Any:  # noqa: ANN401
+    """Analyze circuit instances."""
     return circuit_backends["default"][0](instances, models)
 
 
 def analyze_circuit(
-    analyzed_instances: Any,
+    analyzed_instances: Any,  # noqa: ANN401
     connections: dict[str, str],
     ports: dict[str, str],
-) -> Any:
+) -> Any:  # noqa: ANN401
+    """Analyze the circuit based on analyzed instances."""
     return circuit_backends["default"][1](analyzed_instances, connections, ports)
 
 
 def evaluate_circuit(
-    analyzed: Any,
+    analyzed: Any,  # noqa: ANN401
     instances: dict[str, SType],
 ) -> SType:
+    """Evaluate the circuit based on analyzed instances."""
     return circuit_backends["default"][2](analyzed, instances)

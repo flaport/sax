@@ -1,4 +1,4 @@
-"""SAX Additive Backend"""
+"""SAX Additive Backend."""
 
 from __future__ import annotations
 
@@ -15,6 +15,7 @@ def analyze_instances_additive(
     instances: dict[str, Component],
     models: dict[str, Model],
 ) -> dict[str, SDict]:
+    """Analyze instances for the additive backend."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
         if not isinstance(v, Component):
@@ -31,15 +32,16 @@ def analyze_instances_additive(
 
 
 def analyze_circuit_additive(
-    analyzed_instances: dict[str, SDict],
+    analyzed_instances: dict[str, SDict],  # noqa: ARG001
     connections: dict[str, str],
     ports: dict[str, str],
-) -> Any:
+) -> Any:  # noqa: ANN401
+    """Analyze a circuit for the additive backend."""
     return connections, ports
 
 
 def evaluate_circuit_additive(
-    analyzed: Any,
+    analyzed: Any,  # noqa: ANN401
     instances: dict[str, SDict],
 ) -> SDict:
     """Evaluate a circuit for the given sdicts."""
