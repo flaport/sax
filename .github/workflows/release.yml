@@ -42,10 +42,6 @@ jobs:
         with:
           user: __token__
           password: ${{ secrets.PYPI_TOKEN }}
-      - name: GitHub Release
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*
 
   release-gh:
     name: GitHub Release
