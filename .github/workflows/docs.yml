@@ -12,16 +12,14 @@ jobs:
     name: Run Notebooks
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Install UV
         uses: astral-sh/setup-uv@v5
       - name: Install Just
         uses: taiki-e/install-action@just
-      - name: Create Venv
-        run: just dev
       - name: Run notebooks
-        run: just nbrun
+        run: just dev nbrun
       - name: Upload artifacts [nbs]
         uses: actions/upload-artifact@v4
         with:
@@ -34,7 +32,7 @@ jobs:
     needs:
       - run
     steps:
-      - name: Checkout repository
+      - name: Checkout
         uses: actions/checkout@v4
       - name: Download artifacts [nbs]
         uses: actions/download-artifact@v4
@@ -45,10 +43,8 @@ jobs:
         uses: astral-sh/setup-uv@v5
       - name: Install Just
         uses: taiki-e/install-action@just
-      - name: Create Venv
-        run: just dev
       - name: Build docs
-        run: just docs
+        run: just dev docs
       - name: Upload artifact [site]
         uses: actions/upload-pages-artifact@v3
         with:

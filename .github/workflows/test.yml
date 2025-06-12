@@ -10,9 +10,16 @@ jobs:
   pre-commit:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
-      - uses: pre-commit/action@v3.0.1
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Install UV
+        uses: astral-sh/setup-uv@v5
+      - name: Install Just
+        uses: taiki-e/install-action@just
+      - name: Set up python
+        run: just dev
+      - name: Run pre-commit
+        uses: pre-commit/action@v3.0.1
 
   test:
     runs-on: ubuntu-latest
@@ -21,12 +28,12 @@ jobs:
         uses: actions/checkout@v3
       - name: Install UV
         uses: astral-sh/setup-uv@v5
-      - name: Create Venv
-        run: uv sync --all-extras
+      - name: Install Just
+        uses: taiki-e/install-action@just
       - name: Run tests
-        run: uv run pytest
+        run: just dev test
       - name: Upload artifacts [tests]
         uses: actions/upload-artifact@master
         with:
           name: tests
-          path: ./tests
+          path: ./src/tests

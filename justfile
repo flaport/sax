@@ -16,7 +16,7 @@ inits:
 ipykernel:
 	uv run python -m ipykernel install --user --name sax --display-name sax
 
-test:
+test: ipykernel
 	uv run pytest -s -n logical
 
 docs:
@@ -27,7 +27,7 @@ docs:
 serve: docs
 	uv run mkdocs serve -a localhost:8080
 
-nbrun:
+nbrun: ipykernel
 	find nbs -maxdepth 2 -mindepth 1 -name "*.ipynb" -not -path "*/.ipynb_checkpoints/*" -not -path "./.venv/*" | xargs parallel -j `nproc --all` uv run papermill {} {} -k sax :::
 
 nbdocs:
