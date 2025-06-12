@@ -9,70 +9,64 @@ on:
 jobs:
 
   run:
+    name: Run Notebooks
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Install UV
         uses: astral-sh/setup-uv@v5
+      - name: Install Just
+        uses: taiki-e/install-action@just
       - name: Create Venv
-        run: uv sync --all-extras
+        run: just dev
       - name: Run notebooks
-        run: make nbrun
-      - name: Upload artifacts [internals]
+        run: just nbrun
+      - name: Upload artifacts [nbs]
         uses: actions/upload-artifact@v4
         with:
-          name: internals
-          path: ./internals
-      - name: Upload artifacts [examples]
-        uses: actions/upload-artifact@v4
-        with:
-          name: examples
-          path: ./examples
+          name: nbs
+          path: ./nbs
 
   docs:
+    name: Build Docs
     runs-on: ubuntu-latest
     needs:
       - run
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Download artifacts [internals]
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Download artifacts [nbs]
         uses: actions/download-artifact@v4
         with:
-          name: internals
-          path: ./internals
-      - name: Download artifacts [examples]
-        uses: actions/download-artifact@v4
-        with:
-          name: examples
-          path: ./examples
+          name: nbs
+          path: ./nbs
       - name: Install UV
         uses: astral-sh/setup-uv@v5
+      - name: Install Just
+        uses: taiki-e/install-action@just
       - name: Create Venv
-        run: uv sync --all-extras
+        run: just dev
       - name: Build docs
-        run: make docs && touch docs/build/html/.nojekyll
-      - name: Upload artifacts [docs]
-        uses: actions/upload-artifact@v4
+        run: just docs
+      - name: Upload artifact [site]
+        uses: actions/upload-pages-artifact@v3
         with:
-          name: docs
-          path: ./docs/build/html
+          name: github-pages
+          path: ./site
 
   pages:
+    name: Deploy Docs
     runs-on: ubuntu-latest
     needs:
       - docs
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Download 'docs' artifact
-        uses: actions/download-artifact@master
-        with:
-          name: docs
-          path: docs/build/html
-      - name: Deploy
-        uses: JamesIves/github-pages-deploy-action@4.1.7
-        with:
-          branch: pages
-          folder: docs/build/html
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
