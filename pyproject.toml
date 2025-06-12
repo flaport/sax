@@ -136,8 +136,9 @@ select = ["ALL"]
 "src/sax/saxtypes.py" = [
   "ANN401"  # any-type
 ]
-"src/tests/*.py" = [
+"src/tests/*" = [
   "D",  # pydocstyle
+  "PT011",  # pytest-raises-too-broad
   "S101",  # assert
   "INP001"  # implicit-namespace-package
 ]

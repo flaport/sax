@@ -190,7 +190,7 @@ def is_model_factory(model: Any) -> bool:
     if not callable(model):
         return False
     sig = inspect.signature(model)
-    return not _is_callable_annotation(sig.return_annotation)  # model factory
+    return _is_callable_annotation(sig.return_annotation)  # model factory
 
 
 def validate_model(model: Callable) -> None:
