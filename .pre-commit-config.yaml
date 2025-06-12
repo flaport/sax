@@ -1,13 +1,53 @@
 repos:
-- repo: https://github.com/kynan/nbstripout
-  rev: 0.6.0
-  hooks:
-    - id: nbstripout
-- repo: https://github.com/psf/black-pre-commit-mirror
-  rev: 23.9.1
-  hooks:
-    - id: black
-- repo: https://github.com/psf/black-pre-commit-mirror
-  rev: 23.9.1
-  hooks:
-    - id: black-jupyter
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: "v5.0.0"
+    hooks:
+      - id: check-added-large-files
+      - id: check-case-conflict
+      - id: check-merge-conflict
+      - id: check-symlinks
+      - id: check-yaml
+        args: []
+      - id: debug-statements
+      - id: end-of-file-fixer
+        exclude: 'changelog\.d/.*|CHANGLEOG\.md'
+      - id: mixed-line-ending
+      - id: name-tests-test
+        args: ["--pytest-test-first"]
+        exclude: "tests/custom"
+      - id: requirements-txt-fixer
+      - id: trailing-whitespace
+        args: [--markdown-linebreak-ext=md]
+        exclude: 'changelog\.d/.*|CHANGELOG\.md'
+
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.9.5
+    hooks:
+      - id: ruff-format
+        stages: [pre-commit]
+        args: ["--config", "pyproject.toml"]
+        types_or: [python, jupyter]
+      - id: ruff
+        stages: [pre-commit]
+        args: ["--fix", "--config", "pyproject.toml"]
+        types_or: [python]
+
+  - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
+    rev: v2.14.0
+    hooks:
+      - id: pretty-format-toml
+        args: [--autofix]
+
+  - repo: https://github.com/kynan/nbstripout
+    rev: 0.8.1
+    hooks:
+      - id: nbstripout
+        files: ".ipynb"
+
+  - repo: local
+    hooks:
+      - id: pyright
+        name: pyright
+        entry: uv run --no-sync pyright
+        language: system
+        files: \.(py)$
