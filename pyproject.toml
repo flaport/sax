@@ -152,10 +152,13 @@ where = ["src"]
 [tool.tbump]
 
 [[tool.tbump.file]]
+src = "README.md"
+
+[[tool.tbump.file]]
 src = "pyproject.toml"
 
 [[tool.tbump.file]]
-src = "sax/__init__.py"
+src = "src/sax/__init__.py"
 
 [tool.tbump.git]
 message_template = "Bump to {new_version}"
