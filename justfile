@@ -8,7 +8,7 @@ dist:
 	uv run python -m build --wheel
 
 uv:
-	curl -LsSf https://astral.sh/uv/0.4.30/install.sh | sh
+	curl -LsSf https://astral.sh/uv/install.sh | sh
 
 inits:
 	cd src/sax && uv run mkinit --relative --recursive --write && uv run ruff format __init__.py
