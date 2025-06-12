@@ -1,5 +1,5 @@
-site_name: SAX
-repo_url: https://github.com/falport/sax
+site_name: sax
+repo_url: https://github.com/flaport/sax
 site_url: https://flaport.github.io/sax
 site_description: Autograd and XLA for S-parameters
 site_author: Floris Laporte

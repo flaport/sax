@@ -20,6 +20,7 @@ test:
 	uv run pytest -s -n logical
 
 docs:
+	sed 's|](docs/|](|g' README.md > docs/index.md
 	uv run mkdocs build
 
 serve:

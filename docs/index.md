@@ -2,7 +2,7 @@
 
 > S + Autograd + XLA
 
-![SAX LOGO](docs/source/_static/img/logo.svg)
+![SAX LOGO](assets/logo.svg)
 
 Autograd and XLA for S-parameters - a scatter parameter circuit simulator and
 optimizer for the frequency domain based on [JAX](https://github.com/google/jax).
@@ -117,7 +117,7 @@ plt.figlegend(ncol=2, loc="upper center")
 plt.show()
 ```
 
-![output](docs/assets/output_10_0.png)
+![output](assets/output_10_0.png)
 
 Those are the basics. For more info, check out the **full**
 [SAX Quick Start page](https://flaport.github.io/sax/examples/01_quick_start.html) or the rest of the [Documentation](https://flaport.github.io/sax).
