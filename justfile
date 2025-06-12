@@ -21,9 +21,10 @@ test:
 
 docs:
 	sed 's|](docs/|](|g' README.md > docs/index.md
+	sed 's|^#|###|g' CHANGELOG.md | sed 's|^### \[0|## [0|g' > docs/changelog.md
 	uv run mkdocs build
 
-serve:
+serve: docs
 	uv run mkdocs serve -a localhost:8080
 
 nbrun:

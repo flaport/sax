@@ -33,6 +33,8 @@ coverage.xml
 db.sqlite3
 db.sqlite3-journal
 dmypy.json
+docs/changelog.md
+docs/index.md
 ipython_config.py
 local_settings.py
 neff_data.csv
