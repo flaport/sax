@@ -36,7 +36,7 @@ description = "Autograd and XLA for S-parameters"
 name = "sax"
 readme = "README.md"
 requires-python = ">=3.11.0"
-version = "0.14.5"
+version = "0.14.6"
 
 [project.optional-dependencies]
 dev = [
@@ -165,7 +165,7 @@ message_template = "Bump to {new_version}"
 tag_template = "{new_version}"
 
 [tool.tbump.version]
-current = "0.14.5"
+current = "0.14.6"
 regex = '''
   (?P<major>\d+)
   \.
