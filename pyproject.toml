@@ -122,12 +122,16 @@ select = ["ALL"]
 [tool.ruff.lint.per-file-ignores]
 "*.ipynb" = [
   "ANN",  # flake8-annotations
+  "ARG001",  # unused-function-argument
   "D",  # pydocstyle
   "E402",  # module-import-not-at-top-of-file
   "E501",  # line-too-long
   "F821",  # undefined-name
   "FBT003",  # boolean-positional-value-in-call
-  "S101"  # assert
+  "N816",  # mixed-case-variable-in-global-scope
+  "PLC2401",  # non-ascii-name
+  "S101",  # assert
+  "SLF001"  # private-member-access
 ]
 "src/sax/saxtypes.py" = [
   "ANN401"  # any-type
