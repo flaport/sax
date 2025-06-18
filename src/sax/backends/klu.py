@@ -1,5 +1,7 @@
 """SAX KLU Backend."""
 
+from __future__ import annotations
+
 from typing import Any
 
 import jax
@@ -9,24 +11,20 @@ from natsort import natsorted
 
 import sax
 
-from ..s import scoo
-
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
-dot_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
+mul_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 
 
 def analyze_instances_klu(
-    instances: sax.Instances,
-    models: sax.Models,
+    instances: dict[sax.Name, sax.Instance],
+    models: dict[str, sax.Model],
 ) -> dict[str, sax.SCoo]:
-    """KLU Instances analysis."""
-    instances, instances_old = {}, instances
-    for k, v in instances_old.items():
-        instances[k] = sax.into[sax.Instance](v)
+    """Analyze instances for the KLU backend."""
+    instances = sax.into[sax.Instances](instances)
     model_names = set()
     for i in instances.values():
         model_names.add(i["component"])
-    dummy_models = {k: scoo(models[k]()) for k in model_names}
+    dummy_models = {k: sax.scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
         dummy_instances[k] = dummy_models[i["component"]]
@@ -34,18 +32,18 @@ def analyze_instances_klu(
 
 
 def analyze_circuit_klu(
-    analyzed_instances: dict[str, sax.SCoo],
+    analyzed_instances: dict[sax.Name, sax.SCoo],
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
-    """KLU Circuit Analysis."""
+    """Analyze a circuit for the KLU backend."""
     connections = {**connections, **{v: k for k, v in connections.items()}}
     inverse_ports = {v: k for k, v in ports.items()}
     port_map = {k: i for i, k in enumerate(ports)}
 
     idx, Si, Sj, instance_ports = 0, [], [], {}
     for name, instance in analyzed_instances.items():
-        si, sj, _, ports_map = scoo(instance)
+        si, sj, _, ports_map = sax.scoo(instance)
         Si.append(si + idx)
         Sj.append(sj + idx)
         instance_ports.update({f"{name},{p}": i + idx for p, i in ports_map.items()})
@@ -94,8 +92,11 @@ def analyze_circuit_klu(
     )
 
 
-def evaluate_circuit_klu(analyzed: Any, instances: dict[str, sax.SType]) -> sax.SDense:  # noqa: ANN401
-    """Evaluate a circuit with KLU."""
+def evaluate_circuit_klu(
+    analyzed: Any,  # noqa: ANN401
+    instances: dict[sax.Name, sax.SType],
+) -> sax.SDense:
+    """Evaluate a circuit for the KLU backend."""
     (
         n_col,
         mask,
@@ -114,7 +115,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: dict[str, sax.SType]) -> sax.
     Sx = []
     batch_shape = ()
     for name, _ in dummy_pms:
-        _, _, sx, ports_map = scoo(instances[name])
+        _, _, sx, ports_map = sax.scoo(instances[name])
         Sx.append(sx)
         if len(sx.shape[:-1]) > len(batch_shape):
             batch_shape = sx.shape[:-1]
@@ -130,7 +131,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: dict[str, sax.SType]) -> sax.
     Sx = Sx.reshape(-1, Sx.shape[-1])  # n_lhs x N
     I_CSx = I_CSx.reshape(-1, I_CSx.shape[-1])  # n_lhs x M
     inv_I_CS_Cext = solve_klu(I_CSi, I_CSj, I_CSx, Cext)
-    S_inv_I_CS_Cext = dot_coo(Si, Sj, Sx, inv_I_CS_Cext)
+    S_inv_I_CS_Cext = mul_coo(Si, Sj, Sx, inv_I_CS_Cext)
 
     CextT_S_inv_I_CS_Cext = S_inv_I_CS_Cext[..., Cexti, :][..., :, Cextj]
 
@@ -142,7 +143,7 @@ def evaluate_circuit_klu(analyzed: Any, instances: dict[str, sax.SType]) -> sax.
 
 def _get_instance_ports(
     connections: dict[str, str], ports: dict[str, str]
-) -> dict[sax.InstanceName, list[sax.Port]]:
+) -> dict[str, list[str]]:
     instance_ports = {}
     for connection in connections.items():
         for ip in connection:
@@ -156,3 +157,20 @@ def _get_instance_ports(
             instance_ports[i] = set()
         instance_ports[i].add(p)
     return {k: natsorted(v) for k, v in instance_ports.items()}
+
+
+def _get_dummy_instances(
+    connections: dict[str, str],
+    ports: dict[str, str],
+) -> dict[str, tuple[Any, Any, None, dict[str, int]]]:
+    """No longer used. deprecated by analyze_instances_klu."""
+    instance_ports = _get_instance_ports(connections, ports)
+    dummy_instances = {}
+    for name, _ports in instance_ports.items():
+        num_ports = len(_ports)
+        pm = {p: i for i, p in enumerate(_ports)}
+        ij = jnp.mgrid[:num_ports, :num_ports]
+        i = ij[0].ravel()
+        j = ij[1].ravel()
+        dummy_instances[name] = (i, j, None, pm)
+    return dummy_instances

@@ -5,6 +5,7 @@ Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 
 __all__ = [
     "Backend",
+    "BackendOrDefault",
     "CircuitInfo",
     "Model",
     "ModelFactory",
@@ -78,6 +79,7 @@ SDictModel: TypeAlias = SDictModelSM | SDictModelMM
 SDictModelFactory: TypeAlias = SDictModelFactorySM | SDictModelFactoryMM
 SType: TypeAlias = STypeSM | STypeMM
 Backend: TypeAlias = Literal["filipsson_gunnar", "additive", "forward", "klu"]
+BackendOrDefault: TypeAlias = Backend | Literal["default"]
 Models: TypeAlias = ModelsSM | ModelsMM
 
 

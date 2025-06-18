@@ -2,6 +2,7 @@
 
 from .anymode import (
     Backend,
+    BackendOrDefault,
     CircuitInfo,
     Model,
     ModelFactory,
@@ -112,6 +113,7 @@ __all__ = [
     "AnyNetlist",
     "ArrayLike",
     "Backend",
+    "BackendOrDefault",
     "Bool",
     "BoolArray",
     "BoolArrayLike",

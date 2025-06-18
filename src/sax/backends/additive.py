@@ -1,45 +1,45 @@
 """SAX Additive Backend."""
 
+from __future__ import annotations
+
 from typing import Any
 
 import jax.numpy as jnp
 import networkx as nx
 
-from ..netlist import Component
-from ..saxtypes import Model, SDict, sdict
+import sax
 
 
 def analyze_instances_additive(
-    instances: dict[str, Component],
-    models: dict[str, Model],
-) -> dict[str, SDict]:
-    instances, instances_old = {}, instances
-    for k, v in instances_old.items():
-        if not isinstance(v, Component):
-            v = Component(**v)
-        instances[k] = v
+    instances: sax.Instances,
+    models: sax.Models,
+) -> dict[sax.Name, sax.SDict]:
+    """Analyze instances for the additive backend."""
+    instances = sax.into[sax.Instances](instances)
+    models = sax.into[sax.Models](models)
     model_names = set()
     for i in instances.values():
-        model_names.add(i.component)
-    dummy_models = {k: sdict(models[k]()) for k in model_names}
+        model_names.add(i["component"])
+    dummy_models = {k: sax.sdict(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
-        dummy_instances[k] = dummy_models[i.component]
+        dummy_instances[k] = dummy_models[i["component"]]
     return dummy_instances
 
 
 def analyze_circuit_additive(
-    analyzed_instances: dict[str, SDict],
-    connections: dict[str, str],
-    ports: dict[str, str],
-) -> Any:
+    analyzed_instances: dict[sax.Name, sax.SDict],  # noqa: ARG001
+    connections: sax.Connections,
+    ports: sax.Ports,
+) -> Any:  # noqa: ANN401
+    """Analyze a circuit for the additive backend."""
     return connections, ports
 
 
 def evaluate_circuit_additive(
-    analyzed: Any,
-    instances: dict[str, SDict],
-) -> SDict:
+    analyzed: Any,  # noqa: ANN401
+    instances: dict[sax.Name, sax.SDict],
+) -> sax.SDict:
     """Evaluate a circuit for the given sdicts."""
     connections, ports = analyzed
     edges = _graph_edges(instances, connections, ports)
@@ -59,7 +59,7 @@ def evaluate_circuit_additive(
     return sdict
 
 
-def _split_port(port: str) -> tuple[str, str]:
+def _split_port(port: sax.Port) -> tuple[sax.Name, sax.Name]:
     try:
         instance, port = port.split(",")
     except ValueError:
@@ -69,10 +69,10 @@ def _split_port(port: str) -> tuple[str, str]:
 
 
 def _graph_edges(
-    instances: dict[str, SDict],
-    connections: dict[str, str],
-    ports: dict[str, str],
-):
+    instances: dict[sax.Name, sax.SDict],
+    connections: sax.Connections,
+    ports: sax.Ports,
+) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:
     zero = jnp.array([0.0], dtype=float)
     edges = {}
     edges.update({_split_port(k): _split_port(v) for k, v in connections.items()})
@@ -96,13 +96,13 @@ def _graph_edges(
                 (instance, p2),
                 {"type": "S", "length": jnp.asarray(length, dtype=float).ravel()},
             )
-            for (p1, p2), length in sdict(s).items()
+            for (p1, p2), length in sax.sdict(s).items()
         ]
 
     return edges
 
 
-def _prune_internal_output_nodes(graph):
+def _prune_internal_output_nodes(graph: nx.Graph) -> nx.Graph:
     broken = True
     while broken:
         broken = False
@@ -119,7 +119,9 @@ def _prune_internal_output_nodes(graph):
     return graph
 
 
-def _get_possible_paths(graph, source, target):
+def _get_possible_paths(
+    graph: nx.Graph, source: tuple[str, str], target: tuple[str, str]
+) -> list[list[tuple[tuple[str, str], tuple[str, str]]]]:
     paths = []
     default_props = {"type": "C", "length": 0.0}
     for path in nx.all_simple_edge_paths(graph, source, target):
@@ -134,7 +136,9 @@ def _get_possible_paths(graph, source, target):
     return paths
 
 
-def _path_lengths(graph, paths):
+def _path_lengths(
+    graph: nx.Graph, paths: list[list[tuple[tuple[str, str], tuple[str, str]]]]
+) -> list[Any]:
     lengths = []
     for path in paths:
         length = zero = jnp.array([0.0], dtype=float)

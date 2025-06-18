@@ -24,9 +24,9 @@ __all__ = ["circuit"]
 def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
-    backend: sax.Backend | Literal["default"] = "default",
-    return_type: Literal["SDict"] = "SDict",
+    backend: sax.BackendOrDefault = "default",
     *,
+    return_type: Literal["SDict"] = "SDict",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
@@ -36,9 +36,9 @@ def circuit(
 def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
-    backend: sax.Backend | Literal["default"] = "default",
-    return_type: Literal["SDense"] = "SDense",
+    backend: sax.BackendOrDefault = "default",
     *,
+    return_type: Literal["SDense"] = "SDense",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.SDenseModel, sax.CircuitInfo]: ...
@@ -48,9 +48,9 @@ def circuit(
 def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
-    backend: sax.Backend | Literal["default"] = "default",
-    return_type: Literal["SCoo"] = "SCoo",
+    backend: sax.BackendOrDefault = "default",
     *,
+    return_type: Literal["SCoo"] = "SCoo",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.SCooModel, sax.CircuitInfo]: ...
@@ -59,9 +59,9 @@ def circuit(
 def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
-    backend: sax.Backend | Literal["default"] = "default",
-    return_type: Literal["SDict", "SDense", "SCoo"] = "SDense",
+    backend: sax.BackendOrDefault = "default",
     *,
+    return_type: Literal["SDict", "SDense", "SCoo"] = "SDense",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.Model, sax.CircuitInfo]:
