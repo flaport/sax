@@ -1,7 +1,5 @@
 """SAX Circuit Definition."""
 
-from __future__ import annotations
-
 import json
 import shutil
 from collections.abc import Iterable, Iterator
@@ -162,7 +160,7 @@ def _create_dag(
     return g
 
 
-def draw_dag(dag: nx.DiGraph[Any], *, with_labels: bool = True, **kwargs) -> None:
+def draw_dag(dag: nx.DiGraph[Any], *, with_labels: bool = True, **kwargs: Any) -> None:  # noqa: ANN401
     if shutil.which("dot"):
         return nx.draw(
             dag,

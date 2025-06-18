@@ -1,13 +1,10 @@
 """SAX Loss Functions."""
 
-from __future__ import annotations
-
-from typing import TYPE_CHECKING, cast
+from typing import cast
 
 import jax.numpy as jnp
 
-if TYPE_CHECKING:
-    from .saxtypes import ComplexArray
+from .saxtypes import ComplexArray
 
 
 def mse(x: ComplexArray, y: ComplexArray) -> float:

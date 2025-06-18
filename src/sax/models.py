@@ -1,7 +1,5 @@
 """SAX Default Models."""
 
-from __future__ import annotations
-
 from functools import cache
 
 import jax
@@ -12,7 +10,6 @@ import sax
 
 from .constants import EPS
 from .s import reciprocal
-from .saxtypes.core import FloatArrayLike
 
 __all__ = ["copier", "coupler", "passthru", "straight", "unitary"]
 
@@ -20,7 +17,7 @@ __all__ = ["copier", "coupler", "passthru", "straight", "unitary"]
 @validate_call
 def straight(
     *,
-    wl: FloatArrayLike = 1.55,
+    wl: sax.FloatArrayLike = 1.55,
     wl0: sax.Float = 1.55,
     neff: sax.Float = 2.34,
     ng: sax.Float = 3.4,
@@ -38,7 +35,7 @@ def straight(
         loss: loss in dB/cm.
 
     """
-    dwl: int = sax.into[FloatArrayLike](wl) - wl0
+    dwl: sax.FloatArray = sax.into[sax.FloatArray](wl) - wl0
     dneff_dwl = (ng - neff) / wl0
     _neff = neff - dwl * dneff_dwl
     phase = 2 * jnp.pi * _neff * length / wl

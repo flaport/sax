@@ -3,8 +3,6 @@
 Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 """
 
-from __future__ import annotations
-
 __all__ = [
     "ModelFactoryMM",
     "ModelMM",
@@ -41,7 +39,7 @@ from .singlemode import (
 )
 
 
-def val_mode(obj: Any) -> Mode:
+def val_mode(obj: Any) -> "Mode":
     return val_name(obj, type_name="Mode")
 
 
@@ -49,7 +47,7 @@ Mode: TypeAlias = Annotated[str, val(val_mode)]
 """A mode definition '{mode}'."""
 
 
-def val_port_mode(obj: Any) -> PortMode:
+def val_port_mode(obj: Any) -> "PortMode":
     s = cast_string(obj)
     parts = s.split("@")
     if len(parts) != 2:
@@ -135,7 +133,7 @@ STypeMM: TypeAlias = SDictMM | SCooMM | SDenseMM
 """Any S-Matrix type [SDict, SDense, SCOO]."""
 
 
-def val_model(model: Any) -> ModelMM:
+def val_model(model: Any) -> "ModelMM":
     return val_not_callable_annotated(val_sax_callable(model))
 
 
@@ -156,7 +154,7 @@ ModelMM: TypeAlias = Annotated[
 """A keyword-only function producing an SType."""
 
 
-def val_model_factory(model: Any) -> ModelFactoryMM:
+def val_model_factory(model: Any) -> "ModelFactoryMM":
     return val_callable_annotated(val_sax_callable(model))
 
 

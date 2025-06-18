@@ -9,51 +9,55 @@ from natsort import natsorted
 
 import sax
 
+from .constants import DEFAULT_MODE, DEFAULT_MODES
 from .s import block_diag
+from .saxtypes.settings import SettingsValue
 
 
 @overload
 def multimode(
-    S: sax.SDictModel, modes: tuple[str, ...] = ("TE", "TM")
+    S: sax.SDictModel, modes: tuple[str, ...] = DEFAULT_MODES
 ) -> sax.SDictModel: ...
 
 
 @overload
 def multimode(
-    S: sax.SCooModel, modes: tuple[str, ...] = ("TE", "TM")
+    S: sax.SCooModel, modes: tuple[str, ...] = DEFAULT_MODES
 ) -> sax.SCooModel: ...
 
 
 @overload
 def multimode(
-    S: sax.SDenseModel, modes: tuple[str, ...] = ("TE", "TM")
+    S: sax.SDenseModel, modes: tuple[str, ...] = DEFAULT_MODES
 ) -> sax.SDenseModel: ...
 
 
 @overload
-def multimode(S: sax.SDict, modes: tuple[str, ...] = ("TE", "TM")) -> sax.SDictMM: ...
+def multimode(S: sax.SDict, modes: tuple[str, ...] = DEFAULT_MODES) -> sax.SDictMM: ...
 
 
 @overload
-def multimode(S: sax.SCoo, modes: tuple[str, ...] = ("TE", "TM")) -> sax.SCooMM: ...
+def multimode(S: sax.SCoo, modes: tuple[str, ...] = DEFAULT_MODES) -> sax.SCooMM: ...
 
 
 @overload
-def multimode(S: sax.SDense, modes: tuple[str, ...] = ("TE", "TM")) -> sax.SDenseMM: ...
+def multimode(
+    S: sax.SDense, modes: tuple[str, ...] = DEFAULT_MODES
+) -> sax.SDenseMM: ...
 
 
 def multimode(
     S: sax.SType | sax.Model,
-    modes: tuple[str, ...] = ("TE", "TM"),
+    modes: tuple[str, ...] = DEFAULT_MODES,
 ) -> sax.STypeMM | sax.ModelMM:
     """Convert a single mode model to a multimode model."""
     if (model := sax.try_into[sax.Model](S)) is not None:
 
         @wraps(model)
-        def new_model(**params) -> sax.STypeMM:
+        def new_model(**params: SettingsValue) -> sax.STypeMM:
             return multimode(model(**params), modes=modes)
 
-        return cast(sax.STypeMM, new_model)
+        return cast(sax.ModelMM, new_model)
 
     s: sax.SType = sax.into[sax.SType](S)
 
@@ -74,7 +78,7 @@ def multimode(
 
 
 def _multimode_sdict(
-    sdict: sax.SDict, modes: tuple[str, ...] = ("TE", "TM")
+    sdict: sax.SDict, modes: tuple[str, ...] = DEFAULT_MODES
 ) -> sax.SDict:
     multimode_sdict = {}
     mode_combinations = _mode_combinations(modes)
@@ -85,7 +89,7 @@ def _multimode_sdict(
 
 
 def _multimode_scoo(
-    scoo: sax.SCoo, modes: tuple[sax.Mode, ...] = ("TE", "TM")
+    scoo: sax.SCoo, modes: tuple[sax.Mode, ...] = DEFAULT_MODES
 ) -> sax.SCoo:
     Si, Sj, Sx, port_map = scoo
     num_ports = len(port_map)
@@ -112,7 +116,7 @@ def _multimode_scoo(
 
 
 def _multimode_sdense(
-    sdense: sax.SDenseSM, modes: tuple[sax.Mode, ...] = ("TE", "TM")
+    sdense: sax.SDenseSM, modes: tuple[sax.Mode, ...] = DEFAULT_MODES
 ) -> sax.SDenseMM:
     Sx, port_map = sdense
     num_ports = len(port_map)
@@ -130,37 +134,37 @@ def _multimode_sdense(
 
 
 @overload
-def singlemode(S: sax.SDictModel, mode: str = "TE") -> sax.SDictModelSM: ...
+def singlemode(S: sax.SDictModel, mode: str = DEFAULT_MODE) -> sax.SDictModelSM: ...
 
 
 @overload
-def singlemode(S: sax.SCooModel, mode: str = "TE") -> sax.SCooModelSM: ...
+def singlemode(S: sax.SCooModel, mode: str = DEFAULT_MODE) -> sax.SCooModelSM: ...
 
 
 @overload
-def singlemode(S: sax.SDenseModel, mode: str = "TE") -> sax.SDenseModelSM: ...
+def singlemode(S: sax.SDenseModel, mode: str = DEFAULT_MODE) -> sax.SDenseModelSM: ...
 
 
 @overload
-def singlemode(S: sax.SDict, mode: str = "TE") -> sax.SDictSM: ...
+def singlemode(S: sax.SDict, mode: str = DEFAULT_MODE) -> sax.SDictSM: ...
 
 
 @overload
-def singlemode(S: sax.SCoo, mode: str = "TE") -> sax.SCooSM: ...
+def singlemode(S: sax.SCoo, mode: str = DEFAULT_MODE) -> sax.SCooSM: ...
 
 
 @overload
-def singlemode(S: sax.SDense, mode: str = "TE") -> sax.SDenseSM: ...
+def singlemode(S: sax.SDense, mode: str = DEFAULT_MODE) -> sax.SDenseSM: ...
 
 
 def singlemode(
-    S: sax.SType | sax.Model, mode: sax.Mode = "TE"
+    S: sax.SType | sax.Model, mode: sax.Mode = DEFAULT_MODE
 ) -> sax.STypeSM | sax.ModelSM:
     """Convert multimode model to a singlemode model."""
     if (model := sax.try_into[sax.Model](S)) is not None:
 
         @wraps(model)
-        def new_model(**params) -> sax.STypeSM:
+        def new_model(**params: SettingsValue) -> sax.STypeSM:
             return singlemode(model(**params), mode=mode)
 
         return cast(sax.ModelSM, new_model)
@@ -181,7 +185,7 @@ def singlemode(
     raise ValueError(msg)
 
 
-def _singlemode_sdict(sdict: sax.SDictMM, mode: str = "TE") -> sax.SDictSM:
+def _singlemode_sdict(sdict: sax.SDictMM, mode: str = DEFAULT_MODE) -> sax.SDictSM:
     sdict_sm = {}
     for (p1, p2), value in sdict.items():
         if p1.endswith(f"@{mode}") and p2.endswith(f"@{mode}"):
@@ -191,7 +195,7 @@ def _singlemode_sdict(sdict: sax.SDictMM, mode: str = "TE") -> sax.SDictSM:
     return sdict_sm
 
 
-def _singlemode_scoo(scoo: sax.SCooMM, mode: str = "TE") -> sax.SCooSM:
+def _singlemode_scoo(scoo: sax.SCooMM, mode: str = DEFAULT_MODE) -> sax.SCooSM:
     Si, Sj, Sx, port_map = scoo
     # no need to touch the data...
     # just removing some ports from the port map should be enough
@@ -203,7 +207,7 @@ def _singlemode_scoo(scoo: sax.SCooMM, mode: str = "TE") -> sax.SCooSM:
     return Si, Sj, Sx, port_map
 
 
-def _singlemode_sdense(sdense: sax.SDenseMM, mode: str = "TE") -> sax.SDenseSM:
+def _singlemode_sdense(sdense: sax.SDenseMM, mode: str = DEFAULT_MODE) -> sax.SDenseSM:
     Sx, port_map = sdense
     port_map = {
         port.split("@")[0]: idx

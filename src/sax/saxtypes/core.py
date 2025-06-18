@@ -3,8 +3,6 @@
 Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 """
 
-from __future__ import annotations
-
 __all__ = [
     "ArrayLike",
     "Bool",
@@ -112,16 +110,16 @@ def _val_item_type(
 
 
 @overload
-def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Bool: ...
+def val_bool(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> "Bool": ...
 
 
 @overload
 def val_bool(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> BoolLike: ...
+) -> "BoolLike": ...
 
 
-def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
+def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> "BoolLike":
     return _val_item_type(
         obj,
         strict=strict,
@@ -137,16 +135,16 @@ Bool: TypeAlias = Annotated[bool | np.bool_, val(val_bool, strict=True)]
 
 
 @overload
-def val_int(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Int: ...
+def val_int(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> "Int": ...
 
 
 @overload
 def val_int(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntLike: ...
+) -> "IntLike": ...
 
 
-def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
+def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> "IntLike":
     if strict and maybe(partial(val_bool, strict=True, cast=False))(obj) is not None:
         msg = (
             f"NOT_INT: Strict validation does not allow casting {obj} [bool] into Int. "
@@ -167,16 +165,18 @@ Int: TypeAlias = Annotated[int | np.signedinteger, val(val_int, strict=True)]
 
 
 @overload
-def val_float(obj: Any, *, strict: bool = ..., cast: Literal[True] = True) -> Float: ...
+def val_float(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> "Float": ...
 
 
 @overload
 def val_float(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatLike: ...
+) -> "FloatLike": ...
 
 
-def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike:
+def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> "FloatLike":
     return _val_item_type(
         obj,
         strict=strict,
@@ -194,16 +194,16 @@ Float: TypeAlias = Annotated[float | np.floating, val(val_float, strict=True)]
 @overload
 def val_complex(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> Complex: ...
+) -> "Complex": ...
 
 
 @overload
 def val_complex(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexLike: ...
+) -> "ComplexLike": ...
 
 
-def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> ComplexLike:
+def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> "ComplexLike":
     return _val_item_type(
         obj,
         strict=strict,
@@ -287,18 +287,18 @@ def _val_array_type(  # noqa: C901
 @overload
 def val_bool_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> BoolArray: ...
+) -> "BoolArray": ...
 
 
 @overload
 def val_bool_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> BoolArrayLike: ...
+) -> "BoolArrayLike": ...
 
 
 def val_bool_array(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> BoolArrayLike:
+) -> "BoolArrayLike":
     return _val_array_type(
         obj,
         strict=strict,
@@ -316,16 +316,18 @@ BoolArray: TypeAlias = Annotated[Array, np.bool_, val(val_bool_array, strict=Tru
 @overload
 def val_int_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> IntArray: ...
+) -> "IntArray": ...
 
 
 @overload
 def val_int_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntArrayLike: ...
+) -> "IntArrayLike": ...
 
 
-def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntArrayLike:
+def val_int_array(
+    obj: Any, *, strict: bool = False, cast: bool = True
+) -> "IntArrayLike":
     return _val_array_type(
         obj,
         strict=strict,
@@ -345,18 +347,18 @@ IntArray: TypeAlias = Annotated[
 @overload
 def val_float_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> FloatArray: ...
+) -> "FloatArray": ...
 
 
 @overload
 def val_float_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatArrayLike: ...
+) -> "FloatArrayLike": ...
 
 
 def val_float_array(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> FloatArrayLike:
+) -> "FloatArrayLike":
     return _val_array_type(
         obj,
         strict=strict,
@@ -374,18 +376,18 @@ FloatArray: TypeAlias = Annotated[Array, np.floating, val(val_float_array, stric
 @overload
 def val_complex_array(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> ComplexArray: ...
+) -> "ComplexArray": ...
 
 
 @overload
 def val_complex_array(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexArrayLike: ...
+) -> "ComplexArrayLike": ...
 
 
 def val_complex_array(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> ComplexArrayLike:
+) -> "ComplexArrayLike":
     return _val_array_type(
         obj,
         strict=strict,
@@ -405,18 +407,18 @@ ComplexArray: TypeAlias = Annotated[
 @overload
 def val_int_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> IntArray1D: ...
+) -> "IntArray1D": ...
 
 
 @overload
 def val_int_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> IntArray1DLike: ...
+) -> "IntArray1DLike": ...
 
 
 def val_int_array_1d(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> IntArray1DLike:
+) -> "IntArray1DLike":
     return _val_array_type(
         obj,
         strict=strict,
@@ -436,18 +438,18 @@ IntArray1D: TypeAlias = Annotated[
 @overload
 def val_float_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> FloatArray1D: ...
+) -> "FloatArray1D": ...
 
 
 @overload
 def val_float_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> FloatArray1DLike: ...
+) -> "FloatArray1DLike": ...
 
 
 def val_float_array_1d(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> FloatArray1DLike:
+) -> "FloatArray1DLike":
     return _val_array_type(
         obj,
         strict=strict,
@@ -467,18 +469,18 @@ FloatArray1D: TypeAlias = Annotated[
 @overload
 def val_complex_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
-) -> ComplexArray1D: ...
+) -> "ComplexArray1D": ...
 
 
 @overload
 def val_complex_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[False] = False
-) -> ComplexArray1DLike: ...
+) -> "ComplexArray1DLike": ...
 
 
 def val_complex_array_1d(
     obj: Any, *, strict: bool = False, cast: bool = True
-) -> ComplexArray1DLike:
+) -> "ComplexArray1DLike":
     return _val_array_type(
         obj,
         strict=strict,
@@ -571,7 +573,7 @@ Name: TypeAlias = Annotated[str, val(val_name)]
 class IOLike(Protocol):
     """An buffer like object implementing 'read'."""
 
-    def read(self, size: int | None = -1, /) -> str: ...
+    def read(self, size: int | None = -1, /) -> str: ...  # noqa: D102
 
 
 def _get_annotated_type(annotated: Any) -> type | UnionType:

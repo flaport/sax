@@ -3,8 +3,6 @@
 Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 """
 
-from __future__ import annotations
-
 __all__ = [
     "Backend",
     "CircuitInfo",
