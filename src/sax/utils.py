@@ -8,7 +8,6 @@ from pathlib import Path
 from typing import Any, TypeVar
 
 import yaml
-from pydantic import validate_call
 
 import sax
 
@@ -53,13 +52,11 @@ def read(content_or_filename: str | Path | sax.IOLike) -> str:
     return content_or_filename.read()
 
 
-@validate_call(validate_return=True)
 def load_netlist(content_or_filename: str | Path | sax.IOLike) -> sax.Netlist:
     """Load a SAX netlist."""
     return yaml.safe_load(read(content_or_filename))
 
 
-@validate_call(validate_return=True)
 def load_recursive_netlist(
     top_level_path: str | Path,
     ext: str = ".pic.yml",

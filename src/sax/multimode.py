@@ -10,8 +10,6 @@ from natsort import natsorted
 import sax
 
 from .constants import DEFAULT_MODE, DEFAULT_MODES
-from .s import block_diag
-from .saxtypes.settings import SettingsValue
 
 __all__ = [
     "multimode",
@@ -59,7 +57,7 @@ def multimode(
     if (model := sax.try_into[sax.Model](S)) is not None:
 
         @wraps(model)
-        def new_model(**params: SettingsValue) -> sax.STypeMM:
+        def new_model(**params: sax.SettingsValue) -> sax.STypeMM:
             return multimode(model(**params), modes=modes)
 
         return cast(sax.ModelMM, new_model)
@@ -127,7 +125,7 @@ def _multimode_sdense(
     num_ports = len(port_map)
     mode_map: dict[sax.Mode, int] = {mode: i for i, mode in enumerate(modes)}
 
-    Sx_m = block_diag(*(Sx for _ in modes))
+    Sx_m = sax.block_diag(*(Sx for _ in modes))
 
     port_map_m = {
         f"{port}@{mode}": idx + mode_map[mode] * num_ports
@@ -169,7 +167,7 @@ def singlemode(
     if (model := sax.try_into[sax.Model](S)) is not None:
 
         @wraps(model)
-        def new_model(**params: SettingsValue) -> sax.STypeSM:
+        def new_model(**params: sax.SettingsValue) -> sax.STypeSM:
             return singlemode(model(**params), mode=mode)
 
         return cast(sax.ModelSM, new_model)
