@@ -4,12 +4,15 @@ from __future__ import annotations
 
 import inspect
 import re
+import warnings
 from collections.abc import Callable, Iterator
 from functools import wraps
 from pathlib import Path
 from typing import Any, TypeVar
 
+import jax.numpy as jnp
 import yaml
+from numpy.exceptions import ComplexWarning
 
 import sax
 
@@ -130,31 +133,38 @@ def replace_kwargs(func: Callable, **kwargs: sax.SettingsValue) -> None:
 
 
 def update_settings(
-    settings: sax.Settings,
-    *compnames: str,
-    **kwargs: sax.SettingsValue,
+    settings: sax.Settings, *compnames: str, **kwargs: sax.SettingsValue
 ) -> sax.Settings:
-    """Update a nested settings dictionary."""
-    _settings = {}
+    """Update a nested settings dictionary.
 
-    if compnames:
+    .. note ::
+
+        1. Even though it's possible to update parameter dictionaries in place,
+        this function is convenient to apply certain parameters (e.g. wavelength
+        'wl' or temperature 'T') globally.
+        2. This operation never updates the given settings dictionary inplace.
+        3. Any non-float keyword arguments will be silently ignored.
+
+    """
+    _settings = {}
+    if not compnames:
+        for k, v in settings.items():
+            if isinstance(v, dict):
+                _settings[k] = update_settings(v, **kwargs)
+            elif k in kwargs:
+                _settings[k] = _try_complex_float(kwargs[k])
+            else:
+                _settings[k] = _try_complex_float(v)
+    else:
         for k, v in settings.items():
             if isinstance(v, dict):
                 if k == compnames[0]:
                     _settings[k] = update_settings(v, *compnames[1:], **kwargs)
                 else:
-                    _settings[k] = sax.try_into[sax.SettingsValue](v)
+                    _settings[k] = v
             else:
-                _settings[k] = sax.try_into[sax.SettingsValue](v)
-    else:
-        for k, v in settings.items():
-            if isinstance(v, dict):
-                _settings[k] = update_settings(v, **kwargs)
-            elif k in kwargs:
-                _settings[k] = sax.try_into[sax.SettingsValue](kwargs[k])
-            else:
-                _settings[k] = sax.try_into[sax.SettingsValue](v)
-    return {k: v for k, v in settings.items() if v is not None}
+                _settings[k] = _try_complex_float(v)
+    return _settings
 
 
 def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]:
@@ -181,3 +191,18 @@ def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]
             yield (k, {**v})  # shallow copy of dict
         else:
             yield (k, v)
+
+
+def _try_complex_float(f: Any) -> Any:  # noqa: ANN401
+    """Try converting an object to float, return unchanged object on fail."""
+    # TODO: deprecate for `sax.into` options.
+    with warnings.catch_warnings():
+        warnings.filterwarnings(action="error", category=ComplexWarning)
+        try:
+            return jnp.asarray(f, dtype=float)
+        except ComplexWarning:
+            return jnp.asarray(f, dtype=complex)
+        except (ValueError, TypeError):
+            pass
+
+    return f
