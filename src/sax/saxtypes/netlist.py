@@ -43,13 +43,14 @@ def val_instance(obj: Any) -> Instance:
             )
             raise TypeError(msg)
         component = obj["component"]
-        settings = {**obj.pop("settings", {})}
+        settings = {**obj.get("settings", {})}
         if "info" in obj:
-            settings.update(obj.pop("info", {}))
-        return {
+            settings.update(obj.get("info", {}))
+        inst: Instance = {
             "component": component,
             "settings": settings,
         }
+        return inst
     msg = f"Cannot coerce {obj} [{type(obj)}] into a component dictionary."
     raise TypeError(msg)
 
