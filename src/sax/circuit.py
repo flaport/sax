@@ -26,7 +26,7 @@ def circuit(
     models: sax.Models | None = None,
     backend: sax.BackendOrDefault = "default",
     *,
-    return_type: Literal["SDict"] = "SDict",
+    return_type: Literal["SDict"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
@@ -38,7 +38,7 @@ def circuit(
     models: sax.Models | None = None,
     backend: sax.BackendOrDefault = "default",
     *,
-    return_type: Literal["SDense"] = "SDense",
+    return_type: Literal["SDense"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.SDenseModel, sax.CircuitInfo]: ...
@@ -50,7 +50,7 @@ def circuit(
     models: sax.Models | None = None,
     backend: sax.BackendOrDefault = "default",
     *,
-    return_type: Literal["SCoo"] = "SCoo",
+    return_type: Literal["SCoo"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.SCooModel, sax.CircuitInfo]: ...
