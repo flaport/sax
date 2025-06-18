@@ -24,7 +24,7 @@ __all__ = [
     "SType",
 ]
 
-from typing import Any, Literal, NamedTuple, TypeAlias
+from typing import Literal, NamedTuple, TypeAlias
 
 import networkx as nx
 
@@ -86,6 +86,6 @@ Models: TypeAlias = ModelsSM | ModelsMM
 class CircuitInfo(NamedTuple):
     """Information about the circuit function you created."""
 
-    dag: nx.Graph[Any]
+    dag: nx.DiGraph
     models: dict[Name, Model]
     backend: Backend

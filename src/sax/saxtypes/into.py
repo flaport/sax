@@ -20,8 +20,6 @@ from pydantic import PlainValidator, TypeAdapter
 from pydantic_core._pydantic_core import ValidationError
 from typing_extensions import _AnnotatedAlias
 
-from sax.utils import maybe
-
 T = TypeVar("T")
 
 
@@ -74,6 +72,8 @@ class TryInto(type):
     def __getitem__(cls, key: Any) -> Callable[..., Any | None]: ...
 
     def __getitem__(cls, key: type[T] | str | Any) -> Callable[..., T | Any | None]:
+        from ..utils import maybe
+
         return maybe(into[key])
 
 

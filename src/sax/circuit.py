@@ -131,7 +131,7 @@ def _create_dag(
     models: sax.Models | None = None,
     *,
     validate: bool = False,
-) -> nx.DiGraph[Any]:
+) -> nx.DiGraph:
     if models is None:
         models = {}
 
@@ -154,13 +154,13 @@ def _create_dag(
     # we only need the nodes that depend on the parent...
     parent_node = next(iter(netlist.keys()))
     nodes = [parent_node, *nx.descendants(g, parent_node)]
-    g = cast(nx.DiGraph[Any], nx.induced_subgraph(g, nodes))
+    g = cast(nx.DiGraph, nx.induced_subgraph(g, nodes))
     if validate:
         g = _validate_dag(g)
     return g
 
 
-def draw_dag(dag: nx.DiGraph[Any], *, with_labels: bool = True, **kwargs: Any) -> None:  # noqa: ANN401
+def draw_dag(dag: nx.DiGraph, *, with_labels: bool = True, **kwargs: Any) -> None:  # noqa: ANN401
     if shutil.which("dot"):
         return nx.draw(
             dag,
@@ -253,15 +253,15 @@ def _flat_circuit(
     return cast(sax.Model, _circuit)
 
 
-def _in_degree(dag: nx.DiGraph[Any]) -> Iterator[tuple[str, int]]:
+def _in_degree(dag: nx.DiGraph) -> Iterator[tuple[str, int]]:
     return cast(Iterator[tuple[str, int]], dag.in_degree())
 
 
-def _out_degree(dag: nx.DiGraph[Any]) -> Iterator[tuple[str, int]]:
+def _out_degree(dag: nx.DiGraph) -> Iterator[tuple[str, int]]:
     return cast(Iterator[tuple[str, int]], dag.out_degree())
 
 
-def _my_dag_pos(dag: nx.DiGraph[Any]) -> dict:
+def _my_dag_pos(dag: nx.DiGraph) -> dict:
     # inferior to pydot
     in_degree = {}
     for k, v in _in_degree(dag):
@@ -283,17 +283,17 @@ def _my_dag_pos(dag: nx.DiGraph[Any]) -> dict:
     return pos
 
 
-def _find_root(g: nx.DiGraph[Any]) -> list[str]:
+def _find_root(g: nx.DiGraph) -> list[str]:
     return [n for n, d in _in_degree(g) if d == 0]
 
 
-def _find_leaves(g: nx.DiGraph[Any]) -> list[str]:
+def _find_leaves(g: nx.DiGraph) -> list[str]:
     return [n for n, d in _out_degree(g) if d == 0]
 
 
 def _find_missing_models(
     models: dict | None,
-    dag: nx.DiGraph[Any],
+    dag: nx.DiGraph,
     extra_models: dict | None = None,
 ) -> tuple[sax.Models, list[str], list[str]]:
     if extra_models is None:
@@ -308,7 +308,7 @@ def _find_missing_models(
 
 def _validate_models(
     models: sax.Models,
-    dag: nx.DiGraph[Any],
+    dag: nx.DiGraph,
     extra_models: dict | None = None,
 ) -> sax.Models:
     models, required_models, missing_models = _find_missing_models(
@@ -467,7 +467,7 @@ def _extract_instance_models(netlist: sax.AnyNetlist) -> sax.Models:
     return {}
 
 
-def _validate_dag(dag: nx.DiGraph[Any]) -> nx.DiGraph[Any]:
+def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
     nodes = _find_root(dag)
     if len(nodes) > 1:
         msg = f"Multiple top_levels found in netlist: {nodes}"

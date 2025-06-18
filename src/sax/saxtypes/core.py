@@ -54,8 +54,6 @@ from jaxtyping import Array
 from pydantic import PlainValidator
 from pydantic_core import PydanticCustomError
 
-from ..utils import maybe
-
 T = TypeVar("T")
 
 ArrayLike: TypeAlias = Array | np.ndarray
@@ -91,6 +89,8 @@ def _val_item_type(
     type_def: Any,
     type_name: str,
 ) -> T:
+    from ..utils import maybe
+
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
         arr = maybe(np.asarray)(item)
@@ -145,6 +145,8 @@ def val_int(
 
 
 def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> "IntLike":
+    from ..utils import maybe
+
     if strict and maybe(partial(val_bool, strict=True, cast=False))(obj) is not None:
         msg = (
             f"NOT_INT: Strict validation does not allow casting {obj} [bool] into Int. "
