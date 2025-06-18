@@ -79,7 +79,7 @@ def _graph_edges(
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:
-    zero = jnp.array([0.0], dtype=float)
+    zero = jnp.asarray([0.0])
     edges = {}
     edges.update({_split_port(k): _split_port(v) for k, v in connections.items()})
     edges.update({_split_port(v): _split_port(k) for k, v in connections.items()})
@@ -100,7 +100,7 @@ def _graph_edges(
             (
                 (instance, p1),
                 (instance, p2),
-                {"type": "S", "length": jnp.asarray(length, dtype=float).ravel()},
+                {"type": "S", "length": jnp.asarray(length).ravel()},
             )
             for (p1, p2), length in sax.sdict(s).items()
         ]
@@ -147,7 +147,7 @@ def _path_lengths(
 ) -> list[Any]:
     lengths = []
     for path in paths:
-        length = zero = jnp.array([0.0], dtype=float)
+        length = zero = jnp.array([0.0])
         default_edge_data = {"type": "C", "length": zero}
         for edge in path:
             edge_data = graph.get_edge_data(*edge, default_edge_data)
