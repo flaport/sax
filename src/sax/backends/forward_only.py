@@ -2,48 +2,47 @@
 
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, cast
 
 import jax.numpy as jnp
 import networkx as nx
 
-from ..netlist import Component
-from ..saxtypes import Model, SCoo, SDict, scoo, sdict
+import sax
+
+from ..s import scoo, sdict
 
 
 def analyze_instances_forward(
-    instances: dict[str, Component],
-    models: dict[str, Model],
-) -> dict[str, SCoo]:
-    """Analyze instances for the forward_only backend."""
+    instances: sax.Instances,
+    models: sax.Models,
+) -> dict[str, sax.SCoo]:
+    """Analyze instances for forward algorithm."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
-        if not isinstance(v, Component):
-            v = Component(**v)
-        instances[k] = v
+        instances[k] = sax.into[sax.Instance](v)
     model_names = set()
     for i in instances.values():
-        model_names.add(i.component)
+        model_names.add(i["component"])
     dummy_models = {k: scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
-        dummy_instances[k] = dummy_models[i.component]
+        dummy_instances[k] = dummy_models[i["component"]]
     return dummy_instances
 
 
 def analyze_circuit_forward(
-    analyzed_instances: dict[str, SDict],  # noqa: ARG001
-    connections: dict[str, str],
-    ports: dict[str, str],
+    analyzed_instances: dict[str, sax.SDict],  # noqa: ARG001
+    connections: sax.Connections,
+    ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
-    """Analyze a circuit for the forward_only backend."""
+    """Analyze circuit for forward algorithm."""
     return connections, ports
 
 
 def evaluate_circuit_forward(
     analyzed: Any,  # noqa: ANN401
-    instances: dict[str, SDict],
-) -> SDict:
+    instances: dict[sax.InstanceName, sax.SDict],
+) -> sax.SDict:
     """Evaluate a circuit for the given sdicts using simple matrix multiplication."""
     connections, ports = analyzed
     edges = _graph_edges_directed(instances, connections, ports)
@@ -63,7 +62,9 @@ def evaluate_circuit_forward(
                     if node in node_signals:
                         signal = node_signals[node]
                         for neighbor in graph.successors(node):
-                            transmission = graph[node][neighbor]["transmission"]
+                            transmission = cast(
+                                int, graph[node][neighbor]["transmission"]
+                            )
                             if neighbor in layer_signals:
                                 layer_signals[neighbor] += signal * transmission
                             else:
@@ -88,10 +89,10 @@ def _split_port(port: str) -> tuple[str, str]:
 
 
 def _graph_edges_directed(
-    instances: dict[str, SDict],
-    connections: dict[str, str],
-    ports: dict[str, str],
-) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:
+    instances: dict[str, sax.SDict],
+    connections: sax.Connections,
+    ports: sax.Ports,
+) -> Any:  # noqa: ANN401
     one = jnp.array([1.0], dtype=float)
     edges_dict = {}
     edges_dict.update({_split_port(k): _split_port(v) for k, v in connections.items()})

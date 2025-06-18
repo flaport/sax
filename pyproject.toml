@@ -133,7 +133,7 @@ select = ["ALL"]
   "S101",  # assert
   "SLF001"  # private-member-access
 ]
-"src/sax/saxtypes.py" = [
+"src/sax/saxtypes/*.py" = [
   "ANN401"  # any-type
 ]
 "src/tests/*" = [

@@ -15,7 +15,6 @@ def analyze_instances_additive(
     instances: dict[str, Component],
     models: dict[str, Model],
 ) -> dict[str, SDict]:
-    """Analyze instances for the additive backend."""
     instances, instances_old = {}, instances
     for k, v in instances_old.items():
         if not isinstance(v, Component):
@@ -32,16 +31,15 @@ def analyze_instances_additive(
 
 
 def analyze_circuit_additive(
-    analyzed_instances: dict[str, SDict],  # noqa: ARG001
+    analyzed_instances: dict[str, SDict],
     connections: dict[str, str],
     ports: dict[str, str],
-) -> Any:  # noqa: ANN401
-    """Analyze a circuit for the additive backend."""
+) -> Any:
     return connections, ports
 
 
 def evaluate_circuit_additive(
-    analyzed: Any,  # noqa: ANN401
+    analyzed: Any,
     instances: dict[str, SDict],
 ) -> SDict:
     """Evaluate a circuit for the given sdicts."""
@@ -76,7 +74,7 @@ def _graph_edges(
     instances: dict[str, SDict],
     connections: dict[str, str],
     ports: dict[str, str],
-) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:
+):
     zero = jnp.array([0.0], dtype=float)
     edges = {}
     edges.update({_split_port(k): _split_port(v) for k, v in connections.items()})
@@ -106,7 +104,7 @@ def _graph_edges(
     return edges
 
 
-def _prune_internal_output_nodes(graph: nx.Graph) -> nx.Graph:
+def _prune_internal_output_nodes(graph):
     broken = True
     while broken:
         broken = False
@@ -123,9 +121,7 @@ def _prune_internal_output_nodes(graph: nx.Graph) -> nx.Graph:
     return graph
 
 
-def _get_possible_paths(
-    graph: nx.Graph, source: tuple[str, str], target: tuple[str, str]
-) -> list[list[tuple[tuple[str, str], tuple[str, str]]]]:
+def _get_possible_paths(graph, source, target):
     paths = []
     default_props = {"type": "C", "length": 0.0}
     for path in nx.all_simple_edge_paths(graph, source, target):
@@ -140,9 +136,7 @@ def _get_possible_paths(
     return paths
 
 
-def _path_lengths(
-    graph: nx.Graph, paths: list[list[tuple[tuple[str, str], tuple[str, str]]]]
-) -> list[Any]:
+def _path_lengths(graph, paths):
     lengths = []
     for path in paths:
         length = zero = jnp.array([0.0], dtype=float)

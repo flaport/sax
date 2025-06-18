@@ -2,25 +2,26 @@
 
 from __future__ import annotations
 
-from typing import cast
+from typing import TYPE_CHECKING, cast
 
 import jax.numpy as jnp
 
-from .saxtypes import ComplexArrayND
+if TYPE_CHECKING:
+    from .saxtypes import ComplexArray
 
 
-def mse(x: ComplexArrayND, y: ComplexArrayND) -> float:
+def mse(x: ComplexArray, y: ComplexArray) -> float:
     """Mean squared error."""
     return cast(float, (abs(x - y) ** 2).mean())
 
 
-def huber_loss(x: ComplexArrayND, y: ComplexArrayND, delta: float = 0.5) -> float:
+def huber_loss(x: ComplexArray, y: ComplexArray, delta: float = 0.5) -> float:
     """Huber loss."""
     loss = ((delta**2) * ((1.0 + (abs(x - y) / delta) ** 2) ** 0.5 - 1.0)).mean()
     return cast(float, loss)
 
 
-def l2_reg(weights: dict[str, ComplexArrayND]) -> float:
+def l2_reg(weights: dict[str, ComplexArray]) -> float:
     """L2 regularization loss."""
     numel = 0
     loss = 0.0
