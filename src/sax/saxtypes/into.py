@@ -48,9 +48,9 @@ class Into(type):
 
 
 def _wrapped_validator(key: type[T]) -> Callable[..., T]:
-    def into_type(obj: Any, /, *, strict: bool | None = None) -> T:
+    def into_type(obj: Any) -> T:
         try:
-            return TypeAdapter(key).validate_python(obj, strict=strict)
+            return TypeAdapter(key).validate_python(obj, strict=False)
         except ValidationError as e:
             raise TypeError(str(e)) from e
 

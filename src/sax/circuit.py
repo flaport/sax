@@ -61,7 +61,7 @@ def circuit(
     models: sax.Models | None = None,
     backend: sax.BackendOrDefault = "default",
     *,
-    return_type: Literal["SDict", "SDense", "SCoo"] = "SDense",
+    return_type: Literal["SDict", "SDense", "SCoo"] = "SDict",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.Model, sax.CircuitInfo]:

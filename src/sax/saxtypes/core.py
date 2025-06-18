@@ -130,7 +130,7 @@ def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> "BoolLike"
     )
 
 
-Bool: TypeAlias = Annotated[bool | np.bool_, val(val_bool, strict=True)]
+Bool: TypeAlias = Annotated[bool | np.bool_, val(val_bool, strict=False)]
 """Any boolean."""
 
 
@@ -147,7 +147,7 @@ def val_int(
 def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> "IntLike":
     from ..utils import maybe
 
-    if strict and maybe(partial(val_bool, strict=True, cast=False))(obj) is not None:
+    if strict and maybe(partial(val_bool, strict=False, cast=False))(obj) is not None:
         msg = (
             f"NOT_INT: Strict validation does not allow casting {obj} [bool] into Int. "
         )
@@ -162,7 +162,7 @@ def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> "IntLike":
     )
 
 
-Int: TypeAlias = Annotated[int | np.signedinteger, val(val_int, strict=True)]
+Int: TypeAlias = Annotated[int | np.signedinteger, val(val_int, strict=False)]
 """Any signed integer."""
 
 
@@ -189,7 +189,7 @@ def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> "FloatLik
     )
 
 
-Float: TypeAlias = Annotated[float | np.floating, val(val_float, strict=True)]
+Float: TypeAlias = Annotated[float | np.floating, val(val_float, strict=False)]
 """Any float."""
 
 
@@ -217,7 +217,7 @@ def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> "Comple
 
 
 Complex: TypeAlias = Annotated[
-    complex | np.complexfloating, val(val_complex, strict=True)
+    complex | np.complexfloating, val(val_complex, strict=False)
 ]
 """Any complex number."""
 
@@ -311,7 +311,7 @@ def val_bool_array(
     )
 
 
-BoolArray: TypeAlias = Annotated[Array, np.bool_, val(val_bool_array, strict=True)]
+BoolArray: TypeAlias = Annotated[Array, np.bool_, val(val_bool_array, strict=False)]
 """N-dimensional Bool array."""
 
 
@@ -341,7 +341,7 @@ def val_int_array(
 
 
 IntArray: TypeAlias = Annotated[
-    Array, np.signedinteger, val(val_int_array, strict=True)
+    Array, np.signedinteger, val(val_int_array, strict=False)
 ]
 """N-dimensional Int array."""
 
@@ -371,7 +371,9 @@ def val_float_array(
     )
 
 
-FloatArray: TypeAlias = Annotated[Array, np.floating, val(val_float_array, strict=True)]
+FloatArray: TypeAlias = Annotated[
+    Array, np.floating, val(val_float_array, strict=False)
+]
 """N-dimensional Float array."""
 
 
@@ -401,7 +403,7 @@ def val_complex_array(
 
 
 ComplexArray: TypeAlias = Annotated[
-    Array, np.complexfloating, val(val_complex_array, strict=True)
+    Array, np.complexfloating, val(val_complex_array, strict=False)
 ]
 """N-dimensional Complex array."""
 
@@ -432,7 +434,7 @@ def val_int_array_1d(
 
 
 IntArray1D: TypeAlias = Annotated[
-    ArrayLike, np.signedinteger, 1, val(val_int_array_1d, strict=True)
+    ArrayLike, np.signedinteger, 1, val(val_int_array_1d, strict=False)
 ]
 """1-dimensional Int array."""
 
@@ -463,7 +465,7 @@ def val_float_array_1d(
 
 
 FloatArray1D: TypeAlias = Annotated[
-    ArrayLike, np.floating, 1, val(val_float_array_1d, strict=True)
+    ArrayLike, np.floating, 1, val(val_float_array_1d, strict=False)
 ]
 """1-dimensional Float array."""
 
@@ -494,7 +496,7 @@ def val_complex_array_1d(
 
 
 ComplexArray1D: TypeAlias = Annotated[
-    ArrayLike, np.complexfloating, 1, val(val_complex_array_1d, strict=True)
+    ArrayLike, np.complexfloating, 1, val(val_complex_array_1d, strict=False)
 ]
 """1-dimensional Complex array."""
 

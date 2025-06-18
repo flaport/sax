@@ -119,9 +119,9 @@ def sdense(S: sax.SType | sax.Model) -> sax.SDenseModel | sax.SDense:
     raise ValueError(msg)
 
 
-@validate_call
 def reciprocal(sdict: sax.SDict) -> sax.SDict:
     """Make an SDict reciprocal."""
+    sdict = sax.into[sax.SDict](sdict)
     return {
         **{(p1, p2): v for (p1, p2), v in sdict.items()},
         **{(p2, p1): v for (p1, p2), v in sdict.items()},
