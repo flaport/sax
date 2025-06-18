@@ -453,13 +453,13 @@ def _enforce_return_type(model: sax.Model, return_type: Any) -> sax.Model:  # no
 
 
 def _extract_instance_models(netlist: sax.AnyNetlist) -> sax.Models:
-    if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
+    if sax.try_into[sax.RecursiveNetlist](netlist) is not None:
         models = {}
-        for net in recnet.values():
-            models.update(_extract_instance_models(net))
+        for net in netlist.values():
+            models.update(_extract_instance_models(cast(sax.Netlist, net)))
         return models
-    if (net := sax.try_into[sax.Netlist](netlist)) is not None:
-        callable_instances = [f for f in net["instances"].values() if callable(f)]
+    if sax.try_into[sax.Netlist](netlist) is not None:
+        callable_instances = [f for f in netlist["instances"].values() if callable(f)]
         models = {}
         for f in callable_instances:
             while isinstance(f, partial):
