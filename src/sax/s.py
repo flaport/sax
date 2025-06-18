@@ -14,6 +14,17 @@ import sax
 
 from .multimode import _consolidate_sdense
 
+__all__ = [
+    "block_diag",
+    "get_mode",
+    "get_modes",
+    "get_ports",
+    "reciprocal",
+    "scoo",
+    "sdense",
+    "sdict",
+]
+
 
 @overload
 def sdict(S: sax.Model) -> sax.SDictModel: ...

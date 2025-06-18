@@ -9,6 +9,12 @@ from jaxtyping import Array
 
 import sax
 
+__all__ = [
+    "analyze_circuit_fg",
+    "analyze_instances_fg",
+    "evaluate_circuit_fg",
+]
+
 
 def analyze_instances_fg(
     instances: sax.Instances,

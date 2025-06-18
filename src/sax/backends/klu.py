@@ -11,6 +11,12 @@ from natsort import natsorted
 
 import sax
 
+__all__ = [
+    "analyze_circuit_klu",
+    "analyze_instances_klu",
+    "evaluate_circuit_klu",
+]
+
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
 mul_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 

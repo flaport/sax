@@ -9,6 +9,12 @@ import networkx as nx
 
 import sax
 
+__all__ = [
+    "analyze_circuit_additive",
+    "analyze_instances_additive",
+    "evaluate_circuit_additive",
+]
+
 
 def analyze_instances_additive(
     instances: sax.Instances,

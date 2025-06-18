@@ -13,6 +13,11 @@ from .constants import DEFAULT_MODE, DEFAULT_MODES
 from .s import block_diag
 from .saxtypes.settings import SettingsValue
 
+__all__ = [
+    "multimode",
+    "singlemode",
+]
+
 
 @overload
 def multimode(

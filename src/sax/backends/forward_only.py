@@ -1,4 +1,4 @@
-"""SAX forward_only Backend."""
+"""Forward-only backend for SAX circuit evaluation."""
 
 from __future__ import annotations
 
@@ -8,6 +8,12 @@ import jax.numpy as jnp
 import networkx as nx
 
 import sax
+
+__all__ = [
+    "analyze_circuit_forward",
+    "analyze_instances_forward",
+    "evaluate_circuit_forward",
+]
 
 
 def analyze_instances_forward(
