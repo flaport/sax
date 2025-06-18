@@ -1,5 +1,7 @@
 """SAX Default Models."""
 
+from __future__ import annotations
+
 from functools import cache
 
 import jax

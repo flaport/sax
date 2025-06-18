@@ -11,6 +11,8 @@ Example:
 
 """
 
+from __future__ import annotations
+
 __all__ = ["into", "try_into"]
 
 from collections.abc import Callable

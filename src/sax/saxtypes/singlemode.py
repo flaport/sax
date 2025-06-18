@@ -1,5 +1,7 @@
 """SAX SingleMode Types and type coercions."""
 
+from __future__ import annotations
+
 __all__ = [
     "InstanceName",
     "InstancePort",
@@ -36,14 +38,14 @@ from .core import ComplexArray, IntArray1D, Name, cast_string, val, val_name
 T = TypeVar("T")
 
 
-def val_instance_name(obj: Any) -> "Port":
+def val_instance_name(obj: Any) -> Port:
     return val_name(obj, type_name="InstanceName")
 
 
 InstanceName: TypeAlias = Annotated[str, val(val_instance_name)]
 
 
-def val_port(obj: Any) -> "Port":
+def val_port(obj: Any) -> Port:
     return val_name(obj, type_name="Port")
 
 
@@ -51,7 +53,7 @@ Port: TypeAlias = Annotated[str, val(val_port)]
 """A port definition '{port}'."""
 
 
-def val_instance_port(obj: Any) -> "InstancePort":
+def val_instance_port(obj: Any) -> InstancePort:
     s = cast_string(obj)
     parts = s.split(",")
     if len(parts) != 2:
@@ -214,7 +216,7 @@ def val_callable_annotated(model: Callable) -> Callable:
     return model
 
 
-def val_model(model: Any) -> "ModelSM":
+def val_model(model: Any) -> ModelSM:
     return val_not_callable_annotated(val_sax_callable(model))
 
 
@@ -235,7 +237,7 @@ ModelSM: TypeAlias = Annotated[
 """A keyword-only function producing an SType."""
 
 
-def val_model_factory(model: Any) -> "ModelFactorySM":
+def val_model_factory(model: Any) -> ModelFactorySM:
     return val_callable_annotated(val_sax_callable(model))
 
 

@@ -1,5 +1,7 @@
 """Constants and magic numbers."""
 
+from __future__ import annotations
+
 import jax.numpy as jnp
 
 from sax.saxtypes.core import FloatArray1D

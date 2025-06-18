@@ -1,5 +1,7 @@
 """SAX netlist definitions."""
 
+from __future__ import annotations
+
 from functools import partial
 from typing import Annotated, Any, Literal, NotRequired, TypeAlias, TypedDict
 
@@ -27,7 +29,7 @@ Component: TypeAlias = Annotated[str, val(val_name, name="Component")]
 """The name of an instance component (model / cell / ...)."""
 
 
-def val_instance(obj: Any) -> "Instance":
+def val_instance(obj: Any) -> Instance:
     if isinstance(obj, str):
         return {"component": obj}
     if isinstance(obj, partial):
@@ -67,7 +69,7 @@ Connections: TypeAlias = dict[InstancePort, InstancePort]
 """A mapping between connected ports."""
 
 
-def val_ports(obj: Any) -> "Ports":
+def val_ports(obj: Any) -> Ports:
     from .into import into
 
     ports: dict[str, InstancePort] = into[dict[str, InstancePort]](obj)

@@ -1,5 +1,7 @@
 """All types and type-validators used in SAX."""
 
+from __future__ import annotations
+
 from .anymode import (
     Backend,
     BackendOrDefault,

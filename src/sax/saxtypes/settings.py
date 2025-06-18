@@ -1,5 +1,7 @@
 """SAX Settings."""
 
+from __future__ import annotations
+
 __all__ = [
     "Settings",
     "SettingsValue",
@@ -10,7 +12,7 @@ from typing import Annotated, Any, TypeAlias
 from .core import val, val_complex_array
 
 
-def val_settings_value(value: Any) -> "SettingsValue":
+def val_settings_value(value: Any) -> SettingsValue:
     """Validate a parameter dictionary."""
     if isinstance(value, str) or value is None:
         return value
@@ -26,7 +28,7 @@ SettingsValue: TypeAlias = Annotated[Any, val(val_settings_value)]
 """Anything that can be used as value in a settings dict."""
 
 
-def val_settings(settings: dict) -> "Settings":
+def val_settings(settings: dict) -> Settings:
     if not isinstance(settings, dict):
         msg = "Settings should be a dictionary. Got: {settings!r}."
         raise TypeError(msg)
