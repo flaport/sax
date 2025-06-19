@@ -8,7 +8,6 @@ from typing import cast, overload
 
 import networkx as nx
 from natsort import natsorted
-from pydantic import validate_call
 
 import sax
 
@@ -18,7 +17,6 @@ __all__ = [  # noqa: RUF022
 ]
 
 
-@validate_call
 def netlist(
     netlist: sax.AnyNetlist,
     *,
@@ -281,7 +279,7 @@ def convert_nets_to_connections(
     connections = net.get("connections", {})
     connections = _nets_to_connections(nets, connections)
     net["connections"] = connections
-    return netlist
+    return net
 
 
 def _nets_to_connections(
