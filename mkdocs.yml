@@ -3,7 +3,7 @@ repo_url: https://github.com/flaport/sax
 site_url: https://flaport.github.io/sax
 site_description: Autograd and XLA for S-parameters
 site_author: Floris Laporte
-repo_name: flaport/SAX
+repo_name: flaport/sax
 copyright: Copyright © 2025, Floris Laporte, Apache-2.0
 
 theme:
@@ -14,7 +14,7 @@ theme:
   # icon:
   #   logo: simple/materialformkdocs # https://squidfunk.github.io/mkdocs-material/reference/icons-emojis
   logo: assets/logo.svg
-  favicon: assets/logo.ico
+  favicon: assets/favicon.ico
   features:
     - navigation.footer
   search: true

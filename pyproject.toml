@@ -17,10 +17,8 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Physics"
 ]
 dependencies = [
-  "black>=25.1.0",
   "flax>=0.10.0",
-  "jax>=0.5.0",
-  "jaxlib>=0.5.0",
+  "jax>=0.6.0",
   "jaxtyping>=0.2.38",
   "klujax>=0.4.1",
   "matplotlib>=3.0.0",
@@ -33,6 +31,21 @@ dependencies = [
   "xarray>=2025.1.2"
 ]
 description = "Autograd and XLA for S-parameters"
+keywords = [
+  "simulation",
+  "optimization",
+  "autograd",
+  "simulation-framework",
+  "circuit",
+  "physics-simulation",
+  "photonics",
+  "s-parameters",
+  "jax",
+  "xla",
+  "photonic-circuit",
+  "photonic-optimization"
+]
+license = {text = "Apache Software License"}
 name = "sax"
 readme = "README.md"
 requires-python = ">=3.11.0"
@@ -45,7 +58,6 @@ dev = [
   "ipykernel>=6.29.5",
   "meow-sim>=0.13.0",
   "mkinit>=1.1.0",
-  "mypy>=1.15.0",
   "pre-commit>=4.1.0",
   "pyright>=1.1.0",
   "ruff>=0.9.0",
