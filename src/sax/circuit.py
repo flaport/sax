@@ -19,7 +19,7 @@ from .netlist import netlist as into_recnet
 from .s import get_ports, scoo, sdense, sdict
 from .utils import get_settings, merge_dicts, replace_kwargs, update_settings
 
-__all__ = ["circuit"]
+__all__ = ["circuit", "draw_dag", "get_required_circuit_models"]
 
 
 @overload
@@ -163,6 +163,7 @@ def _create_dag(
 
 
 def draw_dag(dag: nx.DiGraph, *, with_labels: bool = True, **kwargs: Any) -> None:  # noqa: ANN401
+    """Draw a DAG using networkx and pydot."""
     if shutil.which("dot"):
         return nx.draw(
             dag,
