@@ -31,7 +31,7 @@ from typing import (
     TypeAlias,
 )
 
-from .core import ComplexArray, IntArray1D, Name, val, val_name
+from .core import ComplexArray, IntArray1D, Name, val
 from .singlemode import (
     cast_string,
     val_callable_annotated,
@@ -42,7 +42,7 @@ from .singlemode import (
 
 
 def val_mode(obj: Any) -> Mode:
-    return val_name(obj, type_name="Mode")
+    return str(obj)  # just a string to allow '@0' etc.
 
 
 Mode: TypeAlias = Annotated[str, val(val_mode)]
