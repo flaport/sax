@@ -115,7 +115,7 @@ def sdense(S: sax.SType | sax.Model) -> sax.SDenseModel | sax.SDense:
         return _sdense
 
     if (_sdict := sax.try_into[sax.SDict](S)) is not None:
-        return _sdict_to_sdense(*_sdict)
+        return _sdict_to_sdense(_sdict)
 
     msg = f"Could not convert S-matrix to sdense. Got: {S!r}."
     raise ValueError(msg)
