@@ -1,3 +1,18 @@
+<a id="0.15.1"></a>
+# [0.15.1](https://github.com/flaport/sax/releases/tag/0.15.1) - 2025-06-20
+
+# What's Changed
+
+## Documentation
+
+- Better refs in docs. [#54](https://github.com/$OWNER/$REPOSITORY/pull/54)
+- Fix docs [#53](https://github.com/$OWNER/$REPOSITORY/pull/53)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.0...0.15.1
+
+[Changes][0.15.1]
+
+
 <a id="0.15.0"></a>
 # [0.15.0](https://github.com/flaport/sax/releases/tag/0.15.0) - 2025-06-20
 
@@ -569,6 +584,7 @@
 [Changes][0.8.7]
 
 
+[0.15.1]: https://github.com/flaport/sax/compare/0.15.0...0.15.1
 [0.15.0]: https://github.com/flaport/sax/compare/0.14.7...0.15.0
 [0.14.7]: https://github.com/flaport/sax/compare/0.14.6...0.14.7
 [0.14.6]: https://github.com/flaport/sax/compare/0.14.5...0.14.6
