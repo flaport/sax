@@ -1,20 +1,28 @@
+<a id="0.15.0"></a>
+# [0.15.0](https://github.com/flaport/sax/releases/tag/0.15.0) - 2025-06-20
+
+# What's Changed
+
+## New
+
+- More models [#52](https://github.com/$OWNER/$REPOSITORY/pull/52)
+- Refactoring of codebase: better types, array instances, ... [#51](https://github.com/$OWNER/$REPOSITORY/pull/51)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.14.7...0.15.0
+
+[Changes][0.15.0]
+
+
 <a id="0.14.7"></a>
 # [0.14.7](https://github.com/flaport/sax/releases/tag/0.14.7) - 2025-06-12
 
 # What's Changed
 
-* No changes
+## Maintenance
+
+- Fix GitHub CI
 
 **Full Changelog**: https://github.com/flaport/sax/compare/0.14.6...0.14.7
-
-
-[Changes][0.14.7]
-
-
-<a id="0.14.7"></a>
-# [0.14.7](https://github.com/flaport/sax/releases/tag/0.14.7) - 2025-06-12
-
-
 
 [Changes][0.14.7]
 
@@ -561,7 +569,7 @@
 [Changes][0.8.7]
 
 
-[0.14.7]: https://github.com/flaport/sax/compare/0.14.7...0.14.7
+[0.15.0]: https://github.com/flaport/sax/compare/0.14.7...0.15.0
 [0.14.7]: https://github.com/flaport/sax/compare/0.14.6...0.14.7
 [0.14.6]: https://github.com/flaport/sax/compare/0.14.5...0.14.6
 [0.14.5]: https://github.com/flaport/sax/compare/0.14.4...0.14.5
