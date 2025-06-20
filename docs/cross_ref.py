@@ -12,8 +12,9 @@ def _process_content(content: str) -> str:
 
     for i, block in enumerate(blocks):
         if i % 2:
+            blocks[i] = f"```{block}```"
             continue
-        lines = block.splitlines()
+        lines = block.split("\n")
         for j, line in enumerate(lines):
             parts = line.split("`")
             for k, part in enumerate(parts):
@@ -28,7 +29,7 @@ def _process_content(content: str) -> str:
             lines[j] = "".join(parts)
         blocks[i] = "\n".join(lines)
 
-    content = "```".join(blocks)
+    content = "".join(blocks)
     return content
 
 
