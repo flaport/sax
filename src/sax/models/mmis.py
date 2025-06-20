@@ -35,7 +35,6 @@ def mmi1x2_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
 
     Returns:
         S-matrix dictionary representing the ideal MMI splitter behavior.
-        Contains transmission coefficients that preserve power conservation.
 
     Examples:
         Equal power MMI splitter:
@@ -95,8 +94,6 @@ def mmi2x2_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
 
     Returns:
         S-matrix dictionary representing the ideal MMI coupler behavior.
-        Contains transmission coefficients with proper phase relationships
-        including 90-degree phase shifts for cross-coupled terms.
 
     Examples:
         3dB MMI coupler:
@@ -165,8 +162,6 @@ def mmi1x2(
 
     Returns:
         S-matrix dictionary representing the dispersive MMI splitter behavior.
-        Contains transmission coefficients that account for both wavelength
-        dependence and loss effects.
 
     Examples:
         Basic MMI splitter:
@@ -274,8 +269,6 @@ def mmi2x2(
 
     Returns:
         S-matrix dictionary representing the realistic MMI coupler behavior.
-        Contains transmission coefficients with proper phase relationships,
-        wavelength dependence, and asymmetric characteristics.
 
     Examples:
         Symmetric 3dB MMI coupler:
@@ -404,8 +397,7 @@ def _mmi_amp(
         loss_dB: Peak insertion loss in dB at the center wavelength.
 
     Returns:
-        Complex amplitude transmission coefficient with wavelength-dependent
-        magnitude and proper loss scaling.
+        The mmi amplitude
 
     Note:
         The function works in the frequency domain (f = 1/λ) to ensure
@@ -455,8 +447,7 @@ def _mmi_nxn(
             If None, assumes uniform splitting (1/n to each output).
 
     Returns:
-        S-matrix dictionary for the nxn MMI device with the specified
-        characteristics and wavelength response.
+        The mmi amplitude
 
     Examples:
         4x4 MMI with custom splitting:

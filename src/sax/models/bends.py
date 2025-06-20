@@ -44,9 +44,7 @@ def bend(
             lossless modeling. Defaults to 0.0 dB/cm.
 
     Returns:
-        S-matrix dictionary with transmission coefficients between input and output
-        ports. For a 2-port bend, this includes the forward and reverse transmission
-        coefficients accounting for phase accumulation and loss.
+        The bend s-matrix
 
     Examples:
         Basic bend simulation:

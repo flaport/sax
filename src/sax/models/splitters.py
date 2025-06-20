@@ -38,9 +38,7 @@ def splitter_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
             Defaults to 0.5 for equal splitting.
 
     Returns:
-        S-matrix dictionary representing the ideal splitter behavior. Contains
-        transmission coefficients that preserve power conservation and reciprocity.
-        The amplitudes are related to the square root of the power coupling ratios.
+        S-matrix dictionary containing the complex-valued cross/thru coefficients.
 
     Examples:
         Equal power splitter (3dB splitter):

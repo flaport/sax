@@ -39,9 +39,7 @@ def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
             Defaults to 0.5.
 
     Returns:
-        S-matrix dictionary representing the ideal coupler. Contains transmission
-        coefficients that maintain power conservation and proper phase relationships.
-        Cross-coupled terms include a 90-degree phase shift (factor of 1j).
+        The coupler s-matrix
 
     Examples:
         3dB coupler (equal splitting):
@@ -153,9 +151,7 @@ def coupler(
             to wavelength (∂²Δn/∂λ²). Units: μm⁻². Defaults to 0.4821.
 
     Returns:
-        S-matrix dictionary representing the dispersive coupler behavior.
-        Contains complex transmission coefficients that account for both
-        amplitude coupling and phase evolution.
+        The coupler s-matrix
 
     Examples:
         Basic dispersive coupler:
@@ -292,9 +288,7 @@ def grating_coupler(
             Defaults to 40e-3 μm (40 nm).
 
     Returns:
-        S-matrix dictionary with transmission and reflection coefficients for
-        both directions. Includes proper coupling between the waveguide port
-        (in0) and fiber port (out0).
+        The grating coupler s-matrix
 
     Examples:
         Basic grating coupler:

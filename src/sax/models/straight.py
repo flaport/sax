@@ -53,9 +53,7 @@ def straight(
             lossless modeling. Defaults to 0.0 dB/cm.
 
     Returns:
-        S-matrix dictionary containing the complex transmission coefficient
-        between the input and output ports. The coefficient includes both
-        phase (from propagation) and amplitude (from loss) information.
+        S-matrix dictionary containing the complex transmission coefficient.
 
     Examples:
         Basic lossless waveguide:
@@ -149,9 +147,7 @@ def attenuator(*, loss: sax.FloatArrayLike = 0.0) -> sax.SDict:
             Defaults to 0.0 dB.
 
     Returns:
-        S-matrix dictionary containing the real-valued transmission coefficient
-        between input and output ports. The coefficient is purely real since
-        ideal attenuators introduce no phase shift.
+        S-matrix dictionary containing the complex transmission coefficient.
 
     Examples:
         Fixed attenuator:
@@ -253,9 +249,7 @@ def phase_shifter(
             proportional to the device length. Defaults to 0.0 dB.
 
     Returns:
-        S-matrix dictionary containing the complex transmission coefficient.
-        The coefficient includes both amplitude (affected by loss) and phase
-        (from propagation and voltage-induced effects).
+        S-matrix dictionary containing the complex-valued transmission coefficient.
 
     Examples:
         Basic phase shifter:

@@ -31,9 +31,7 @@ def crossing_ideal(wl: sax.FloatArrayLike = 1.5) -> sax.SDict:
             for this ideal model. Defaults to 1.5 μm.
 
     Returns:
-        S-matrix dictionary representing the ideal crossing behavior. Contains
-        transmission coefficients between input and output ports with unit
-        amplitude and reciprocal behavior.
+        The crossing s-matrix
 
     Examples:
         Basic crossing simulation:
