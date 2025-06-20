@@ -40,13 +40,15 @@ def netlist(
         ValueError: If the input netlist format is invalid.
 
     Example:
-        >>> # Convert flat netlist to recursive format
-        >>> flat_net = {
-        ...     "instances": {"wg1": {"component": "waveguide"}},
-        ...     "ports": {"in": "wg1,in", "out": "wg1,out"},
-        ... }
-        >>> rec_net = netlist(flat_net, top_level_name="my_circuit")
-        >>> # Result: {"my_circuit": flat_net}
+        ```python
+        # Convert flat netlist to recursive format
+        flat_net = {
+            "instances": {"wg1": {"component": "waveguide"}},
+            "ports": {"in": "wg1,in", "out": "wg1,out"},
+        }
+        rec_net = netlist(flat_net, top_level_name="my_circuit")
+        # Result: {"my_circuit": flat_net}
+        ```
     """
     if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
         top_level = recnet.get(top_level_name, None)
@@ -77,19 +79,21 @@ def flatten_netlist(recnet: sax.RecursiveNetlist, sep: str = "~") -> sax.Netlist
         Single flat netlist with all hierarchies inlined.
 
     Example:
-        >>> # Flatten a hierarchical netlist
-        >>> recnet = {
-        ...     "top": {
-        ...         "instances": {"sub1": {"component": "subcircuit"}},
-        ...         "ports": {"in": "sub1,in"},
-        ...     },
-        ...     "subcircuit": {
-        ...         "instances": {"wg1": {"component": "waveguide"}},
-        ...         "ports": {"in": "wg1,in"},
-        ...     },
-        ... }
-        >>> flat = flatten_netlist(recnet)
-        >>> # Result has instances like "sub1~wg1" for the flattened hierarchy
+        ```python
+        # Flatten a hierarchical netlist
+        recnet = {
+            "top": {
+                "instances": {"sub1": {"component": "subcircuit"}},
+                "ports": {"in": "sub1,in"},
+            },
+            "subcircuit": {
+                "instances": {"wg1": {"component": "waveguide"}},
+                "ports": {"in": "wg1,in"},
+            },
+        }
+        flat = flatten_netlist(recnet)
+        # Result has instances like "sub1~wg1" for the flattened hierarchy
+        ```
     """
     first_name = next(iter(recnet.keys()))
     net = deepcopy(recnet[first_name])

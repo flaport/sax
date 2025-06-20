@@ -1,13 +1,15 @@
 """Easily convert a similar type into the desired type.
 
 Example:
-    >>> x: int = 5
-    >>> y: sax.Complex = sax.into[sax.Complex](x)
-    >>> print(y)
-    (5+0j)
-    >>> if (z := sax.try_into[sax.Float](x)) is not None:
-    ...     print(z)
-    5.0
+    ```python
+    x: int = 5
+    y: sax.Complex = sax.into[sax.Complex](x)
+    print(y)
+    # (5+0j)
+    if (z := sax.try_into[sax.Float](x)) is not None:
+        print(z)
+    # 5.0
+    ```
 
 """
 

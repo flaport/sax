@@ -72,15 +72,20 @@ def multimode(
         ValueError: If the input cannot be converted to multimode.
 
     Example:
-        >>> # Convert single-mode S-matrix to multimode
-        >>> s_sm = {("in", "out"): 0.9 + 0.1j, ("out", "in"): 0.9 + 0.1j}
-        >>> s_mm = multimode(s_sm, modes=("TE", "TM"))
-        >>> # Result contains: ("in@TE", "out@TE"), ("in@TM", "out@TM"), etc.
-        >>>
-        >>> # Convert a model to multimode
-        >>> def single_mode_model(wl=1.55):
-        ...     return {("in", "out"): 0.9}
-        >>> mm_model = multimode(single_mode_model)
+        ```python
+        # Convert single-mode S-matrix to multimode
+        s_sm = {("in", "out"): 0.9 + 0.1j, ("out", "in"): 0.9 + 0.1j}
+        s_mm = multimode(s_sm, modes=("TE", "TM"))
+        # Result contains: ("in@TE", "out@TE"), ("in@TM", "out@TM"), etc.
+
+
+        # Convert a model to multimode
+        def single_mode_model(wl=1.55):
+            return {("in", "out"): 0.9}
+
+
+        mm_model = multimode(single_mode_model)
+        ```
     """
     if (model := sax.try_into[sax.Model](S)) is not None:
 
@@ -209,19 +214,24 @@ def singlemode(
         ValueError: If the input cannot be converted to single-mode.
 
     Example:
-        >>> # Extract TE mode from multimode S-matrix
-        >>> s_mm = {
-        ...     ("in@TE", "out@TE"): 0.9,
-        ...     ("in@TM", "out@TM"): 0.8,
-        ...     ("in@TE", "out@TM"): 0.1,
-        ... }
-        >>> s_te = singlemode(s_mm, mode="TE")
-        >>> # Result: {("in", "out"): 0.9}
-        >>>
-        >>> # Convert a multimode model to single-mode
-        >>> def multimode_model(wl=1.55):
-        ...     return multimode_s_matrix
-        >>> te_model = singlemode(multimode_model, mode="TE")
+        ```python
+        # Extract TE mode from multimode S-matrix
+        s_mm = {
+            ("in@TE", "out@TE"): 0.9,
+            ("in@TM", "out@TM"): 0.8,
+            ("in@TE", "out@TM"): 0.1,
+        }
+        s_te = singlemode(s_mm, mode="TE")
+        # Result: {("in", "out"): 0.9}
+
+
+        # Convert a multimode model to single-mode
+        def multimode_model(wl=1.55):
+            return multimode_s_matrix
+
+
+        te_model = singlemode(multimode_model, mode="TE")
+        ```
     """
     if (model := sax.try_into[sax.Model](S)) is not None:
 

@@ -118,9 +118,11 @@ def analyze_instances(
         Backend-specific analyzed instances data structure.
 
     Example:
-        >>> instances = {"wg1": {"component": "waveguide", "settings": {}}}
-        >>> models = {"waveguide": my_waveguide_model}
-        >>> analyzed = analyze_instances(instances, models)
+        ```python
+        instances = {"wg1": {"component": "waveguide", "settings": {}}}
+        models = {"waveguide": my_waveguide_model}
+        analyzed = analyze_instances(instances, models)
+        ```
     """
     return circuit_backends["default"][0](instances, models)
 
@@ -145,9 +147,11 @@ def analyze_circuit(
         Backend-specific analyzed circuit data structure.
 
     Example:
-        >>> connections = {"wg1,out": "wg2,in"}
-        >>> ports = {"in": "wg1,in", "out": "wg2,out"}
-        >>> analyzed_circuit = analyze_circuit(analyzed_instances, connections, ports)
+        ```python
+        connections = {"wg1,out": "wg2,in"}
+        ports = {"in": "wg1,in", "out": "wg2,out"}
+        analyzed_circuit = analyze_circuit(analyzed_instances, connections, ports)
+        ```
     """
     return circuit_backends["default"][1](analyzed_instances, connections, ports)
 
@@ -169,10 +173,12 @@ def evaluate_circuit(
         Overall circuit S-matrix.
 
     Example:
-        >>> # Evaluate individual instances
-        >>> s_matrices = {"wg1": wg1_model(wl=1.55), "wg2": wg2_model(wl=1.55)}
-        >>> # Compute circuit S-matrix
-        >>> circuit_s = evaluate_circuit(analyzed_circuit, s_matrices)
+        ```python
+        # Evaluate individual instances
+        s_matrices = {"wg1": wg1_model(wl=1.55), "wg2": wg2_model(wl=1.55)}
+        # Compute circuit S-matrix
+        circuit_s = evaluate_circuit(analyzed_circuit, s_matrices)
+        ```
     """
     return circuit_backends["default"][2](analyzed, instances)
 
@@ -193,11 +199,13 @@ def validate_circuit_backend(backend: str) -> Backend:
         KeyError: If the backend is not available.
 
     Example:
-        >>> backend = validate_circuit_backend("klu")
-        >>> # Returns "klu" if available
-        >>>
-        >>> backend = validate_circuit_backend("default")
-        >>> # Returns the default backend (usually "klu" or "filipsson_gunnar")
+        ```python
+        backend = validate_circuit_backend("klu")
+        # Returns "klu" if available
+
+        backend = validate_circuit_backend("default")
+        # Returns the default backend (usually "klu" or "filipsson_gunnar")
+        ```
     """
     backend = backend.lower()
     backend = backend_map.get(backend, backend)

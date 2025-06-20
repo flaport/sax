@@ -35,12 +35,14 @@ def analyze_instances_additive(
         Dictionary mapping instance names to their S-matrices in SDict format.
 
     Example:
-        >>> instances = {
-        ...     "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
-        ...     "dc1": {"component": "coupler", "settings": {"coupling": 0.1}},
-        ... }
-        >>> models = {"waveguide": waveguide_model, "coupler": coupler_model}
-        >>> analyzed = analyze_instances_additive(instances, models)
+        ```python
+        instances = {
+            "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
+            "dc1": {"component": "coupler", "settings": {"coupling": 0.1}},
+        }
+        models = {"waveguide": waveguide_model, "coupler": coupler_model}
+        analyzed = analyze_instances_additive(instances, models)
+        ```
     """
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)
@@ -76,9 +78,11 @@ def analyze_circuit_additive(
         Tuple containing connections and ports information for circuit evaluation.
 
     Example:
-        >>> connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
-        >>> ports = {"in": "wg1,in", "out": "wg2,out"}
-        >>> analyzed = analyze_circuit_additive(analyzed_instances, connections, ports)
+        ```python
+        connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        ports = {"in": "wg1,in", "out": "wg2,out"}
+        analyzed = analyze_circuit_additive(analyzed_instances, connections, ports)
+        ```
     """
     return connections, ports
 
@@ -109,13 +113,15 @@ def evaluate_circuit_additive(
         Circuit S-matrix in SDict format with external port combinations as keys.
 
     Example:
-        >>> # Evaluated instance S-matrices
-        >>> instances = {
-        ...     "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
-        ...     "dc1": {("in1", "out1"): 0.9, ("in1", "out2"): 0.1},
-        ... }
-        >>> circuit_s = evaluate_circuit_additive(analyzed, instances)
-        >>> # Result contains S-parameters between external ports
+        ```python
+        # Evaluated instance S-matrices
+        instances = {
+            "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
+            "dc1": {("in1", "out1"): 0.9, ("in1", "out2"): 0.1},
+        }
+        circuit_s = evaluate_circuit_additive(analyzed, instances)
+        # Result contains S-parameters between external ports
+        ```
     """
     connections, ports = analyzed
     edges = _graph_edges(instances, connections, ports)

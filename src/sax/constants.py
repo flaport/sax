@@ -105,12 +105,14 @@ def wl_o(
         1D array of wavelengths in μm.
 
     Example:
-        >>> # Generate O-band wavelengths with default step
-        >>> wl = wl_o()
-        >>> # Generate 100 equally spaced points in O-band
-        >>> wl = wl_o(num=100)
-        >>> # Custom range with specific step
-        >>> wl = wl_o(step=0.001, wl_min=1.27, wl_max=1.35)
+        ```python
+        # Generate O-band wavelengths with default step
+        wl = wl_o()
+        # Generate 100 equally spaced points in O-band
+        wl = wl_o(num=100)
+        # Custom range with specific step
+        wl = wl_o(step=0.001, wl_min=1.27, wl_max=1.35)
+        ```
     """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
@@ -134,10 +136,12 @@ def wl_e(
         1D array of wavelengths in μm.
 
     Example:
-        >>> # Generate E-band wavelengths with default step
-        >>> wl = wl_e()
-        >>> # Generate 50 equally spaced points in E-band
-        >>> wl = wl_e(num=50)
+        ```python
+        # Generate E-band wavelengths with default step
+        wl = wl_e()
+        # Generate 50 equally spaced points in E-band
+        wl = wl_e(num=50)
+        ```
     """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
@@ -161,10 +165,12 @@ def wl_s(
         1D array of wavelengths in μm.
 
     Example:
-        >>> # Generate S-band wavelengths with default step
-        >>> wl = wl_s()
-        >>> # Generate 100 equally spaced points in S-band
-        >>> wl = wl_s(num=100)
+        ```python
+        # Generate S-band wavelengths with default step
+        wl = wl_s()
+        # Generate 100 equally spaced points in S-band
+        wl = wl_s(num=100)
+        ```
     """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
@@ -191,12 +197,14 @@ def wl_c(
         1D array of wavelengths in μm.
 
     Example:
-        >>> # Generate C-band wavelengths with default step
-        >>> wl = wl_c()
-        >>> # Generate 100 equally spaced points in C-band
-        >>> wl = wl_c(num=100)
-        >>> # High resolution C-band scan
-        >>> wl = wl_c(step=0.00001)
+        ```python
+        # Generate C-band wavelengths with default step
+        wl = wl_c()
+        # Generate 100 equally spaced points in C-band
+        wl = wl_c(num=100)
+        # High resolution C-band scan
+        wl = wl_c(step=0.00001)
+        ```
     """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
@@ -220,10 +228,12 @@ def wl_l(
         1D array of wavelengths in μm.
 
     Example:
-        >>> # Generate L-band wavelengths with default step
-        >>> wl = wl_l()
-        >>> # Generate 100 equally spaced points in L-band
-        >>> wl = wl_l(num=100)
+        ```python
+        # Generate L-band wavelengths with default step
+        wl = wl_l()
+        # Generate 100 equally spaced points in L-band
+        wl = wl_l(num=100)
+        ```
     """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 

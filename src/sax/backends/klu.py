@@ -45,12 +45,14 @@ def analyze_instances_klu(
         large circuits efficiently with full bidirectional coupling and reflections.
 
     Example:
-        >>> instances = {
-        ...     "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
-        ...     "dc1": {"component": "coupler", "settings": {"coupling": 0.1}},
-        ... }
-        >>> models = {"waveguide": waveguide_model, "coupler": coupler_model}
-        >>> analyzed = analyze_instances_klu(instances, models)
+        ```python
+        instances = {
+            "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
+            "dc1": {"component": "coupler", "settings": {"coupling": 0.1}},
+        }
+        models = {"waveguide": waveguide_model, "coupler": coupler_model}
+        analyzed = analyze_instances_klu(instances, models)
+        ```
     """
     instances = sax.into[sax.Instances](instances)
     model_names = set()
@@ -91,9 +93,11 @@ def analyze_circuit_klu(
         circuit evaluation, especially for large circuits with many components.
 
     Example:
-        >>> connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
-        >>> ports = {"in": "wg1,in", "out": "wg2,out"}
-        >>> analyzed = analyze_circuit_klu(analyzed_instances, connections, ports)
+        ```python
+        connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        ports = {"in": "wg1,in", "out": "wg2,out"}
+        analyzed = analyze_circuit_klu(analyzed_instances, connections, ports)
+        ```
     """
     connections = {**connections, **{v: k for k, v in connections.items()}}
     inverse_ports = {v: k for k, v in ports.items()}
@@ -181,18 +185,20 @@ def evaluate_circuit_klu(
         and reflections accurately using sparse matrix techniques.
 
     Example:
-        >>> # Circuit analysis and instances
-        >>> instances = {
-        ...     "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
-        ...     "dc1": {
-        ...         ("in1", "out1"): 0.9,
-        ...         ("in1", "out2"): 0.1,
-        ...         ("in2", "out1"): 0.1,
-        ...         ("in2", "out2"): 0.9,
-        ...     },
-        ... }
-        >>> circuit_s_matrix, port_map = evaluate_circuit_klu(analyzed, instances)
-        >>> # Result is a dense S-matrix with full coupling terms
+        ```python
+        # Circuit analysis and instances
+        instances = {
+            "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
+            "dc1": {
+                ("in1", "out1"): 0.9,
+                ("in1", "out2"): 0.1,
+                ("in2", "out1"): 0.1,
+                ("in2", "out2"): 0.9,
+            },
+        }
+        circuit_s_matrix, port_map = evaluate_circuit_klu(analyzed, instances)
+        # Result is a dense S-matrix with full coupling terms
+        ```
     """
     (
         n_col,

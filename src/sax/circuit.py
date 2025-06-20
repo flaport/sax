@@ -109,26 +109,29 @@ def circuit(
         KeyError: If required models are missing.
 
     Example:
-        >>> # Define component models
-        >>> def waveguide(length=10.0, neff=2.4, wl=1.55):
-        ...     phase = 2 * np.pi * neff * length / wl
-        ...     return {("in", "out"): np.exp(1j * phase)}
-        >>>
-        >>> # Create netlist
-        >>> netlist = {
-        ...     "instances": {
-        ...         "wg1": {"component": "waveguide", "settings": {"length": 20.0}}
-        ...     },
-        ...     "connections": {},
-        ...     "ports": {"in": "wg1,in", "out": "wg1,out"},
-        ... }
-        >>>
-        >>> # Create circuit
-        >>> models = {"waveguide": waveguide}
-        >>> circuit_func, info = circuit(netlist, models)
-        >>>
-        >>> # Evaluate circuit
-        >>> s_matrix = circuit_func(wl=1.55)
+        ```python
+        # Define component models
+        def waveguide(length=10.0, neff=2.4, wl=1.55):
+            phase = 2 * np.pi * neff * length / wl
+            return {("in", "out"): np.exp(1j * phase)}
+
+
+        # Create netlist
+        netlist = {
+            "instances": {
+                "wg1": {"component": "waveguide", "settings": {"length": 20.0}}
+            },
+            "connections": {},
+            "ports": {"in": "wg1,in", "out": "wg1,out"},
+        }
+
+        # Create circuit
+        models = {"waveguide": waveguide}
+        circuit_func, info = circuit(netlist, models)
+
+        # Evaluate circuit
+        s_matrix = circuit_func(wl=1.55)
+        ```
     """
     backend = validate_circuit_backend(backend)
 
@@ -225,11 +228,14 @@ def draw_dag(dag: nx.DiGraph, *, with_labels: bool = True, **kwargs: Any) -> Non
         **kwargs: Additional keyword arguments passed to networkx draw function.
 
     Example:
-        >>> import matplotlib.pyplot as plt
-        >>> # Assuming you have a circuit with dependencies
-        >>> _, info = circuit(netlist, models)
-        >>> draw_dag(info.dag)
-        >>> plt.show()
+        ```python
+        import matplotlib.pyplot as plt
+
+        # Assuming you have a circuit with dependencies
+        _, info = circuit(netlist, models)
+        draw_dag(info.dag)
+        plt.show()
+        ```
     """
     if shutil.which("dot"):
         return nx.draw(
@@ -260,20 +266,22 @@ def get_required_circuit_models(
         List of component names that require model functions.
 
     Example:
-        >>> netlist = {
-        ...     "instances": {
-        ...         "wg1": {"component": "waveguide"},
-        ...         "dc1": {"component": "directional_coupler"},
-        ...     },
-        ...     "ports": {"in": "wg1,in", "out": "dc1,out"},
-        ... }
-        >>> required = get_required_circuit_models(netlist)
-        >>> # Result: ["waveguide", "directional_coupler"]
-        >>>
-        >>> # With some models already available
-        >>> models = {"waveguide": my_waveguide_model}
-        >>> required = get_required_circuit_models(netlist, models)
-        >>> # Result: ["directional_coupler"]
+        ```python
+        netlist = {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "dc1": {"component": "directional_coupler"},
+            },
+            "ports": {"in": "wg1,in", "out": "dc1,out"},
+        }
+        required = get_required_circuit_models(netlist)
+        # Result: ["waveguide", "directional_coupler"]
+
+        # With some models already available
+        models = {"waveguide": my_waveguide_model}
+        required = get_required_circuit_models(netlist, models)
+        # Result: ["directional_coupler"]
+        ```
     """
     instance_models = _extract_instance_models(netlist)
     recnet: sax.RecursiveNetlist = into_recnet(

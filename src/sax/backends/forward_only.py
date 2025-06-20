@@ -40,12 +40,14 @@ def analyze_instances_forward(
         may not be accurate for circuits with reflections or loops.
 
     Example:
-        >>> instances = {
-        ...     "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
-        ...     "amp1": {"component": "amplifier", "settings": {"gain": 20.0}},
-        ... }
-        >>> models = {"waveguide": waveguide_model, "amplifier": amplifier_model}
-        >>> analyzed = analyze_instances_forward(instances, models)
+        ```python
+        instances = {
+            "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
+            "amp1": {"component": "amplifier", "settings": {"gain": 20.0}},
+        }
+        models = {"waveguide": waveguide_model, "amplifier": amplifier_model}
+        analyzed = analyze_instances_forward(instances, models)
+        ```
     """
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)
@@ -81,9 +83,11 @@ def analyze_circuit_forward(
         Tuple containing connections and ports information for circuit evaluation.
 
     Example:
-        >>> connections = {"wg1,out": "amp1,in", "amp1,out": "wg2,in"}
-        >>> ports = {"in": "wg1,in", "out": "wg2,out"}
-        >>> analyzed = analyze_circuit_forward(analyzed_instances, connections, ports)
+        ```python
+        connections = {"wg1,out": "amp1,in", "amp1,out": "wg2,in"}
+        ports = {"in": "wg1,in", "out": "wg2,out"}
+        analyzed = analyze_circuit_forward(analyzed_instances, connections, ports)
+        ```
     """
     return connections, ports
 
@@ -120,14 +124,16 @@ def evaluate_circuit_forward(
         or reflections, use the Filipsson-Gunnar or KLU backends instead.
 
     Example:
-        >>> # Circuit analysis and instances (feed-forward only)
-        >>> analyzed = (connections, ports)
-        >>> instances = {
-        ...     "wg1": {("in", "out"): 0.95},  # Low-loss waveguide
-        ...     "amp1": {("in", "out"): 10.0},  # 20dB amplifier
-        ... }
-        >>> circuit_s = evaluate_circuit_forward(analyzed, instances)
-        >>> # Result contains only forward transmission terms
+        ```python
+        # Circuit analysis and instances (feed-forward only)
+        analyzed = (connections, ports)
+        instances = {
+            "wg1": {("in", "out"): 0.95},  # Low-loss waveguide
+            "amp1": {("in", "out"): 10.0},  # 20dB amplifier
+        }
+        circuit_s = evaluate_circuit_forward(analyzed, instances)
+        # Result contains only forward transmission terms
+        ```
     """
     connections, ports = analyzed
     edges = _graph_edges_directed(instances, connections, ports)

@@ -60,13 +60,15 @@ def maybe(
         Wrapped function that returns None when the specified exception occurs.
 
     Example:
-        >>> # Safe division that returns None for division by zero
-        >>> safe_divide = maybe(lambda x, y: x / y, ZeroDivisionError)
-        >>> result = safe_divide(10, 0)  # Returns None instead of raising
-        >>>
-        >>> # Safe file reading
-        >>> safe_read = maybe(lambda f: open(f).read(), FileNotFoundError)
-        >>> content = safe_read("nonexistent.txt")  # Returns None
+        ```python
+        # Safe division that returns None for division by zero
+        safe_divide = maybe(lambda x, y: x / y, ZeroDivisionError)
+        result = safe_divide(10, 0)  # Returns None instead of raising
+
+        # Safe file reading
+        safe_read = maybe(lambda f: open(f).read(), FileNotFoundError)
+        content = safe_read("nonexistent.txt")  # Returns None
+        ```
     """
 
     @wraps(func)
@@ -92,9 +94,11 @@ def copy_settings(settings: sax.Settings) -> sax.Settings:
         Deep copy of the input settings dictionary.
 
     Example:
-        >>> original = {"wl": 1.55, "temp": 300, "nested": {"param": 1.0}}
-        >>> copied = copy_settings(original)
-        >>> copied["nested"]["param"] = 2.0  # Doesn't affect original
+        ```python
+        original = {"wl": 1.55, "temp": 300, "nested": {"param": 1.0}}
+        copied = copy_settings(original)
+        copied["nested"]["param"] = 2.0  # Doesn't affect original
+        ```
     """
     return deepcopy(settings)
 
@@ -113,15 +117,18 @@ def read(content_or_filename: str | Path | sax.IOLike) -> str:
         Content as string.
 
     Example:
-        >>> # Direct string content
-        >>> content = read("line1\\nline2")
-        >>>
-        >>> # From file path
-        >>> content = read("config.yaml")
-        >>>
-        >>> # From file-like object
-        >>> from io import StringIO
-        >>> content = read(StringIO("data"))
+        ```python
+        # Direct string content
+        content = read("line1\\nline2")
+
+        # From file path
+        content = read("config.yaml")
+
+        # From file-like object
+        from io import StringIO
+
+        content = read(StringIO("data"))
+        ```
     """
     if isinstance(content_or_filename, str) and "\n" in content_or_filename:
         return content_or_filename
@@ -145,19 +152,21 @@ def load_netlist(content_or_filename: str | Path | sax.IOLike) -> sax.Netlist:
         Parsed netlist dictionary.
 
     Example:
-        >>> # Load from file
-        >>> netlist = load_netlist("circuit.yml")
-        >>>
-        >>> # Load from YAML string
-        >>> yaml_content = '''
-        ... instances:
-        ...   wg1:
-        ...     component: waveguide
-        ... ports:
-        ...   in: wg1,in
-        ...   out: wg1,out
-        ... '''
-        >>> netlist = load_netlist(yaml_content)
+        ```python
+        # Load from file
+        netlist = load_netlist("circuit.yml")
+
+        # Load from YAML string
+        yaml_content = '''
+        instances:
+          wg1:
+            component: waveguide
+        ports:
+          in: wg1,in
+          out: wg1,out
+        '''
+        netlist = load_netlist(yaml_content)
+        ```
     """
     return yaml.safe_load(read(content_or_filename))
 
@@ -180,9 +189,11 @@ def load_recursive_netlist(
         Recursive netlist dictionary mapping component names to their netlists.
 
     Example:
-        >>> # Load all .pic.yml files in directory
-        >>> recnet = load_recursive_netlist("circuits/main.pic.yml")
-        >>> # Result: {"main": {...}, "component1": {...}, "component2": {...}}
+        ```python
+        # Load all .pic.yml files in directory
+        recnet = load_recursive_netlist("circuits/main.pic.yml")
+        # Result: {"main": {...}, "component1": {...}, "component2": {...}}
+        ```
     """
     top_level_path = Path(top_level_path)
     folder_path = top_level_path.parent
@@ -219,9 +230,11 @@ def clean_string(
         ValueError: If cleaning fails to produce a valid identifier.
 
     Example:
-        >>> clean_string("my-component.v2")  # Result: "my_componentpv2"
-        >>> clean_string("2stage_amp")  # Result: "_2stage_amp"
-        >>> clean_string("TE-mode")  # Result: "TEm_mode"
+        ```python
+        clean_string("my-component.v2")  # Result: "my_componentpv2"
+        clean_string("2stage_amp")  # Result: "_2stage_amp"
+        clean_string("TE-mode")  # Result: "TEm_mode"
+        ```
     """
     s = s.strip()
     s = s.replace(".", dot)  # dot
@@ -249,11 +262,14 @@ def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
         Dictionary of parameter names and their default values.
 
     Example:
-        >>> def my_model(wl=1.55, length=10.0, neff=2.4):
-        ...     return some_s_matrix
-        >>>
-        >>> settings = get_settings(my_model)
-        >>> # Result: {"wl": 1.55, "length": 10.0, "neff": 2.4}
+        ```python
+        def my_model(wl=1.55, length=10.0, neff=2.4):
+            return some_s_matrix
+
+
+        settings = get_settings(my_model)
+        # Result: {"wl": 1.55, "length": 10.0, "neff": 2.4}
+        ```
     """
     signature = inspect.signature(model)
     settings: sax.Settings = {
@@ -278,10 +294,12 @@ def merge_dicts(*dicts: dict) -> dict:
         Merged dictionary with nested structures preserved.
 
     Example:
-        >>> dict1 = {"a": 1, "nested": {"x": 10}}
-        >>> dict2 = {"b": 2, "nested": {"y": 20}}
-        >>> merged = merge_dicts(dict1, dict2)
-        >>> # Result: {"a": 1, "b": 2, "nested": {"x": 10, "y": 20}}
+        ```python
+        dict1 = {"a": 1, "nested": {"x": 10}}
+        dict2 = {"b": 2, "nested": {"y": 20}}
+        merged = merge_dicts(dict1, dict2)
+        # Result: {"a": 1, "b": 2, "nested": {"x": 10, "y": 20}}
+        ```
     """
     num_dicts = len(dicts)
 
@@ -331,15 +349,17 @@ def update_settings(
           'wl' or temperature 'T') globally.
 
     Example:
-        >>> settings = {
-        ...     "wg1": {"length": 10.0, "neff": 2.4},
-        ...     "wg2": {"length": 20.0, "neff": 2.4},
-        ... }
-        >>> # Update all components
-        >>> updated = update_settings(settings, wl=1.55)
-        >>>
-        >>> # Update specific component
-        >>> updated = update_settings(settings, "wg1", length=15.0)
+        ```python
+        settings = {
+            "wg1": {"length": 10.0, "neff": 2.4},
+            "wg2": {"length": 20.0, "neff": 2.4},
+        }
+        # Update all components
+        updated = update_settings(settings, wl=1.55)
+
+        # Update specific component
+        updated = update_settings(settings, "wg1", length=15.0)
+        ```
     """
     _settings = {}
     if not compnames:
@@ -376,9 +396,11 @@ def flatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
         Flattened dictionary with concatenated keys.
 
     Example:
-        >>> nested = {"a": {"b": 1, "c": {"d": 2}}, "e": 3}
-        >>> flat = flatten_dict(nested)
-        >>> # Result: {"a,b": 1, "a,c,d": 2, "e": 3}
+        ```python
+        nested = {"a": {"b": 1, "c": {"d": 2}}, "e": 3}
+        flat = flatten_dict(nested)
+        # Result: {"a,b": 1, "a,c,d": 2, "e": 3}
+        ```
     """
     return _flatten_dict(dic, sep=sep)
 
@@ -397,9 +419,11 @@ def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
         Nested dictionary with original structure restored.
 
     Example:
-        >>> flat = {"a,b": 1, "a,c,d": 2, "e": 3}
-        >>> nested = unflatten_dict(flat)
-        >>> # Result: {"a": {"b": 1, "c": {"d": 2}}, "e": 3}
+        ```python
+        flat = {"a,b": 1, "a,c,d": 2, "e": 3}
+        nested = unflatten_dict(flat)
+        # Result: {"a": {"b": 1, "c": {"d": 2}}, "e": 3}
+        ```
     """
     # from: https://gist.github.com/fmder/494aaa2dd6f8c428cede
     items = {}
@@ -446,14 +470,17 @@ def grouped_interp(
         ValueError: If wls or phis are not 1D arrays or have mismatched shapes.
 
     Example:
-        >>> import jax.numpy as jnp
-        >>> # Reference phase data with grouped points
-        >>> wls_ref = jnp.array([1.50, 1.501, 1.55, 1.551, 1.60, 1.601])
-        >>> phis_ref = jnp.array([0.1, 0.11, 0.5, 0.51, 1.0, 1.01])
-        >>>
-        >>> # Interpolate at new wavelengths
-        >>> wl_new = jnp.linspace(1.51, 1.59, 10)
-        >>> phis_interp = grouped_interp(wl_new, wls_ref, phis_ref)
+        ```python
+        import jax.numpy as jnp
+
+        # Reference phase data with grouped points
+        wls_ref = jnp.array([1.50, 1.501, 1.55, 1.551, 1.60, 1.601])
+        phis_ref = jnp.array([0.1, 0.11, 0.5, 0.51, 1.0, 1.01])
+
+        # Interpolate at new wavelengths
+        wl_new = jnp.linspace(1.51, 1.59, 10)
+        phis_interp = grouped_interp(wl_new, wls_ref, phis_ref)
+        ```
     """
     wl = jnp.asarray(wl)
     wls = jnp.asarray(wls)
@@ -488,14 +515,17 @@ def rename_params(model: sax.Model, renamings: dict[str, str]) -> sax.Model:
         ValueError: If multiple old names map to the same new name.
 
     Example:
-        >>> def original_model(wavelength=1.55, eff_index=2.4):
-        ...     return some_s_matrix
-        >>>
-        >>> # Rename parameters to standard names
-        >>> renamed_model = rename_params(
-        ...     original_model, {"wavelength": "wl", "eff_index": "neff"}
-        ... )
-        >>> # Now can call: renamed_model(wl=1.55, neff=2.4)
+        ```python
+        def original_model(wavelength=1.55, eff_index=2.4):
+            return some_s_matrix
+
+
+        # Rename parameters to standard names
+        renamed_model = rename_params(
+            original_model, {"wavelength": "wl", "eff_index": "neff"}
+        )
+        # Now can call: renamed_model(wl=1.55, neff=2.4)
+        ```
     """
     reversed_renamings = {v: k for k, v in renamings.items()}
     if len(reversed_renamings) < len(renamings):
@@ -555,17 +585,20 @@ def rename_ports(
         ValueError: If the input type is not supported for port renaming.
 
     Example:
-        >>> # Rename ports in S-matrix
-        >>> s_matrix = {("input", "output"): 0.9}
-        >>> renamed_s = rename_ports(s_matrix, {"input": "in", "output": "out"})
-        >>> # Result: {("in", "out"): 0.9}
-        >>>
-        >>> # Rename ports in model
-        >>> def original_model(wl=1.55):
-        ...     return {("input", "output"): 0.9}
-        >>> renamed_model = rename_ports(
-        ...     original_model, {"input": "in", "output": "out"}
-        ... )
+        ```python
+        # Rename ports in S-matrix
+        s_matrix = {("input", "output"): 0.9}
+        renamed_s = rename_ports(s_matrix, {"input": "in", "output": "out"})
+        # Result: {("in", "out"): 0.9}
+
+
+        # Rename ports in model
+        def original_model(wl=1.55):
+            return {("input", "output"): 0.9}
+
+
+        renamed_model = rename_ports(original_model, {"input": "in", "output": "out"})
+        ```
     """
     if (scoo := sax.try_into[sax.SCoo](S)) is not None:
         Si, Sj, Sx, ports_map = scoo
@@ -601,9 +634,11 @@ def hash_dict(dic: dict) -> int:
         Integer hash value.
 
     Example:
-        >>> settings = {"wl": 1.55, "length": 10.0}
-        >>> hash_val = hash_dict(settings)
-        >>> # Same settings will always produce the same hash
+        ```python
+        settings = {"wl": 1.55, "length": 10.0}
+        hash_val = hash_dict(settings)
+        # Same settings will always produce the same hash
+        ```
     """
     return int(
         md5(  # noqa: S324
@@ -645,10 +680,13 @@ def normalization(x: sax.ComplexArray, axis: int | None = None) -> Normalization
         Normalization object containing mean and standard deviation.
 
     Example:
-        >>> import jax.numpy as jnp
-        >>> data = jnp.array([[1, 2, 3], [4, 5, 6]])
-        >>> norm_params = normalization(data, axis=0)
-        >>> # Computes mean and std along axis 0
+        ```python
+        import jax.numpy as jnp
+
+        data = jnp.array([[1, 2, 3], [4, 5, 6]])
+        norm_params = normalization(data, axis=0)
+        # Computes mean and std along axis 0
+        ```
     """
     if axis is None:
         return Normalization(x.mean(), x.std())
@@ -668,11 +706,14 @@ def cartesian_product(*arrays: sax.ComplexArray) -> sax.ComplexArray:
         Array where each row is a unique combination of input elements.
 
     Example:
-        >>> import jax.numpy as jnp
-        >>> x = jnp.array([1, 2])
-        >>> y = jnp.array([10, 20])
-        >>> product = cartesian_product(x, y)
-        >>> # Result: [[1, 10], [1, 20], [2, 10], [2, 20]]
+        ```python
+        import jax.numpy as jnp
+
+        x = jnp.array([1, 2])
+        y = jnp.array([10, 20])
+        product = cartesian_product(x, y)
+        # Result: [[1, 10], [1, 20], [2, 10], [2, 20]]
+        ```
     """
     ixarrays = jnp.ix_(*arrays)
     barrays = jnp.broadcast_arrays(*ixarrays)
@@ -694,9 +735,11 @@ def normalize(x: sax.ComplexArray, normalization: Normalization) -> sax.ComplexA
         Normalized array with zero mean and unit standard deviation.
 
     Example:
-        >>> data = jnp.array([1, 2, 3, 4, 5])
-        >>> norm_params = normalization(data)
-        >>> normalized = normalize(data, norm_params)
+        ```python
+        data = jnp.array([1, 2, 3, 4, 5])
+        norm_params = normalization(data)
+        normalized = normalize(data, norm_params)
+        ```
     """
     mean, std = normalization
     return (x - mean) / std
@@ -715,10 +758,12 @@ def denormalize(x: sax.ComplexArray, normalization: Normalization) -> sax.Comple
         Denormalized array with original scale and offset.
 
     Example:
-        >>> normalized_data = jnp.array([-1, 0, 1])  # normalized
-        >>> norm_params = Normalization(mean=3.0, std=2.0)
-        >>> original = denormalize(normalized_data, norm_params)
-        >>> # Result: [1, 3, 5]
+        ```python
+        normalized_data = jnp.array([-1, 0, 1])  # normalized
+        norm_params = Normalization(mean=3.0, std=2.0)
+        original = denormalize(normalized_data, norm_params)
+        # Result: [1, 3, 5]
+        ```
     """
     mean, std = normalization
     return x * std + mean

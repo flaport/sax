@@ -26,10 +26,13 @@ def mse(x: ComplexArray, y: ComplexArray) -> float:
         Mean squared error as a float value.
 
     Example:
-        >>> import jax.numpy as jnp
-        >>> x = jnp.array([1 + 2j, 3 + 4j])
-        >>> y = jnp.array([1 + 1j, 3 + 3j])
-        >>> loss = mse(x, y)
+        ```python
+        import jax.numpy as jnp
+
+        x = jnp.array([1 + 2j, 3 + 4j])
+        y = jnp.array([1 + 1j, 3 + 3j])
+        loss = mse(x, y)
+        ```
     """
     return cast(float, (abs(x - y) ** 2).mean())
 
@@ -51,10 +54,13 @@ def huber_loss(x: ComplexArray, y: ComplexArray, delta: float = 0.5) -> float:
         Huber loss as a float value.
 
     Example:
-        >>> import jax.numpy as jnp
-        >>> x = jnp.array([1 + 2j, 3 + 4j])
-        >>> y = jnp.array([1 + 1j, 3 + 3j])
-        >>> loss = huber_loss(x, y, delta=1.0)
+        ```python
+        import jax.numpy as jnp
+
+        x = jnp.array([1 + 2j, 3 + 4j])
+        y = jnp.array([1 + 1j, 3 + 3j])
+        loss = huber_loss(x, y, delta=1.0)
+        ```
     """
     loss = ((delta**2) * ((1.0 + (abs(x - y) / delta) ** 2) ** 0.5 - 1.0)).mean()
     return cast(float, loss)
@@ -74,13 +80,16 @@ def l2_reg(weights: dict[str, ComplexArray]) -> float:
         L2 regularization loss normalized by total number of elements.
 
     Example:
-        >>> import jax.numpy as jnp
-        >>> weights = {
-        ...     "w1": jnp.array([1 + 1j, 2 + 2j]),
-        ...     "b1": jnp.array([0.1 + 0.2j]),
-        ...     "other": jnp.array([5 + 5j]),  # ignored (doesn't start with w/b)
-        ... }
-        >>> reg_loss = l2_reg(weights)
+        ```python
+        import jax.numpy as jnp
+
+        weights = {
+            "w1": jnp.array([1 + 1j, 2 + 2j]),
+            "b1": jnp.array([0.1 + 0.2j]),
+            "other": jnp.array([5 + 5j]),  # ignored (doesn't start with w/b)
+        }
+        reg_loss = l2_reg(weights)
+        ```
     """
     numel = 0
     loss = 0.0

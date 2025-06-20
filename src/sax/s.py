@@ -54,14 +54,19 @@ def sdict(S: sax.Model | sax.SType) -> sax.SDictModel | sax.SDict:
         ValueError: If the input cannot be converted to SDict format.
 
     Example:
-        >>> # Convert from other formats
-        >>> scoo_matrix = (Si, Sj, Sx, port_map)
-        >>> sdict_matrix = sdict(scoo_matrix)
-        >>>
-        >>> # Convert a model
-        >>> def my_model(wl=1.55):
-        ...     return some_sdense_matrix
-        >>> sdict_model = sdict(my_model)
+        ```python
+        # Convert from other formats
+        scoo_matrix = (Si, Sj, Sx, port_map)
+        sdict_matrix = sdict(scoo_matrix)
+
+
+        # Convert a model
+        def my_model(wl=1.55):
+            return some_sdense_matrix
+
+
+        sdict_model = sdict(my_model)
+        ```
     """
     if (_model := sax.try_into[sax.Model](S)) is not None:
 
@@ -110,14 +115,19 @@ def scoo(S: sax.Model | sax.SType) -> sax.SCooModel | sax.SCoo:
         ValueError: If the input cannot be converted to SCoo format.
 
     Example:
-        >>> # Convert from dict format
-        >>> sdict_matrix = {("in", "out"): 0.9 + 0.1j, ("out", "in"): 0.9 + 0.1j}
-        >>> Si, Sj, Sx, port_map = scoo(sdict_matrix)
-        >>>
-        >>> # Convert a model
-        >>> def my_model(wl=1.55):
-        ...     return some_sdict_matrix
-        >>> scoo_model = scoo(my_model)
+        ```python
+        # Convert from dict format
+        sdict_matrix = {("in", "out"): 0.9 + 0.1j, ("out", "in"): 0.9 + 0.1j}
+        Si, Sj, Sx, port_map = scoo(sdict_matrix)
+
+
+        # Convert a model
+        def my_model(wl=1.55):
+            return some_sdict_matrix
+
+
+        scoo_model = scoo(my_model)
+        ```
     """
     if (_model := sax.try_into[sax.Model](S)) is not None:
 
@@ -166,14 +176,19 @@ def sdense(S: sax.SType | sax.Model) -> sax.SDenseModel | sax.SDense:
         ValueError: If the input cannot be converted to SDense format.
 
     Example:
-        >>> # Convert from dict format
-        >>> sdict_matrix = {("in", "out"): 0.9 + 0.1j, ("out", "in"): 0.9 + 0.1j}
-        >>> matrix, port_map = sdense(sdict_matrix)
-        >>>
-        >>> # Convert a model
-        >>> def my_model(wl=1.55):
-        ...     return some_sdict_matrix
-        >>> sdense_model = sdense(my_model)
+        ```python
+        # Convert from dict format
+        sdict_matrix = {("in", "out"): 0.9 + 0.1j, ("out", "in"): 0.9 + 0.1j}
+        matrix, port_map = sdense(sdict_matrix)
+
+
+        # Convert a model
+        def my_model(wl=1.55):
+            return some_sdict_matrix
+
+
+        sdense_model = sdense(my_model)
+        ```
     """
     if (_model := sax.try_into[sax.Model](S)) is not None:
 
@@ -210,10 +225,12 @@ def reciprocal(sdict: sax.SDict) -> sax.SDict:
         Reciprocal S-matrix in SDict format with symmetric port pairs.
 
     Example:
-        >>> # Make a non-reciprocal matrix reciprocal
-        >>> s_matrix = {("in", "out"): 0.9 + 0.1j}
-        >>> s_reciprocal = reciprocal(s_matrix)
-        >>> # Result: {("in", "out"): 0.9+0.1j, ("out", "in"): 0.9+0.1j}
+        ```python
+        # Make a non-reciprocal matrix reciprocal
+        s_matrix = {("in", "out"): 0.9 + 0.1j}
+        s_reciprocal = reciprocal(s_matrix)
+        # Result: {("in", "out"): 0.9+0.1j, ("out", "in"): 0.9+0.1j}
+        ```
     """
     sdict = sax.into[sax.SDict](sdict)
     return {
@@ -240,14 +257,17 @@ def block_diag(*arrs: Array) -> Array:
         ValueError: If batch dimensions don't match or matrices aren't square.
 
     Example:
-        >>> import jax.numpy as jnp
-        >>> A = jnp.array([[1, 2], [3, 4]])
-        >>> B = jnp.array([[5, 6], [7, 8]])
-        >>> C = block_diag(A, B)
-        >>> # Result: [[1, 2, 0, 0],
-        >>> #          [3, 4, 0, 0],
-        >>> #          [0, 0, 5, 6],
-        >>> #          [0, 0, 7, 8]]
+        ```python
+        import jax.numpy as jnp
+
+        A = jnp.array([[1, 2], [3, 4]])
+        B = jnp.array([[5, 6], [7, 8]])
+        C = block_diag(A, B)
+        # Result: [[1, 2, 0, 0],
+        #          [3, 4, 0, 0],
+        #          [0, 0, 5, 6],
+        #          [0, 0, 7, 8]]
+        ```
     """
     batch_shape = arrs[0].shape[:-2]
 
@@ -284,15 +304,17 @@ def get_ports(S: sax.SType) -> tuple[sax.Port, ...] | tuple[sax.PortMode]:
         TypeError: If input is a model function (not evaluated) or invalid type.
 
     Example:
-        >>> # Single-mode matrix
-        >>> s_matrix = {("in", "out"): 0.9, ("out", "in"): 0.9}
-        >>> ports = get_ports(s_matrix)
-        >>> # Result: ("in", "out")
-        >>>
-        >>> # Multimode matrix
-        >>> s_mm = {("in@TE", "out@TE"): 0.9, ("in@TM", "out@TM"): 0.8}
-        >>> ports_mm = get_ports(s_mm)
-        >>> # Result: ("in@TE", "in@TM", "out@TE", "out@TM")
+        ```python
+        # Single-mode matrix
+        s_matrix = {("in", "out"): 0.9, ("out", "in"): 0.9}
+        ports = get_ports(s_matrix)
+        # Result: ("in", "out")
+
+        # Multimode matrix
+        s_mm = {("in@TE", "out@TE"): 0.9, ("in@TM", "out@TM"): 0.8}
+        ports_mm = get_ports(s_mm)
+        # Result: ("in@TE", "in@TM", "out@TE", "out@TM")
+        ```
     """
     if callable(S):
         msg = (
@@ -326,14 +348,16 @@ def get_modes(S: sax.STypeMM) -> tuple[sax.Mode, ...]:
         Tuple of unique mode names found in the S-matrix.
 
     Example:
-        >>> # Multimode S-matrix with TE and TM modes
-        >>> s_mm = {
-        ...     ("in@TE", "out@TE"): 0.9,
-        ...     ("in@TM", "out@TM"): 0.8,
-        ...     ("in@TE", "out@TM"): 0.1,
-        ... }
-        >>> modes = get_modes(s_mm)
-        >>> # Result: ("TE", "TM")
+        ```python
+        # Multimode S-matrix with TE and TM modes
+        s_mm = {
+            ("in@TE", "out@TE"): 0.9,
+            ("in@TM", "out@TM"): 0.8,
+            ("in@TE", "out@TM"): 0.1,
+        }
+        modes = get_modes(s_mm)
+        # Result: ("TE", "TM")
+        ```
     """
     return tuple(get_mode(pm) for pm in get_ports(S))
 
@@ -352,11 +376,13 @@ def get_mode(pm: sax.PortMode) -> sax.Mode:
         The mode identifier (part after @).
 
     Example:
-        >>> mode = get_mode("waveguide1@TE")
-        >>> # Result: "TE"
-        >>>
-        >>> mode = get_mode("input@TM")
-        >>> # Result: "TM"
+        ```python
+        mode = get_mode("waveguide1@TE")
+        # Result: "TE"
+
+        mode = get_mode("input@TM")
+        # Result: "TM"
+        ```
     """
     return pm.split("@")[1]
 
@@ -377,16 +403,18 @@ def get_port_combinations(S: sax.Model | sax.SType) -> tuple[tuple[str, str], ..
         TypeError: If input is a model function (not evaluated).
 
     Example:
-        >>> # S-matrix with cross-coupling
-        >>> s_matrix = {
-        ...     ("in1", "out1"): 0.9,
-        ...     ("in1", "out2"): 0.1,
-        ...     ("in2", "out1"): 0.1,
-        ...     ("in2", "out2"): 0.9,
-        ... }
-        >>> combinations = get_port_combinations(s_matrix)
-        >>> # Result:
-        >>> # (("in1", "out1"), ("in1", "out2"), ("in2", "out1"), ("in2", "out2"))
+        ```python
+        # S-matrix with cross-coupling
+        s_matrix = {
+            ("in1", "out1"): 0.9,
+            ("in1", "out2"): 0.1,
+            ("in2", "out1"): 0.1,
+            ("in2", "out2"): 0.9,
+        }
+        combinations = get_port_combinations(s_matrix)
+        # Result:
+        # (("in1", "out1"), ("in1", "out2"), ("in2", "out1"), ("in2", "out2"))
+        ```
     """
     if callable(S):
         msg = (
