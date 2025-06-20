@@ -99,6 +99,7 @@ def circuit(
         top_level_name=top_level_name,
     )
     recnet = convert_nets_to_connections(recnet)
+    recnet = resolve_array_instances(recnet)
     recnet = remove_unused_instances(recnet)
     _validate_netlist_ports(recnet)
     dependency_dag = _create_dag(recnet, models, validate=True)
@@ -249,6 +250,7 @@ def _flat_circuit(
         for name, inst in instances.items()
     }
     default_settings = merge_dicts(model_settings, netlist_settings)
+    default_settings = {_strip_array_index(k): v for k, v in default_settings.items()}
     analyzed = analyze_fn(dummy_instances, connections, ports)
 
     def _circuit(**settings: sax.SettingsValue) -> sax.SType:
@@ -258,7 +260,9 @@ def _flat_circuit(
 
         instances: dict[str, sax.SType] = {}
         for inst_name, model in inst2model.items():
-            instances[inst_name] = model(**full_settings.get(inst_name, {}))
+            instances[inst_name] = model(
+                **full_settings.get(_strip_array_index(inst_name), {})
+            )
 
         return evaluate_fn(analyzed, instances)
 
@@ -507,3 +511,42 @@ def _validate_netlist_ports(netlist: sax.RecursiveNetlist) -> None:
             f"at least 2 ports need to be defined. Got {ports_str}."
         )
         raise ValueError(msg)
+
+
+def _strip_array_index(s: sax.InstanceName) -> sax.Name:
+    return s.split("<")[0]
+
+
+def resolve_array_instance(name: sax.Name, inst: sax.Instance) -> sax.Instances:
+    if "array" not in inst:
+        return {name: inst}
+    ret = {}
+    for i in range(inst["array"]["columns"]):
+        for j in range(inst["array"]["rows"]):
+            ret[f"{name}<{i}.{j}>"] = {"component": inst["component"]}
+            if "settings" in inst:
+                ret[f"{name}<{i}.{j}>"]["settings"] = inst["settings"]
+    return ret
+
+
+@overload
+def resolve_array_instances(netlist: sax.RecursiveNetlist) -> sax.RecursiveNetlist: ...
+
+
+@overload
+def resolve_array_instances(netlist: sax.Netlist) -> sax.Netlist: ...
+
+
+def resolve_array_instances(netlist: sax.AnyNetlist) -> sax.AnyNetlist:
+    if (net := sax.try_into[sax.Netlist](netlist)) is not None:
+        net = {**net}  # shallow copy
+        instances = {}
+        for name, inst in net["instances"].items():
+            instances.update(resolve_array_instance(name, inst))
+        net["instances"] = instances
+        return net
+    if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
+        return {
+            k: cast(sax.Netlist, resolve_array_instances(v)) for k, v in recnet.items()
+        }
+    return netlist

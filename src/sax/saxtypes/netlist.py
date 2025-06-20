@@ -42,6 +42,7 @@ def val_instance(obj: Any) -> Instance:
                 f"Component dictionaries need to contain a 'component' key. Got: {obj}."
             )
             raise TypeError(msg)
+        array = obj.get("array", None)
         component = obj["component"]
         settings = {**obj.get("settings", {})}
         if "info" in obj:
@@ -50,14 +51,31 @@ def val_instance(obj: Any) -> Instance:
             "component": component,
             "settings": settings,
         }
+        if isinstance(array, dict) and "columns" in array and "rows" in array:
+            inst["array"] = {
+                "columns": int(array["columns"]),
+                "rows": int(array["rows"]),
+            }
+            if "column_pitch" in array:
+                inst["array"]["column_pitch"] = float(array["column_pitch"])
+            if "row_pitch" in array:
+                inst["array"]["row_pitch"] = float(array["row_pitch"])
         return inst
     msg = f"Cannot coerce {obj} [{type(obj)}] into a component dictionary."
     raise TypeError(msg)
 
 
+class ArrayConfig(TypedDict):
+    columns: int
+    rows: int
+    column_pitch: NotRequired[float]
+    row_pitch: NotRequired[float]
+
+
 class _Instance(TypedDict):
     component: Component
     settings: NotRequired[Settings]
+    array: NotRequired[ArrayConfig]
 
 
 Instance: TypeAlias = Annotated[_Instance, val(val_instance)]
