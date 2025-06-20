@@ -81,7 +81,8 @@ dev = [
   "tbump>=6.0.0",
   "tmm>=0.2.0",
   "towncrier>=24.0.0",
-  "vega-datasets>=0.9.0"
+  "vega-datasets>=0.9.0",
+  "nb-clean>=4.0.1"
 ]
 
 [tool.pytest.ini_options]
