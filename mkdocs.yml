@@ -60,6 +60,9 @@ nav:
       - models: models.md
   - changelog: changelog.md
 
+extra_css:
+  - assets/custom.css
+
 plugins:
   - search
   - autorefs
