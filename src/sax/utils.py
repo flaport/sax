@@ -46,7 +46,30 @@ __all__ = [
 def maybe(
     func: Callable[..., T], /, exc: type[Exception] = Exception
 ) -> Callable[..., T | None]:
-    """Try a function, return None if it fails."""
+    """Create a safe version of a function that returns None on exceptions.
+
+    Wraps a function to catch specified exceptions and return None instead of
+    raising them. This is useful for optional operations or when you want to
+    gracefully handle failures.
+
+    Args:
+        func: Function to wrap for safe execution.
+        exc: Exception type(s) to catch. Defaults to Exception (catches all).
+
+    Returns:
+        Wrapped function that returns None when the specified exception occurs.
+
+    Example:
+        ```python
+        # Safe division that returns None for division by zero
+        safe_divide = maybe(lambda x, y: x / y, ZeroDivisionError)
+        result = safe_divide(10, 0)  # Returns None instead of raising
+
+        # Safe file reading
+        safe_read = maybe(lambda f: open(f).read(), FileNotFoundError)
+        content = safe_read("nonexistent.txt")  # Returns None
+        ```
+    """
 
     @wraps(func)
     def new_func(*args: Any, **kwargs: Any) -> T | None:  # noqa: ANN401
@@ -59,12 +82,54 @@ def maybe(
 
 
 def copy_settings(settings: sax.Settings) -> sax.Settings:
-    """Copy a parameter dictionary."""
+    """Create a deep copy of a settings dictionary.
+
+    Creates a deep copy of a settings dictionary to avoid unintended mutations
+    of shared parameter dictionaries.
+
+    Args:
+        settings: Settings dictionary to copy.
+
+    Returns:
+        Deep copy of the input settings dictionary.
+
+    Example:
+        ```python
+        original = {"wl": 1.55, "temp": 300, "nested": {"param": 1.0}}
+        copied = copy_settings(original)
+        copied["nested"]["param"] = 2.0  # Doesn't affect original
+        ```
+    """
     return deepcopy(settings)
 
 
 def read(content_or_filename: str | Path | sax.IOLike) -> str:
-    """Read the contents of a file."""
+    r"""Read content from string, file path, or file-like object.
+
+    Flexible content reader that can handle string content directly, file paths,
+    or file-like objects. Automatically detects the input type and reads accordingly.
+
+    Args:
+        content_or_filename: Content as string (if contains newlines), file path,
+            or file-like object with read() method.
+
+    Returns:
+        Content as string.
+
+    Example:
+        ```python
+        # Direct string content
+        content = read("line1\\nline2")
+
+        # From file path
+        content = read("config.yaml")
+
+        # From file-like object
+        from io import StringIO
+
+        content = read(StringIO("data"))
+        ```
+    """
     if isinstance(content_or_filename, str) and "\n" in content_or_filename:
         return content_or_filename
 
@@ -75,7 +140,34 @@ def read(content_or_filename: str | Path | sax.IOLike) -> str:
 
 
 def load_netlist(content_or_filename: str | Path | sax.IOLike) -> sax.Netlist:
-    """Load a SAX netlist."""
+    """Load a SAX netlist from YAML content or file.
+
+    Parses YAML content to create a SAX netlist dictionary. The YAML should
+    contain instances, connections, and ports sections.
+
+    Args:
+        content_or_filename: YAML content as string, file path, or file-like object.
+
+    Returns:
+        Parsed netlist dictionary.
+
+    Example:
+        ```python
+        # Load from file
+        netlist = load_netlist("circuit.yml")
+
+        # Load from YAML string
+        yaml_content = '''
+        instances:
+          wg1:
+            component: waveguide
+        ports:
+          in: wg1,in
+          out: wg1,out
+        '''
+        netlist = load_netlist(yaml_content)
+        ```
+    """
     return yaml.safe_load(read(content_or_filename))
 
 
@@ -83,7 +175,26 @@ def load_recursive_netlist(
     top_level_path: str | Path,
     ext: str = ".pic.yml",
 ) -> sax.RecursiveNetlist:
-    """Load a SAX Recursive Netlist."""
+    """Load a SAX recursive netlist from a directory of YAML files.
+
+    Recursively loads all YAML files with the specified extension from a directory
+    to create a recursive netlist. Each file becomes a component in the recursive
+    netlist, with the filename (without extension) as the component name.
+
+    Args:
+        top_level_path: Path to the top-level netlist file.
+        ext: File extension to search for. Defaults to ".pic.yml".
+
+    Returns:
+        Recursive netlist dictionary mapping component names to their netlists.
+
+    Example:
+        ```python
+        # Load all .pic.yml files in directory
+        recnet = load_recursive_netlist("circuits/main.pic.yml")
+        # Result: {"main": {...}, "component1": {...}, "component2": {...}}
+        ```
+    """
     top_level_path = Path(top_level_path)
     folder_path = top_level_path.parent
 
@@ -98,8 +209,33 @@ def load_recursive_netlist(
     return recnet
 
 
-def clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") -> str:
-    """Clean a string such that it is a valid python identifier."""
+def clean_string(
+    s: str, dot: str = "p", minus: str = "m", other: str = "_"
+) -> sax.Name:
+    """Clean a string to create a valid Python identifier.
+
+    Converts arbitrary strings to valid Python identifiers by replacing special
+    characters and ensuring the result starts with a letter or underscore.
+
+    Args:
+        s: String to clean.
+        dot: Replacement for dots. Defaults to "p".
+        minus: Replacement for minus/dash. Defaults to "m".
+        other: Replacement for other special characters. Defaults to "_".
+
+    Returns:
+        Valid Python identifier string.
+
+    Raises:
+        ValueError: If cleaning fails to produce a valid identifier.
+
+    Example:
+        ```python
+        clean_string("my-component.v2")  # Result: "my_componentpv2"
+        clean_string("2stage_amp")  # Result: "_2stage_amp"
+        clean_string("TE-mode")  # Result: "TEm_mode"
+        ```
+    """
     s = s.strip()
     s = s.replace(".", dot)  # dot
     s = s.replace("-", minus)  # minus
@@ -113,7 +249,28 @@ def clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") -> 
 
 
 def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
-    """Get the parameters of a SAX model function."""
+    """Extract default parameter settings from a SAX model function.
+
+    Inspects a model function's signature to extract default parameter values.
+    This is useful for understanding what parameters a model accepts and their
+    default values.
+
+    Args:
+        model: SAX model function or model factory to inspect.
+
+    Returns:
+        Dictionary of parameter names and their default values.
+
+    Example:
+        ```python
+        def my_model(wl=1.55, length=10.0, neff=2.4):
+            return some_s_matrix
+
+
+        settings = get_settings(my_model)
+        # Result: {"wl": 1.55, "length": 10.0, "neff": 2.4}
+        ```
+    """
     signature = inspect.signature(model)
     settings: sax.Settings = {
         k: (v.default if not isinstance(v, dict) else v)
@@ -124,7 +281,26 @@ def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
 
 
 def merge_dicts(*dicts: dict) -> dict:
-    """Merge (possibly deeply nested) dictionaries."""
+    """Merge multiple dictionaries with support for nested merging.
+
+    Recursively merges multiple dictionaries, with later dictionaries
+    taking precedence over earlier ones. Nested dictionaries are merged
+    recursively rather than replaced entirely.
+
+    Args:
+        *dicts: Variable number of dictionaries to merge.
+
+    Returns:
+        Merged dictionary with nested structures preserved.
+
+    Example:
+        ```python
+        dict1 = {"a": 1, "nested": {"x": 10}}
+        dict2 = {"b": 2, "nested": {"y": 20}}
+        merged = merge_dicts(dict1, dict2)
+        # Result: {"a": 1, "b": 2, "nested": {"x": 10, "y": 20}}
+        ```
+    """
     num_dicts = len(dicts)
 
     if num_dicts < 1:
@@ -152,16 +328,38 @@ def replace_kwargs(func: Callable, **kwargs: sax.SettingsValue) -> None:
 def update_settings(
     settings: sax.Settings, *compnames: str, **kwargs: sax.SettingsValue
 ) -> sax.Settings:
-    """Update a nested settings dictionary.
+    """Update a nested settings dictionary with new parameter values.
 
-    .. note ::
+    Updates settings for specific components or globally. Supports nested
+    parameter dictionaries and selective component updates.
 
-        1. Even though it's possible to update parameter dictionaries in place,
-        this function is convenient to apply certain parameters (e.g. wavelength
-        'wl' or temperature 'T') globally.
-        2. This operation never updates the given settings dictionary inplace.
-        3. Any non-float keyword arguments will be silently ignored.
+    Args:
+        settings: Original settings dictionary to update.
+        *compnames: Component names to update. If empty, updates all components.
+        **kwargs: Parameter values to update.
 
+    Returns:
+        Updated settings dictionary (does not modify original).
+
+    Note:
+        - This operation never updates the given settings dictionary in place.
+        - Any non-float keyword arguments will be silently ignored.
+        - Even though it's possible to update parameter dictionaries in place,
+          this function is convenient to apply certain parameters (e.g. wavelength
+          'wl' or temperature 'T') globally.
+
+    Example:
+        ```python
+        settings = {
+            "wg1": {"length": 10.0, "neff": 2.4},
+            "wg2": {"length": 20.0, "neff": 2.4},
+        }
+        # Update all components
+        updated = update_settings(settings, wl=1.55)
+
+        # Update specific component
+        updated = update_settings(settings, "wg1", length=15.0)
+        ```
     """
     _settings = {}
     if not compnames:
@@ -185,12 +383,48 @@ def update_settings(
 
 
 def flatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
-    """Flatten a nested dictionary."""
+    """Flatten a nested dictionary into a single-level dictionary.
+
+    Converts a nested dictionary into a flat dictionary by concatenating
+    nested keys with a separator.
+
+    Args:
+        dic: Nested dictionary to flatten.
+        sep: Separator to use between nested keys. Defaults to ",".
+
+    Returns:
+        Flattened dictionary with concatenated keys.
+
+    Example:
+        ```python
+        nested = {"a": {"b": 1, "c": {"d": 2}}, "e": 3}
+        flat = flatten_dict(nested)
+        # Result: {"a,b": 1, "a,c,d": 2, "e": 3}
+        ```
+    """
     return _flatten_dict(dic, sep=sep)
 
 
 def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
-    """Unflatten a flattened dictionary."""
+    """Unflatten a dictionary by splitting keys and creating nested structure.
+
+    Converts a flattened dictionary back to nested form by splitting keys
+    on the separator and creating the nested hierarchy.
+
+    Args:
+        dic: Flattened dictionary to unflatten.
+        sep: Separator used in the flattened keys. Defaults to ",".
+
+    Returns:
+        Nested dictionary with original structure restored.
+
+    Example:
+        ```python
+        flat = {"a,b": 1, "a,c,d": 2, "e": 3}
+        nested = unflatten_dict(flat)
+        # Result: {"a": {"b": 1, "c": {"d": 2}}, "e": 3}
+        ```
+    """
     # from: https://gist.github.com/fmder/494aaa2dd6f8c428cede
     items = {}
 
@@ -212,20 +446,41 @@ def unflatten_dict(dic: dict[str, Any], sep: str = ",") -> dict[str, Any]:
 def grouped_interp(
     wl: sax.FloatArray, wls: sax.FloatArray, phis: sax.FloatArray
 ) -> sax.FloatArray:
-    """Grouped phase interpolation.
+    """Perform grouped phase interpolation for optical phase data.
 
-    .. note ::
+    Grouped interpolation is useful for interpolating phase values where each
+    datapoint is doubled (very close together) to give an indication of the
+    phase variation at that point. This is common in optical simulations where
+    phase unwrapping is needed.
 
-        Grouped interpolation is useful to interpolate phase values where each datapoint
-        is doubled (very close together) to give an indication of the phase
-        variation at that point.
+    Args:
+        wl: Wavelength points where interpolation is desired.
+        wls: Reference wavelength points (1D array).
+        phis: Phase values at reference wavelengths (1D array).
 
-    .. warning ::
+    Returns:
+        Interpolated phase values at the requested wavelengths.
 
-        this interpolation is only accurate in the range
-        `[wls[0], wls[-2])` (`wls[-2]` not included). Any extrapolation
-        outside these bounds can yield unexpected results!
+    Warning:
+        This interpolation is only accurate in the range [wls[0], wls[-2])
+        (wls[-2] not included). Any extrapolation outside these bounds can
+        yield unexpected results!
 
+    Raises:
+        ValueError: If wls or phis are not 1D arrays or have mismatched shapes.
+
+    Example:
+        ```python
+        import jax.numpy as jnp
+
+        # Reference phase data with grouped points
+        wls_ref = jnp.array([1.50, 1.501, 1.55, 1.551, 1.60, 1.601])
+        phis_ref = jnp.array([0.1, 0.11, 0.5, 0.51, 1.0, 1.01])
+
+        # Interpolate at new wavelengths
+        wl_new = jnp.linspace(1.51, 1.59, 10)
+        phis_interp = grouped_interp(wl_new, wls_ref, phis_ref)
+        ```
     """
     wl = jnp.asarray(wl)
     wls = jnp.asarray(wls)
@@ -244,7 +499,34 @@ def grouped_interp(
 
 
 def rename_params(model: sax.Model, renamings: dict[str, str]) -> sax.Model:
-    """Rename the parameters of a `Model` or `ModelFactory`."""
+    """Rename the parameters of a model function.
+
+    Creates a new model with renamed parameters while preserving the original
+    functionality and default values.
+
+    Args:
+        model: Model function to rename parameters for.
+        renamings: Dictionary mapping old parameter names to new names.
+
+    Returns:
+        New model function with renamed parameters.
+
+    Raises:
+        ValueError: If multiple old names map to the same new name.
+
+    Example:
+        ```python
+        def original_model(wavelength=1.55, eff_index=2.4):
+            return some_s_matrix
+
+
+        # Rename parameters to standard names
+        renamed_model = rename_params(
+            original_model, {"wavelength": "wl", "eff_index": "neff"}
+        )
+        # Now can call: renamed_model(wl=1.55, neff=2.4)
+        ```
+    """
     reversed_renamings = {v: k for k, v in renamings.items()}
     if len(reversed_renamings) < len(renamings):
         msg = "Multiple old names point to the same new name!"
@@ -287,7 +569,37 @@ def rename_ports(S: sax.Model, renamings: dict[str, str]) -> sax.Model: ...
 def rename_ports(
     S: sax.SType | sax.Model, renamings: dict[str, str]
 ) -> sax.SType | sax.Model:
-    """Rename the ports of an `SDict`, `Model` or `ModelFactory`."""
+    """Rename the ports of an S-matrix or model.
+
+    Creates a new S-matrix or model with renamed ports while preserving
+    all S-parameter values and relationships.
+
+    Args:
+        S: S-matrix in any format or model function to rename ports for.
+        renamings: Dictionary mapping old port names to new names.
+
+    Returns:
+        S-matrix or model with renamed ports.
+
+    Raises:
+        ValueError: If the input type is not supported for port renaming.
+
+    Example:
+        ```python
+        # Rename ports in S-matrix
+        s_matrix = {("input", "output"): 0.9}
+        renamed_s = rename_ports(s_matrix, {"input": "in", "output": "out"})
+        # Result: {("in", "out"): 0.9}
+
+
+        # Rename ports in model
+        def original_model(wl=1.55):
+            return {("input", "output"): 0.9}
+
+
+        renamed_model = rename_ports(original_model, {"input": "in", "output": "out"})
+        ```
+    """
     if (scoo := sax.try_into[sax.SCoo](S)) is not None:
         Si, Sj, Sx, ports_map = scoo
         ports_map = {renamings[p]: i for p, i in ports_map.items()}
@@ -310,7 +622,24 @@ def rename_ports(
 
 
 def hash_dict(dic: dict) -> int:
-    """Hash a dictionary to an integer."""
+    """Compute a hash value for a dictionary.
+
+    Creates a deterministic hash of a dictionary that can contain NumPy arrays
+    and nested structures. Useful for caching and change detection.
+
+    Args:
+        dic: Dictionary to hash.
+
+    Returns:
+        Integer hash value.
+
+    Example:
+        ```python
+        settings = {"wl": 1.55, "length": 10.0}
+        hash_val = hash_dict(settings)
+        # Same settings will always produce the same hash
+        ```
+    """
     return int(
         md5(  # noqa: S324
             orjson.dumps(
@@ -322,21 +651,70 @@ def hash_dict(dic: dict) -> int:
 
 
 class Normalization(NamedTuple):
-    """Normalization parameters for an array."""
+    """Normalization parameters for an array.
+
+    Contains the mean and standard deviation values needed to normalize
+    and denormalize arrays. Typically used for machine learning preprocessing.
+
+    Attributes:
+        mean: Mean values for normalization.
+        std: Standard deviation values for normalization.
+    """
 
     mean: sax.ComplexArray
     std: sax.ComplexArray
 
 
 def normalization(x: sax.ComplexArray, axis: int | None = None) -> Normalization:
-    """Calculate the mean and standard deviation of an array along a given axis."""
+    """Calculate normalization parameters (mean and std) for an array.
+
+    Computes the mean and standard deviation of an array along the specified
+    axis for use in normalization operations.
+
+    Args:
+        x: Input array to compute normalization parameters for.
+        axis: Axis along which to compute statistics. If None, computes over
+            the entire array.
+
+    Returns:
+        Normalization object containing mean and standard deviation.
+
+    Example:
+        ```python
+        import jax.numpy as jnp
+
+        data = jnp.array([[1, 2, 3], [4, 5, 6]])
+        norm_params = normalization(data, axis=0)
+        # Computes mean and std along axis 0
+        ```
+    """
     if axis is None:
         return Normalization(x.mean(), x.std())
     return Normalization(x.mean(axis), x.std(axis))
 
 
 def cartesian_product(*arrays: sax.ComplexArray) -> sax.ComplexArray:
-    """Calculate the n-dimensional cartesian product the arrays."""
+    """Calculate the n-dimensional Cartesian product of input arrays.
+
+    Creates all possible combinations of elements from the input arrays,
+    useful for parameter sweeps and grid generation.
+
+    Args:
+        *arrays: Variable number of arrays to compute Cartesian product for.
+
+    Returns:
+        Array where each row is a unique combination of input elements.
+
+    Example:
+        ```python
+        import jax.numpy as jnp
+
+        x = jnp.array([1, 2])
+        y = jnp.array([10, 20])
+        product = cartesian_product(x, y)
+        # Result: [[1, 10], [1, 20], [2, 10], [2, 20]]
+        ```
+    """
     ixarrays = jnp.ix_(*arrays)
     barrays = jnp.broadcast_arrays(*ixarrays)
     sarrays = jnp.stack(barrays, -1)
@@ -345,13 +723,48 @@ def cartesian_product(*arrays: sax.ComplexArray) -> sax.ComplexArray:
 
 
 def normalize(x: sax.ComplexArray, normalization: Normalization) -> sax.ComplexArray:
-    """Normalize an array with a given mean and standard deviation."""
+    """Normalize an array using provided normalization parameters.
+
+    Applies z-score normalization: (x - mean) / std.
+
+    Args:
+        x: Array to normalize.
+        normalization: Normalization parameters containing mean and std.
+
+    Returns:
+        Normalized array with zero mean and unit standard deviation.
+
+    Example:
+        ```python
+        data = jnp.array([1, 2, 3, 4, 5])
+        norm_params = normalization(data)
+        normalized = normalize(data, norm_params)
+        ```
+    """
     mean, std = normalization
     return (x - mean) / std
 
 
 def denormalize(x: sax.ComplexArray, normalization: Normalization) -> sax.ComplexArray:
-    """Denormalize an array with a given mean and standard deviation."""
+    """Denormalize an array using provided normalization parameters.
+
+    Reverses z-score normalization: x * std + mean.
+
+    Args:
+        x: Normalized array to denormalize.
+        normalization: Normalization parameters containing mean and std.
+
+    Returns:
+        Denormalized array with original scale and offset.
+
+    Example:
+        ```python
+        normalized_data = jnp.array([-1, 0, 1])  # normalized
+        norm_params = Normalization(mean=3.0, std=2.0)
+        original = denormalize(normalized_data, norm_params)
+        # Result: [1, 3, 5]
+        ```
+    """
     mean, std = normalization
     return x * std + mean
 

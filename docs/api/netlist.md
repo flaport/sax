@@ -1,6 +1,0 @@
-# API
-
-
-## Functions
-
-::: sax.netlist

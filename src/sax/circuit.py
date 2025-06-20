@@ -80,16 +80,58 @@ def circuit(
 ) -> tuple[sax.Model, sax.CircuitInfo]:
     """Create a circuit function for a given netlist.
 
-    Args:
-        netlist: The netlist to create a circuit for.
-        models: A dictionary of models to use in the circuit.
-        backend: The backend to use for the circuit.
-        return_type: The type of the circuit function to return.
-        top_level_name: select a circuit from the recnet to be considered 'top level'.
-            Ignored when no matching name found in recursive netlist.
-        ignore_impossible_connections: Ignore connections to missing instance ports
-            in stead of erroring out.
+    Constructs a circuit model from a netlist description by connecting component
+    models according to the specified connections. The resulting circuit function
+    can be called with parameters to evaluate the overall S-matrix.
 
+    Args:
+        netlist: Circuit netlist specifying instances, connections, and ports.
+            Can be a flat netlist or recursive netlist dictionary.
+        models: Dictionary mapping component names to their model functions.
+            If None, models must be provided in the netlist itself.
+        backend: Circuit analysis backend to use. Options include "default",
+            "klu", "filipsson_gunnar", "additive", "forward". Defaults to "default".
+        return_type: Format of the returned S-matrix. Options: "SDict", "SDense",
+            "SCoo". Defaults to "SDict".
+        top_level_name: Name of the top-level circuit in recursive netlists.
+            Defaults to "top_level".
+        ignore_impossible_connections: If True, ignore connections to missing
+            instance ports instead of raising an error. Defaults to False.
+
+    Returns:
+        Tuple containing:
+            - Circuit model function that accepts parameters and returns S-matrix
+            - CircuitInfo object with DAG, models, and backend information
+
+    Raises:
+        RuntimeError: If circuit construction fails.
+        ValueError: If netlist or models are invalid.
+        KeyError: If required models are missing.
+
+    Example:
+        ```python
+        # Define component models
+        def waveguide(length=10.0, neff=2.4, wl=1.55):
+            phase = 2 * np.pi * neff * length / wl
+            return {("in", "out"): np.exp(1j * phase)}
+
+
+        # Create netlist
+        netlist = {
+            "instances": {
+                "wg1": {"component": "waveguide", "settings": {"length": 20.0}}
+            },
+            "connections": {},
+            "ports": {"in": "wg1,in", "out": "wg1,out"},
+        }
+
+        # Create circuit
+        models = {"waveguide": waveguide}
+        circuit_func, info = circuit(netlist, models)
+
+        # Evaluate circuit
+        s_matrix = circuit_func(wl=1.55)
+        ```
     """
     backend = validate_circuit_backend(backend)
 
@@ -175,7 +217,26 @@ def _create_dag(
 
 
 def draw_dag(dag: nx.DiGraph, *, with_labels: bool = True, **kwargs: Any) -> None:  # noqa: ANN401
-    """Draw a DAG using networkx and pydot."""
+    """Draw a directed acyclic graph (DAG) representing circuit dependencies.
+
+    Visualizes the dependency graph of a circuit using networkx. If pydot/graphviz
+    is available, uses hierarchical layout; otherwise falls back to a custom layout.
+
+    Args:
+        dag: Directed acyclic graph representing circuit component dependencies.
+        with_labels: Whether to display node labels. Defaults to True.
+        **kwargs: Additional keyword arguments passed to networkx draw function.
+
+    Example:
+        ```python
+        import matplotlib.pyplot as plt
+
+        # Assuming you have a circuit with dependencies
+        _, info = circuit(netlist, models)
+        draw_dag(info.dag)
+        plt.show()
+        ```
+    """
     if shutil.which("dot"):
         return nx.draw(
             dag,
@@ -190,12 +251,37 @@ def get_required_circuit_models(
     netlist: sax.AnyNetlist,
     models: dict[str, sax.Model] | None = None,
 ) -> list[str]:
-    """Figure out which models are needed for a given netlist.
+    """Determine which component models are required for a given netlist.
+
+    Analyzes a netlist to identify all component types that need model functions.
+    This is useful for validating that all required models are available before
+    circuit construction.
 
     Args:
-        netlist: The netlist to create a circuit for.
-        models: A dictionary of models to use in the circuit.
+        netlist: Circuit netlist to analyze for component dependencies.
+        models: Optional dictionary of available models. Used to filter out
+            models that are already provided.
 
+    Returns:
+        List of component names that require model functions.
+
+    Example:
+        ```python
+        netlist = {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "dc1": {"component": "directional_coupler"},
+            },
+            "ports": {"in": "wg1,in", "out": "dc1,out"},
+        }
+        required = get_required_circuit_models(netlist)
+        # Result: ["waveguide", "directional_coupler"]
+
+        # With some models already available
+        models = {"waveguide": my_waveguide_model}
+        required = get_required_circuit_models(netlist, models)
+        # Result: ["directional_coupler"]
+        ```
     """
     instance_models = _extract_instance_models(netlist)
     recnet: sax.RecursiveNetlist = into_recnet(

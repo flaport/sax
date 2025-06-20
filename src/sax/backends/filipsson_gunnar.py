@@ -20,7 +20,37 @@ def analyze_instances_fg(
     instances: sax.Instances,
     models: sax.Models,
 ) -> dict[sax.InstanceName, sax.SDict]:
-    """Analyze instances for the Filipsson Gunnar backend."""
+    """Analyze circuit instances for the Filipsson-Gunnar backend.
+
+    Prepares instance S-matrices for the Filipsson-Gunnar backend by converting
+    all component models to SDict format. This backend implements the classic
+    Filipsson-Gunnar algorithm for S-matrix interconnection of multiports.
+
+    Args:
+        instances: Dictionary mapping instance names to instance definitions
+            containing component names and settings.
+        models: Dictionary mapping component names to their model functions.
+
+    Returns:
+        Dictionary mapping instance names to their S-matrices in SDict format.
+
+    Note:
+        The Filipsson-Gunnar algorithm is a systematic method for computing
+        the overall S-matrix of interconnected multiport networks described in:
+        Filipsson, Gunnar. "A new general computer algorithm for S-matrix
+        calculation of interconnected multiports." 11th European Microwave
+        Conference. IEEE, 1981.
+
+    Example:
+        ```python
+        instances = {
+            "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
+            "dc1": {"component": "coupler", "settings": {"coupling": 0.1}},
+        }
+        models = {"waveguide": waveguide_model, "coupler": coupler_model}
+        analyzed = analyze_instances_fg(instances, models)
+        ```
+    """
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)
     model_names = set()
@@ -38,7 +68,29 @@ def analyze_circuit_fg(
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
-    """Analyze a circuit for the Filipsson Gunnar backend."""
+    """Analyze circuit topology for the Filipsson-Gunnar backend.
+
+    Prepares the circuit connection information for the Filipsson-Gunnar backend
+    evaluation. This implementation currently skips detailed analysis and passes
+    the connection information directly to the evaluation phase.
+
+    Args:
+        analyzed_instances: Instance S-matrices from analyze_instances_fg.
+            Not used in this analysis step but required for interface consistency.
+        connections: Dictionary mapping instance ports to each other, defining
+            internal circuit connections.
+        ports: Dictionary mapping external port names to instance ports.
+
+    Returns:
+        Tuple containing connections and ports information for circuit evaluation.
+
+    Example:
+        ```python
+        connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        ports = {"in": "wg1,in", "out": "wg2,out"}
+        analyzed = analyze_circuit_fg(analyzed_instances, connections, ports)
+        ```
+    """
     return connections, ports  # skip analysis for now
 
 
@@ -46,7 +98,44 @@ def evaluate_circuit_fg(
     analyzed: Any,  # noqa: ANN401
     instances: dict[str, sax.SType],
 ) -> sax.SDict:
-    """Evaluate a circuit for the given sdicts."""
+    """Evaluate circuit S-matrix using the Filipsson-Gunnar algorithm.
+
+    Computes the overall circuit S-matrix by systematically interconnecting
+    multiport networks using the Filipsson-Gunnar algorithm. This method
+    iteratively applies equation 6 from the original paper to connect ports.
+
+    The algorithm:
+    1. Creates a block diagonal S-matrix from all component S-matrices
+    2. Iteratively interconnects ports according to the connections
+    3. Applies the Filipsson-Gunnar interconnection formula for each connection
+    4. Extracts the final S-matrix for external ports
+
+    Args:
+        analyzed: Circuit analysis data from analyze_circuit_fg containing
+            connections and ports information.
+        instances: Dictionary mapping instance names to their evaluated S-matrices
+            in any SAX format (will be converted to SDict).
+
+    Returns:
+        Circuit S-matrix in SDict format with external port combinations as keys.
+
+    Note:
+        The interconnection formula used is equation 6 from:
+        Filipsson, Gunnar. "A new general computer algorithm for S-matrix
+        calculation of interconnected multiports." 11th European Microwave
+        Conference. IEEE, 1981.
+
+    Example:
+        ```python
+        # Circuit analysis and instances
+        analyzed = (connections, ports)
+        instances = {
+            "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
+            "dc1": {("in1", "out1"): 0.9, ("in1", "out2"): 0.1},
+        }
+        circuit_s = evaluate_circuit_fg(analyzed, instances)
+        ```
+    """
     connections, ports = analyzed
 
     # it's actually easier working w reverse:
@@ -115,11 +204,9 @@ def _interconnect_ports(
 ) -> dict[tuple[str, str], Any]:
     """Interconnect two ports in a given model.
 
-    .. note ::
-
-        the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.
-        "A new general computer algorithm for S-matrix calculation of interconnected
-        multiports." 11th European Microwave Conference. IEEE, 1981.'
+    > the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.
+    > "A new general computer algorithm for S-matrix calculation of interconnected
+    > multiports." 11th European Microwave Conference. IEEE, 1981.'
 
     """
     current_block_diag = {}
@@ -154,12 +241,9 @@ def _calculate_interconnected_value(
 ) -> Array:
     """Calculate an interconnected S-parameter value.
 
-    .. note ::
-
-        The interconnect algorithm is based on equation 6 in the paper below
-
-        Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
-        of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
+    > The interconnect algorithm is based on equation 6 in the paper below
+    > Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
+    > of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
 
     """
     result = vij + (

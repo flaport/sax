@@ -60,7 +60,7 @@ dev = [
   "ipykernel>=6.29.5",
   "ipykernel>=6.29.5",
   "matplotlib>=3.10.0",
-  "meow-sim>=0.13.0",
+  "meow-sim>=0.14.0",
   "mkautodoc>=0.2.0",
   "mkdocs-autorefs>=1.3.0",
   "mkdocs-material>=9.6.0",
@@ -114,6 +114,7 @@ ignore = [
   "PLR2004",  # magic-value-comparison
   "PLW2901",  # redefined-loop-name
   "RET504",  # unnecessary-assign
+  "RUF002",  # ambiguous-unicode-character-docstring
   "TC001",  # typing-only-first-party-import
   "TC002",  # typing-only-third-party-import
   "TC003",  # typing-only-standard-library-import
@@ -138,7 +139,8 @@ select = ["ALL"]
   "N816",  # mixed-case-variable-in-global-scope
   "PLC2401",  # non-ascii-name
   "S101",  # assert
-  "SLF001"  # private-member-access
+  "SLF001",  # private-member-access
+  "T201"  # print
 ]
 "src/sax/saxtypes/*.py" = [
   "ANN401"  # any-type

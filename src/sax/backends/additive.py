@@ -20,7 +20,30 @@ def analyze_instances_additive(
     instances: sax.Instances,
     models: sax.Models,
 ) -> dict[sax.InstanceName, sax.SDict]:
-    """Analyze instances for the additive backend."""
+    """Analyze circuit instances for the additive backend.
+
+    Prepares instance S-matrices for the additive backend by converting all
+    component models to SDict format. The additive backend uses a graph-based
+    approach with path finding to compute circuit responses.
+
+    Args:
+        instances: Dictionary mapping instance names to instance definitions
+            containing component names and settings.
+        models: Dictionary mapping component names to their model functions.
+
+    Returns:
+        Dictionary mapping instance names to their S-matrices in SDict format.
+
+    Example:
+        ```python
+        instances = {
+            "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
+            "dc1": {"component": "coupler", "settings": {"coupling": 0.1}},
+        }
+        models = {"waveguide": waveguide_model, "coupler": coupler_model}
+        analyzed = analyze_instances_additive(instances, models)
+        ```
+    """
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)
     model_names = set()
@@ -38,7 +61,29 @@ def analyze_circuit_additive(
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
-    """Analyze a circuit for the additive backend."""
+    """Analyze circuit topology for the additive backend.
+
+    Prepares the circuit connection information for the additive backend
+    evaluation. This backend uses graph theory to find all possible paths
+    between circuit ports and sums their contributions.
+
+    Args:
+        analyzed_instances: Instance S-matrices from analyze_instances_additive.
+            Not used in this analysis step but required for interface consistency.
+        connections: Dictionary mapping instance ports to each other, defining
+            internal circuit connections.
+        ports: Dictionary mapping external port names to instance ports.
+
+    Returns:
+        Tuple containing connections and ports information for circuit evaluation.
+
+    Example:
+        ```python
+        connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        ports = {"in": "wg1,in", "out": "wg2,out"}
+        analyzed = analyze_circuit_additive(analyzed_instances, connections, ports)
+        ```
+    """
     return connections, ports
 
 
@@ -46,7 +91,38 @@ def evaluate_circuit_additive(
     analyzed: Any,  # noqa: ANN401
     instances: dict[sax.InstanceName, sax.SDict],
 ) -> sax.SDict:
-    """Evaluate a circuit for the given sdicts."""
+    """Evaluate circuit S-matrix using additive path-based method.
+
+    Computes the circuit S-matrix by finding all possible signal paths between
+    external ports and additively combining their contributions. This approach
+    works well for circuits with multiple parallel paths.
+
+    The algorithm:
+    1. Creates a graph representation of the circuit
+    2. Finds all simple paths between each pair of external ports
+    3. Calculates the transmission/reflection for each path
+    4. Sums contributions from all paths
+
+    Args:
+        analyzed: Circuit analysis data from analyze_circuit_additive containing
+            connections and ports information.
+        instances: Dictionary mapping instance names to their evaluated S-matrices
+            in SDict format.
+
+    Returns:
+        Circuit S-matrix in SDict format with external port combinations as keys.
+
+    Example:
+        ```python
+        # Evaluated instance S-matrices
+        instances = {
+            "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
+            "dc1": {("in1", "out1"): 0.9, ("in1", "out2"): 0.1},
+        }
+        circuit_s = evaluate_circuit_additive(analyzed, instances)
+        # Result contains S-parameters between external ports
+        ```
+    """
     connections, ports = analyzed
     edges = _graph_edges(instances, connections, ports)
 

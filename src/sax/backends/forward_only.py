@@ -20,7 +20,35 @@ def analyze_instances_forward(
     instances: sax.Instances,
     models: sax.Models,
 ) -> dict[sax.InstanceName, sax.SCoo]:
-    """Analyze instances for the forward_only backend."""
+    """Analyze circuit instances for the forward-only backend.
+
+    Prepares instance S-matrices for the forward-only backend by converting all
+    component models to SCoo (coordinate) format. This backend is specialized
+    for feed-forward circuits without feedback loops.
+
+    Args:
+        instances: Dictionary mapping instance names to instance definitions
+            containing component names and settings.
+        models: Dictionary mapping component names to their model functions.
+
+    Returns:
+        Dictionary mapping instance names to their S-matrices in SCoo format.
+
+    Note:
+        The forward-only backend is designed for circuits with unidirectional
+        signal flow and no feedback paths. It uses a simplified approach that
+        may not be accurate for circuits with reflections or loops.
+
+    Example:
+        ```python
+        instances = {
+            "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
+            "amp1": {"component": "amplifier", "settings": {"gain": 20.0}},
+        }
+        models = {"waveguide": waveguide_model, "amplifier": amplifier_model}
+        analyzed = analyze_instances_forward(instances, models)
+        ```
+    """
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)
     model_names = set()
@@ -38,7 +66,29 @@ def analyze_circuit_forward(
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
-    """Analyze a circuit for the forward_only backend."""
+    """Analyze circuit topology for the forward-only backend.
+
+    Prepares the circuit connection information for the forward-only backend
+    evaluation. This backend assumes unidirectional signal flow and does not
+    account for reflections or bidirectional coupling.
+
+    Args:
+        analyzed_instances: Instance S-matrices from analyze_instances_forward.
+            Not used in this analysis step but required for interface consistency.
+        connections: Dictionary mapping instance ports to each other, defining
+            internal circuit connections.
+        ports: Dictionary mapping external port names to instance ports.
+
+    Returns:
+        Tuple containing connections and ports information for circuit evaluation.
+
+    Example:
+        ```python
+        connections = {"wg1,out": "amp1,in", "amp1,out": "wg2,in"}
+        ports = {"in": "wg1,in", "out": "wg2,out"}
+        analyzed = analyze_circuit_forward(analyzed_instances, connections, ports)
+        ```
+    """
     return connections, ports
 
 
@@ -46,7 +96,45 @@ def evaluate_circuit_forward(
     analyzed: Any,  # noqa: ANN401
     instances: dict[str, sax.SDict],
 ) -> sax.SDict:
-    """Evaluate a circuit for the given sdicts using simple matrix multiplication."""
+    """Evaluate circuit S-matrix using forward-only propagation.
+
+    Computes the circuit response using a simplified forward propagation approach.
+    This method assumes unidirectional signal flow and uses breadth-first search
+    to propagate signals through the circuit without considering reflections.
+
+    The algorithm:
+    1. Creates a directed graph representation of the circuit
+    2. For each input port, injects a unit signal
+    3. Uses BFS to propagate signals through the circuit
+    4. Records the signal levels at output ports
+
+    Args:
+        analyzed: Circuit analysis data from analyze_circuit_forward containing
+            connections and ports information.
+        instances: Dictionary mapping instance names to their evaluated S-matrices
+            in SDict format.
+
+    Returns:
+        Circuit S-matrix in SDict format, typically containing only forward
+        transmission terms (input to output ports).
+
+    Warning:
+        This backend is only accurate for feed-forward circuits without
+        reflections or feedback paths. For circuits with bidirectional coupling
+        or reflections, use the Filipsson-Gunnar or KLU backends instead.
+
+    Example:
+        ```python
+        # Circuit analysis and instances (feed-forward only)
+        analyzed = (connections, ports)
+        instances = {
+            "wg1": {("in", "out"): 0.95},  # Low-loss waveguide
+            "amp1": {("in", "out"): 10.0},  # 20dB amplifier
+        }
+        circuit_s = evaluate_circuit_forward(analyzed, instances)
+        # Result contains only forward transmission terms
+        ```
+    """
     connections, ports = analyzed
     edges = _graph_edges_directed(instances, connections, ports)
 

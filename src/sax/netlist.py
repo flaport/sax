@@ -22,7 +22,34 @@ def netlist(
     *,
     top_level_name: str = "top_level",
 ) -> sax.RecursiveNetlist:
-    """Return a netlist from a given dictionary."""
+    """Convert a netlist to recursive netlist format.
+
+    Ensures that the input netlist is in recursive netlist format, which is a
+    dictionary mapping component names to their netlists. If a top-level circuit
+    with the specified name exists, it will be promoted to the top level.
+
+    Args:
+        netlist: Input netlist in any format (flat netlist or recursive netlist).
+        top_level_name: Name to use for the top-level circuit when converting
+            from flat netlist format. Defaults to "top_level".
+
+    Returns:
+        Recursive netlist dictionary with component name keys.
+
+    Raises:
+        ValueError: If the input netlist format is invalid.
+
+    Example:
+        ```python
+        # Convert flat netlist to recursive format
+        flat_net = {
+            "instances": {"wg1": {"component": "waveguide"}},
+            "ports": {"in": "wg1,in", "out": "wg1,out"},
+        }
+        rec_net = netlist(flat_net, top_level_name="my_circuit")
+        # Result: {"my_circuit": flat_net}
+        ```
+    """
     if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
         top_level = recnet.get(top_level_name, None)
         if top_level is None:
@@ -39,7 +66,35 @@ def netlist(
 
 
 def flatten_netlist(recnet: sax.RecursiveNetlist, sep: str = "~") -> sax.Netlist:
-    """Flatten a recursive netlist."""
+    """Flatten a recursive netlist into a single flat netlist.
+
+    Converts a hierarchical (recursive) netlist into a single flat netlist by
+    inlining all sub-circuits. Instance names are prefixed to avoid conflicts.
+
+    Args:
+        recnet: Recursive netlist to flatten.
+        sep: Separator used for hierarchical instance naming. Defaults to "~".
+
+    Returns:
+        Single flat netlist with all hierarchies inlined.
+
+    Example:
+        ```python
+        # Flatten a hierarchical netlist
+        recnet = {
+            "top": {
+                "instances": {"sub1": {"component": "subcircuit"}},
+                "ports": {"in": "sub1,in"},
+            },
+            "subcircuit": {
+                "instances": {"wg1": {"component": "waveguide"}},
+                "ports": {"in": "wg1,in"},
+            },
+        }
+        flat = flatten_netlist(recnet)
+        # Result has instances like "sub1~wg1" for the flattened hierarchy
+        ```
+    """
     first_name = next(iter(recnet.keys()))
     net = deepcopy(recnet[first_name])
     _flatten_netlist_into(recnet, net, sep)
