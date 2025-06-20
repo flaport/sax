@@ -24,9 +24,9 @@ __all__ = ["circuit", "draw_dag", "get_required_circuit_models"]
 
 @overload
 def circuit(
-    *,
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
+    *,
     backend: sax.BackendOrDefault = "default",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
@@ -35,9 +35,9 @@ def circuit(
 
 @overload
 def circuit(
-    *,
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
+    *,
     backend: sax.BackendOrDefault = "default",
     return_type: Literal["SDict"],
     top_level_name: str = "top_level",
@@ -47,9 +47,9 @@ def circuit(
 
 @overload
 def circuit(
-    *,
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
+    *,
     backend: sax.BackendOrDefault = "default",
     return_type: Literal["SDense"],
     top_level_name: str = "top_level",
@@ -59,9 +59,9 @@ def circuit(
 
 @overload
 def circuit(
-    *,
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
+    *,
     backend: sax.BackendOrDefault = "default",
     return_type: Literal["SCoo"],
     top_level_name: str = "top_level",
@@ -70,9 +70,9 @@ def circuit(
 
 
 def circuit(
-    *,
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
+    *,
     backend: sax.BackendOrDefault = "default",
     return_type: Literal["SDict", "SDense", "SCoo"] = "SDict",
     top_level_name: str = "top_level",
