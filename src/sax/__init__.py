@@ -186,13 +186,8 @@ from .backends import (
     evaluate_circuit_forward,
     validate_circuit_backend,
 )
-from .models import (
-    copier,
-    coupler,
-    passthru,
-    straight,
-    unitary,
-)
+
+from . import models
 
 __all__ = [  # noqa: RUF022
     "AnyNetlist",
@@ -316,8 +311,6 @@ __all__ = [  # noqa: RUF022
     "circuit",
     "circuit_backends",
     "clean_string",
-    "copier",
-    "coupler",
     "denormalize",
     "draw_dag",
     "evaluate_circuit",
@@ -346,7 +339,6 @@ __all__ = [  # noqa: RUF022
     "netlist",
     "normalization",
     "normalize",
-    "passthru",
     "read",
     "reciprocal",
     "rename_params",
@@ -356,10 +348,9 @@ __all__ = [  # noqa: RUF022
     "sdense",
     "sdict",
     "singlemode",
-    "straight",
     "try_into",
     "unflatten_dict",
-    "unitary",
     "update_settings",
     "validate_circuit_backend",
+    "models",
 ]
