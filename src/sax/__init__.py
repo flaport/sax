@@ -174,11 +174,11 @@ from .multimode import (
     multimode,
     singlemode,
 )
-from .netlist import (
+from .netlists import (
     flatten_netlist,
     netlist,
 )
-from .circuit import (
+from .circuits import (
     circuit,
     draw_dag,
     get_required_circuit_models,
