@@ -76,17 +76,18 @@ plugins:
             - https://www.mkdocs.org/objects.inv
             - https://python-markdown.github.io/objects.inv
           options:
-            docstring_style: google
             docstring_options:
               ignore_init_summary: true
             docstring_section_style: table # table | list | spacy
+            docstring_style: google
             filters: ["!^_"]
             heading_level: 1
             inherited_members: true
+            line_length: 88
             merge_init_into_class: true
             separate_signature: true
-            show_root_heading: true
             show_root_full_path: false
+            show_root_heading: true
             show_signature_annotations: true
             show_source: true
             show_symbol_type_heading: true
