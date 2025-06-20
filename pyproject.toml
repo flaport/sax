@@ -139,7 +139,8 @@ select = ["ALL"]
   "N816",  # mixed-case-variable-in-global-scope
   "PLC2401",  # non-ascii-name
   "S101",  # assert
-  "SLF001"  # private-member-access
+  "SLF001",  # private-member-access
+  "T201"  # print
 ]
 "src/sax/saxtypes/*.py" = [
   "ANN401"  # any-type

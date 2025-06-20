@@ -1,6 +1,11 @@
-"""SAX Types and type coercions.
+"""SAX Multimode Types and type coercions.
 
-Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
+This module defines types and validators specifically for multi-mode optical
+circuits, where ports can support multiple optical modes (e.g., TE0, TE1, TM0).
+Ports are specified using the 'port@mode' notation.
+
+References:
+    Numpy type reference: https://numpy.org/doc/stable/reference/arrays.scalars.html
 """
 
 from __future__ import annotations
@@ -42,14 +47,56 @@ from .singlemode import (
 
 
 def val_mode(obj: Any) -> Mode:
+    """Validate a mode specification string.
+
+    Modes can be any string identifier, including numerical modes like '@0', '@1'
+    or named modes like '@TE0', '@TM0'.
+
+    Args:
+        obj: The object to validate as a mode.
+
+    Returns:
+        The validated mode string.
+
+    Examples:
+        ```python
+        import sax.saxtypes.multimode as mm
+
+        # Valid mode specifications
+        result = mm.val_mode("0")  # "0" (numerical mode)
+        result = mm.val_mode("TE0")  # "TE0" (named mode)
+        result = mm.val_mode("TM1")  # "TM1" (named mode)
+        ```
+    """
     return str(obj)  # just a string to allow '@0' etc.
 
 
 Mode: TypeAlias = Annotated[str, val(val_mode)]
-"""A mode definition '{mode}'."""
+"""A mode identifier string (e.g., '0', 'TE0', 'TM1')."""
 
 
 def val_port_mode(obj: Any) -> PortMode:
+    """Validate a port-mode specification in 'port@mode' format.
+
+    Args:
+        obj: The object to validate as a port-mode specification.
+
+    Returns:
+        The validated port-mode string.
+
+    Raises:
+        TypeError: If the string doesn't follow 'port@mode' format.
+
+    Examples:
+        ```python
+        import sax.saxtypes.multimode as mm
+
+        # Valid port-mode specifications
+        result = mm.val_port_mode("in0@0")  # "in0@0"
+        result = mm.val_port_mode("out1@TE0")  # "out1@TE0"
+        result = mm.val_port_mode("port@TM1")  # "port@TM1"
+        ```
+    """
     s = cast_string(obj)
     parts = s.split("@")
     if len(parts) != 2:
@@ -62,15 +109,15 @@ def val_port_mode(obj: Any) -> PortMode:
 
 
 PortMode: TypeAlias = Annotated[str, val(val_port_mode)]
-"""A port-mode definition '{port}@{mode}'."""
+"""A port-mode specification in the format 'port_name@mode_name'."""
 
 
 PortMapMM: TypeAlias = dict[PortMode, int]
-"""A mapping from a port to an index."""
+"""A mapping from multi-mode port-mode names to their matrix indices."""
 
 
 PortCombinationMM: TypeAlias = tuple[PortMode, PortMode]
-"""A combination of two port names."""
+"""A pair of multi-mode port-mode names representing an S-parameter."""
 
 
 SDictMM: TypeAlias = dict[PortCombinationMM, ComplexArray]
@@ -136,52 +183,74 @@ STypeMM: TypeAlias = SDictMM | SCooMM | SDenseMM
 
 
 def val_model(model: Any) -> ModelMM:
+    """Validate a multi-mode SAX model function.
+
+    Args:
+        model: The model function to validate.
+
+    Returns:
+        The validated multi-mode model.
+
+    Raises:
+        TypeError: If validation fails.
+    """
     return val_not_callable_annotated(val_sax_callable(model))
 
 
 SDictModelMM: TypeAlias = Annotated[Callable[..., SDictMM], val(val_model)]
-"""A keyword-only function producing an SDict."""
+"""A keyword-only function that produces a multi-mode SDict S-matrix."""
 
 SDenseModelMM: TypeAlias = Annotated[Callable[..., SDenseMM], val(val_model)]
-"""A keyword-only function producing an SDense."""
+"""A keyword-only function that produces a multi-mode SDense S-matrix."""
 
 
 SCooModelMM: TypeAlias = Annotated[Callable[..., SCooMM], val(val_model)]
-"""A keyword-only function producing an Scoo."""
+"""A keyword-only function that produces a multi-mode SCoo S-matrix."""
 
 
 ModelMM: TypeAlias = Annotated[
-    SDictModelMM | SDenseModelMM | SCooModelMM, val(val_model)
+    SDenseModelMM | SCooModelMM | SDictModelMM, val(val_model)
 ]
-"""A keyword-only function producing an SType."""
+"""A keyword-only function that produces any multi-mode S-matrix type."""
 
 
 def val_model_factory(model: Any) -> ModelFactoryMM:
+    """Validate a multi-mode SAX model factory function.
+
+    Args:
+        model: The model factory function to validate.
+
+    Returns:
+        The validated multi-mode model factory.
+
+    Raises:
+        TypeError: If validation fails.
+    """
     return val_callable_annotated(val_sax_callable(model))
 
 
 SDictModelFactoryMM: TypeAlias = Annotated[
     Callable[..., SDictModelMM], val(val_model_factory)
 ]
-"""A keyword-only function producing an SDictModel."""
+"""A keyword-only function that produces a multi-mode SDict model."""
 
 
 SDenseModelFactoryMM: TypeAlias = Annotated[
     Callable[..., SDenseModelMM], val(val_model_factory)
 ]
-"""A keyword-only function producing an SDenseModel."""
+"""A keyword-only function that produces a multi-mode SDense model."""
 
 SCooModelFactoryMM: TypeAlias = Annotated[
     Callable[..., SCooModelMM], val(val_model_factory)
 ]
-"""A keyword-only function producing an ScooModel."""
+"""A keyword-only function that produces a multi-mode SCoo model."""
 
 
 ModelFactoryMM: TypeAlias = Annotated[
     SDictModelFactoryMM | SDenseModelFactoryMM | SCooModelFactoryMM,
     val(val_model_factory),
 ]
-"""A keyword-only function producing a Model."""
+"""A keyword-only function that produces any multi-mode model."""
 
 ModelsMM: TypeAlias = dict[Name, ModelMM]
-"""A mapping between model names and multimode model functions."""
+"""A mapping from model names to multi-mode model functions."""

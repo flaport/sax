@@ -1,4 +1,9 @@
-"""SAX netlist definitions."""
+"""SAX netlist type definitions.
+
+This module defines the type system for optical circuit netlists, including
+component instances, connections, ports, and placements. It provides both
+flat and hierarchical netlist representations.
+"""
 
 from __future__ import annotations
 
@@ -26,10 +31,41 @@ __all__ = [
 
 
 Component: TypeAlias = Annotated[str, val(val_name, name="Component")]
-"""The name of an instance component (model / cell / ...)."""
+"""The name of a component model (must be a valid Python identifier)."""
 
 
 def val_instance(obj: Any) -> Instance:
+    """Validate and normalize an instance definition.
+
+    Accepts various formats: strings, callables, dictionaries, or partial functions.
+    Converts them to a standardized instance dictionary format.
+
+    Args:
+        obj: The object to validate as an instance definition.
+
+    Returns:
+        A validated instance dictionary.
+
+    Raises:
+        TypeError: If the object cannot be converted to a valid instance.
+
+    Examples:
+        ```python
+        import sax.saxtypes.netlist as nl
+
+        # String component name
+        inst = nl.val_instance("coupler")
+        # {"component": "coupler"}
+
+        # Dictionary with settings
+        inst = nl.val_instance({"component": "coupler", "settings": {"coupling": 0.5}})
+
+        # Partial function
+        from functools import partial
+
+        inst = nl.val_instance(partial(coupler_model, coupling=0.5))
+        ```
+    """
     if isinstance(obj, str):
         return {"component": obj}
     if isinstance(obj, partial):
@@ -66,6 +102,15 @@ def val_instance(obj: Any) -> Instance:
 
 
 class ArrayConfig(TypedDict):
+    """Configuration for arrayed component instances.
+
+    Attributes:
+        columns: Number of columns in the array.
+        rows: Number of rows in the array.
+        column_pitch: Optional spacing between columns.
+        row_pitch: Optional spacing between rows.
+    """
+
     columns: int
     rows: int
     column_pitch: NotRequired[float]
@@ -73,22 +118,45 @@ class ArrayConfig(TypedDict):
 
 
 class _Instance(TypedDict):
+    """Internal instance representation."""
+
     component: Component
     settings: NotRequired[Settings]
     array: NotRequired[ArrayConfig]
 
 
 Instance: TypeAlias = Annotated[_Instance, val(val_instance)]
-"""An instantiation of a cell in a netlist."""
+"""An component instantiation in a netlist with optional settings and array config."""
 
 Instances: TypeAlias = dict[InstanceName, Instance]
-"""A mapping of instance names to instance definitions."""
+"""A mapping from instance names to their definitions."""
 
 Connections: TypeAlias = dict[InstancePort, InstancePort]
-"""A mapping between connected ports."""
+"""A mapping defining point-to-point connections between instance ports."""
 
 
 def val_ports(obj: Any) -> Ports:
+    """Validate a ports definition for a netlist.
+
+    Ensures that at least two ports are defined (minimum for a meaningful circuit).
+
+    Args:
+        obj: The object to validate as a ports definition.
+
+    Returns:
+        The validated ports mapping.
+
+    Raises:
+        TypeError: If fewer than two ports are defined.
+
+    Examples:
+        ```python
+        import sax.saxtypes.netlist as nl
+
+        # Valid ports definition
+        ports = nl.val_ports({"in": "coupler1,in0", "out": "coupler1,out0"})
+        ```
+    """
     from .into import into
 
     ports: dict[str, InstancePort] = into[dict[str, InstancePort]](obj)
@@ -99,7 +167,7 @@ def val_ports(obj: Any) -> Ports:
 
 
 Ports: TypeAlias = Annotated[dict[Port, InstancePort], val(val_ports)]
-"""A mapping from circuit outport ports to instance ports."""
+"""A mapping from external circuit ports to internal instance ports."""
 
 _PortPlacement: TypeAlias = Literal[
     "ce", "cw", "nc", "ne", "nw", "sc", "se", "sw", "cc", "center"
@@ -107,7 +175,24 @@ _PortPlacement: TypeAlias = Literal[
 
 
 class Placement(TypedDict):
-    """A netlist placement."""
+    """Physical placement information for an instance.
+
+    Defines the position, orientation, and constraints for placing
+    an instance in physical layout coordinates.
+
+    Attributes:
+        x: X coordinate position.
+        y: Y coordinate position.
+        dx: Optional X offset.
+        dy: Optional Y offset.
+        rotation: Optional rotation angle in degrees.
+        mirror: Optional mirroring flag.
+        xmin: Optional minimum X constraint.
+        xmax: Optional maximum X constraint.
+        ymin: Optional minimum Y constraint.
+        ymax: Optional maximum Y constraint.
+        port: Optional port anchor specification.
+    """
 
     x: str | float
     y: str | float
@@ -123,11 +208,20 @@ class Placement(TypedDict):
 
 
 Placements: TypeAlias = dict[InstanceName, Placement]
-""" A mapping from instance names to their placements."""
+"""A mapping from instance names to their physical placements."""
 
 
 class Net(TypedDict):
-    """A logical connection."""
+    """A logical connection between two ports.
+
+    Represents a point-to-point connection with optional metadata.
+
+    Attributes:
+        p1: First port in the connection.
+        p2: Second port in the connection.
+        settings: Optional connection settings.
+        name: Optional connection name.
+    """
 
     p1: str
     p2: str
@@ -136,11 +230,23 @@ class Net(TypedDict):
 
 
 Nets: TypeAlias = list[Net]
-""" A list of logical connections."""
+"""A list of logical connections between ports."""
 
 
 class Netlist(TypedDict):
-    """A netlist definition."""
+    """A complete netlist definition for an optical circuit.
+
+    Contains all information needed to define a circuit: instances,
+    connections, external ports, and optional placement/settings.
+
+    Attributes:
+        instances: The component instances in the circuit.
+        connections: Point-to-point connections between instances.
+        ports: Mapping of external ports to internal instance ports.
+        nets: Alternative connection specification as a list.
+        placements: Physical placement information for instances.
+        settings: Global circuit settings.
+    """
 
     instances: Instances
     connections: NotRequired[Connections]
@@ -151,13 +257,38 @@ class Netlist(TypedDict):
 
 
 RecursiveNetlist: TypeAlias = dict[Name, Netlist]
-"""A recursive netlist definition."""
+"""A hierarchical netlist containing multiple named circuits."""
 
 AnyNetlist: TypeAlias = Netlist | RecursiveNetlist | dict[str, dict[str, str]]
-"""Any kind of netlist recursive or not."""
+"""Any valid netlist format: flat, recursive, or simplified dictionary."""
 
 
 def _instance_from_partial(p: partial) -> Instance:
+    """Convert a partial function to an instance definition.
+
+    Extracts the component name and keyword arguments from a partial function
+    to create a standardized instance dictionary.
+
+    Args:
+        p: The partial function to convert.
+
+    Returns:
+        An instance dictionary.
+
+    Raises:
+        ValueError: If the partial has positional arguments.
+        TypeError: If the partial is invalid.
+
+    Examples:
+        ```python
+        from functools import partial
+
+        # Create partial with settings
+        partial_model = partial(coupler_model, coupling=0.5, loss=0.1)
+        instance = _instance_from_partial(partial_model)
+        # {"component": "coupler_model", "settings": {"coupling": 0.5, "loss": 0.1}}
+        ```
+    """
     settings: Settings = {}
     f: Any = p
     while isinstance(f, partial):

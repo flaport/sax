@@ -32,21 +32,25 @@ def model_2port(p1: sax.Name, p2: sax.Name) -> sax.SDictModel:
     Examples:
         Create a custom waveguide model:
 
-        >>> import sax
-        >>>
-        >>> # Create a 2-port model with custom port names
-        >>> waveguide_model = sax.models.model_2port("input", "output")
-        >>> s_matrix = waveguide_model(wl=1.55)
-        >>> print(s_matrix[("input", "output")])  # Should be 1.0
+        ```python
+        import sax
+
+        # Create a 2-port model with custom port names
+        waveguide_model = sax.models.model_2port("input", "output")
+        s_matrix = waveguide_model(wl=1.55)
+        print(s_matrix[("input", "output")])  # Should be 1.0
+        ```
 
         Create multiple models with different port names:
 
-        >>> isolator_model = sax.models.model_2port("in", "out")
-        >>> delay_line_model = sax.models.model_2port("start", "end")
-        >>>
-        >>> # Use in circuit simulations
-        >>> s1 = isolator_model(wl=1.55)
-        >>> s2 = delay_line_model(wl=1.55)
+        ```python
+        isolator_model = sax.models.model_2port("in", "out")
+        delay_line_model = sax.models.model_2port("start", "end")
+
+        # Use in circuit simulations
+        s1 = isolator_model(wl=1.55)
+        s2 = delay_line_model(wl=1.55)
+        ```
 
     Note:
         The generated model assumes:
@@ -91,29 +95,36 @@ def model_3port(p1: sax.Name, p2: sax.Name, p3: sax.Name) -> sax.SDictModel:
     Examples:
         Create a custom Y-branch splitter:
 
-        >>> import sax
-        >>>
-        >>> y_branch_model = sax.models.model_3port("input", "branch1", "branch2")
-        >>> s_matrix = y_branch_model(wl=1.55)
-        >>>
-        >>> # Check equal splitting (3dB each)
-        >>> power_branch1 = abs(s_matrix[("input", "branch1")]) ** 2
-        >>> power_branch2 = abs(s_matrix[("input", "branch2")]) ** 2
-        >>> print(f"Powers: {power_branch1:.3f}, {power_branch2:.3f}")  # Both 0.5
+        ```python
+        import sax
+
+        y_branch_model = sax.models.model_3port("input", "branch1", "branch2")
+        s_matrix = y_branch_model(wl=1.55)
+
+        # Check equal splitting (3dB each)
+        power_branch1 = abs(s_matrix[("input", "branch1")]) ** 2
+        power_branch2 = abs(s_matrix[("input", "branch2")]) ** 2
+        print(f"Powers: {power_branch1:.3f}, {power_branch2:.3f}")  # Both 0.5
+        ```
 
         Create a tap coupler model:
 
-        >>> tap_model = sax.models.model_3port("in", "thru", "drop")
-        >>> s_matrix = tap_model(wl=1.55)
-        >>> # Equal 50/50 tapping
+        ```python
+        tap_model = sax.models.model_3port("in", "thru", "drop")
+        s_matrix = tap_model(wl=1.55)
+        # Equal 50/50 tapping
+        ```
 
         Multi-wavelength simulation:
 
-        >>> import numpy as np
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> splitter_model = sax.models.model_3port("in", "out1", "out2")
-        >>> s_matrices = splitter_model(wl=wavelengths)
-        >>> # Wavelength-independent equal splitting
+        ```python
+        import numpy as np
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        splitter_model = sax.models.model_3port("in", "out1", "out2")
+        s_matrices = splitter_model(wl=wavelengths)
+        # Wavelength-independent equal splitting
+        ```
 
     Note:
         The generated model implements:
@@ -169,34 +180,41 @@ def model_4port(
     Examples:
         Create a custom directional coupler:
 
-        >>> import sax
-        >>>
-        >>> dc_model = sax.models.model_4port("in1", "in2", "out1", "out2")
-        >>> s_matrix = dc_model(wl=1.55)
-        >>>
-        >>> # Check 3dB coupling
-        >>> bar_power = abs(s_matrix[("in1", "out2")]) ** 2
-        >>> cross_power = abs(s_matrix[("in1", "out1")]) ** 2
-        >>> print(f"Bar: {bar_power:.3f}, Cross: {cross_power:.3f}")  # Both 0.5
-        >>>
-        >>> # Check 90-degree phase relationship
-        >>> bar_phase = jnp.angle(s_matrix[("in1", "out2")])
-        >>> cross_phase = jnp.angle(s_matrix[("in1", "out1")])
-        >>> phase_diff = cross_phase - bar_phase
-        >>> print(f"Phase difference: {phase_diff:.3f} rad")  # Should be π/2
+        ```python
+        import sax
+
+        dc_model = sax.models.model_4port("in1", "in2", "out1", "out2")
+        s_matrix = dc_model(wl=1.55)
+
+        # Check 3dB coupling
+        bar_power = abs(s_matrix[("in1", "out2")]) ** 2
+        cross_power = abs(s_matrix[("in1", "out1")]) ** 2
+        print(f"Bar: {bar_power:.3f}, Cross: {cross_power:.3f}")  # Both 0.5
+
+        # Check 90-degree phase relationship
+        bar_phase = jnp.angle(s_matrix[("in1", "out2")])
+        cross_phase = jnp.angle(s_matrix[("in1", "out1")])
+        phase_diff = cross_phase - bar_phase
+        print(f"Phase difference: {phase_diff:.3f} rad")  # Should be π/2
+        ```
 
         Create a 2x2 MMI model:
 
-        >>> mmi_model = sax.models.model_4port("i1", "i2", "o1", "o2")
-        >>> s_matrix = mmi_model(wl=1.55)
+        ```python
+        mmi_model = sax.models.model_4port("i1", "i2", "o1", "o2")
+        s_matrix = mmi_model(wl=1.55)
+        ```
 
         Multi-wavelength coupler analysis:
 
-        >>> import numpy as np
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> coupler_model = sax.models.model_4port("p1", "p2", "p3", "p4")
-        >>> s_matrices = coupler_model(wl=wavelengths)
-        >>> # Wavelength-independent 3dB coupling
+        ```python
+        import numpy as np
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        coupler_model = sax.models.model_4port("p1", "p2", "p3", "p4")
+        s_matrices = coupler_model(wl=wavelengths)
+        # Wavelength-independent 3dB coupling
+        ```
 
     Note:
         The generated model implements:
@@ -266,29 +284,37 @@ def unitary(
     Examples:
         Create a 4×4 star coupler:
 
-        >>> import sax
-        >>>
-        >>> star_coupler = sax.models.unitary(4, 4, reciprocal=True, diagonal=False)
-        >>> Si, Sj, Sx, port_map = star_coupler(wl=1.55)
-        >>> # Full 4×4 unitary matrix with all-to-all coupling
+        ```python
+        import sax
+
+        star_coupler = sax.models.unitary(4, 4, reciprocal=True, diagonal=False)
+        Si, Sj, Sx, port_map = star_coupler(wl=1.55)
+        # Full 4×4 unitary matrix with all-to-all coupling
+        ```
 
         Create a 2×8 splitter array:
 
-        >>> splitter_array = sax.models.unitary(2, 8, reciprocal=True)
-        >>> Si, Sj, Sx, port_map = splitter_array(wl=1.55)
-        >>> # Each input couples to all 8 outputs
+        ```python
+        splitter_array = sax.models.unitary(2, 8, reciprocal=True)
+        Si, Sj, Sx, port_map = splitter_array(wl=1.55)
+        # Each input couples to all 8 outputs
+        ```
 
         Create diagonal routing device:
 
-        >>> router = sax.models.unitary(4, 4, diagonal=True, reciprocal=True)
-        >>> Si, Sj, Sx, port_map = router(wl=1.55)
-        >>> # Each input couples to only one output (permutation matrix)
+        ```python
+        router = sax.models.unitary(4, 4, diagonal=True, reciprocal=True)
+        Si, Sj, Sx, port_map = router(wl=1.55)
+        # Each input couples to only one output (permutation matrix)
+        ```
 
         Non-reciprocal device (e.g., isolator array):
 
-        >>> isolator_array = sax.models.unitary(3, 3, reciprocal=False)
-        >>> Si, Sj, Sx, port_map = isolator_array(wl=1.55)
-        >>> # Asymmetric transmission characteristics
+        ```python
+        isolator_array = sax.models.unitary(3, 3, reciprocal=False)
+        Si, Sj, Sx, port_map = isolator_array(wl=1.55)
+        # Asymmetric transmission characteristics
+        ```
 
     Note:
         The algorithm works by:
@@ -402,31 +428,40 @@ def copier(
     Examples:
         Create a 1×4 optical amplifier/splitter:
 
-        >>> import sax
-        >>>
-        >>> amp_splitter = sax.models.copier(1, 4, reciprocal=False)
-        >>> Si, Sj, Sx, port_map = amp_splitter(wl=1.55)
-        >>> # Single input amplified and split to 4 outputs
+        ```python
+        import sax
+
+        amp_splitter = sax.models.copier(1, 4, reciprocal=False)
+        Si, Sj, Sx, port_map = amp_splitter(wl=1.55)
+        # Single input amplified and split to 4 outputs
+        ```
 
         Create a 2×2 bidirectional amplifier:
 
-        >>> bidir_amp = sax.models.copier(2, 2, reciprocal=True, diagonal=True)
-        >>> Si, Sj, Sx, port_map = bidir_amp(wl=1.55)
-        >>> # Each input amplified to corresponding output
+        ```python
+        bidir_amp = sax.models.copier(2, 2, reciprocal=True, diagonal=True)
+        Si, Sj, Sx, port_map = bidir_amp(wl=1.55)
+        # Each input amplified to corresponding output
+        ```
 
         Create a broadcast network:
 
-        >>> broadcaster = sax.models.copier(3, 6, reciprocal=False)
-        >>> Si, Sj, Sx, port_map = broadcaster(wl=1.55)
-        >>> # Each input broadcast to all outputs with gain
+        ```python
+        broadcaster = sax.models.copier(3, 6, reciprocal=False)
+        Si, Sj, Sx, port_map = broadcaster(wl=1.55)
+        # Each input broadcast to all outputs with gain
+        ```
 
         Multi-wavelength gain device:
 
-        >>> import numpy as np
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> gain_device = sax.models.copier(1, 2, diagonal=False)
-        >>> Si, Sj, Sx, port_map = gain_device(wl=wavelengths)
-        >>> # Wavelength-independent copying/amplification
+        ```python
+        import numpy as np
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        gain_device = sax.models.copier(1, 2, diagonal=False)
+        Si, Sj, Sx, port_map = gain_device(wl=wavelengths)
+        # Wavelength-independent copying/amplification
+        ```
 
     Note:
         The copier model differs from unitary devices in several key ways:
@@ -530,31 +565,40 @@ def passthru(
     Examples:
         Create a 4-channel fiber ribbon cable:
 
-        >>> import sax
-        >>>
-        >>> fiber_ribbon = sax.models.passthru(4, reciprocal=True)
-        >>> Si, Sj, Sx, port_map = fiber_ribbon(wl=1.55)
-        >>> # 4 independent channels with unity transmission
+        ```python
+        import sax
+
+        fiber_ribbon = sax.models.passthru(4, reciprocal=True)
+        Si, Sj, Sx, port_map = fiber_ribbon(wl=1.55)
+        # 4 independent channels with unity transmission
+        ```
 
         Create an 8×8 optical switch (straight-through state):
 
-        >>> switch_thru = sax.models.passthru(8, reciprocal=True)
-        >>> Si, Sj, Sx, port_map = switch_thru(wl=1.55)
-        >>> # Each input passes straight to corresponding output
+        ```python
+        switch_thru = sax.models.passthru(8, reciprocal=True)
+        Si, Sj, Sx, port_map = switch_thru(wl=1.55)
+        # Each input passes straight to corresponding output
+        ```
 
         Create a unidirectional buffer array:
 
-        >>> buffer_array = sax.models.passthru(6, reciprocal=False)
-        >>> Si, Sj, Sx, port_map = buffer_array(wl=1.55)
-        >>> # One-way transmission for each channel
+        ```python
+        buffer_array = sax.models.passthru(6, reciprocal=False)
+        Si, Sj, Sx, port_map = buffer_array(wl=1.55)
+        # One-way transmission for each channel
+        ```
 
         Multi-wavelength pass-through analysis:
 
-        >>> import numpy as np
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> multilink = sax.models.passthru(3, reciprocal=True)
-        >>> Si, Sj, Sx, port_map = multilink(wl=wavelengths)
-        >>> # Wavelength-independent transmission for all links
+        ```python
+        import numpy as np
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        multilink = sax.models.passthru(3, reciprocal=True)
+        Si, Sj, Sx, port_map = multilink(wl=wavelengths)
+        # Wavelength-independent transmission for all links
+        ```
 
     Note:
         The pass-through model creates a diagonal unitary matrix where:
