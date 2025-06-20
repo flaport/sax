@@ -4,6 +4,8 @@
 
 import sys
 
+import sax
+
 
 def _process_content(content: str) -> str:
     blocks = content.split("```")
@@ -17,8 +19,10 @@ def _process_content(content: str) -> str:
             for k, part in enumerate(parts):
                 if k % 2 == 0:
                     continue
-                if part.isidentifier():
+                if hasattr(sax, part):
                     parts[k] = f"[`{part}`][sax.{part}]"
+                elif hasattr(sax.models, part):
+                    parts[k] = f"[`{part}`][sax.models.{part}]"
                 else:
                     parts[k] = f"`{part}`"
             lines[j] = "".join(parts)
