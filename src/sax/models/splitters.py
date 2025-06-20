@@ -8,8 +8,6 @@ from pydantic import validate_call
 
 import sax
 
-from .ports import PortNamer
-
 
 @jax.jit
 @validate_call
@@ -90,7 +88,7 @@ def splitter_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
     kappa = jnp.asarray(coupling**0.5)
     tau = jnp.asarray((1 - coupling) ** 0.5)
 
-    p = PortNamer(num_inputs=1, num_outputs=2)
+    p = sax.PortNamer(num_inputs=1, num_outputs=2)
     return sax.reciprocal(
         {
             (p.in0, p.out0): tau,

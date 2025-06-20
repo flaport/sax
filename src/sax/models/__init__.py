@@ -27,7 +27,6 @@ from .mmis import (
     mmi2x2,
     mmi2x2_ideal,
 )
-from .ports import PortNamer
 from .splitters import (
     splitter_ideal,
 )
@@ -38,7 +37,6 @@ from .straight import (
 )
 
 __all__ = [
-    "PortNamer",
     "attenuator",
     "bend",
     "copier",

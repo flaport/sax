@@ -14,8 +14,8 @@ import numpy as np
 import sax
 
 from .backends import circuit_backends, validate_circuit_backend
-from .netlist import convert_nets_to_connections, remove_unused_instances
-from .netlist import netlist as into_recnet
+from .netlists import convert_nets_to_connections, remove_unused_instances
+from .netlists import netlist as into_recnet
 from .s import get_ports, scoo, sdense, sdict
 from .utils import get_settings, merge_dicts, replace_kwargs, update_settings
 

@@ -8,8 +8,6 @@ from pydantic import validate_call
 
 import sax
 
-from .ports import PortNamer
-
 
 @validate_call
 def model_2port(p1: sax.Name, p2: sax.Name) -> sax.SDictModel:
@@ -377,7 +375,7 @@ def unitary(
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
-    p = PortNamer(num_inputs, num_outputs)
+    p = sax.PortNamer(num_inputs, num_outputs)
     pm = {
         **{p[i]: i for i in range(num_inputs)},
         **{p[i + num_inputs]: i + num_inputs for i in range(num_outputs)},
@@ -516,7 +514,7 @@ def copier(
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
-    p = PortNamer(num_inputs, num_outputs)
+    p = sax.PortNamer(num_inputs, num_outputs)
     pm = {
         **{p[i]: i for i in range(num_inputs)},
         **{p[i + num_inputs]: i + num_inputs for i in range(num_outputs)},
