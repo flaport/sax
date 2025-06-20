@@ -19,7 +19,7 @@ __all__ = [
 def analyze_instances_fg(
     instances: sax.Instances,
     models: sax.Models,
-) -> dict[sax.Name, sax.SDict]:
+) -> dict[sax.InstanceName, sax.SDict]:
     """Analyze instances for the Filipsson Gunnar backend."""
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)

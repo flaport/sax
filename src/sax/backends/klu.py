@@ -22,7 +22,7 @@ mul_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 
 
 def analyze_instances_klu(
-    instances: dict[sax.Name, sax.Instance],
+    instances: dict[sax.InstanceName, sax.Instance],
     models: dict[str, sax.Model],
 ) -> dict[str, sax.SCoo]:
     """Analyze instances for the KLU backend."""
@@ -38,7 +38,7 @@ def analyze_instances_klu(
 
 
 def analyze_circuit_klu(
-    analyzed_instances: dict[sax.Name, sax.SCoo],
+    analyzed_instances: dict[sax.InstanceName, sax.SCoo],
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
@@ -100,7 +100,7 @@ def analyze_circuit_klu(
 
 def evaluate_circuit_klu(
     analyzed: Any,  # noqa: ANN401
-    instances: dict[sax.Name, sax.SType],
+    instances: dict[sax.InstanceName, sax.SType],
 ) -> sax.SDense:
     """Evaluate a circuit for the KLU backend."""
     (

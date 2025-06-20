@@ -19,7 +19,7 @@ __all__ = [
 def analyze_instances_additive(
     instances: sax.Instances,
     models: sax.Models,
-) -> dict[sax.Name, sax.SDict]:
+) -> dict[sax.InstanceName, sax.SDict]:
     """Analyze instances for the additive backend."""
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)
@@ -34,7 +34,7 @@ def analyze_instances_additive(
 
 
 def analyze_circuit_additive(
-    analyzed_instances: dict[sax.Name, sax.SDict],  # noqa: ARG001
+    analyzed_instances: dict[sax.InstanceName, sax.SDict],  # noqa: ARG001
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
@@ -44,7 +44,7 @@ def analyze_circuit_additive(
 
 def evaluate_circuit_additive(
     analyzed: Any,  # noqa: ANN401
-    instances: dict[sax.Name, sax.SDict],
+    instances: dict[sax.InstanceName, sax.SDict],
 ) -> sax.SDict:
     """Evaluate a circuit for the given sdicts."""
     connections, ports = analyzed
@@ -65,7 +65,7 @@ def evaluate_circuit_additive(
     return sdict
 
 
-def _split_port(port: sax.Port) -> tuple[sax.Name, sax.Name]:
+def _split_port(port: sax.Port) -> tuple[sax.InstanceName, sax.Name]:
     try:
         instance, port = port.split(",")
     except ValueError:
@@ -75,7 +75,7 @@ def _split_port(port: sax.Port) -> tuple[sax.Name, sax.Name]:
 
 
 def _graph_edges(
-    instances: dict[sax.Name, sax.SDict],
+    instances: dict[sax.InstanceName, sax.SDict],
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:

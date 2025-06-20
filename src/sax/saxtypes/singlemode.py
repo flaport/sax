@@ -41,7 +41,7 @@ T = TypeVar("T")
 
 
 def val_instance_name(obj: Any) -> Port:
-    return val_name(obj, type_name="InstanceName")
+    return val_name(obj, type_name="InstanceName", extra_allowed_chars=(".", "<", ">"))
 
 
 InstanceName: TypeAlias = Annotated[str, val(val_instance_name)]

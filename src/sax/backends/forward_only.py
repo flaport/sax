@@ -19,7 +19,7 @@ __all__ = [
 def analyze_instances_forward(
     instances: sax.Instances,
     models: sax.Models,
-) -> dict[sax.Name, sax.SCoo]:
+) -> dict[sax.InstanceName, sax.SCoo]:
     """Analyze instances for the forward_only backend."""
     instances = sax.into[sax.Instances](instances)
     models = sax.into[sax.Models](models)
@@ -34,7 +34,7 @@ def analyze_instances_forward(
 
 
 def analyze_circuit_forward(
-    analyzed_instances: dict[sax.Name, sax.SDict],  # noqa: ARG001
+    analyzed_instances: dict[sax.InstanceName, sax.SDict],  # noqa: ARG001
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401

@@ -556,9 +556,14 @@ def cast_string(obj: Any) -> str:
     return str(obj)
 
 
-def val_name(obj: Any, *, type_name: str = "Name") -> str:
+def val_name(
+    obj: Any, *, type_name: str = "Name", extra_allowed_chars: tuple[str, ...] = ()
+) -> str:
     s = cast_string(obj)
-    if not s.isidentifier():
+    _s = s
+    for c in extra_allowed_chars:
+        _s = _s.replace(c, "_")
+    if not _s.isidentifier():
         msg = (
             f"A {type_name!r} string should be a valid python identifier. Got: {s!r}. "
             "note: python identifiers should only contain letters, numbers or "
