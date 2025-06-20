@@ -7,6 +7,7 @@ import jax.numpy as jnp
 from pydantic import validate_call
 
 import sax
+from sax.models.ports import PortNamer
 
 
 @jax.jit
@@ -18,28 +19,19 @@ def straight(
     neff: sax.FloatArrayLike = 2.34,
     ng: sax.FloatArrayLike = 3.4,
     length: sax.FloatArrayLike = 10.0,
-    loss: sax.FloatArrayLike = 0.0,
+    loss_dB_cm: sax.FloatArrayLike = 0.0,
 ) -> sax.SDict:
-    """A simple straight waveguide model.
-
-    Args:
-        wl: wavelength in microns.
-        wl0: reference wavelength in microns.
-        neff: effective index.
-        ng: group index.
-        length: length of the waveguide in microns.
-        loss: loss in dB/cm.
-
-    """
+    """A simple straight waveguide model."""
     dwl: sax.FloatArray = sax.into[sax.FloatArray](wl) - wl0
     dneff_dwl = (ng - neff) / wl0
     _neff = neff - dwl * dneff_dwl
     phase = 2 * jnp.pi * _neff * length / wl
-    amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
+    amplitude = jnp.asarray(10 ** (-1e-4 * loss_dB_cm * length / 20), dtype=complex)
     transmission = amplitude * jnp.exp(1j * phase)
+    p = PortNamer(1, 1)
     return sax.reciprocal(
         {
-            ("in0", "out0"): transmission,
+            (p.in0, p.out0): transmission,
         },
     )
 
@@ -49,9 +41,10 @@ def straight(
 def attenuator(*, loss: sax.FloatArrayLike = 0.0) -> sax.SDict:
     """Attenuator model."""
     transmission = jnp.asarray(10 ** (-loss / 20), dtype=complex)
+    p = PortNamer(1, 1)
     return sax.reciprocal(
         {
-            ("in0", "out0"): transmission,
+            (p.in0, p.out0): transmission,
         }
     )
 
@@ -65,13 +58,14 @@ def phase_shifter(
     length: sax.FloatArrayLike = 10,
     loss: sax.FloatArrayLike = 0.0,
 ) -> sax.SDict:
-    """Returns simple phase shifter model."""
+    """Simple phase shifter model."""
     deltaphi = voltage * jnp.pi
     phase = 2 * jnp.pi * neff * length / wl + deltaphi
     amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
     transmission = amplitude * jnp.exp(1j * phase)
+    p = PortNamer(1, 1)
     return sax.reciprocal(
         {
-            ("o1", "o2"): transmission,
+            (p.o1, p.o2): transmission,
         }
     )

@@ -2,16 +2,15 @@
 
 from __future__ import annotations
 
-from functools import cache
-
 import jax
 import jax.numpy as jnp
 from pydantic import validate_call
 
 import sax
 
+from .ports import PortNamer
 
-@cache
+
 @validate_call
 def model_2port(p1: sax.Name, p2: sax.Name) -> sax.SDictModel:
     """Generate a general 2-port model."""
@@ -25,7 +24,6 @@ def model_2port(p1: sax.Name, p2: sax.Name) -> sax.SDictModel:
     return model_2port
 
 
-@cache
 @validate_call
 def model_3port(p1: sax.Name, p2: sax.Name, p3: sax.Name) -> sax.SDictModel:
     """Generate a general 3-port model."""
@@ -45,7 +43,6 @@ def model_3port(p1: sax.Name, p2: sax.Name, p3: sax.Name) -> sax.SDictModel:
     return model_3port
 
 
-@cache
 @validate_call
 def model_4port(
     p1: sax.Name, p2: sax.Name, p3: sax.Name, p4: sax.Name
@@ -70,34 +67,15 @@ def model_4port(
     return model_4port
 
 
-@cache
 @validate_call
 def unitary(
-    num_inputs: int | None = None,
-    num_outputs: int | None = None,
-    ports: tuple[str, ...] | None = None,
+    num_inputs: int,
+    num_outputs: int,
     *,
     reciprocal: bool = True,
     diagonal: bool = False,
 ) -> sax.SCooModel:
-    """A unitary model.
-
-    Args:
-        num_inputs: number of input ports.
-        num_outputs: number of output ports.
-        ports: tuple of input and output ports.
-        jit: whether to jit the model.
-        reciprocal: whether the model is reciprocal.
-        diagonal: whether the model is diagonal.
-
-    """
-    input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports,
-        num_inputs,
-        num_outputs,
-        diagonal=diagonal,
-    )
-
+    """A unitary model."""
     # let's create the squared S-matrix:
     N = max(num_inputs, num_outputs)
     S = jnp.zeros((2 * N, 2 * N), dtype=float)
@@ -137,9 +115,10 @@ def unitary(
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
+    p = PortNamer(num_inputs, num_outputs)
     pm = {
-        **{p: i for i, p in enumerate(input_ports)},
-        **{p: i + num_inputs for i, p in enumerate(output_ports)},
+        **{p[i]: i for i in range(num_inputs)},
+        **{p[i + num_inputs]: i + num_inputs for i in range(num_outputs)},
     }
 
     @validate_call
@@ -153,33 +132,15 @@ def unitary(
     return jax.jit(func)
 
 
-@cache
 @validate_call
 def copier(
-    num_inputs: int | None = None,
-    num_outputs: int | None = None,
-    ports: tuple[str, ...] | None = None,
+    num_inputs: int,
+    num_outputs: int,
     *,
     reciprocal: bool = True,
     diagonal: bool = False,
 ) -> sax.SCooModel:
-    """A copier model.
-
-    Args:
-        num_inputs: number of input ports.
-        num_outputs: number of output ports.
-        ports: tuple of input and output ports.
-        jit: whether to jit the model.
-        reciprocal: whether the model is reciprocal.
-        diagonal: whether the model is diagonal.
-    """
-    input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports,
-        num_inputs,
-        num_outputs,
-        diagonal=diagonal,
-    )
-
+    """A copier model."""
     # let's create the squared S-matrix:
     S = jnp.zeros((num_inputs + num_outputs, num_inputs + num_outputs), dtype=float)
 
@@ -205,9 +166,10 @@ def copier(
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
+    p = PortNamer(num_inputs, num_outputs)
     pm = {
-        **{p: i for i, p in enumerate(input_ports)},
-        **{p: i + num_inputs for i, p in enumerate(output_ports)},
+        **{p[i]: i for i in range(num_inputs)},
+        **{p[i + num_inputs]: i + num_inputs for i in range(num_outputs)},
     }
 
     @validate_call
@@ -221,11 +183,9 @@ def copier(
     return jax.jit(func)
 
 
-@cache
 @validate_call
 def passthru(
-    num_links: int | None = None,
-    ports: tuple[str, ...] | None = None,
+    num_links: int,
     *,
     reciprocal: bool = True,
 ) -> sax.SCooModel:
@@ -240,74 +200,9 @@ def passthru(
     passthru = unitary(
         num_links,
         num_links,
-        ports,
         reciprocal=reciprocal,
         diagonal=True,
     )
     passthru.__name__ = f"passthru_{num_links}_{num_links}"
     passthru.__qualname__ = f"passthru_{num_links}_{num_links}"
     return jax.jit(passthru)
-
-
-def _validate_ports(
-    ports: tuple[sax.Port, ...] | None,
-    num_inputs: int | None,
-    num_outputs: int | None,
-    *,
-    diagonal: bool,
-) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
-    """Validate the ports and return the input and output ports."""
-    if ports is None:
-        if num_inputs is None or num_outputs is None:
-            msg = (
-                "if not ports given, you must specify how many input ports "
-                "and how many output ports a model has."
-            )
-            raise ValueError(
-                msg,
-            )
-        input_ports = [f"in{i}" for i in range(num_inputs)]
-        output_ports = [f"out{i}" for i in range(num_outputs)]
-    else:
-        if num_inputs is not None and num_outputs is None:
-            msg = "if num_inputs is given, num_outputs should be given as well."
-            raise ValueError(
-                msg,
-            )
-        if num_outputs is not None and num_inputs is None:
-            msg = "if num_outputs is given, num_inputs should be given as well."
-            raise ValueError(
-                msg,
-            )
-        if num_inputs is not None and num_outputs is not None:
-            if num_inputs + num_outputs != len(ports):
-                msg = "num_inputs + num_outputs != len(ports)"
-                raise ValueError(msg)
-            input_ports = ports[:num_inputs]
-            output_ports = ports[num_inputs:]
-        else:
-            input_ports, output_ports = _get_inputs_outputs(ports)
-            num_inputs = len(input_ports)
-            num_outputs = len(output_ports)
-
-    if diagonal and num_inputs != num_outputs:
-        msg = (
-            "Can only have a diagonal passthru if number "
-            "of input ports equals the number of output ports!"
-        )
-        raise ValueError(
-            msg,
-        )
-
-    return tuple(input_ports), tuple(output_ports), num_inputs, num_outputs
-
-
-def _get_inputs_outputs(
-    ports: tuple[sax.Port, ...],
-) -> tuple[tuple[sax.Port, ...], tuple[sax.Port, ...]]:
-    inputs = tuple(p for p in ports if p.lower().startswith("in"))
-    outputs = tuple(p for p in ports if not p.lower().startswith("in"))
-    if not inputs:
-        inputs = tuple(p for p in ports if not p.lower().startswith("out"))
-        outputs = tuple(p for p in ports if p.lower().startswith("out"))
-    return inputs, outputs

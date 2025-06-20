@@ -1,7 +1,6 @@
 """SAX Bend Models."""
 
 import jax
-import jax.numpy as jnp
 from pydantic import validate_call
 
 import sax
@@ -12,10 +11,19 @@ from .straight import straight
 @jax.jit
 @validate_call
 def bend(
-    wl: sax.FloatArrayLike = 1.5,
-    length: sax.FloatArrayLike = 20.0,
-    loss: sax.FloatArrayLike = 0.0,
+    wl: sax.FloatArrayLike = 1.55,
+    wl0: sax.FloatArrayLike = 1.55,
+    neff: sax.FloatArrayLike = 2.34,
+    ng: sax.FloatArrayLike = 3.4,
+    length: sax.FloatArrayLike = 10.0,
+    loss_dB_cm: sax.FloatArrayLike = 0.1,
 ) -> sax.SDict:
-    """Returns bend Sparameters."""
-    amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
-    return {k: amplitude * v for k, v in straight(wl=wl, length=length).items()}
+    """Simple bend model."""
+    return straight(
+        wl=wl,
+        wl0=wl0,
+        neff=neff,
+        ng=ng,
+        length=length,
+        loss_dB_cm=loss_dB_cm,
+    )

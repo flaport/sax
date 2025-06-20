@@ -8,6 +8,8 @@ from pydantic import validate_call
 
 import sax
 
+from .ports import PortNamer
+
 
 @jax.jit
 @validate_call
@@ -15,12 +17,13 @@ def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
     """A simple coupler model."""
     kappa = jnp.asarray(coupling**0.5)
     tau = jnp.asarray((1 - coupling) ** 0.5)
+    p = PortNamer(2, 2)
     return sax.reciprocal(
         {
-            ("in0", "out0"): tau,
-            ("in0", "out1"): 1j * kappa,
-            ("in1", "out0"): 1j * kappa,
-            ("in1", "out1"): tau,
+            (p.in0, p.out0): tau,
+            (p.in0, p.out1): 1j * kappa,
+            (p.in1, p.out0): 1j * kappa,
+            (p.in1, p.out1): tau,
         },
     )
 
@@ -59,20 +62,15 @@ def coupler(
 
     .. code::
 
-          coupling0/2        coupling        coupling0/2
-        <-------------><--------------------><---------->
-         o2 ________                           _______o3
-                    \                         /
-                     \        length         /
-                      =======================
-                     /                       \
-            ________/                         \________
-         o1                                           o4
+         o2 -----                      ----- o3
+                 \ ◀     length     ▶ /
+                  --------------------
+       coupling0/2      coupling      coupling0/2
+                  --------------------
+                 /                    \
+         o1 ----◤                      ----- o4
+                 bend_radius
 
-                      ------------------------> K (coupled power)
-                     /
-                    / K
-           -----------------------------------> T = 1 - K (transmitted power)
     """
     dwl = wl - wl0
     dn = dn + dn1 * dwl + 0.5 * dn2 * dwl**2
@@ -81,12 +79,13 @@ def coupler(
 
     tau = jnp.cos(kappa0 + kappa1 * length)
     kappa = -jnp.sin(kappa0 + kappa1 * length)
+    p = PortNamer(2, 2)
     return sax.reciprocal(
         {
-            ("in0", "out0"): tau,
-            ("in0", "out1"): 1j * kappa,
-            ("in1", "out0"): 1j * kappa,
-            ("in1", "out1"): tau,
+            (p.in0, p.out0): tau,
+            (p.in0, p.out1): 1j * kappa,
+            (p.in1, p.out0): 1j * kappa,
+            (p.in1, p.out1): tau,
         }
     )
 
@@ -132,11 +131,12 @@ def grating_coupler(
     amplitude = jnp.asarray(10 ** (-loss / 20))
     sigma = jnp.asarray(bandwidth / (2 * jnp.sqrt(2 * jnp.log(2))))
     transmission = jnp.asarray(amplitude * jnp.exp(-((wl - wl0) ** 2) / (2 * sigma**2)))
+    p = PortNamer(1, 1)
     return sax.reciprocal(
         {
-            ("in0", "in0"): reflection,
-            ("in0", "out0"): transmission,
-            ("out0", "in0"): transmission,
-            ("out0", "out0"): reflection_fiber,
+            (p.in0, p.in0): reflection,
+            (p.in0, p.out0): transmission,
+            (p.out0, p.in0): transmission,
+            (p.out0, p.out0): reflection_fiber,
         }
     )

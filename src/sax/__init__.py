@@ -202,6 +202,7 @@ from .backends import (
 )
 
 from . import models
+from .models import PortNamer
 
 __all__ = [  # noqa: RUF022
     "AnyNetlist",
@@ -271,6 +272,7 @@ __all__ = [  # noqa: RUF022
     "PortMapMM",
     "PortMapSM",
     "PortMode",
+    "PortNamer",
     "Ports",
     "RecursiveNetlist",
     "SCoo",

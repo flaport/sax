@@ -6,15 +6,18 @@ from pydantic import validate_call
 
 import sax
 
+from .ports import PortNamer
+
 
 @jax.jit
 @validate_call
 def crossing_ideal(wl: sax.FloatArrayLike = 1.5) -> sax.SDict:
     """Crossing model."""
     one = jnp.ones_like(jnp.asarray(wl))
+    p = PortNamer(2, 2)
     return sax.reciprocal(
         {
-            ("o1", "o3"): one,
-            ("o2", "o4"): one,
+            (p.o1, p.o3): one,
+            (p.o2, p.o4): one,
         }
     )
