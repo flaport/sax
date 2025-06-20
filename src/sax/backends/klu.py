@@ -25,7 +25,33 @@ def analyze_instances_klu(
     instances: dict[sax.InstanceName, sax.Instance],
     models: dict[str, sax.Model],
 ) -> dict[str, sax.SCoo]:
-    """Analyze instances for the KLU backend."""
+    """Analyze circuit instances for the KLU backend.
+
+    Prepares instance S-matrices for the KLU backend by converting all component
+    models to SCoo (coordinate) format. The KLU backend uses sparse matrix
+    techniques with the KLU solver for high-performance circuit evaluation.
+
+    Args:
+        instances: Dictionary mapping instance names to instance definitions
+            containing component names and settings.
+        models: Dictionary mapping component names to their model functions.
+
+    Returns:
+        Dictionary mapping instance names to their S-matrices in SCoo format.
+
+    Note:
+        The KLU backend is the recommended high-performance backend for most
+        circuit simulations. It uses sparse matrix factorization and can handle
+        large circuits efficiently with full bidirectional coupling and reflections.
+
+    Example:
+        >>> instances = {
+        ...     "wg1": {"component": "waveguide", "settings": {"length": 10.0}},
+        ...     "dc1": {"component": "coupler", "settings": {"coupling": 0.1}},
+        ... }
+        >>> models = {"waveguide": waveguide_model, "coupler": coupler_model}
+        >>> analyzed = analyze_instances_klu(instances, models)
+    """
     instances = sax.into[sax.Instances](instances)
     model_names = set()
     for i in instances.values():
@@ -42,7 +68,33 @@ def analyze_circuit_klu(
     connections: sax.Connections,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
-    """Analyze a circuit for the KLU backend."""
+    """Analyze circuit topology for the KLU sparse matrix backend.
+
+    Performs detailed circuit analysis to set up the sparse matrix system for
+    the KLU solver. This analysis creates the connection matrices and index
+    mappings needed for efficient sparse matrix operations.
+
+    Args:
+        analyzed_instances: Instance S-matrices from analyze_instances_klu in
+            SCoo format.
+        connections: Dictionary mapping instance ports to each other, defining
+            internal circuit connections.
+        ports: Dictionary mapping external port names to instance ports.
+
+    Returns:
+        Complex analysis data structure containing sparse matrix indices,
+        connection mappings, and external port information optimized for
+        the KLU solver.
+
+    Note:
+        This analysis step is computationally intensive but enables very fast
+        circuit evaluation, especially for large circuits with many components.
+
+    Example:
+        >>> connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        >>> ports = {"in": "wg1,in", "out": "wg2,out"}
+        >>> analyzed = analyze_circuit_klu(analyzed_instances, connections, ports)
+    """
     connections = {**connections, **{v: k for k, v in connections.items()}}
     inverse_ports = {v: k for k, v in ports.items()}
     port_map = {k: i for i, k in enumerate(ports)}
@@ -102,7 +154,46 @@ def evaluate_circuit_klu(
     analyzed: Any,  # noqa: ANN401
     instances: dict[sax.InstanceName, sax.SType],
 ) -> sax.SDense:
-    """Evaluate a circuit for the KLU backend."""
+    """Evaluate circuit S-matrix using the KLU sparse matrix solver.
+
+    Computes the circuit S-matrix by solving the sparse linear system
+    (I - CS)x = C_ext using the high-performance KLU sparse matrix solver.
+    This approach is highly efficient for large circuits.
+
+    The algorithm:
+    1. Assembles the sparse connection matrix C and S-matrix blocks
+    2. Forms the system matrix (I - CS) where I is identity
+    3. Solves the linear system using KLU factorization
+    4. Extracts the external port S-matrix from the solution
+
+    Args:
+        analyzed: Complex analysis data from analyze_circuit_klu containing
+            pre-computed sparse matrix indices and mappings.
+        instances: Dictionary mapping instance names to their evaluated S-matrices
+            in any SAX format (will be converted to SCoo).
+
+    Returns:
+        Circuit S-matrix in SDense format (dense matrix with port mapping).
+
+    Note:
+        This backend provides the best performance for most circuits, especially
+        large ones. It handles all types of coupling (forward, backward, cross)
+        and reflections accurately using sparse matrix techniques.
+
+    Example:
+        >>> # Circuit analysis and instances
+        >>> instances = {
+        ...     "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
+        ...     "dc1": {
+        ...         ("in1", "out1"): 0.9,
+        ...         ("in1", "out2"): 0.1,
+        ...         ("in2", "out1"): 0.1,
+        ...         ("in2", "out2"): 0.9,
+        ...     },
+        ... }
+        >>> circuit_s_matrix, port_map = evaluate_circuit_klu(analyzed, instances)
+        >>> # Result is a dense S-matrix with full coupling terms
+    """
     (
         n_col,
         mask,
