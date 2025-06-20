@@ -40,18 +40,22 @@ def mmi1x2_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
     Examples:
         Equal power MMI splitter:
 
-        >>> import sax
-        >>>
-        >>> s_matrix = sax.models.mmi1x2_ideal(coupling=0.5)
-        >>> power_out0 = abs(s_matrix[("in0", "out0")]) ** 2
-        >>> power_out1 = abs(s_matrix[("in0", "out1")]) ** 2
-        >>> print(f"Output powers: {power_out0:.3f}, {power_out1:.3f}")
+        ```python
+        import sax
+
+        s_matrix = sax.models.mmi1x2_ideal(coupling=0.5)
+        power_out0 = abs(s_matrix[("in0", "out0")]) ** 2
+        power_out1 = abs(s_matrix[("in0", "out1")]) ** 2
+        print(f"Output powers: {power_out0:.3f}, {power_out1:.3f}")
+        ```
 
         Asymmetric MMI splitter:
 
-        >>> s_matrix = sax.models.mmi1x2_ideal(coupling=0.25)  # 25% to out1
-        >>> power_out0 = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.75
-        >>> power_out1 = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.25
+        ```python
+        s_matrix = sax.models.mmi1x2_ideal(coupling=0.25)  # 25% to out1
+        power_out0 = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.75
+        power_out1 = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.25
+        ```
 
     Note:
         This is an idealized model that assumes:
@@ -97,18 +101,22 @@ def mmi2x2_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
     Examples:
         3dB MMI coupler:
 
-        >>> import sax
-        >>>
-        >>> s_matrix = sax.models.mmi2x2_ideal(coupling=0.5)
-        >>> bar_power = abs(s_matrix[("in0", "out0")]) ** 2  # Bar transmission
-        >>> cross_power = abs(s_matrix[("in0", "out1")]) ** 2  # Cross transmission
-        >>> print(f"Bar: {bar_power:.3f}, Cross: {cross_power:.3f}")
+        ```python
+        import sax
+
+        s_matrix = sax.models.mmi2x2_ideal(coupling=0.5)
+        bar_power = abs(s_matrix[("in0", "out0")]) ** 2  # Bar transmission
+        cross_power = abs(s_matrix[("in0", "out1")]) ** 2  # Cross transmission
+        print(f"Bar: {bar_power:.3f}, Cross: {cross_power:.3f}")
+        ```
 
         Variable coupling MMI:
 
-        >>> s_matrix = sax.models.mmi2x2_ideal(coupling=0.8)  # 80% coupling
-        >>> bar_power = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.2
-        >>> cross_power = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.8
+        ```python
+        s_matrix = sax.models.mmi2x2_ideal(coupling=0.8)  # 80% coupling
+        bar_power = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.2
+        cross_power = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.8
+        ```
 
     Note:
         This is an idealized model that assumes:
@@ -163,29 +171,33 @@ def mmi1x2(
     Examples:
         Basic MMI splitter:
 
-        >>> import sax
-        >>> import numpy as np
-        >>>
-        >>> s_matrix = sax.models.mmi1x2(wl=1.55, fwhm=0.15, loss_dB=0.5)
-        >>> power_out0 = abs(s_matrix[("o1", "o2")]) ** 2
-        >>> power_out1 = abs(s_matrix[("o1", "o3")]) ** 2
-        >>> total_power = power_out0 + power_out1
-        >>> insertion_loss_dB = -10 * np.log10(total_power)
+        ```python
+        import sax
+        import numpy as np
+
+        s_matrix = sax.models.mmi1x2(wl=1.55, fwhm=0.15, loss_dB=0.5)
+        power_out0 = abs(s_matrix[("o1", "o2")]) ** 2
+        power_out1 = abs(s_matrix[("o1", "o3")]) ** 2
+        total_power = power_out0 + power_out1
+        insertion_loss_dB = -10 * np.log10(total_power)
+        ```
 
         Spectral analysis:
 
-        >>> wavelengths = np.linspace(1.4, 1.7, 301)
-        >>> s_matrices = sax.models.mmi1x2(
-        ...     wl=wavelengths, wl0=1.55, fwhm=0.2, loss_dB=0.4
-        ... )
-        >>> transmission = np.abs(s_matrices[("o1", "o2")]) ** 2
-        >>> # Analyze spectral response and bandwidth
+        ```python
+        wavelengths = np.linspace(1.4, 1.7, 301)
+        s_matrices = sax.models.mmi1x2(wl=wavelengths, wl0=1.55, fwhm=0.2, loss_dB=0.4)
+        transmission = np.abs(s_matrices[("o1", "o2")]) ** 2
+        # Analyze spectral response and bandwidth
+        ```
 
         Bandwidth optimization:
 
-        >>> # Design for specific bandwidth
-        >>> target_bandwidth = 0.1  # 100 nm
-        >>> s_matrix = sax.models.mmi1x2(wl=1.55, fwhm=target_bandwidth, loss_dB=0.3)
+        ```python
+        # Design for specific bandwidth
+        target_bandwidth = 0.1  # 100 nm
+        s_matrix = sax.models.mmi1x2(wl=1.55, fwhm=target_bandwidth, loss_dB=0.3)
+        ```
 
     Note:
         The spectral response follows a Gaussian profile in the frequency domain:
@@ -268,46 +280,52 @@ def mmi2x2(
     Examples:
         Symmetric 3dB MMI coupler:
 
-        >>> import sax
-        >>> import numpy as np
-        >>>
-        >>> s_matrix = sax.models.mmi2x2(
-        ...     wl=1.55,
-        ...     fwhm=0.15,
-        ...     loss_dB=0.4,
-        ...     splitting_ratio_cross=0.5,
-        ...     splitting_ratio_thru=0.5,
-        ... )
-        >>> bar_power = abs(s_matrix[("o1", "o3")]) ** 2
-        >>> cross_power = abs(s_matrix[("o1", "o4")]) ** 2
+        ```python
+        import sax
+        import numpy as np
+
+        s_matrix = sax.models.mmi2x2(
+            wl=1.55,
+            fwhm=0.15,
+            loss_dB=0.4,
+            splitting_ratio_cross=0.5,
+            splitting_ratio_thru=0.5,
+        )
+        bar_power = abs(s_matrix[("o1", "o3")]) ** 2
+        cross_power = abs(s_matrix[("o1", "o4")]) ** 2
+        ```
 
         Asymmetric MMI with different bar/cross losses:
 
-        >>> s_matrix = sax.models.mmi2x2(
-        ...     wl=1.55,
-        ...     loss_dB_thru=0.3,  # Lower bar loss
-        ...     loss_dB_cross=0.6,  # Higher cross loss
-        ...     splitting_ratio_cross=0.4,  # Imbalanced coupling
-        ...     splitting_ratio_thru=0.6,
-        ... )
+        ```python
+        s_matrix = sax.models.mmi2x2(
+            wl=1.55,
+            loss_dB_thru=0.3,  # Lower bar loss
+            loss_dB_cross=0.6,  # Higher cross loss
+            splitting_ratio_cross=0.4,  # Imbalanced coupling
+            splitting_ratio_thru=0.6,
+        )
+        ```
 
         Wavelength-shifted MMI (fabrication variation):
 
-        >>> s_matrix = sax.models.mmi2x2(
-        ...     wl=1.55,
-        ...     wl0=1.55,
-        ...     shift=0.01,  # 10 nm shift from process variation
-        ...     fwhm=0.12,
-        ... )
+        ```python
+        s_matrix = sax.models.mmi2x2(
+            wl=1.55,
+            wl0=1.55,
+            shift=0.01,  # 10 nm shift from process variation
+            fwhm=0.12,
+        )
+        ```
 
         Spectral analysis of MMI coupler:
 
-        >>> wavelengths = np.linspace(1.45, 1.65, 201)
-        >>> s_matrices = sax.models.mmi2x2(
-        ...     wl=wavelengths, wl0=1.55, fwhm=0.18, loss_dB=0.5
-        ... )
-        >>> bar_transmission = np.abs(s_matrices[("o1", "o3")]) ** 2
-        >>> cross_transmission = np.abs(s_matrices[("o1", "o4")]) ** 2
+        ```python
+        wavelengths = np.linspace(1.45, 1.65, 201)
+        s_matrices = sax.models.mmi2x2(wl=wavelengths, wl0=1.55, fwhm=0.18, loss_dB=0.5)
+        bar_transmission = np.abs(s_matrices[("o1", "o3")]) ** 2
+        cross_transmission = np.abs(s_matrices[("o1", "o4")]) ** 2
+        ```
 
     Note:
         The cross-coupled terms include a 90-degree phase shift (1j factor)
@@ -443,24 +461,28 @@ def _mmi_nxn(
     Examples:
         4x4 MMI with custom splitting:
 
-        >>> import numpy as np
-        >>> import sax
-        >>>
-        >>> # Create custom 4x4 splitting matrix
-        >>> splitting = np.array(
-        ...     [
-        ...         [0.7, 0.1, 0.1, 0.1],  # Input 0 distribution
-        ...         [0.1, 0.7, 0.1, 0.1],  # Input 1 distribution
-        ...         [0.1, 0.1, 0.7, 0.1],  # Input 2 distribution
-        ...         [0.1, 0.1, 0.1, 0.7],  # Input 3 distribution
-        ...     ]
-        ... )
-        >>> s_matrix = sax.models._mmi_nxn(n=4, wl=1.55, splitting_matrix=splitting)
+        ```python
+        import numpy as np
+        import sax
+
+        # Create custom 4x4 splitting matrix
+        splitting = np.array(
+            [
+                [0.7, 0.1, 0.1, 0.1],  # Input 0 distribution
+                [0.1, 0.7, 0.1, 0.1],  # Input 1 distribution
+                [0.1, 0.1, 0.7, 0.1],  # Input 2 distribution
+                [0.1, 0.1, 0.1, 0.7],  # Input 3 distribution
+            ]
+        )
+        s_matrix = sax.models._mmi_nxn(n=4, wl=1.55, splitting_matrix=splitting)
+        ```
 
         8x8 MMI with port-specific losses:
 
-        >>> losses = np.array([0.2, 0.3, 0.25, 0.35, 0.3, 0.4, 0.3, 0.2])
-        >>> s_matrix = sax.models._mmi_nxn(n=8, loss_dB=losses, fwhm=0.15)
+        ```python
+        losses = np.array([0.2, 0.3, 0.25, 0.35, 0.3, 0.4, 0.3, 0.2])
+        s_matrix = sax.models._mmi_nxn(n=8, loss_dB=losses, fwhm=0.15)
+        ```
 
     Note:
         This is a generalized model that can represent various MMI configurations:

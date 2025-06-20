@@ -60,39 +60,46 @@ def straight(
     Examples:
         Basic lossless waveguide:
 
-        >>> import sax
-        >>>
-        >>> # Lossless silicon waveguide
-        >>> s_matrix = sax.models.straight(
-        ...     wl=1.55, length=100.0, neff=2.4, ng=3.8, loss_dB_cm=0.0
-        ... )
-        >>> phase = jnp.angle(s_matrix[("in0", "out0")])
-        >>> print(f"Phase shift: {phase:.3f} radians")
+        ```python
+        import sax
+
+        # Lossless silicon waveguide
+        s_matrix = sax.models.straight(
+            wl=1.55, length=100.0, neff=2.4, ng=3.8, loss_dB_cm=0.0
+        )
+        phase = jnp.angle(s_matrix[("in0", "out0")])
+        print(f"Phase shift: {phase:.3f} radians")
+        ```
 
         Lossy waveguide analysis:
 
-        >>> # Waveguide with realistic loss
-        >>> s_matrix = sax.models.straight(
-        ...     wl=1.55,
-        ...     length=1000.0,  # 1 mm
-        ...     loss_dB_cm=2.0,  # 2 dB/cm loss
-        ... )
-        >>> transmission = abs(s_matrix[("in0", "out0")]) ** 2
-        >>> loss_dB = -10 * jnp.log10(transmission)
-        >>> print(f"Total loss: {loss_dB:.2f} dB")
+        ```python
+        # Waveguide with realistic loss
+        s_matrix = sax.models.straight(
+            wl=1.55,
+            length=1000.0,  # 1 mm
+            loss_dB_cm=2.0,  # 2 dB/cm loss
+        )
+        transmission = abs(s_matrix[("in0", "out0")]) ** 2
+        loss_dB = -10 * jnp.log10(transmission)
+        print(f"Total loss: {loss_dB:.2f} dB")
+        ```
 
         Dispersion analysis:
 
-        >>> import numpy as np
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> s_matrices = sax.models.straight(
-        ...     wl=wavelengths,
-        ...     length=100.0,
-        ...     neff=2.4,
-        ...     ng=4.0,  # High dispersion
-        ... )
-        >>> phases = np.angle(s_matrices[("in0", "out0")])
-        >>> group_delay = np.gradient(phases, wavelengths)
+        ```python
+        import numpy as np
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s_matrices = sax.models.straight(
+            wl=wavelengths,
+            length=100.0,
+            neff=2.4,
+            ng=4.0,  # High dispersion
+        )
+        phases = np.angle(s_matrices[("in0", "out0")])
+        group_delay = np.gradient(phases, wavelengths)
+        ```
 
     Note:
         The dispersion model uses a linear approximation:
@@ -149,34 +156,41 @@ def attenuator(*, loss: sax.FloatArrayLike = 0.0) -> sax.SDict:
     Examples:
         Fixed attenuator:
 
-        >>> import sax
-        >>>
-        >>> # 6 dB attenuator
-        >>> s_matrix = sax.models.attenuator(loss=6.0)
-        >>> transmission = abs(s_matrix[("in0", "out0")]) ** 2
-        >>> print(f"Power transmission: {transmission:.3f}")  # Should be ~0.251
-        >>>
-        >>> # Verify in dB
-        >>> loss_dB = -10 * jnp.log10(transmission)
-        >>> print(f"Loss: {loss_dB:.1f} dB")  # Should be 6.0 dB
+        ```python
+        import sax
+
+        # 6 dB attenuator
+        s_matrix = sax.models.attenuator(loss=6.0)
+        transmission = abs(s_matrix[("in0", "out0")]) ** 2
+        print(f"Power transmission: {transmission:.3f}")  # Should be ~0.251
+
+        # Verify in dB
+        loss_dB = -10 * jnp.log10(transmission)
+        print(f"Loss: {loss_dB:.1f} dB")  # Should be 6.0 dB
+        ```
 
         Variable attenuator:
 
-        >>> import numpy as np
-        >>> losses = np.linspace(0, 20, 101)  # 0 to 20 dB
-        >>> transmissions = []
-        >>> for loss_val in losses:
-        ...     s = sax.models.attenuator(loss=loss_val)
-        ...     transmissions.append(abs(s[("in0", "out0")]) ** 2)
+        ```python
+        import numpy as np
+
+        losses = np.linspace(0, 20, 101)  # 0 to 20 dB
+        transmissions = []
+        for loss_val in losses:
+            s = sax.models.attenuator(loss=loss_val)
+            transmissions.append(abs(s[("in0", "out0")]) ** 2)
+        ```
 
         Wavelength-dependent attenuator (filter):
 
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> # Gaussian spectral filter
-        >>> center_wl = 1.55
-        >>> bandwidth = 0.01
-        >>> spectral_loss = 20 * np.exp(-(((wavelengths - center_wl) / bandwidth) ** 2))
-        >>> s_matrices = sax.models.attenuator(loss=spectral_loss)
+        ```python
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        # Gaussian spectral filter
+        center_wl = 1.55
+        bandwidth = 0.01
+        spectral_loss = 20 * np.exp(-(((wavelengths - center_wl) / bandwidth) ** 2))
+        s_matrices = sax.models.attenuator(loss=spectral_loss)
+        ```
 
     Note:
         This model represents an ideal attenuator with:
@@ -246,38 +260,44 @@ def phase_shifter(
     Examples:
         Basic phase shifter:
 
-        >>> import sax
-        >>> import numpy as np
-        >>>
-        >>> # No voltage applied
-        >>> s_matrix = sax.models.phase_shifter(wl=1.55, voltage=0.0, length=100.0)
-        >>> phase_0V = np.angle(s_matrix[("o1", "o2")])
-        >>>
-        >>> # 1V applied
-        >>> s_matrix = sax.models.phase_shifter(wl=1.55, voltage=1.0, length=100.0)
-        >>> phase_1V = np.angle(s_matrix[("o1", "o2")])
-        >>> voltage_phase_shift = phase_1V - phase_0V
-        >>> print(f"Voltage-induced phase shift: {voltage_phase_shift:.3f} rad")
+        ```python
+        import sax
+        import numpy as np
+
+        # No voltage applied
+        s_matrix = sax.models.phase_shifter(wl=1.55, voltage=0.0, length=100.0)
+        phase_0V = np.angle(s_matrix[("o1", "o2")])
+
+        # 1V applied
+        s_matrix = sax.models.phase_shifter(wl=1.55, voltage=1.0, length=100.0)
+        phase_1V = np.angle(s_matrix[("o1", "o2")])
+        voltage_phase_shift = phase_1V - phase_0V
+        print(f"Voltage-induced phase shift: {voltage_phase_shift:.3f} rad")
+        ```
 
         Phase modulation analysis:
 
-        >>> voltages = np.linspace(-2, 2, 101)
-        >>> phases = []
-        >>> for v in voltages:
-        ...     s = sax.models.phase_shifter(voltage=v, length=50.0)
-        ...     phases.append(np.angle(s[("o1", "o2")]))
-        >>> phases = np.array(phases)
-        >>> # Should see linear relationship with slope = π * length
+        ```python
+        voltages = np.linspace(-2, 2, 101)
+        phases = []
+        for v in voltages:
+            s = sax.models.phase_shifter(voltage=v, length=50.0)
+            phases.append(np.angle(s[("o1", "o2")]))
+        phases = np.array(phases)
+        # Should see linear relationship with slope = π * length
+        ```
 
         Lossy phase shifter (e.g., silicon modulator):
 
-        >>> s_matrix = sax.models.phase_shifter(
-        ...     voltage=1.0,
-        ...     length=1000.0,  # 1 mm
-        ...     loss=0.5,  # 0.5 dB loss
-        ... )
-        >>> transmission = abs(s_matrix[("o1", "o2")]) ** 2
-        >>> phase_shift = np.angle(s_matrix[("o1", "o2")])
+        ```python
+        s_matrix = sax.models.phase_shifter(
+            voltage=1.0,
+            length=1000.0,  # 1 mm
+            loss=0.5,  # 0.5 dB loss
+        )
+        transmission = abs(s_matrix[("o1", "o2")]) ** 2
+        phase_shift = np.angle(s_matrix[("o1", "o2")])
+        ```
 
     Note:
         This simplified model assumes:

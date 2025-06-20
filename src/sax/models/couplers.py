@@ -46,29 +46,35 @@ def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
     Examples:
         3dB coupler (equal splitting):
 
-        >>> import sax
-        >>>
-        >>> s_matrix = sax.models.coupler_ideal(coupling=0.5)
-        >>> # Bar transmission (straight through)
-        >>> bar_power = abs(s_matrix[("in0", "out0")]) ** 2
-        >>> # Cross transmission (between arms)
-        >>> cross_power = abs(s_matrix[("in0", "out1")]) ** 2
-        >>> print(f"Bar power: {bar_power:.3f}")  # Should be 0.5
-        >>> print(f"Cross power: {cross_power:.3f}")  # Should be 0.5
+        ```python
+        import sax
+
+        s_matrix = sax.models.coupler_ideal(coupling=0.5)
+        # Bar transmission (straight through)
+        bar_power = abs(s_matrix[("in0", "out0")]) ** 2
+        # Cross transmission (between arms)
+        cross_power = abs(s_matrix[("in0", "out1")]) ** 2
+        print(f"Bar power: {bar_power:.3f}")  # Should be 0.5
+        print(f"Cross power: {cross_power:.3f}")  # Should be 0.5
+        ```
 
         Asymmetric coupler:
 
-        >>> s_matrix = sax.models.coupler_ideal(coupling=0.1)  # 10% coupling
-        >>> bar_power = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.9
-        >>> cross_power = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.1
+        ```python
+        s_matrix = sax.models.coupler_ideal(coupling=0.1)  # 10% coupling
+        bar_power = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.9
+        cross_power = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.1
+        ```
 
         Phase relationship verification:
 
-        >>> s_matrix = sax.models.coupler_ideal(coupling=0.5)
-        >>> bar_phase = jnp.angle(s_matrix[("in0", "out0")])
-        >>> cross_phase = jnp.angle(s_matrix[("in0", "out1")])
-        >>> phase_diff = cross_phase - bar_phase
-        >>> print(f"Phase difference: {phase_diff:.3f} rad")  # Should be π/2
+        ```python
+        s_matrix = sax.models.coupler_ideal(coupling=0.5)
+        bar_phase = jnp.angle(s_matrix[("in0", "out0")])
+        cross_phase = jnp.angle(s_matrix[("in0", "out1")])
+        phase_diff = cross_phase - bar_phase
+        print(f"Phase difference: {phase_diff:.3f} rad")  # Should be π/2
+        ```
 
     Note:
         This is an idealized lossless model that assumes:
@@ -154,42 +160,48 @@ def coupler(
     Examples:
         Basic dispersive coupler:
 
-        >>> import sax
-        >>> import numpy as np
-        >>>
-        >>> s_matrix = sax.models.coupler(
-        ...     wl=1.55,
-        ...     length=10.0,  # 10 μm coupling length
-        ...     coupling0=0.1,
-        ...     dn=0.015
-        ... )
-        >>> bar_transmission = abs(s_matrix[('in0', 'out0')])**2
-        >>> cross_transmission = abs(s_matrix[('in0', 'out1')])**2
+        ```python
+        import sax
+        import numpy as np
+
+        s_matrix = sax.models.coupler(
+            wl=1.55,
+            length=10.0,  # 10 μm coupling length
+            coupling0=0.1,
+            dn=0.015
+        )
+        bar_transmission = abs(s_matrix[('in0', 'out0')])**2
+        cross_transmission = abs(s_matrix[('in0', 'out1')])**2
+        ```
 
         Wavelength sweep analysis:
 
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> s_matrices = sax.models.coupler(
-        ...     wl=wavelengths,
-        ...     length=20.0,
-        ...     coupling0=0.2,
-        ...     dn=0.02,
-        ...     dn1=0.1  # Include dispersion
-        ... )
-        >>> bar_power = np.abs(s_matrices[('in0', 'out0')])**2
-        >>> cross_power = np.abs(s_matrices[('in0', 'out1')])**2
+        ```python
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s_matrices = sax.models.coupler(
+            wl=wavelengths,
+            length=20.0,
+            coupling0=0.2,
+            dn=0.02,
+            dn1=0.1  # Include dispersion
+        )
+        bar_power = np.abs(s_matrices[('in0', 'out0')])**2
+        cross_power = np.abs(s_matrices[('in0', 'out1')])**2
+        ```
 
         Design for specific coupling:
 
-        >>> # Design for 3dB coupling at 1.55 μm
-        >>> target_coupling = 0.5
-        >>> # Adjust length and coupling0 to achieve target
-        >>> s_matrix = sax.models.coupler(
-        ...     wl=1.55,
-        ...     length=15.7,  # Calculated for π/2 phase
-        ...     coupling0=0.0,
-        ...     dn=0.02
-        ... )
+        ```python
+        # Design for 3dB coupling at 1.55 μm
+        target_coupling = 0.5
+        # Adjust length and coupling0 to achieve target
+        s_matrix = sax.models.coupler(
+            wl=1.55,
+            length=15.7,  # Calculated for π/2 phase
+            coupling0=0.0,
+            dn=0.02
+        )
+        ```
 
     .. code::
 
@@ -287,37 +299,43 @@ def grating_coupler(
     Examples:
         Basic grating coupler:
 
-        >>> import sax
-        >>> import numpy as np
-        >>>
-        >>> s_matrix = sax.models.grating_coupler(
-        ...     wl=1.55,
-        ...     wl0=1.55,
-        ...     loss=3.0,  # 3 dB insertion loss
-        ...     bandwidth=0.035,  # 35 nm bandwidth
-        ... )
-        >>> coupling_efficiency = abs(s_matrix[("in0", "out0")]) ** 2
-        >>> print(f"Coupling efficiency: {coupling_efficiency:.3f}")
+        ```python
+        import sax
+        import numpy as np
+
+        s_matrix = sax.models.grating_coupler(
+            wl=1.55,
+            wl0=1.55,
+            loss=3.0,  # 3 dB insertion loss
+            bandwidth=0.035,  # 35 nm bandwidth
+        )
+        coupling_efficiency = abs(s_matrix[("in0", "out0")]) ** 2
+        print(f"Coupling efficiency: {coupling_efficiency:.3f}")
+        ```
 
         Spectral response analysis:
 
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> s_matrices = sax.models.grating_coupler(
-        ...     wl=wavelengths, wl0=1.55, loss=4.0, bandwidth=0.040
-        ... )
-        >>> transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
-        >>> # Plot spectral response
+        ```python
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s_matrices = sax.models.grating_coupler(
+            wl=wavelengths, wl0=1.55, loss=4.0, bandwidth=0.040
+        )
+        transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
+        # Plot spectral response
+        ```
 
         Grating with reflections:
 
-        >>> s_matrix = sax.models.grating_coupler(
-        ...     wl=1.55,
-        ...     loss=3.5,
-        ...     reflection=0.05,  # 5% waveguide reflection
-        ...     reflection_fiber=0.02,  # 2% fiber reflection
-        ... )
-        >>> waveguide_reflection = abs(s_matrix[("in0", "in0")]) ** 2
-        >>> fiber_reflection = abs(s_matrix[("out0", "out0")]) ** 2
+        ```python
+        s_matrix = sax.models.grating_coupler(
+            wl=1.55,
+            loss=3.5,
+            reflection=0.05,  # 5% waveguide reflection
+            reflection_fiber=0.02,  # 2% fiber reflection
+        )
+        waveguide_reflection = abs(s_matrix[("in0", "in0")]) ** 2
+        fiber_reflection = abs(s_matrix[("out0", "out0")]) ** 2
+        ```
 
     .. code::
 

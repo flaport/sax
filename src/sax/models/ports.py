@@ -33,21 +33,26 @@ def set_port_naming_strategy(strategy: PortNamingStrategy) -> PortNamingStrategy
     Examples:
         Switch to optical naming:
 
-        >>> import sax.models
-        >>> sax.models.set_port_naming_strategy("optical")
-        'optical'
-        >>> # Now models will use o1, o2, o3, ... port names
+        ```python
+        import sax.models
+
+        sax.models.set_port_naming_strategy("optical")
+        # Now models will use o1, o2, o3, ... port names
+        ```
 
         Switch to input/output naming:
 
-        >>> sax.models.set_port_naming_strategy("inout")
-        'inout'
-        >>> # Now models will use in0, in1, out0, out1, ... port names
+        ```python
+        sax.models.set_port_naming_strategy("inout")
+        # Now models will use in0, in1, out0, out1, ... port names
+        ```
 
         Check current strategy:
 
-        >>> current = sax.models.get_port_naming_strategy()
-        >>> print(f"Current strategy: {current}")
+        ```python
+        current = sax.models.get_port_naming_strategy()
+        print(f"Current strategy: {current}")
+        ```
 
     Note:
         This is a global setting that affects all subsequently created model
@@ -76,16 +81,21 @@ def get_port_naming_strategy() -> PortNamingStrategy:
     Examples:
         Check current strategy:
 
-        >>> import sax.models
-        >>> strategy = sax.models.get_port_naming_strategy()
-        >>> print(f"Current strategy: {strategy}")
+        ```python
+        import sax.models
+
+        strategy = sax.models.get_port_naming_strategy()
+        print(f"Current strategy: {strategy}")
+        ```
 
         Use in conditional logic:
 
-        >>> if sax.models.get_port_naming_strategy() == "optical":
-        ...     print("Using optical port naming (o1, o2, ...)")
-        ... else:
-        ...     print("Using input/output port naming (in0, out0, ...)")
+        ```python
+        if sax.models.get_port_naming_strategy() == "optical":
+            print("Using optical port naming (o1, o2, ...)")
+        else:
+            print("Using input/output port naming (in0, out0, ...)")
+        ```
     """
     return PORT_NAMING_STRATEGY
 
@@ -125,18 +135,24 @@ class PortNamer:
         Examples:
             Create a 2x2 device (e.g., directional coupler):
 
-            >>> p = PortNamer(2, 2)
-            >>> print(p.in0, p.in1, p.out0, p.out1)  # inout strategy
+            ```python
+            p = PortNamer(2, 2)
+            print(p.in0, p.in1, p.out0, p.out1)  # inout strategy
+            ```
 
             Create a 1x2 device (e.g., splitter):
 
-            >>> p = PortNamer(1, 2)
-            >>> print(p.in0, p.out0, p.out1)
+            ```python
+            p = PortNamer(1, 2)
+            print(p.in0, p.out0, p.out1)
+            ```
 
             Force optical naming:
 
-            >>> p = PortNamer(2, 2, strategy="optical")
-            >>> print(p.o1, p.o2, p.o3, p.o4)
+            ```python
+            p = PortNamer(2, 2, strategy="optical")
+            print(p.o1, p.o2, p.o3, p.o4)
+            ```
         """
         self.num_inputs = num_inputs
         self.num_outputs = num_outputs
@@ -184,9 +200,11 @@ class PortNamer:
         Examples:
             Index-based access:
 
-            >>> p = PortNamer(2, 2)  # 2 inputs, 2 outputs
-            >>> print(p[0], p[1])  # First two ports (inputs)
-            >>> print(p[2], p[3])  # Last two ports (outputs)
+            ```python
+            p = PortNamer(2, 2)  # 2 inputs, 2 outputs
+            print(p[0], p[1])  # First two ports (inputs)
+            print(p[2], p[3])  # Last two ports (outputs)
+            ```
         """
         if idx < 0:
             msg = "Index must be a non-negative integer."
@@ -215,9 +233,11 @@ class PortNamer:
         Examples:
             Check port direction:
 
-            >>> p = PortNamer(2, 2)
-            >>> print(p.is_input_port("in0"))  # True
-            >>> print(p.is_input_port("out0"))  # False
+            ```python
+            p = PortNamer(2, 2)
+            print(p.is_input_port("in0"))  # True
+            print(p.is_input_port("out0"))  # False
+            ```
         """
         port = port.lower()
         if port.startswith("in"):
@@ -237,9 +257,11 @@ class PortNamer:
         Examples:
             Check port direction:
 
-            >>> p = PortNamer(2, 2)
-            >>> print(p.is_output_port("out0"))  # True
-            >>> print(p.is_output_port("in0"))  # False
+            ```python
+            p = PortNamer(2, 2)
+            print(p.is_output_port("out0"))  # True
+            print(p.is_output_port("in0"))  # False
+            ```
         """
         return not self.is_input_port(port)
 
@@ -255,9 +277,11 @@ class PortNamer:
         Examples:
             Check port direction by index:
 
-            >>> p = PortNamer(2, 2)
-            >>> print(p.is_input_port_idx(0))  # True (first input)
-            >>> print(p.is_input_port_idx(2))  # False (first output)
+            ```python
+            p = PortNamer(2, 2)
+            print(p.is_input_port_idx(0))  # True (first input)
+            print(p.is_input_port_idx(2))  # False (first output)
+            ```
         """
         return self.is_input_port(self[idx])
 
@@ -273,8 +297,10 @@ class PortNamer:
         Examples:
             Check port direction by index:
 
-            >>> p = PortNamer(2, 2)
-            >>> print(p.is_output_port_idx(2))  # True (first output)
-            >>> print(p.is_output_port_idx(0))  # False (first input)
+            ```python
+            p = PortNamer(2, 2)
+            print(p.is_output_port_idx(2))  # True (first output)
+            print(p.is_output_port_idx(0))  # False (first input)
+            ```
         """
         return self.is_output_port(self[idx])

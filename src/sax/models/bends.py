@@ -51,20 +51,24 @@ def bend(
     Examples:
         Basic bend simulation:
 
-        >>> import numpy as np
-        >>> import sax
-        >>>
-        >>> # Single wavelength simulation
-        >>> s_matrix = sax.models.bend(wl=1.55, length=20.0, loss_dB_cm=0.2)
-        >>> print(f"Transmission: {s_matrix[('in0', 'out0')]}")
+        ```python
+        import numpy as np
+        import sax
+
+        # Single wavelength simulation
+        s_matrix = sax.models.bend(wl=1.55, length=20.0, loss_dB_cm=0.2)
+        print(f"Transmission: {s_matrix[('in0', 'out0')]}")
+        ```
 
         Multi-wavelength analysis:
 
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> s_matrices = sax.models.bend(
-        ...     wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
-        ... )
-        >>> transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
+        ```python
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s_matrices = sax.models.bend(
+            wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
+        )
+        transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
+        ```
 
     Note:
         This model treats the bend as an equivalent straight waveguide and does not

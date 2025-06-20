@@ -45,30 +45,37 @@ def splitter_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
     Examples:
         Equal power splitter (3dB splitter):
 
-        >>> import sax
-        >>>
-        >>> # 50/50 power splitter
-        >>> s_matrix = sax.models.splitter_ideal(coupling=0.5)
-        >>> print(f"Power to out0: {abs(s_matrix[('in0', 'out0')]) ** 2}")
-        >>> print(f"Power to out1: {abs(s_matrix[('in0', 'out1')]) ** 2}")
-        >>> # Both should be 0.5
+        ```python
+        import sax
+
+        # 50/50 power splitter
+        s_matrix = sax.models.splitter_ideal(coupling=0.5)
+        print(f"Power to out0: {abs(s_matrix[('in0', 'out0')]) ** 2}")
+        print(f"Power to out1: {abs(s_matrix[('in0', 'out1')]) ** 2}")
+        # Both should be 0.5
+        ```
 
         Asymmetric splitter:
 
-        >>> # 90/10 power splitter
-        >>> s_matrix = sax.models.splitter_ideal(coupling=0.1)
-        >>> power_out0 = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.9
-        >>> power_out1 = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.1
+        ```python
+        # 90/10 power splitter
+        s_matrix = sax.models.splitter_ideal(coupling=0.1)
+        power_out0 = abs(s_matrix[("in0", "out0")]) ** 2  # Should be 0.9
+        power_out1 = abs(s_matrix[("in0", "out1")]) ** 2  # Should be 0.1
+        ```
 
         Variable coupling analysis:
 
-        >>> import numpy as np
-        >>> couplings = np.linspace(0, 1, 101)
-        >>> power_ratios = []
-        >>> for c in couplings:
-        ...     s = sax.models.splitter_ideal(coupling=c)
-        ...     ratio = abs(s[("in0", "out1")]) ** 2 / abs(s[("in0", "out0")]) ** 2
-        ...     power_ratios.append(ratio)
+        ```python
+        import numpy as np
+
+        couplings = np.linspace(0, 1, 101)
+        power_ratios = []
+        for c in couplings:
+            s = sax.models.splitter_ideal(coupling=c)
+            ratio = abs(s[("in0", "out1")]) ** 2 / abs(s[("in0", "out0")]) ** 2
+            power_ratios.append(ratio)
+        ```
 
     Note:
         This is an idealized lossless model that assumes:

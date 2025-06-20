@@ -38,20 +38,25 @@ def crossing_ideal(wl: sax.FloatArrayLike = 1.5) -> sax.SDict:
     Examples:
         Basic crossing simulation:
 
-        >>> import sax
-        >>>
-        >>> # Single wavelength
-        >>> s_matrix = sax.models.crossing_ideal(wl=1.55)
-        >>> print(f"Horizontal transmission: {s_matrix[('o1', 'o3')]}")
-        >>> print(f"Vertical transmission: {s_matrix[('o2', 'o4')]}")
+        ```python
+        import sax
+
+        # Single wavelength
+        s_matrix = sax.models.crossing_ideal(wl=1.55)
+        print(f"Horizontal transmission: {s_matrix[('o1', 'o3')]}")
+        print(f"Vertical transmission: {s_matrix[('o2', 'o4')]}")
+        ```
 
         Multi-wavelength analysis:
 
-        >>> import numpy as np
-        >>> wavelengths = np.linspace(1.5, 1.6, 101)
-        >>> s_matrices = sax.models.crossing_ideal(wl=wavelengths)
-        >>> # All transmissions should be unity
-        >>> transmission = np.abs(s_matrices[("o1", "o3")]) ** 2
+        ```python
+        import numpy as np
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s_matrices = sax.models.crossing_ideal(wl=wavelengths)
+        # All transmissions should be unity
+        transmission = np.abs(s_matrices[("o1", "o3")]) ** 2
+        ```
 
     Note:
         This is an idealized model that assumes:
