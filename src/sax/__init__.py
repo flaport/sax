@@ -28,6 +28,8 @@ from .saxtypes import (
     FloatArray,
     FloatArray1D,
     FloatArray1DLike,
+    FloatArray2D,
+    FloatArray2DLike,
     FloatArrayLike,
     FloatLike,
     IOLike,
@@ -200,6 +202,7 @@ from .backends import (
 )
 
 from . import models
+from .models import PortNamer
 
 __all__ = [  # noqa: RUF022
     "AnyNetlist",
@@ -229,6 +232,8 @@ __all__ = [  # noqa: RUF022
     "FloatArray",
     "FloatArray1D",
     "FloatArray1DLike",
+    "FloatArray2D",
+    "FloatArray2DLike",
     "FloatArrayLike",
     "FloatLike",
     "IOLike",
@@ -267,6 +272,7 @@ __all__ = [  # noqa: RUF022
     "PortMapMM",
     "PortMapSM",
     "PortMode",
+    "PortNamer",
     "Ports",
     "RecursiveNetlist",
     "SCoo",
@@ -301,8 +307,6 @@ __all__ = [  # noqa: RUF022
     "STypeSM",
     "Settings",
     "SettingsValue",
-    "WLS_C",
-    "WLS_O",
     "WL_C",
     "WL_C_MAX",
     "WL_C_MIN",

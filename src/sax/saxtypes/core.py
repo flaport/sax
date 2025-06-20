@@ -21,6 +21,8 @@ __all__ = [
     "FloatArray",
     "FloatArray1D",
     "FloatArray1DLike",
+    "FloatArray2D",
+    "FloatArray2DLike",
     "FloatArrayLike",
     "FloatLike",
     "IOLike",
@@ -469,6 +471,37 @@ FloatArray1D: TypeAlias = Annotated[
 
 
 @overload
+def val_float_array_2d(
+    obj: Any, *, strict: bool = ..., cast: Literal[True] = True
+) -> FloatArray2D: ...
+
+
+@overload
+def val_float_array_2d(
+    obj: Any, *, strict: bool = ..., cast: Literal[False] = False
+) -> FloatArray2DLike: ...
+
+
+def val_float_array_2d(
+    obj: Any, *, strict: bool = False, cast: bool = True
+) -> FloatArray2DLike:
+    return _val_array_type(
+        obj,
+        strict=strict,
+        cast=cast,
+        type_def=FloatArray2D if strict else FloatArray2DLike,
+        default_dtype=np.float64 if _x64_enabled() else np.float32,
+        type_name="FloatArray2D" if strict else "FloatArray2DLike",
+    )
+
+
+FloatArray2D: TypeAlias = Annotated[
+    ArrayLike, np.floating, 2, val(val_float_array_2d, strict=False)
+]
+"""2-dimensional Float array."""
+
+
+@overload
 def val_complex_array_1d(
     obj: Any, *, strict: bool = ..., cast: Literal[True] = True
 ) -> ComplexArray1D: ...
@@ -541,6 +574,11 @@ IntArray1DLike: TypeAlias = Annotated[
 
 FloatArray1DLike: TypeAlias = Annotated[
     FloatArrayLike, np.floating, 1, val(val_float_array_1d, cast=False)
+]
+"""1-dimensional float array."""
+
+FloatArray2DLike: TypeAlias = Annotated[
+    FloatArrayLike, np.floating, 2, val(val_float_array_2d, cast=False)
 ]
 """1-dimensional float array."""
 
