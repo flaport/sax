@@ -10,59 +10,64 @@ from pydantic import validate_call
 
 import sax
 
-from .constants import EPS
-from .s import reciprocal
 
-__all__ = ["copier", "coupler", "passthru", "straight", "unitary"]
-
-
+@cache
 @validate_call
-def straight(
-    *,
-    wl: sax.FloatArrayLike = 1.55,
-    wl0: sax.Float = 1.55,
-    neff: sax.Float = 2.34,
-    ng: sax.Float = 3.4,
-    length: sax.Float = 10.0,
-    loss: sax.Float = 0.0,
-) -> sax.SDict:
-    """A simple straight waveguide model.
+def model_2port(p1: sax.Name, p2: sax.Name) -> sax.SDictModel:
+    """Generate a general 2-port model."""
 
-    Args:
-        wl: wavelength in microns.
-        wl0: reference wavelength in microns.
-        neff: effective index.
-        ng: group index.
-        length: length of the waveguide in microns.
-        loss: loss in dB/cm.
+    @jax.jit
+    @validate_call
+    def model_2port(wl: sax.FloatArrayLike = 1.5) -> sax.SDict:
+        wl = jnp.asarray(wl)
+        return sax.reciprocal({(p1, p2): jnp.ones_like(wl)})
 
-    """
-    dwl: sax.FloatArray = sax.into[sax.FloatArray](wl) - wl0
-    dneff_dwl = (ng - neff) / wl0
-    _neff = neff - dwl * dneff_dwl
-    phase = 2 * jnp.pi * _neff * length / wl
-    amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
-    transmission = amplitude * jnp.exp(1j * phase)
-    return reciprocal(
-        {
-            ("in0", "out0"): transmission,
-        },
-    )
+    return model_2port
 
 
+@cache
 @validate_call
-def coupler(*, coupling: float = 0.5) -> sax.SDict:
-    """A simple coupler model."""
-    kappa = coupling**0.5
-    tau = (1 - coupling) ** 0.5
-    return reciprocal(
-        {
-            ("in0", "out0"): tau,
-            ("in0", "out1"): 1j * kappa,
-            ("in1", "out0"): 1j * kappa,
-            ("in1", "out1"): tau,
-        },
-    )
+def model_3port(p1: sax.Name, p2: sax.Name, p3: sax.Name) -> sax.SDictModel:
+    """Generate a general 3-port model."""
+
+    @jax.jit
+    @validate_call
+    def model_3port(wl: sax.FloatArrayLike = 1.5) -> sax.SDict:
+        wl = jnp.asarray(wl)
+        thru = jnp.ones_like(wl) / jnp.sqrt(2)
+        return sax.reciprocal(
+            {
+                (p1, p2): thru,
+                (p1, p3): thru,
+            }
+        )
+
+    return model_3port
+
+
+@cache
+@validate_call
+def model_4port(
+    p1: sax.Name, p2: sax.Name, p3: sax.Name, p4: sax.Name
+) -> sax.SDictModel:
+    """Generate a general 4-port model."""
+
+    @jax.jit
+    @validate_call
+    def model_4port(wl: sax.FloatArrayLike = 1.5) -> sax.SDict:
+        wl = jnp.asarray(wl)
+        thru = jnp.ones_like(wl) / jnp.sqrt(2)
+        cross = 1j * thru
+        return sax.reciprocal(
+            {
+                (p1, p4): thru,
+                (p2, p3): thru,
+                (p1, p3): cross,
+                (p2, p4): cross,
+            }
+        )
+
+    return model_4port
 
 
 @cache
@@ -72,7 +77,6 @@ def unitary(
     num_outputs: int | None = None,
     ports: tuple[str, ...] | None = None,
     *,
-    jit: bool = True,
     reciprocal: bool = True,
     diagonal: bool = False,
 ) -> sax.SCooModel:
@@ -119,7 +123,7 @@ def unitary(
 
     # Now we need to normalize the squared S-matrix
     U, s, V = jnp.linalg.svd(S, full_matrices=False)
-    S = jnp.sqrt(U @ jnp.diag(jnp.where(s > EPS, 1, 0)) @ V)
+    S = jnp.sqrt(U @ jnp.diag(jnp.where(s > sax.EPS, 1, 0)) @ V)
 
     # Now create subset of this matrix we're interested in:
     r = jnp.concatenate(
@@ -129,7 +133,7 @@ def unitary(
     S = S[r, :][:, r]
 
     # let's convert it in SCOO format:
-    Si, Sj = jnp.where(S > EPS)
+    Si, Sj = jnp.where(S > sax.EPS)
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
@@ -138,14 +142,15 @@ def unitary(
         **{p: i + num_inputs for i, p in enumerate(output_ports)},
     }
 
-    def func(*, wl: sax.Float = 1.5) -> sax.SCoo:
+    @validate_call
+    def func(*, wl: sax.FloatArrayLike = 1.5) -> sax.SCoo:
         wl_ = jnp.asarray(wl)
         Sx_ = jnp.broadcast_to(Sx, (*wl_.shape, *Sx.shape))
         return Si, Sj, Sx_, pm
 
     func.__name__ = f"unitary_{num_inputs}_{num_outputs}"
     func.__qualname__ = f"unitary_{num_inputs}_{num_outputs}"
-    return jax.jit(func) if jit else func
+    return jax.jit(func)
 
 
 @cache
@@ -155,7 +160,6 @@ def copier(
     num_outputs: int | None = None,
     ports: tuple[str, ...] | None = None,
     *,
-    jit: bool = True,
     reciprocal: bool = True,
     diagonal: bool = False,
 ) -> sax.SCooModel:
@@ -197,7 +201,7 @@ def copier(
             S = S.at[num_inputs + r, r].set(1)
 
     # let's convert it in SCOO format:
-    Si, Sj = jnp.where(jnp.sqrt(EPS) < S)
+    Si, Sj = jnp.where(jnp.sqrt(sax.EPS) < S)
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
@@ -206,14 +210,15 @@ def copier(
         **{p: i + num_inputs for i, p in enumerate(output_ports)},
     }
 
-    def func(wl: float = 1.5) -> sax.SCoo:
+    @validate_call
+    def func(wl: sax.FloatArrayLike = 1.5) -> sax.SCoo:
         wl_ = jnp.asarray(wl)
         Sx_ = jnp.broadcast_to(Sx, (*wl_.shape, *Sx.shape))
         return Si, Sj, Sx_, pm
 
     func.__name__ = f"unitary_{num_inputs}_{num_outputs}"
     func.__qualname__ = f"unitary_{num_inputs}_{num_outputs}"
-    return jax.jit(func) if jit else func
+    return jax.jit(func)
 
 
 @cache
@@ -222,7 +227,6 @@ def passthru(
     num_links: int | None = None,
     ports: tuple[str, ...] | None = None,
     *,
-    jit: bool = True,
     reciprocal: bool = True,
 ) -> sax.SCooModel:
     """A passthru model.
@@ -237,13 +241,12 @@ def passthru(
         num_links,
         num_links,
         ports,
-        jit=jit,
         reciprocal=reciprocal,
         diagonal=True,
     )
     passthru.__name__ = f"passthru_{num_links}_{num_links}"
     passthru.__qualname__ = f"passthru_{num_links}_{num_links}"
-    return jax.jit(passthru) if jit else passthru
+    return jax.jit(passthru)
 
 
 def _validate_ports(

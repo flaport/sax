@@ -26,7 +26,7 @@ def test_circuit() -> None:
     _mzi, _info = sax.circuit(
         netlist=SAMPLE_NETLIST,
         models={
-            "coupler": sax.models.coupler,
+            "coupler": sax.models.coupler_ideal,
             "waveguide": sax.models.straight,
         },
     )

@@ -25,10 +25,10 @@ SAMPLE_NETLIST = {
 
 SAMPLE_NETLIST2 = {
     "instances": {
-        "lft": sax.models.coupler,
+        "lft": sax.models.coupler_ideal,
         "top": partial(sax.models.straight, length=10.0),
         "btm": partial(sax.models.straight, length=30.0),
-        "rgt": sax.models.coupler,
+        "rgt": sax.models.coupler_ideal,
     },
     "connections": {
         "lft,out0": "btm,in0",
