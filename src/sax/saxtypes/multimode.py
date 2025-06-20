@@ -127,11 +127,11 @@ A mapping from a port combination to an S-parameter or an array of S-parameters.
 
 Example:
 
-.. code-block::
-
-    sdict: sax.SDict = {
-        ("in0", "out0"): 3.0,
-    }
+```python
+sdict: sax.SDict = {
+    ("in0", "out0"): 3.0,
+}
+```
 
 """
 
@@ -143,11 +143,11 @@ If (N+2)-D array then the S-matrix dimensions are the last two.
 
 Example:
 
-.. code-block::
-
+    ```python
     Sd = jnp.arange(9, dtype=float).reshape(3, 3)
     port_map = {"in0": 0, "in1": 2, "out0": 1}
     sdense = Sd, port_map
+    ```
 
 """
 
@@ -164,13 +164,13 @@ valid `SCoo` representation!
 
 Example:
 
-.. code-block::
-
+    ```python
     Si = jnp.arange(3, dtype=int)
     Sj = jnp.array([0, 1, 0], dtype=int)
     Sx = jnp.array([3.0, 4.0, 1.0])
     port_map = {"in0": 0, "in1": 2, "out0": 1}
     scoo: sax.SCoo = (Si, Sj, Sx, port_map)
+    ```
 
 Note:
     This representation is only recommended for internal library use. Please don't

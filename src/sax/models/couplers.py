@@ -114,6 +114,17 @@ def coupler(
 ) -> sax.SDict:
     r"""Dispersive directional coupler model.
 
+    ```
+        o2 -----                      ----- o3
+                \ ◀     length     ▶ /
+                --------------------
+    coupling0/2      coupling      coupling0/2
+                --------------------
+                /                    \
+        o1 ----◤                      ----- o4
+                bend_radius
+    ```
+
     This function models a realistic directional coupler with wavelength-dependent
     coupling and chromatic dispersion effects. The model includes both the
     coupling region dispersion and bend-induced coupling contributions.
@@ -199,17 +210,6 @@ def coupler(
         )
         ```
 
-    .. code::
-
-         o2 -----                      ----- o3
-                 \ ◀     length     ▶ /
-                  --------------------
-       coupling0/2      coupling      coupling0/2
-                  --------------------
-                 /                    \
-         o1 ----◤                      ----- o4
-                 bend_radius
-
     Note:
         The coupling strength follows the formula:
         κ_total = κ₀ + κ₁ + κ_length
@@ -255,6 +255,17 @@ def grating_coupler(
     bandwidth: sax.FloatArrayLike = 40e-3,
 ) -> sax.SDict:
     """Grating coupler model for fiber-chip coupling.
+
+    ```
+
+                       fiber out0
+
+                    /  /  /  /
+                   /  /  /  /
+
+                 _|-|_|-|_|-|___
+            in0  ______________|
+    ```
 
     This function models a grating coupler used to couple light between an
     optical fiber and an on-chip waveguide. The model includes wavelength-
@@ -330,16 +341,6 @@ def grating_coupler(
         waveguide_reflection = abs(s_matrix[("in0", "in0")]) ** 2
         fiber_reflection = abs(s_matrix[("out0", "out0")]) ** 2
         ```
-
-    .. code::
-
-                       fiber out0
-
-                    /  /  /  /
-                   /  /  /  /
-
-                 _|-|_|-|_|-|___
-            in0  ______________|
 
     Note:
         The transmission profile follows a Gaussian shape:

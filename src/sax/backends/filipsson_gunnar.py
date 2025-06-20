@@ -204,11 +204,9 @@ def _interconnect_ports(
 ) -> dict[tuple[str, str], Any]:
     """Interconnect two ports in a given model.
 
-    .. note ::
-
-        the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.
-        "A new general computer algorithm for S-matrix calculation of interconnected
-        multiports." 11th European Microwave Conference. IEEE, 1981.'
+    > the interconnect algorithm is based on equation 6 of 'Filipsson, Gunnar.
+    > "A new general computer algorithm for S-matrix calculation of interconnected
+    > multiports." 11th European Microwave Conference. IEEE, 1981.'
 
     """
     current_block_diag = {}
@@ -243,12 +241,9 @@ def _calculate_interconnected_value(
 ) -> Array:
     """Calculate an interconnected S-parameter value.
 
-    .. note ::
-
-        The interconnect algorithm is based on equation 6 in the paper below
-
-        Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
-        of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
+    > The interconnect algorithm is based on equation 6 in the paper below
+    > Filipsson, Gunnar. "A new general computer algorithm for S-matrix calculation
+    > of interconnected multiports." 11th European Microwave Conference. IEEE, 1981.
 
     """
     result = vij + (
