@@ -1,4 +1,17 @@
-"""Constants and magic numbers."""
+"""Constants and magic numbers.
+
+This module defines physical constants and optical communication band parameters
+according to ITU standards. The optical bands (O, E, S, C, L) represent different
+wavelength ranges used in fiber optic communications:
+
+- O-band (Original): 1260-1360 nm
+- E-band (Extended): 1360-1460 nm
+- S-band (Short): 1460-1530 nm
+- C-band (Conventional): 1530-1565 nm
+- L-band (Long): 1565-1625 nm
+
+Reference: https://www.fiberlabs.com/glossary/optical-communication-band/
+"""
 
 from __future__ import annotations
 
@@ -35,34 +48,42 @@ __all__ = [
     "wl_s",
 ]
 
-EPS: float = 1e-12
-C_M_S: float = 299792458.0
-C_UM_S: float = 1e6 * C_M_S
-DEFAULT_MODE: str = "TE"
-DEFAULT_MODES: tuple[str, ...] = ("TE", "TM")
+# Physical constants
+EPS: float = 1e-12  #: Small numerical epsilon for avoiding division by zero
+C_M_S: float = 299792458.0  #: Speed of light in vacuum (m/s)
+C_UM_S: float = 1e6 * C_M_S  #: Speed of light in vacuum (μm/s)
 
-DEFAULT_WL_STEP: float = 0.0001
+# Default optical mode settings
+DEFAULT_MODE: str = "TE"  #: Default optical mode
+DEFAULT_MODES: tuple[str, ...] = ("TE", "TM")  #: Default multimode configuration
 
-# https://www.fiberlabs.com/glossary/optical-communication-band/
-WL_O_MIN: float = 1.260
-WL_O_MAX: float = 1.360
-WL_O: float = 0.5 * (WL_O_MIN + WL_O_MAX)
+# Default wavelength step for array generation
+DEFAULT_WL_STEP: float = 0.0001  #: Default wavelength step (μm)
 
-WL_E_MIN: float = 1.360
-WL_E_MAX: float = 1.460
-WL_E: float = 0.5 * (WL_E_MIN + WL_E_MAX)
+# O-band wavelength range (1260-1360 nm)
+WL_O_MIN: float = 1.260  #: O-band minimum wavelength (μm)
+WL_O_MAX: float = 1.360  #: O-band maximum wavelength (μm)
+WL_O: float = 0.5 * (WL_O_MIN + WL_O_MAX)  #: O-band center wavelength (μm)
 
-WL_S_MIN: float = 1.460
-WL_S_MAX: float = 1.530
-WL_S: float = 0.5 * (WL_S_MIN + WL_S_MAX)
+# E-band wavelength range (1360-1460 nm)
+WL_E_MIN: float = 1.360  #: E-band minimum wavelength (μm)
+WL_E_MAX: float = 1.460  #: E-band maximum wavelength (μm)
+WL_E: float = 0.5 * (WL_E_MIN + WL_E_MAX)  #: E-band center wavelength (μm)
 
-WL_C_MIN: float = 1.530
-WL_C_MAX: float = 1.565
-WL_C: float = 0.5 * (WL_C_MIN + WL_C_MAX)
+# S-band wavelength range (1460-1530 nm)
+WL_S_MIN: float = 1.460  #: S-band minimum wavelength (μm)
+WL_S_MAX: float = 1.530  #: S-band maximum wavelength (μm)
+WL_S: float = 0.5 * (WL_S_MIN + WL_S_MAX)  #: S-band center wavelength (μm)
 
-WL_L_MIN: float = 1.565
-WL_L_MAX: float = 1.625
-WL_L: float = 0.5 * (WL_L_MIN + WL_L_MAX)
+# C-band wavelength range (1530-1565 nm)
+WL_C_MIN: float = 1.530  #: C-band minimum wavelength (μm)
+WL_C_MAX: float = 1.565  #: C-band maximum wavelength (μm)
+WL_C: float = 0.5 * (WL_C_MIN + WL_C_MAX)  #: C-band center wavelength (μm)
+
+# L-band wavelength range (1565-1625 nm)
+WL_L_MIN: float = 1.565  #: L-band minimum wavelength (μm)
+WL_L_MAX: float = 1.625  #: L-band maximum wavelength (μm)
+WL_L: float = 0.5 * (WL_L_MIN + WL_L_MAX)  #: L-band center wavelength (μm)
 
 
 def wl_o(
@@ -72,7 +93,25 @@ def wl_o(
     wl_min: float = WL_O_MIN,
     wl_max: float = WL_O_MAX,
 ) -> FloatArray1D:
-    """Wavelengths in the O-band."""
+    """Generate wavelength array in the O-band (Original band: 1260-1360 nm).
+
+    Args:
+        step: Wavelength step size in μm. Used when num is None.
+        num: Number of wavelength points. If provided, step is ignored.
+        wl_min: Minimum wavelength in μm. Defaults to O-band minimum.
+        wl_max: Maximum wavelength in μm. Defaults to O-band maximum.
+
+    Returns:
+        1D array of wavelengths in μm.
+
+    Example:
+        >>> # Generate O-band wavelengths with default step
+        >>> wl = wl_o()
+        >>> # Generate 100 equally spaced points in O-band
+        >>> wl = wl_o(num=100)
+        >>> # Custom range with specific step
+        >>> wl = wl_o(step=0.001, wl_min=1.27, wl_max=1.35)
+    """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
 
@@ -83,7 +122,23 @@ def wl_e(
     wl_min: float = WL_E_MIN,
     wl_max: float = WL_E_MAX,
 ) -> FloatArray1D:
-    """Wavelengths in the E-band."""
+    """Generate wavelength array in the E-band (Extended band: 1360-1460 nm).
+
+    Args:
+        step: Wavelength step size in μm. Used when num is None.
+        num: Number of wavelength points. If provided, step is ignored.
+        wl_min: Minimum wavelength in μm. Defaults to E-band minimum.
+        wl_max: Maximum wavelength in μm. Defaults to E-band maximum.
+
+    Returns:
+        1D array of wavelengths in μm.
+
+    Example:
+        >>> # Generate E-band wavelengths with default step
+        >>> wl = wl_e()
+        >>> # Generate 50 equally spaced points in E-band
+        >>> wl = wl_e(num=50)
+    """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
 
@@ -94,7 +149,23 @@ def wl_s(
     wl_min: float = WL_S_MIN,
     wl_max: float = WL_S_MAX,
 ) -> FloatArray1D:
-    """Wavelengths in the S-band."""
+    """Generate wavelength array in the S-band (Short band: 1460-1530 nm).
+
+    Args:
+        step: Wavelength step size in μm. Used when num is None.
+        num: Number of wavelength points. If provided, step is ignored.
+        wl_min: Minimum wavelength in μm. Defaults to S-band minimum.
+        wl_max: Maximum wavelength in μm. Defaults to S-band maximum.
+
+    Returns:
+        1D array of wavelengths in μm.
+
+    Example:
+        >>> # Generate S-band wavelengths with default step
+        >>> wl = wl_s()
+        >>> # Generate 100 equally spaced points in S-band
+        >>> wl = wl_s(num=100)
+    """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
 
@@ -105,7 +176,28 @@ def wl_c(
     wl_min: float = WL_C_MIN,
     wl_max: float = WL_C_MAX,
 ) -> FloatArray1D:
-    """Wavelengths in the C-band."""
+    """Generate wavelength array in the C-band (Conventional band: 1530-1565 nm).
+
+    The C-band is the most commonly used wavelength range in optical communications
+    due to the low attenuation characteristics of standard single-mode fiber.
+
+    Args:
+        step: Wavelength step size in μm. Used when num is None.
+        num: Number of wavelength points. If provided, step is ignored.
+        wl_min: Minimum wavelength in μm. Defaults to C-band minimum.
+        wl_max: Maximum wavelength in μm. Defaults to C-band maximum.
+
+    Returns:
+        1D array of wavelengths in μm.
+
+    Example:
+        >>> # Generate C-band wavelengths with default step
+        >>> wl = wl_c()
+        >>> # Generate 100 equally spaced points in C-band
+        >>> wl = wl_c(num=100)
+        >>> # High resolution C-band scan
+        >>> wl = wl_c(step=0.00001)
+    """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
 
@@ -116,7 +208,23 @@ def wl_l(
     wl_min: float = WL_L_MIN,
     wl_max: float = WL_L_MAX,
 ) -> FloatArray1D:
-    """Wavelengths in the L-band."""
+    """Generate wavelength array in the L-band (Long band: 1565-1625 nm).
+
+    Args:
+        step: Wavelength step size in μm. Used when num is None.
+        num: Number of wavelength points. If provided, step is ignored.
+        wl_min: Minimum wavelength in μm. Defaults to L-band minimum.
+        wl_max: Maximum wavelength in μm. Defaults to L-band maximum.
+
+    Returns:
+        1D array of wavelengths in μm.
+
+    Example:
+        >>> # Generate L-band wavelengths with default step
+        >>> wl = wl_l()
+        >>> # Generate 100 equally spaced points in L-band
+        >>> wl = wl_l(num=100)
+    """
     return _wl(step=step, num=num, wl_min=wl_min, wl_max=wl_max)
 
 

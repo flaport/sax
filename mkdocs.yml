@@ -60,7 +60,7 @@ nav:
     - backends: nbs/internals/03_backends.md
     - circuit: nbs/internals/02_circuit.md
     - models: nbs/internals/01_models.md
-    - all_models: nbs/internals/04_all_models.md
+    - all models: nbs/internals/04_all_models.md
   - changelog: changelog.md
 
 plugins:

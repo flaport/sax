@@ -104,7 +104,24 @@ def analyze_instances(
     instances: dict[str, Instance],
     models: dict[str, Model],
 ) -> Any:  # noqa: ANN401
-    """Analyze circuit instances."""
+    """Analyze circuit instances for the default backend.
+
+    Prepares circuit instances for analysis by the selected backend. This is the
+    first step in circuit evaluation, where individual component models are
+    prepared for connection analysis.
+
+    Args:
+        instances: Dictionary mapping instance names to instance definitions.
+        models: Dictionary mapping component names to their model functions.
+
+    Returns:
+        Backend-specific analyzed instances data structure.
+
+    Example:
+        >>> instances = {"wg1": {"component": "waveguide", "settings": {}}}
+        >>> models = {"waveguide": my_waveguide_model}
+        >>> analyzed = analyze_instances(instances, models)
+    """
     return circuit_backends["default"][0](instances, models)
 
 
@@ -113,7 +130,25 @@ def analyze_circuit(
     connections: dict[str, str],
     ports: dict[str, str],
 ) -> Any:  # noqa: ANN401
-    """Analyze the circuit based on analyzed instances."""
+    """Analyze circuit connections for the default backend.
+
+    Analyzes how circuit components are connected together based on the netlist
+    connections and ports. This creates the mathematical structure needed for
+    circuit evaluation.
+
+    Args:
+        analyzed_instances: Output from analyze_instances function.
+        connections: Dictionary mapping instance ports to each other.
+        ports: Dictionary mapping external port names to instance ports.
+
+    Returns:
+        Backend-specific analyzed circuit data structure.
+
+    Example:
+        >>> connections = {"wg1,out": "wg2,in"}
+        >>> ports = {"in": "wg1,in", "out": "wg2,out"}
+        >>> analyzed_circuit = analyze_circuit(analyzed_instances, connections, ports)
+    """
     return circuit_backends["default"][1](analyzed_instances, connections, ports)
 
 
@@ -121,12 +156,49 @@ def evaluate_circuit(
     analyzed: Any,  # noqa: ANN401
     instances: dict[str, SType],
 ) -> SType:
-    """Evaluate the circuit based on analyzed instances."""
+    """Evaluate circuit S-matrix for the default backend.
+
+    Computes the overall circuit S-matrix from the analyzed circuit structure
+    and the evaluated S-matrices of individual instances.
+
+    Args:
+        analyzed: Output from analyze_circuit function.
+        instances: Dictionary mapping instance names to their evaluated S-matrices.
+
+    Returns:
+        Overall circuit S-matrix.
+
+    Example:
+        >>> # Evaluate individual instances
+        >>> s_matrices = {"wg1": wg1_model(wl=1.55), "wg2": wg2_model(wl=1.55)}
+        >>> # Compute circuit S-matrix
+        >>> circuit_s = evaluate_circuit(analyzed_circuit, s_matrices)
+    """
     return circuit_backends["default"][2](analyzed, instances)
 
 
 def validate_circuit_backend(backend: str) -> Backend:
-    """Validate the circuit backend."""
+    """Validate and normalize a circuit backend name.
+
+    Checks if the specified backend is available and returns the canonical
+    backend name. Handles backend aliases and validates availability.
+
+    Args:
+        backend: Backend name to validate (case-insensitive).
+
+    Returns:
+        Canonical backend name.
+
+    Raises:
+        KeyError: If the backend is not available.
+
+    Example:
+        >>> backend = validate_circuit_backend("klu")
+        >>> # Returns "klu" if available
+        >>>
+        >>> backend = validate_circuit_backend("default")
+        >>> # Returns the default backend (usually "klu" or "filipsson_gunnar")
+    """
     backend = backend.lower()
     backend = backend_map.get(backend, backend)
     # assert valid circuit_backend
