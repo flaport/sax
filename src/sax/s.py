@@ -20,6 +20,7 @@ __all__ = [
     "block_diag",
     "get_mode",
     "get_modes",
+    "get_port_combinations",
     "get_ports",
     "reciprocal",
     "scoo",
@@ -181,6 +182,30 @@ def get_modes(S: sax.STypeMM) -> tuple[sax.Mode, ...]:
 def get_mode(pm: sax.PortMode) -> sax.Mode:
     """Get the mode from a port@mode string."""
     return pm.split("@")[1]
+
+
+def get_port_combinations(S: sax.Model | sax.SType) -> tuple[tuple[str, str], ...]:
+    """Get port combinations of a model or an stype."""
+    if callable(S):
+        msg = (
+            "Getting the port combinations of a model is no longer supported. "
+            "Please Evaluate the model first: Use get_ports(model()) in stead of "
+            f"get_ports(model). Got: {S}"
+        )
+        raise TypeError(msg)
+    if (sdict := sax.try_into[sax.SDict](S)) is not None:
+        return tuple(sdict.keys())
+    if (scoo := sax.try_into[sax.SCoo](S)) is not None:
+        Si, Sj, _, pm = scoo
+        rpm = {int(i): str(p) for p, i in pm.items()}
+        return tuple(
+            natsorted((rpm[int(i)], rpm[int(j)]) for i, j in zip(Si, Sj, strict=False))
+        )
+    if (sdense := sax.try_into[sax.SDense](S)) is not None:
+        _, pm = sdense
+        return tuple(natsorted((p1, p2) for p1 in pm for p2 in pm))
+    msg = "Could not extract ports for given S"
+    raise ValueError(msg)
 
 
 def _scoo_to_sdict(

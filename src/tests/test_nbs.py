@@ -33,7 +33,7 @@ def test_nbs(path: Path | str) -> None:
         engine_name=None,
         nb=nb,
         kernel_name="sax",
-        input_path=path,
+        input_path=str(path),
         output_path=None,
     )
-    raise_for_execution_errors(nb, NBS_FAIL_DIR / fn)
+    raise_for_execution_errors(nb, str(NBS_FAIL_DIR / fn))

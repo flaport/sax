@@ -135,7 +135,7 @@ class Netlist(TypedDict):
 RecursiveNetlist: TypeAlias = dict[Name, Netlist]
 """A recursive netlist definition."""
 
-AnyNetlist: TypeAlias = Netlist | RecursiveNetlist
+AnyNetlist: TypeAlias = Netlist | RecursiveNetlist | dict[str, dict[str, str]]
 """Any kind of netlist recursive or not."""
 
 
