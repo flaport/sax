@@ -189,14 +189,7 @@ def passthru(
     *,
     reciprocal: bool = True,
 ) -> sax.SCooModel:
-    """A passthru model.
-
-    Args:
-        num_links: number of links.
-        ports: tuple of input and output ports.
-        jit: whether to jit the model.
-        reciprocal: whether the model is reciprocal.
-    """
+    """A passthru model."""
     passthru = unitary(
         num_links,
         num_links,

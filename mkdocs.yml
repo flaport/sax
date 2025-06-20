@@ -41,8 +41,9 @@ theme:
 nav:
   - home: index.md
   - api:
-    - circuit: api/circuit.md
-    - netlist: api/netlist.md
+    - sax: api/sax.md
+    - types: api/types.md
+    - models: api/models.md
   - examples:
     - quick start: nbs/examples/01_quick_start.md
     - all pass: nbs/examples/02_all_pass_filter.md
@@ -59,6 +60,7 @@ nav:
     - backends: nbs/internals/03_backends.md
     - circuit: nbs/internals/02_circuit.md
     - models: nbs/internals/01_models.md
+    - all_models: nbs/internals/04_all_models.md
   - changelog: changelog.md
 
 plugins:
