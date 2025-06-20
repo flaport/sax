@@ -8,8 +8,6 @@ from pydantic import validate_call
 
 import sax
 
-from .ports import PortNamer
-
 
 @jax.jit
 @validate_call
@@ -87,7 +85,7 @@ def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
     """
     kappa = jnp.asarray(coupling**0.5)
     tau = jnp.asarray((1 - coupling) ** 0.5)
-    p = PortNamer(2, 2)
+    p = sax.PortNamer(2, 2)
     return sax.reciprocal(
         {
             (p.in0, p.out0): tau,
@@ -232,7 +230,7 @@ def coupler(
 
     tau = jnp.cos(kappa0 + kappa1 * length)
     kappa = -jnp.sin(kappa0 + kappa1 * length)
-    p = PortNamer(2, 2)
+    p = sax.PortNamer(2, 2)
     return sax.reciprocal(
         {
             (p.in0, p.out0): tau,
@@ -371,7 +369,7 @@ def grating_coupler(
     amplitude = jnp.asarray(10 ** (-loss / 20))
     sigma = jnp.asarray(bandwidth / (2 * jnp.sqrt(2 * jnp.log(2))))
     transmission = jnp.asarray(amplitude * jnp.exp(-((wl - wl0) ** 2) / (2 * sigma**2)))
-    p = PortNamer(1, 1)
+    p = sax.PortNamer(1, 1)
     return sax.reciprocal(
         {
             (p.in0, p.in0): reflection,

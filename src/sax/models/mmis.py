@@ -7,7 +7,6 @@ from pydantic import validate_call
 import sax
 
 from .couplers import coupler_ideal
-from .ports import PortNamer
 from .splitters import splitter_ideal
 
 
@@ -215,7 +214,7 @@ def mmi1x2(
     """
     thru = _mmi_amp(wl=wl, wl0=wl0, fwhm=fwhm, loss_dB=loss_dB) / 2**0.5
 
-    p = PortNamer(1, 2)
+    p = sax.PortNamer(1, 2)
     return sax.reciprocal(
         {
             (p.o1, p.o2): thru,
@@ -366,7 +365,7 @@ def mmi2x2(
         * loss_factor_cross
     )
 
-    p = PortNamer(2, 2)
+    p = sax.PortNamer(2, 2)
     return sax.reciprocal(
         {
             (p.o1, p.o3): thru,
@@ -495,7 +494,7 @@ def _mmi_nxn(
     )
 
     S = {}
-    p = PortNamer(n, n)
+    p = sax.PortNamer(n, n)
     for i in range(n):
         for j in range(n):
             amplitude = _mmi_amp(wl, wl0 + _shift[j], fwhm, _loss_dB[j])

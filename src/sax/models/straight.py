@@ -7,7 +7,6 @@ import jax.numpy as jnp
 from pydantic import validate_call
 
 import sax
-from sax.models.ports import PortNamer
 
 
 @jax.jit
@@ -116,7 +115,7 @@ def straight(
     phase = 2 * jnp.pi * _neff * length / wl
     amplitude = jnp.asarray(10 ** (-1e-4 * loss_dB_cm * length / 20), dtype=complex)
     transmission = amplitude * jnp.exp(1j * phase)
-    p = PortNamer(1, 1)
+    p = sax.PortNamer(1, 1)
     return sax.reciprocal(
         {
             (p.in0, p.out0): transmission,
@@ -205,7 +204,7 @@ def attenuator(*, loss: sax.FloatArrayLike = 0.0) -> sax.SDict:
         components or using specialized filter models.
     """
     transmission = jnp.asarray(10 ** (-loss / 20), dtype=complex)
-    p = PortNamer(1, 1)
+    p = sax.PortNamer(1, 1)
     return sax.reciprocal(
         {
             (p.in0, p.out0): transmission,
@@ -314,7 +313,7 @@ def phase_shifter(
     phase = 2 * jnp.pi * neff * length / wl + deltaphi
     amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
     transmission = amplitude * jnp.exp(1j * phase)
-    p = PortNamer(1, 1)
+    p = sax.PortNamer(1, 1)
     return sax.reciprocal(
         {
             (p.o1, p.o2): transmission,

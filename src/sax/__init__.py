@@ -201,8 +201,15 @@ from .backends import (
     validate_circuit_backend,
 )
 
+from .ports import (
+    PortNamer,
+    set_port_naming_strategy,
+    get_port_naming_strategy,
+)
+
+
 from . import models
-from .models import PortNamer
+
 
 __all__ = [  # noqa: RUF022
     "AnyNetlist",
@@ -347,6 +354,7 @@ __all__ = [  # noqa: RUF022
     "get_mode",
     "get_modes",
     "get_port_combinations",
+    "get_port_naming_strategy",
     "get_ports",
     "get_required_circuit_models",
     "get_settings",
@@ -373,6 +381,7 @@ __all__ = [  # noqa: RUF022
     "scoo",
     "sdense",
     "sdict",
+    "set_port_naming_strategy",
     "singlemode",
     "try_into",
     "unflatten_dict",
