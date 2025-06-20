@@ -30,6 +30,8 @@ from typing import (
     Annotated,
     Any,
     TypeAlias,
+    Union,
+    get_args,
     get_origin,
 )
 
@@ -182,12 +184,18 @@ def val_sax_callable(model: Any) -> Callable:
 
 
 def has_callable_return_annotation(model: Callable) -> bool:
-    annot = inspect.signature(model).return_annotation
+    return is_callable_return_annotation(inspect.signature(model).return_annotation)
+
+
+def is_callable_return_annotation(annot: Any) -> bool:
     if isinstance(annot, str) and (
-        annot.startswith("Callable") or annot.endswith("Model")
+        "model" in annot.lower() or "callable" in annot.lower()
     ):
         return True
-    return get_origin(annot) is Callable
+    origin = get_origin(annot)
+    if origin is Union or origin is Annotated:
+        return is_callable_return_annotation(get_args(annot)[0])
+    return origin is Callable
 
 
 def val_not_callable_annotated(model: Callable) -> Callable:
