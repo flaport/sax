@@ -49,41 +49,68 @@ __all__ = [
 ]
 
 # Physical constants
-EPS: float = 1e-12  #: Small numerical epsilon for avoiding division by zero
-C_M_S: float = 299792458.0  #: Speed of light in vacuum (m/s)
-C_UM_S: float = 1e6 * C_M_S  #: Speed of light in vacuum (μm/s)
+EPS: float = 1e-12
+"""Small numerical epsilon for determining which s-values can be considered zero. """
 
-# Default optical mode settings
-DEFAULT_MODE: str = "TE"  #: Default optical mode
-DEFAULT_MODES: tuple[str, ...] = ("TE", "TM")  #: Default multimode configuration
+C_M_S: float = 299792458.0
+"""Speed of light in vacuum (m/s)."""
 
-# Default wavelength step for array generation
-DEFAULT_WL_STEP: float = 0.0001  #: Default wavelength step (μm)
+C_UM_S: float = 1e6 * C_M_S
+"""Speed of light in vacuum (μm/s)."""
 
-# O-band wavelength range (1260-1360 nm)
-WL_O_MIN: float = 1.260  #: O-band minimum wavelength (μm)
-WL_O_MAX: float = 1.360  #: O-band maximum wavelength (μm)
-WL_O: float = 0.5 * (WL_O_MIN + WL_O_MAX)  #: O-band center wavelength (μm)
+DEFAULT_MODE: str = "TE"
+"""Default optical mode."""
 
-# E-band wavelength range (1360-1460 nm)
-WL_E_MIN: float = 1.360  #: E-band minimum wavelength (μm)
-WL_E_MAX: float = 1.460  #: E-band maximum wavelength (μm)
-WL_E: float = 0.5 * (WL_E_MIN + WL_E_MAX)  #: E-band center wavelength (μm)
+DEFAULT_MODES: tuple[str, ...] = ("TE", "TM")
+"""Default multimode configuration."""
 
-# S-band wavelength range (1460-1530 nm)
-WL_S_MIN: float = 1.460  #: S-band minimum wavelength (μm)
-WL_S_MAX: float = 1.530  #: S-band maximum wavelength (μm)
-WL_S: float = 0.5 * (WL_S_MIN + WL_S_MAX)  #: S-band center wavelength (μm)
+DEFAULT_WL_STEP: float = 0.0001
+""" Default wavelength step for array generation (μm)."""
 
-# C-band wavelength range (1530-1565 nm)
-WL_C_MIN: float = 1.530  #: C-band minimum wavelength (μm)
-WL_C_MAX: float = 1.565  #: C-band maximum wavelength (μm)
-WL_C: float = 0.5 * (WL_C_MIN + WL_C_MAX)  #: C-band center wavelength (μm)
+WL_O_MIN: float = 1.260
+"""O-band minimum wavelength (μm)."""
 
-# L-band wavelength range (1565-1625 nm)
-WL_L_MIN: float = 1.565  #: L-band minimum wavelength (μm)
-WL_L_MAX: float = 1.625  #: L-band maximum wavelength (μm)
-WL_L: float = 0.5 * (WL_L_MIN + WL_L_MAX)  #: L-band center wavelength (μm)
+WL_O_MAX: float = 1.360
+"""O-band maximum wavelength (μm)."""
+
+WL_O: float = 0.5 * (WL_O_MIN + WL_O_MAX)
+"""O-band center wavelength (μm)."""
+
+WL_E_MIN: float = 1.360
+"""E-band minimum wavelength (μm)."""
+
+WL_E_MAX: float = 1.460
+"""E-band maximum wavelength (μm)."""
+
+WL_E: float = 0.5 * (WL_E_MIN + WL_E_MAX)
+"""E-band center wavelength (μm)."""
+
+WL_S_MIN: float = 1.460
+"""S-band minimum wavelength (μm)."""
+
+WL_S_MAX: float = 1.530
+"""S-band maximum wavelength (μm)."""
+
+WL_S: float = 0.5 * (WL_S_MIN + WL_S_MAX)
+"""S-band center wavelength (μm)."""
+
+WL_C_MIN: float = 1.530
+"""C-band minimum wavelength (μm)."""
+
+WL_C_MAX: float = 1.565
+"""C-band maximum wavelength (μm)."""
+
+WL_C: float = 0.5 * (WL_C_MIN + WL_C_MAX)
+"""C-band center wavelength (μm)."""
+
+WL_L_MIN: float = 1.565
+"""L-band minimum wavelength (μm)."""
+
+WL_L_MAX: float = 1.625
+"""L-band maximum wavelength (μm)."""
+
+WL_L: float = 0.5 * (WL_L_MIN + WL_L_MAX)
+"""L-band center wavelength (μm)."""
 
 
 def wl_o(
