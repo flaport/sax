@@ -38,11 +38,13 @@ repos:
       - id: pretty-format-toml
         args: [--autofix]
 
-  - repo: https://github.com/kynan/nbstripout
-    rev: 0.8.1
+  - repo: https://github.com/srstevenson/nb-clean
+    rev: 4.0.1
     hooks:
-      - id: nbstripout
+      - id: nb-clean
         files: ".ipynb"
+        args:
+          - --remove-empty-cells
 
   - repo: local
     hooks:

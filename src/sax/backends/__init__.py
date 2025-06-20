@@ -3,37 +3,43 @@
 from __future__ import annotations
 
 import warnings
-from typing import Any
+from typing import Any, cast
 
-from ..netlist import Component
-from ..saxtypes import Model, SType
+from ..saxtypes import Backend, Model, SType
+from ..saxtypes.netlist import Instance
 from .additive import (
-    analyze_circuit_additive as analyze_circuit_additive,
-)
-from .additive import (
-    analyze_instances_additive as analyze_instances_additive,
-)
-from .additive import (
-    evaluate_circuit_additive as evaluate_circuit_additive,
+    analyze_circuit_additive,
+    analyze_instances_additive,
+    evaluate_circuit_additive,
 )
 from .filipsson_gunnar import (
-    analyze_circuit_fg as analyze_circuit_fg,
-)
-from .filipsson_gunnar import (
-    analyze_instances_fg as analyze_instances_fg,
-)
-from .filipsson_gunnar import (
-    evaluate_circuit_fg as evaluate_circuit_fg,
+    analyze_circuit_fg,
+    analyze_instances_fg,
+    evaluate_circuit_fg,
 )
 from .forward_only import (
-    analyze_circuit_forward as analyze_circuit_forward,
+    analyze_circuit_forward,
+    analyze_instances_forward,
+    evaluate_circuit_forward,
 )
-from .forward_only import (
-    analyze_instances_forward as analyze_instances_forward,
-)
-from .forward_only import (
-    evaluate_circuit_forward as evaluate_circuit_forward,
-)
+
+__all__ = [
+    "analyze_circuit",
+    "analyze_circuit_additive",
+    "analyze_circuit_fg",
+    "analyze_circuit_forward",
+    "analyze_instances",
+    "analyze_instances_additive",
+    "analyze_instances_fg",
+    "analyze_instances_forward",
+    "backend_map",
+    "circuit_backends",
+    "evaluate_circuit",
+    "evaluate_circuit_additive",
+    "evaluate_circuit_fg",
+    "evaluate_circuit_forward",
+    "validate_circuit_backend",
+]
 
 circuit_backends = {
     "fg": (
@@ -95,7 +101,7 @@ except ImportError:
 
 
 def analyze_instances(
-    instances: dict[str, Component],
+    instances: dict[str, Instance],
     models: dict[str, Model],
 ) -> Any:  # noqa: ANN401
     """Analyze circuit instances."""
@@ -117,3 +123,19 @@ def evaluate_circuit(
 ) -> SType:
     """Evaluate the circuit based on analyzed instances."""
     return circuit_backends["default"][2](analyzed, instances)
+
+
+def validate_circuit_backend(backend: str) -> Backend:
+    """Validate the circuit backend."""
+    backend = backend.lower()
+    backend = backend_map.get(backend, backend)
+    # assert valid circuit_backend
+    if backend not in circuit_backends:
+        msg = (
+            f"circuit backend {backend} not found. Allowed circuit backends: "
+            f"{', '.join(circuit_backends.keys())}."
+        )
+        raise KeyError(
+            msg,
+        )
+    return cast(Backend, backend)

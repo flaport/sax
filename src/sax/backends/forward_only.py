@@ -1,4 +1,4 @@
-"""SAX forward_only Backend."""
+"""Forward-only backend for SAX circuit evaluation."""
 
 from __future__ import annotations
 
@@ -7,34 +7,36 @@ from typing import Any
 import jax.numpy as jnp
 import networkx as nx
 
-from ..netlist import Component
-from ..saxtypes import Model, SCoo, SDict, scoo, sdict
+import sax
+
+__all__ = [
+    "analyze_circuit_forward",
+    "analyze_instances_forward",
+    "evaluate_circuit_forward",
+]
 
 
 def analyze_instances_forward(
-    instances: dict[str, Component],
-    models: dict[str, Model],
-) -> dict[str, SCoo]:
+    instances: sax.Instances,
+    models: sax.Models,
+) -> dict[sax.InstanceName, sax.SCoo]:
     """Analyze instances for the forward_only backend."""
-    instances, instances_old = {}, instances
-    for k, v in instances_old.items():
-        if not isinstance(v, Component):
-            v = Component(**v)
-        instances[k] = v
+    instances = sax.into[sax.Instances](instances)
+    models = sax.into[sax.Models](models)
     model_names = set()
     for i in instances.values():
-        model_names.add(i.component)
-    dummy_models = {k: scoo(models[k]()) for k in model_names}
+        model_names.add(i["component"])
+    dummy_models = {k: sax.scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
-        dummy_instances[k] = dummy_models[i.component]
+        dummy_instances[k] = dummy_models[i["component"]]
     return dummy_instances
 
 
 def analyze_circuit_forward(
-    analyzed_instances: dict[str, SDict],  # noqa: ARG001
-    connections: dict[str, str],
-    ports: dict[str, str],
+    analyzed_instances: dict[sax.InstanceName, sax.SDict],  # noqa: ARG001
+    connections: sax.Connections,
+    ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
     """Analyze a circuit for the forward_only backend."""
     return connections, ports
@@ -42,8 +44,8 @@ def analyze_circuit_forward(
 
 def evaluate_circuit_forward(
     analyzed: Any,  # noqa: ANN401
-    instances: dict[str, SDict],
-) -> SDict:
+    instances: dict[str, sax.SDict],
+) -> sax.SDict:
     """Evaluate a circuit for the given sdicts using simple matrix multiplication."""
     connections, ports = analyzed
     edges = _graph_edges_directed(instances, connections, ports)
@@ -88,7 +90,7 @@ def _split_port(port: str) -> tuple[str, str]:
 
 
 def _graph_edges_directed(
-    instances: dict[str, SDict],
+    instances: dict[str, sax.SDict],
     connections: dict[str, str],
     ports: dict[str, str],
 ) -> list[tuple[tuple[str, str], tuple[str, str], dict[str, Any]]]:
@@ -104,7 +106,7 @@ def _graph_edges_directed(
             edges += [(n1, n2, {"transmission": one})]
 
     for instance, s in instances.items():
-        for (p1, p2), w in sdict(s).items():
+        for (p1, p2), w in sax.sdict(s).items():
             if p1.startswith("in") and p2.startswith("out"):
                 edges += [
                     (

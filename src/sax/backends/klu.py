@@ -9,37 +9,38 @@ import jax.numpy as jnp
 import klujax
 from natsort import natsorted
 
-from ..netlist import Component
-from ..saxtypes import Model, SCoo, SDense, SType, scoo
+import sax
+
+__all__ = [
+    "analyze_circuit_klu",
+    "analyze_instances_klu",
+    "evaluate_circuit_klu",
+]
 
 solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
 mul_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
 
 
 def analyze_instances_klu(
-    instances: dict[str, Component],
-    models: dict[str, Model],
-) -> dict[str, SCoo]:
+    instances: dict[sax.InstanceName, sax.Instance],
+    models: dict[str, sax.Model],
+) -> dict[str, sax.SCoo]:
     """Analyze instances for the KLU backend."""
-    instances, instances_old = {}, instances
-    for k, v in instances_old.items():
-        if not isinstance(v, Component):
-            v = Component(**v)
-        instances[k] = v
+    instances = sax.into[sax.Instances](instances)
     model_names = set()
     for i in instances.values():
-        model_names.add(i.component)
-    dummy_models = {k: scoo(models[k]()) for k in model_names}
+        model_names.add(i["component"])
+    dummy_models = {k: sax.scoo(models[k]()) for k in model_names}
     dummy_instances = {}
     for k, i in instances.items():
-        dummy_instances[k] = dummy_models[i.component]
+        dummy_instances[k] = dummy_models[i["component"]]
     return dummy_instances
 
 
 def analyze_circuit_klu(
-    analyzed_instances: dict[str, SCoo],
-    connections: dict[str, str],
-    ports: dict[str, str],
+    analyzed_instances: dict[sax.InstanceName, sax.SCoo],
+    connections: sax.Connections,
+    ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
     """Analyze a circuit for the KLU backend."""
     connections = {**connections, **{v: k for k, v in connections.items()}}
@@ -48,7 +49,7 @@ def analyze_circuit_klu(
 
     idx, Si, Sj, instance_ports = 0, [], [], {}
     for name, instance in analyzed_instances.items():
-        si, sj, _, ports_map = scoo(instance)
+        si, sj, _, ports_map = sax.scoo(instance)
         Si.append(si + idx)
         Sj.append(sj + idx)
         instance_ports.update({f"{name},{p}": i + idx for p, i in ports_map.items()})
@@ -99,8 +100,8 @@ def analyze_circuit_klu(
 
 def evaluate_circuit_klu(
     analyzed: Any,  # noqa: ANN401
-    instances: dict[str, SType],
-) -> SDense:
+    instances: dict[sax.InstanceName, sax.SType],
+) -> sax.SDense:
     """Evaluate a circuit for the KLU backend."""
     (
         n_col,
@@ -120,7 +121,7 @@ def evaluate_circuit_klu(
     Sx = []
     batch_shape = ()
     for name, _ in dummy_pms:
-        _, _, sx, ports_map = scoo(instances[name])
+        _, _, sx, ports_map = sax.scoo(instances[name])
         Sx.append(sx)
         if len(sx.shape[:-1]) > len(batch_shape):
             batch_shape = sx.shape[:-1]

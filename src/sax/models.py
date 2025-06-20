@@ -2,24 +2,30 @@
 
 from __future__ import annotations
 
-from functools import lru_cache as cache
+from functools import cache
 
 import jax
 import jax.numpy as jnp
+from pydantic import validate_call
 
-from .saxtypes import FloatArrayND, Model, SCoo, SDict
-from .utils import get_inputs_outputs, reciprocal
+import sax
+
+from .constants import EPS
+from .s import reciprocal
+
+__all__ = ["copier", "coupler", "passthru", "straight", "unitary"]
 
 
+@validate_call
 def straight(
     *,
-    wl: FloatArrayND | float = 1.55,
-    wl0: float = 1.55,
-    neff: float = 2.34,
-    ng: float = 3.4,
-    length: float = 10.0,
-    loss: float = 0.0,
-) -> SDict:
+    wl: sax.FloatArrayLike = 1.55,
+    wl0: sax.Float = 1.55,
+    neff: sax.Float = 2.34,
+    ng: sax.Float = 3.4,
+    length: sax.Float = 10.0,
+    loss: sax.Float = 0.0,
+) -> sax.SDict:
     """A simple straight waveguide model.
 
     Args:
@@ -31,7 +37,7 @@ def straight(
         loss: loss in dB/cm.
 
     """
-    dwl = wl - wl0
+    dwl: sax.FloatArray = sax.into[sax.FloatArray](wl) - wl0
     dneff_dwl = (ng - neff) / wl0
     _neff = neff - dwl * dneff_dwl
     phase = 2 * jnp.pi * _neff * length / wl
@@ -40,11 +46,12 @@ def straight(
     return reciprocal(
         {
             ("in0", "out0"): transmission,
-        }
+        },
     )
 
 
-def coupler(*, coupling: float = 0.5) -> SDict:
+@validate_call
+def coupler(*, coupling: float = 0.5) -> sax.SDict:
     """A simple coupler model."""
     kappa = coupling**0.5
     tau = (1 - coupling) ** 0.5
@@ -54,56 +61,12 @@ def coupler(*, coupling: float = 0.5) -> SDict:
             ("in0", "out1"): 1j * kappa,
             ("in1", "out0"): 1j * kappa,
             ("in1", "out1"): tau,
-        }
+        },
     )
 
 
-def _validate_ports(
-    ports: tuple[str, ...] | None,
-    num_inputs: int | None,
-    num_outputs: int | None,
-    *,
-    diagonal: bool,
-) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
-    """Validate the ports and return the input and output ports."""
-    if ports is None:
-        if num_inputs is None or num_outputs is None:
-            msg = (
-                "if not ports given, you must specify how many input ports "
-                "and how many output ports a model has."
-            )
-            raise ValueError(msg)
-        input_ports = [f"in{i}" for i in range(num_inputs)]
-        output_ports = [f"out{i}" for i in range(num_outputs)]
-    else:
-        if num_inputs is not None and num_outputs is None:
-            msg = "if num_inputs is given, num_outputs should be given as well."
-            raise ValueError(msg)
-        if num_outputs is not None and num_inputs is None:
-            msg = "if num_outputs is given, num_inputs should be given as well."
-            raise ValueError(msg)
-        if num_inputs is not None and num_outputs is not None:
-            if num_inputs + num_outputs != len(ports):
-                msg = "num_inputs + num_outputs != len(ports)"
-                raise ValueError(msg)
-            input_ports = ports[:num_inputs]
-            output_ports = ports[num_inputs:]
-        else:
-            input_ports, output_ports = get_inputs_outputs(ports)
-            num_inputs = len(input_ports)
-            num_outputs = len(output_ports)
-
-    if diagonal and num_inputs != num_outputs:
-        msg = (
-            "Can only have a diagonal passthru if number "
-            "of input ports equals the number of output ports!"
-        )
-        raise ValueError(msg)
-
-    return tuple(input_ports), tuple(output_ports), num_inputs, num_outputs
-
-
 @cache
+@validate_call
 def unitary(
     num_inputs: int | None = None,
     num_outputs: int | None = None,
@@ -112,7 +75,7 @@ def unitary(
     jit: bool = True,
     reciprocal: bool = True,
     diagonal: bool = False,
-) -> Model:
+) -> sax.SCooModel:
     """A unitary model.
 
     Args:
@@ -125,15 +88,11 @@ def unitary(
 
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal=diagonal
+        ports,
+        num_inputs,
+        num_outputs,
+        diagonal=diagonal,
     )
-    if num_inputs is None:
-        msg = "num_inputs or ports must be given!"
-        raise ValueError(msg)
-
-    if num_outputs is None:
-        msg = "num_outputs or ports must be given!"
-        raise ValueError(msg)
 
     # let's create the squared S-matrix:
     N = max(num_inputs, num_outputs)
@@ -143,7 +102,8 @@ def unitary(
         S = S.at[:N, N:].set(1)
     else:
         r = jnp.arange(
-            N, dtype=int
+            N,
+            dtype=int,
         )  # reciprocal only works if num_inputs == num_outputs!
         S = S.at[r, N + r].set(1)
 
@@ -152,22 +112,24 @@ def unitary(
             S = S.at[N:, :N].set(1)
         else:
             r = jnp.arange(
-                N, dtype=int
+                N,
+                dtype=int,
             )  # reciprocal only works if num_inputs == num_outputs!
             S = S.at[N + r, r].set(1)
 
     # Now we need to normalize the squared S-matrix
     U, s, V = jnp.linalg.svd(S, full_matrices=False)
-    S = jnp.sqrt(U @ jnp.diag(jnp.where(s > 1e-12, 1, 0)) @ V)
+    S = jnp.sqrt(U @ jnp.diag(jnp.where(s > EPS, 1, 0)) @ V)
 
     # Now create subset of this matrix we're interested in:
     r = jnp.concatenate(
-        [jnp.arange(num_inputs, dtype=int), N + jnp.arange(num_outputs, dtype=int)], 0
+        [jnp.arange(num_inputs, dtype=int), N + jnp.arange(num_outputs, dtype=int)],
+        0,
     )
     S = S[r, :][:, r]
 
     # let's convert it in SCOO format:
-    Si, Sj = jnp.where(S > 1e-6)
+    Si, Sj = jnp.where(S > EPS)
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
@@ -176,7 +138,7 @@ def unitary(
         **{p: i + num_inputs for i, p in enumerate(output_ports)},
     }
 
-    def func(wl: float = 1.5) -> SCoo:
+    def func(*, wl: sax.Float = 1.5) -> sax.SCoo:
         wl_ = jnp.asarray(wl)
         Sx_ = jnp.broadcast_to(Sx, (*wl_.shape, *Sx.shape))
         return Si, Sj, Sx_, pm
@@ -187,6 +149,7 @@ def unitary(
 
 
 @cache
+@validate_call
 def copier(
     num_inputs: int | None = None,
     num_outputs: int | None = None,
@@ -195,7 +158,7 @@ def copier(
     jit: bool = True,
     reciprocal: bool = True,
     diagonal: bool = False,
-) -> Model:
+) -> sax.SCooModel:
     """A copier model.
 
     Args:
@@ -207,16 +170,11 @@ def copier(
         diagonal: whether the model is diagonal.
     """
     input_ports, output_ports, num_inputs, num_outputs = _validate_ports(
-        ports, num_inputs, num_outputs, diagonal=diagonal
+        ports,
+        num_inputs,
+        num_outputs,
+        diagonal=diagonal,
     )
-
-    if num_inputs is None:
-        msg = "num_inputs or ports must be given!"
-        raise ValueError(msg)
-
-    if num_outputs is None:
-        msg = "num_outputs or ports must be given!"
-        raise ValueError(msg)
 
     # let's create the squared S-matrix:
     S = jnp.zeros((num_inputs + num_outputs, num_inputs + num_outputs), dtype=float)
@@ -225,7 +183,8 @@ def copier(
         S = S.at[:num_inputs, num_inputs:].set(1)
     else:
         r = jnp.arange(
-            num_inputs, dtype=int
+            num_inputs,
+            dtype=int,
         )  # == range(num_outputs) # reciprocal only works if num_inputs == num_outputs!
         S = S.at[r, num_inputs + r].set(1)
 
@@ -238,7 +197,7 @@ def copier(
             S = S.at[num_inputs + r, r].set(1)
 
     # let's convert it in SCOO format:
-    Si, Sj = jnp.where(S > 1e-6)
+    Si, Sj = jnp.where(jnp.sqrt(EPS) < S)
     Sx = S[Si, Sj]
 
     # the last missing piece is a port map:
@@ -247,7 +206,7 @@ def copier(
         **{p: i + num_inputs for i, p in enumerate(output_ports)},
     }
 
-    def func(wl: float = 1.5) -> SCoo:
+    def func(wl: float = 1.5) -> sax.SCoo:
         wl_ = jnp.asarray(wl)
         Sx_ = jnp.broadcast_to(Sx, (*wl_.shape, *Sx.shape))
         return Si, Sj, Sx_, pm
@@ -258,13 +217,14 @@ def copier(
 
 
 @cache
+@validate_call
 def passthru(
     num_links: int | None = None,
     ports: tuple[str, ...] | None = None,
     *,
     jit: bool = True,
     reciprocal: bool = True,
-) -> Model:
+) -> sax.SCooModel:
     """A passthru model.
 
     Args:
@@ -274,22 +234,77 @@ def passthru(
         reciprocal: whether the model is reciprocal.
     """
     passthru = unitary(
-        num_links, num_links, ports, jit=jit, reciprocal=reciprocal, diagonal=True
+        num_links,
+        num_links,
+        ports,
+        jit=jit,
+        reciprocal=reciprocal,
+        diagonal=True,
     )
     passthru.__name__ = f"passthru_{num_links}_{num_links}"
     passthru.__qualname__ = f"passthru_{num_links}_{num_links}"
     return jax.jit(passthru) if jit else passthru
 
 
-models = {
-    "copier": copier,
-    "coupler": coupler,
-    "passthru": passthru,
-    "straight": straight,
-    "unitary": unitary,
-}
+def _validate_ports(
+    ports: tuple[sax.Port, ...] | None,
+    num_inputs: int | None,
+    num_outputs: int | None,
+    *,
+    diagonal: bool,
+) -> tuple[tuple[str, ...], tuple[str, ...], int, int]:
+    """Validate the ports and return the input and output ports."""
+    if ports is None:
+        if num_inputs is None or num_outputs is None:
+            msg = (
+                "if not ports given, you must specify how many input ports "
+                "and how many output ports a model has."
+            )
+            raise ValueError(
+                msg,
+            )
+        input_ports = [f"in{i}" for i in range(num_inputs)]
+        output_ports = [f"out{i}" for i in range(num_outputs)]
+    else:
+        if num_inputs is not None and num_outputs is None:
+            msg = "if num_inputs is given, num_outputs should be given as well."
+            raise ValueError(
+                msg,
+            )
+        if num_outputs is not None and num_inputs is None:
+            msg = "if num_outputs is given, num_inputs should be given as well."
+            raise ValueError(
+                msg,
+            )
+        if num_inputs is not None and num_outputs is not None:
+            if num_inputs + num_outputs != len(ports):
+                msg = "num_inputs + num_outputs != len(ports)"
+                raise ValueError(msg)
+            input_ports = ports[:num_inputs]
+            output_ports = ports[num_inputs:]
+        else:
+            input_ports, output_ports = _get_inputs_outputs(ports)
+            num_inputs = len(input_ports)
+            num_outputs = len(output_ports)
+
+    if diagonal and num_inputs != num_outputs:
+        msg = (
+            "Can only have a diagonal passthru if number "
+            "of input ports equals the number of output ports!"
+        )
+        raise ValueError(
+            msg,
+        )
+
+    return tuple(input_ports), tuple(output_ports), num_inputs, num_outputs
 
 
-def get_models(*, copy: bool = True) -> dict[str, Model]:
-    """Get the default sax models."""
-    return models if not copy else {**models}
+def _get_inputs_outputs(
+    ports: tuple[sax.Port, ...],
+) -> tuple[tuple[sax.Port, ...], tuple[sax.Port, ...]]:
+    inputs = tuple(p for p in ports if p.lower().startswith("in"))
+    outputs = tuple(p for p in ports if not p.lower().startswith("in"))
+    if not inputs:
+        inputs = tuple(p for p in ports if not p.lower().startswith("out"))
+        outputs = tuple(p for p in ports if p.lower().startswith("out"))
+    return inputs, outputs
