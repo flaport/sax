@@ -1,3 +1,17 @@
+<a id="0.15.3"></a>
+# [0.15.3](https://github.com/flaport/sax/releases/tag/0.15.3) - 2025-06-21
+
+# What's Changed
+
+## Bug Fixes
+
+- fix performance regression [#55](https://github.com/$OWNER/$REPOSITORY/pull/55)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.2...0.15.3
+
+[Changes][0.15.3]
+
+
 <a id="0.15.2"></a>
 # [0.15.2](https://github.com/flaport/sax/releases/tag/0.15.2) - 2025-06-21
 
@@ -596,6 +610,7 @@
 [Changes][0.8.7]
 
 
+[0.15.3]: https://github.com/flaport/sax/compare/0.15.2...0.15.3
 [0.15.2]: https://github.com/flaport/sax/compare/0.15.1...0.15.2
 [0.15.1]: https://github.com/flaport/sax/compare/0.15.0...0.15.1
 [0.15.0]: https://github.com/flaport/sax/compare/0.14.7...0.15.0
