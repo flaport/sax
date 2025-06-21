@@ -68,22 +68,22 @@ def sdict(S: sax.Model | sax.SType) -> sax.SDictModel | sax.SDict:
         sdict_model = sdict(my_model)
         ```
     """
-    if (_model := sax.try_into[sax.Model](S)) is not None:
+    if callable(_model := S):
 
         @wraps(_model)
-        def model(**kwargs: sax.SettingsValue) -> sax.Model:
+        def model(**kwargs: sax.SettingsValue) -> sax.SDict:
             return sdict(_model(**kwargs))
 
-        return cast(sax.SDictModel, model)
+        return model
 
-    if (_scoo := sax.try_into[sax.SCoo](S)) is not None:
+    if isinstance(_sdict := S, dict):
+        return _sdict
+
+    if len(_scoo := cast(tuple, S)) == 4:
         return _scoo_to_sdict(*_scoo)
 
-    if (_sdense := sax.try_into[sax.SDense](S)) is not None:
+    if len(_sdense := cast(tuple, S)) == 2:
         return _sdense_to_sdict(*_sdense)
-
-    if (_sdict := sax.try_into[sax.SDict](S)) is not None:
-        return _sdict
 
     msg = f"Could not convert S-matrix to sdict. Got: {S!r}."
     raise ValueError(msg)
@@ -129,7 +129,7 @@ def scoo(S: sax.Model | sax.SType) -> sax.SCooModel | sax.SCoo:
         scoo_model = scoo(my_model)
         ```
     """
-    if (_model := sax.try_into[sax.Model](S)) is not None:
+    if callable(_model := S):
 
         @wraps(_model)
         def model(**kwargs: sax.SettingsValue) -> sax.SCoo:
@@ -137,14 +137,14 @@ def scoo(S: sax.Model | sax.SType) -> sax.SCooModel | sax.SCoo:
 
         return model
 
-    if (_scoo := sax.try_into[sax.SCoo](S)) is not None:
+    if isinstance(_sdict := S, dict):
+        return _sdict_to_scoo(_sdict)
+
+    if len(_scoo := cast(tuple, S)) == 4:
         return _scoo
 
-    if (_sdense := sax.try_into[sax.SDense](S)) is not None:
+    if len(_sdense := cast(tuple, S)) == 2:
         return _sdense_to_scoo(*_sdense)
-
-    if (_sdict := sax.try_into[sax.SDict](S)) is not None:
-        return _sdict_to_scoo(_sdict)
 
     msg = f"Could not convert S-matrix to scoo. Got: {S!r}."
     raise ValueError(msg)
@@ -190,7 +190,7 @@ def sdense(S: sax.SType | sax.Model) -> sax.SDenseModel | sax.SDense:
         sdense_model = sdense(my_model)
         ```
     """
-    if (_model := sax.try_into[sax.Model](S)) is not None:
+    if callable(_model := S):
 
         @wraps(_model)
         def model(**kwargs: sax.SettingsValue) -> sax.SDense:
@@ -198,14 +198,14 @@ def sdense(S: sax.SType | sax.Model) -> sax.SDenseModel | sax.SDense:
 
         return model
 
-    if (_scoo := sax.try_into[sax.SCoo](S)) is not None:
+    if isinstance(_sdict := S, dict):
+        return _sdict_to_sdense(_sdict)
+
+    if len(_scoo := cast(tuple, S)) == 4:
         return _scoo_to_sdense(*_scoo)
 
-    if (_sdense := sax.try_into[sax.SDense](S)) is not None:
+    if len(_sdense := cast(tuple, S)) == 2:
         return _sdense
-
-    if (_sdict := sax.try_into[sax.SDict](S)) is not None:
-        return _sdict_to_sdense(_sdict)
 
     msg = f"Could not convert S-matrix to sdense. Got: {S!r}."
     raise ValueError(msg)
@@ -232,7 +232,6 @@ def reciprocal(sdict: sax.SDict) -> sax.SDict:
         # Result: {("in", "out"): 0.9+0.1j, ("out", "in"): 0.9+0.1j}
         ```
     """
-    sdict = sax.into[sax.SDict](sdict)
     return {
         **{(p1, p2): v for (p1, p2), v in sdict.items()},
         **{(p2, p1): v for (p1, p2), v in sdict.items()},
