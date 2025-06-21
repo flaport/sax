@@ -29,12 +29,12 @@ __all__ = [
 ]
 
 import inspect
-from ast import TypeVar
 from collections.abc import Callable
 from typing import (
     Annotated,
     Any,
     TypeAlias,
+    TypeVar,
     Union,
     get_args,
     get_origin,

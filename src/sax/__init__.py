@@ -183,6 +183,7 @@ from .circuits import (
     draw_dag,
     get_required_circuit_models,
 )
+from . import backends
 from .backends import (
     analyze_circuit,
     analyze_circuit_additive,
@@ -392,4 +393,5 @@ __all__ = [  # noqa: RUF022
     "wl_l",
     "wl_o",
     "wl_s",
+    "backends",
 ]
