@@ -4,7 +4,7 @@ from __future__ import annotations
 
 from .anymode import (
     Backend,
-    BackendOrDefault,
+    BackendLike,
     CircuitInfo,
     Model,
     ModelFactory,
@@ -117,7 +117,7 @@ __all__ = [
     "AnyNetlist",
     "ArrayLike",
     "Backend",
-    "BackendOrDefault",
+    "BackendLike",
     "Bool",
     "BoolArray",
     "BoolArrayLike",

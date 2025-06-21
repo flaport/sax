@@ -13,7 +13,7 @@ import numpy as np
 
 import sax
 
-from .backends import circuit_backends, validate_circuit_backend
+from .backends import circuit_backends
 from .netlists import convert_nets_to_connections, remove_unused_instances
 from .netlists import netlist as into_recnet
 from .s import get_ports, scoo, sdense, sdict
@@ -27,7 +27,7 @@ def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
     *,
-    backend: sax.BackendOrDefault = "default",
+    backend: sax.BackendLike = "default",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
 ) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
@@ -38,7 +38,7 @@ def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
     *,
-    backend: sax.BackendOrDefault = "default",
+    backend: sax.BackendLike = "default",
     return_type: Literal["SDict"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
@@ -50,7 +50,7 @@ def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
     *,
-    backend: sax.BackendOrDefault = "default",
+    backend: sax.BackendLike = "default",
     return_type: Literal["SDense"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
@@ -62,7 +62,7 @@ def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
     *,
-    backend: sax.BackendOrDefault = "default",
+    backend: sax.BackendLike = "default",
     return_type: Literal["SCoo"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
@@ -73,7 +73,7 @@ def circuit(
     netlist: sax.AnyNetlist,
     models: sax.Models | None = None,
     *,
-    backend: sax.BackendOrDefault = "default",
+    backend: sax.BackendLike = "default",
     return_type: Literal["SDict", "SDense", "SCoo"] = "SDict",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
@@ -133,7 +133,7 @@ def circuit(
         s_matrix = circuit_func(wl=1.55)
         ```
     """
-    backend = validate_circuit_backend(backend)
+    _backend = sax.into[sax.Backend](backend)
 
     instance_models = _extract_instance_models(netlist)
     recnet = into_recnet(
@@ -167,7 +167,7 @@ def circuit(
             flatnet.get("connections", {}),
             flatnet["ports"],
             current_models,
-            backend,
+            _backend,
             ignore_impossible_connections=ignore_impossible_connections,
         )
 
@@ -178,7 +178,7 @@ def circuit(
     return circuit, sax.CircuitInfo(
         dag=dependency_dag,
         models=current_models,
-        backend=backend,
+        backend=_backend,
     )
 
 

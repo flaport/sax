@@ -12,7 +12,7 @@ from __future__ import annotations
 
 __all__ = [
     "Backend",
-    "BackendOrDefault",
+    "BackendLike",
     "CircuitInfo",
     "Model",
     "ModelFactory",
@@ -31,12 +31,12 @@ __all__ = [
     "SType",
 ]
 
-from typing import Literal, NamedTuple, TypeAlias
+from typing import Annotated, Any, Literal, NamedTuple, TypeAlias
 
 import networkx as nx
 
-from sax.saxtypes.core import Name
-from sax.saxtypes.multimode import (
+from .core import Name, val
+from .multimode import (
     ModelFactoryMM,
     ModelMM,
     ModelsMM,
@@ -53,7 +53,7 @@ from sax.saxtypes.multimode import (
     SDictModelMM,
     STypeMM,
 )
-from sax.saxtypes.singlemode import (
+from .singlemode import (
     ModelFactorySM,
     ModelSM,
     ModelsSM,
@@ -113,10 +113,44 @@ SDictModelFactory: TypeAlias = SDictModelFactorySM | SDictModelFactoryMM
 SType: TypeAlias = STypeSM | STypeMM
 """Any S-matrix type (SDict, SDense, SCoo) in single-mode or multi-mode format."""
 
-Backend: TypeAlias = Literal["filipsson_gunnar", "additive", "forward", "klu"]
+
+def val_backend(backend: Any) -> Backend:
+    """Validate and normalize a circuit backend name.
+
+    Checks if the specified backend is available and returns the canonical
+    backend name. Handles backend aliases and validates availability.
+
+    Args:
+        backend: Backend name to validate (case-insensitive).
+
+    Returns:
+        Canonical backend name.
+    """
+    backend = backend.lower()
+    match backend:
+        case "default":
+            from sax.backends import default_backend
+
+            backend = default_backend
+        case "fg":
+            backend = "filipsson_gunnar"
+
+    available_backends = ["filipsson_gunnar", "additive", "forward", "klu"]
+    if backend not in available_backends:
+        msg = (
+            f"Invalid backend '{backend}'. "
+            f"Available backends: {', '.join(available_backends)}."
+        )
+        raise ValueError(msg)
+    return backend
+
+
+Backend: TypeAlias = Annotated[
+    Literal["filipsson_gunnar", "additive", "forward", "klu"], val(val_backend)
+]
 """Available SAX backend algorithms for circuit simulation."""
 
-BackendOrDefault: TypeAlias = Backend | Literal["default"]
+BackendLike: TypeAlias = Backend | Literal["default", "fg"]
 """Backend specification allowing 'default' to use the system default backend."""
 
 Models: TypeAlias = ModelsSM | ModelsMM

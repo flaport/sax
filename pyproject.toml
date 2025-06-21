@@ -83,7 +83,8 @@ dev = [
   "towncrier>=24.0.0",
   "vega-datasets>=0.9.0",
   "nb-clean>=4.0.1",
-  "ty>=0.0.1a11"
+  "ty>=0.0.1a11",
+  "nbstripout>=0.8.1"
 ]
 
 [tool.pytest.ini_options]
