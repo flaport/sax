@@ -49,7 +49,6 @@ nbclean +filenames:
     uv run --no-sync jq --indent 1 'del(.metadata.papermill)' "$filename" > "$filename.tmp" && mv "$filename.tmp" "$filename"; \
   done
 
-
 tree:
   @tree -a -I .git --gitignore
 

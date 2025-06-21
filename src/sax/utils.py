@@ -21,6 +21,8 @@ from numpy.exceptions import ComplexWarning
 
 import sax
 
+from .s import reciprocal
+
 T = TypeVar("T")
 
 __all__ = [
@@ -35,6 +37,7 @@ __all__ = [
     "maybe",
     "merge_dicts",
     "read",
+    "reciprocal",  # re-exported here to not break gplugins
     "rename_params",
     "rename_ports",
     "replace_kwargs",
