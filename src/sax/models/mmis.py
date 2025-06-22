@@ -212,8 +212,7 @@ def mmi1x2(
         - Temperature sensitivity
         - Phase errors between outputs
 
-    .. code::
-
+        ```
                    length_mmi
                     <------>
                     ________
@@ -229,10 +228,10 @@ def mmi1x2(
                  | |
                  <->
             length_taper
+        ```
 
-    .. plot::
-        :include-source:
-
+        ```python
+        # mkdocs: render
         import matplotlib.pyplot as plt
         import numpy as np
         import sax
@@ -241,11 +240,15 @@ def mmi1x2(
 
         wavelengths = np.linspace(1.5, 1.6, 101)
         s = sax.models.mmi1x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
-        transmission = np.abs(s[("o1", "o2")]) ** 2
-        plt.plot(wavelengths, transmission)
+        transmission_o2 = np.abs(s[("o1", "o2")]) ** 2
+        transmission_o3 = np.abs(s[("o1", "o3")]) ** 2
+        plt.plot(wavelengths, transmission_o2, label="Output 1")
+        plt.plot(wavelengths, transmission_o3, label="Output 2")
         plt.xlabel("Wavelength (μm)")
         plt.ylabel("Transmission")
+        plt.legend()
         plt.show()
+        ```
 
     """
     thru = _mmi_amp(wl=wl, wl0=wl0, fwhm=fwhm, loss_dB=loss_dB) / 2**0.5
@@ -379,8 +382,7 @@ def mmi2x2(
         - Multimode interference patterns
         - Phase imbalance between outputs
 
-   .. code::
-
+        ```
                    length_mmi
                     <------>
                     ________
@@ -396,10 +398,10 @@ def mmi2x2(
                  | |
                  <->
             length_taper
+        ```
 
-    .. plot::
-        :include-source:
-
+        ```python
+        # mkdocs: render
         import matplotlib.pyplot as plt
         import numpy as np
         import sax
@@ -414,7 +416,9 @@ def mmi2x2(
         plt.plot(wavelengths, cross_transmission, label="Cross")
         plt.xlabel("Wavelength (μm)")
         plt.ylabel("Transmission")
+        plt.legend()
         plt.show()
+        ```
     """
     loss_dB_cross = loss_dB_cross or loss_dB
     loss_dB_thru = loss_dB_thru or loss_dB

@@ -12,7 +12,7 @@ import sax
 @jax.jit
 @validate_call
 def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
-    """Ideal 2x2 directional coupler model.
+    r"""Ideal 2x2 directional coupler model.
 
     This function models an ideal 2x2 directional coupler with perfect coupling
     efficiency and no loss. The coupler divides input power between two output
@@ -83,63 +83,62 @@ def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
         for maintaining S-matrix unitarity and represents the physical phase
         relationship in evanescent coupling.
 
-    .. code::
+    ```
+    o2 -----                      ----- o3
+            \ ◀     length     ▶ /
+            --------------------
+    coupling0/2      coupling      coupling0/2
+            --------------------
+            /                    \
+    o1 ----◤                  ----- o4
+    ```
 
-        o2 -----                      ----- o3
-                \ ◀     length     ▶ /
-                --------------------
-        coupling0/2      coupling      coupling0/2
-                --------------------
-                /                    \
-        o1 ----◤                  ----- o4
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
 
-    .. plot::
-        :include-source:
+    sax.set_port_naming_strategy("optical")
 
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import sax
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.coupler_ideal(coupling=0.5)
+    bar_power = np.abs(s[("o1", "o4")]) ** 2
+    cross_power = np.abs(s[("o1", "o3")]) ** 2
+    plt.plot(wavelengths, bar_power, label="Bar")
+    plt.plot(wavelengths, cross_power, label="Cross")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Power")
+    plt.legend()
+    plt.show()
+    ```
 
-        sax.set_port_naming_strategy("optical")
+    ```
+    in1 -----                      ----- out1
+            \ ◀     length     ▶ /
+            --------------------
+    coupling0/2      coupling      coupling0/2
+            --------------------
+            /                    \
+    in0 ----◤                  ----- out0
+    ```
 
-        wavelengths = np.linspace(1.5, 1.6, 101)
-        s = sax.models.coupler_ideal(coupling=0.5)
-        bar_power = np.abs(s[("o1", "o4")]) ** 2
-        cross_power = np.abs(s[("o1", "o3")]) ** 2
-        plt.plot(wavelengths, bar_power, label="Bar")
-        plt.plot(wavelengths, cross_power, label="Cross")
-        plt.xlabel("Wavelength (μm)")
-        plt.ylabel("Power")
-        plt.legend()
-        plt.show()
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
 
-    .. code::
-
-        in1 -----                      ----- out1
-                \ ◀     length     ▶ /
-                --------------------
-        coupling0/2      coupling      coupling0/2
-                --------------------
-                /                    \
-        in0 ----◤                  ----- out0
-
-    .. plot::
-        :include-source:
-
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import sax
-
-        wavelengths = np.linspace(1.5, 1.6, 101)
-        s = sax.models.coupler_ideal(coupling=0.5)
-        bar_power = np.abs(s[("in0", "out0")]) ** 2
-        cross_power = np.abs(s[("in0", "out1")]) ** 2
-        plt.plot(wavelengths, bar_power, label="Bar")
-        plt.plot(wavelengths, cross_power, label="Cross")
-        plt.xlabel("Wavelength (μm)")
-        plt.ylabel("Power")
-        plt.legend()
-        plt.show()
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.coupler_ideal(coupling=0.5)
+    bar_power = np.abs(s[("in0", "out0")]) ** 2
+    cross_power = np.abs(s[("in0", "out1")]) ** 2
+    plt.plot(wavelengths, bar_power, label="Bar")
+    plt.plot(wavelengths, cross_power, label="Cross")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Power")
+    plt.legend()
+    ```
     """
     kappa = jnp.asarray(coupling**0.5)
     tau = jnp.asarray((1 - coupling) ** 0.5)
@@ -266,9 +265,8 @@ def coupler(
         )
         ```
 
-    .. plot::
-        :include-source:
-
+        ```python
+        # mkdocs: render
         import matplotlib.pyplot as plt
         import numpy as np
         import sax
@@ -288,6 +286,7 @@ def coupler(
         plt.ylabel("Power")
         plt.legend()
         plt.show()
+        ```
 
     Note:
         The coupling strength follows the formula:
@@ -444,9 +443,8 @@ def grating_coupler(
         For more accurate modeling, consider using measured spectral data
         or finite-element simulation results.
 
-    .. plot::
-        :include-source:
-
+        ```python
+        # mkdocs: render
         import matplotlib.pyplot as plt
         import numpy as np
         import sax
@@ -457,12 +455,12 @@ def grating_coupler(
             loss=3.0,
             bandwidth=0.035,
         )
-        plt.plot(wavelengths, np.abs(s[("in0", "out0")]) ** 2, label="Bar")
-        plt.plot(wavelengths, np.abs(s[("in0", "out1")]) ** 2, label="Cross")
+        plt.plot(wavelengths, np.abs(s[("in0", "out0")]) ** 2, label="Transmission")
         plt.xlabel("Wavelength (μm)")
         plt.ylabel("Power")
         plt.legend()
         plt.show()
+        ```
     """
     one = jnp.ones_like(wl)
     reflection = jnp.asarray(reflection) * one
