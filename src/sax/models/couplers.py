@@ -200,13 +200,13 @@ def coupler(
 
     ```
         in1/o2 -----                      ----- out1/o3
-                    \ ◀     length     ▶ /
+                    \ ◀-----length-----▶ /
                     --------------------
         coupling0/2      coupling      coupling0/2
                     --------------------
                     /                    \
-        in0/o1 ----◤                      ----- out0/o4
-                    bend_radius
+        in0/o1 -----                      ----- out0/o4
+
     ```
 
     ```python
@@ -385,7 +385,7 @@ def grating_coupler(
                   /  /  /  /
 
                 _|-|_|-|_|-|__
-        in0/out1              |
+        in0/o1                |
                  _____________|
     ```
 
