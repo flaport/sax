@@ -211,6 +211,42 @@ def mmi1x2(
         - Polarization dependence
         - Temperature sensitivity
         - Phase errors between outputs
+
+    .. code::
+
+                   length_mmi
+                    <------>
+                    ________
+                   |        |
+                __/          \__
+            o2  __            __  o3
+                  \          /_ _ _ _
+                  |         | _ _ _ _| gap_output_tapers
+                __/          \__
+            o1  __            __  o4
+                  \          /
+                   |________|
+                 | |
+                 <->
+            length_taper
+
+    .. plot::
+        :include-source:
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import sax
+
+        sax.set_port_naming_strategy("optical")
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s = sax.models.mmi1x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
+        transmission = np.abs(s[("o1", "o2")]) ** 2
+        plt.plot(wavelengths, transmission)
+        plt.xlabel("Wavelength (μm)")
+        plt.ylabel("Transmission")
+        plt.show()
+
     """
     thru = _mmi_amp(wl=wl, wl0=wl0, fwhm=fwhm, loss_dB=loss_dB) / 2**0.5
 
@@ -342,6 +378,43 @@ def mmi2x2(
         - Temperature sensitivity
         - Multimode interference patterns
         - Phase imbalance between outputs
+
+   .. code::
+
+                   length_mmi
+                    <------>
+                    ________
+                   |        |
+                __/          \__
+            o2  __            __  o3
+                  \          /_ _ _ _
+                  |         | _ _ _ _| gap_output_tapers
+                __/          \__
+            o1  __            __  o4
+                  \          /
+                   |________|
+                 | |
+                 <->
+            length_taper
+
+    .. plot::
+        :include-source:
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import sax
+
+        sax.set_port_naming_strategy("optical")
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s = sax.models.mmi2x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
+        bar_transmission = np.abs(s[("o1", "o3")]) ** 2
+        cross_transmission = np.abs(s[("o1", "o4")]) ** 2
+        plt.plot(wavelengths, bar_transmission, label="Bar")
+        plt.plot(wavelengths, cross_transmission, label="Cross")
+        plt.xlabel("Wavelength (μm)")
+        plt.ylabel("Transmission")
+        plt.show()
     """
     loss_dB_cross = loss_dB_cross or loss_dB
     loss_dB_thru = loss_dB_thru or loss_dB
