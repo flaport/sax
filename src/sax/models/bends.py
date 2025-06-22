@@ -68,6 +68,58 @@ def bend(
         transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
         ```
 
+    .. code::
+
+                  out0
+                  |
+                 /
+                /
+        in0____/
+
+    .. plot::
+        :include-source:
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import sax
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s = sax.models.bend(
+            wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
+        )
+        transmission = np.abs(s[("in0", "out0")]) ** 2
+        plt.plot(wavelengths, transmission)
+        plt.xlabel("Wavelength (μm)")
+        plt.ylabel("Transmission")
+        plt.show()
+
+    .. code::
+
+                  o2
+                  |
+                 /
+                /
+        o1_____/
+
+    .. plot::
+        :include-source:
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import sax
+
+        sax.set_port_naming_strategy("optical")
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s = sax.models.bend(
+            wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
+        )
+        transmission = np.abs(s[("o1", "o2")]) ** 2
+        plt.plot(wavelengths, transmission)
+        plt.xlabel("Wavelength (μm)")
+        plt.ylabel("Transmission")
+        plt.show()
+
     Note:
         This model treats the bend as an equivalent straight waveguide and does not
         account for:

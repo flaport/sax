@@ -65,6 +65,22 @@ def crossing_ideal(wl: sax.FloatArrayLike = 1.5) -> sax.SDict:
         some crosstalk (-20 to -40 dB), and wavelength-dependent performance.
         For more realistic modeling, consider using fabrication-specific
         crossing models with measured parameters.
+
+    .. plot::
+        :include-source:
+
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import sax
+
+        wavelengths = np.linspace(1.5, 1.6, 101)
+        s = sax.models.crossing_ideal(wl=wavelengths)
+        plt.plot(wavelengths, np.abs(s[("o1", "o3")]) ** 2, label="Horizontal")
+        plt.plot(wavelengths, np.abs(s[("o1", "o4")]) ** 2, label="Vertical")
+        plt.xlabel("Wavelength (μm)")
+        plt.ylabel("Power")
+        plt.legend()
+        plt.show()
     """
     one = jnp.ones_like(jnp.asarray(wl))
     p = sax.PortNamer(2, 2)
