@@ -84,7 +84,8 @@ dev = [
   "vega-datasets>=0.9.0",
   "nb-clean>=4.0.1",
   "ty>=0.0.1a11",
-  "nbstripout>=0.8.1"
+  "nbstripout>=0.8.1",
+  "mkdocs-matplotlib",
 ]
 
 [tool.pytest.ini_options]
