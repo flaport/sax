@@ -212,43 +212,42 @@ def mmi1x2(
         - Temperature sensitivity
         - Phase errors between outputs
 
-        ```
-                   length_mmi
-                    <------>
-                    ________
-                   |        |
-                __/          \__
-            o2  __            __  o3
-                  \          /_ _ _ _
-                  |         | _ _ _ _| gap_output_tapers
-                __/          \__
-            o1  __            __  o4
-                  \          /
-                   |________|
-                 | |
-                 <->
-            length_taper
-        ```
+    ```
+               length_mmi
+                <------>
+                ________
+               |        |
+               |         \__
+               |          __  o2
+            __/          /_ _ _ _
+         o1 __          | _ _ _ _| gap_mmi
+              \          \__
+               |          __  o3
+               |         /
+               |________|
 
-        ```python
-        # mkdocs: render
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import sax
+             <->
+        length_taper
+    ```
 
-        sax.set_port_naming_strategy("optical")
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
 
-        wavelengths = np.linspace(1.5, 1.6, 101)
-        s = sax.models.mmi1x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
-        transmission_o2 = np.abs(s[("o1", "o2")]) ** 2
-        transmission_o3 = np.abs(s[("o1", "o3")]) ** 2
-        plt.plot(wavelengths, transmission_o2, label="Output 1")
-        plt.plot(wavelengths, transmission_o3, label="Output 2")
-        plt.xlabel("Wavelength (μm)")
-        plt.ylabel("Transmission")
-        plt.legend()
-        plt.show()
-        ```
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.mmi1x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
+    transmission_o2 = np.abs(s[("o1", "o2")]) ** 2
+    transmission_o3 = np.abs(s[("o1", "o3")]) ** 2
+    plt.plot(wavelengths, transmission_o2, label="Output 1")
+    plt.plot(wavelengths, transmission_o3, label="Output 2")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Transmission")
+    plt.legend()
+    ```
 
     """
     thru = _mmi_amp(wl=wl, wl0=wl0, fwhm=fwhm, loss_dB=loss_dB) / 2**0.5

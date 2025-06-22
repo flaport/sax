@@ -83,62 +83,6 @@ def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
         for maintaining S-matrix unitarity and represents the physical phase
         relationship in evanescent coupling.
 
-    ```
-    o2 -----                      ----- o3
-            \ ◀     length     ▶ /
-            --------------------
-    coupling0/2      coupling      coupling0/2
-            --------------------
-            /                    \
-    o1 ----◤                  ----- o4
-    ```
-
-    ```python
-    # mkdocs: render
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import sax
-
-    sax.set_port_naming_strategy("optical")
-
-    wavelengths = np.linspace(1.5, 1.6, 101)
-    s = sax.models.coupler_ideal(coupling=0.5)
-    bar_power = np.abs(s[("o1", "o4")]) ** 2
-    cross_power = np.abs(s[("o1", "o3")]) ** 2
-    plt.plot(wavelengths, bar_power, label="Bar")
-    plt.plot(wavelengths, cross_power, label="Cross")
-    plt.xlabel("Wavelength (μm)")
-    plt.ylabel("Power")
-    plt.legend()
-    plt.show()
-    ```
-
-    ```
-    in1 -----                      ----- out1
-            \ ◀     length     ▶ /
-            --------------------
-    coupling0/2      coupling      coupling0/2
-            --------------------
-            /                    \
-    in0 ----◤                  ----- out0
-    ```
-
-    ```python
-    # mkdocs: render
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import sax
-
-    wavelengths = np.linspace(1.5, 1.6, 101)
-    s = sax.models.coupler_ideal(coupling=0.5)
-    bar_power = np.abs(s[("in0", "out0")]) ** 2
-    cross_power = np.abs(s[("in0", "out1")]) ** 2
-    plt.plot(wavelengths, bar_power, label="Bar")
-    plt.plot(wavelengths, cross_power, label="Cross")
-    plt.xlabel("Wavelength (μm)")
-    plt.ylabel("Power")
-    plt.legend()
-    ```
     """
     kappa = jnp.asarray(coupling**0.5)
     tau = jnp.asarray((1 - coupling) ** 0.5)
@@ -168,17 +112,6 @@ def coupler(
     dn2: sax.FloatArrayLike = 0.4821,
 ) -> sax.SDict:
     r"""Dispersive directional coupler model.
-
-    ```
-        o2 -----                      ----- o3
-                \ ◀     length     ▶ /
-                --------------------
-    coupling0/2      coupling      coupling0/2
-                --------------------
-                /                    \
-        o1 ----◤                      ----- o4
-                bend_radius
-    ```
 
     This function models a realistic directional coupler with wavelength-dependent
     coupling and chromatic dispersion effects. The model includes both the
@@ -265,28 +198,41 @@ def coupler(
         )
         ```
 
-        ```python
-        # mkdocs: render
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import sax
+    ```
+        in1/o2 -----                      ----- out1/o3
+                    \ ◀     length     ▶ /
+                    --------------------
+        coupling0/2      coupling      coupling0/2
+                    --------------------
+                    /                    \
+        in0/o1 ----◤                      ----- out0/o4
+                    bend_radius
+    ```
 
-        wavelengths = np.linspace(1.5, 1.6, 101)
-        s = sax.models.coupler(
-            wl=wavelengths,
-            length=15.7,
-            coupling0=0.0,
-            dn=0.02,
-        )
-        bar_power = np.abs(s[("in0", "out0")]) ** 2
-        cross_power = np.abs(s[("in0", "out1")]) ** 2
-        plt.plot(wavelengths, bar_power, label="Bar")
-        plt.plot(wavelengths, cross_power, label="Cross")
-        plt.xlabel("Wavelength (μm)")
-        plt.ylabel("Power")
-        plt.legend()
-        plt.show()
-        ```
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
+
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.coupler(
+        wl=wavelengths,
+        length=15.7,
+        coupling0=0.0,
+        dn=0.02,
+    )
+    bar_power = np.abs(s[("o1", "o4")]) ** 2
+    cross_power = np.abs(s[("o1", "o3")]) ** 2
+    plt.figure()
+    plt.plot(wavelengths, bar_power, label="Bar")
+    plt.plot(wavelengths, cross_power, label="Cross")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Power")
+    plt.legend()
+    ```
 
     Note:
         The coupling strength follows the formula:
@@ -333,17 +279,6 @@ def grating_coupler(
     bandwidth: sax.FloatArrayLike = 40e-3,
 ) -> sax.SDict:
     """Grating coupler model for fiber-chip coupling.
-
-    ```
-
-                       fiber out0
-
-                    /  /  /  /
-                   /  /  /  /
-
-                 _|-|_|-|_|-|___
-            in0  ______________|
-    ```
 
     This function models a grating coupler used to couple light between an
     optical fiber and an on-chip waveguide. The model includes wavelength-
@@ -443,24 +378,37 @@ def grating_coupler(
         For more accurate modeling, consider using measured spectral data
         or finite-element simulation results.
 
-        ```python
-        # mkdocs: render
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import sax
+    ```
+                      out0/o2
+                       fiber
+                   /  /  /  /
+                  /  /  /  /
 
-        wavelengths = np.linspace(1.5, 1.6, 101)
-        s = sax.models.grating_coupler(
-            wl=wavelengths,
-            loss=3.0,
-            bandwidth=0.035,
-        )
-        plt.plot(wavelengths, np.abs(s[("in0", "out0")]) ** 2, label="Transmission")
-        plt.xlabel("Wavelength (μm)")
-        plt.ylabel("Power")
-        plt.legend()
-        plt.show()
-        ```
+                _|-|_|-|_|-|__
+        in0/out1              |
+                 _____________|
+    ```
+
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
+
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.grating_coupler(
+        wl=wavelengths,
+        loss=3.0,
+        bandwidth=0.035,
+    )
+    plt.figure()
+    plt.plot(wavelengths, np.abs(s[("o1", "o2")]) ** 2, label="Transmission")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Power")
+    plt.legend()
+    ```
     """
     one = jnp.ones_like(wl)
     reflection = jnp.asarray(reflection) * one

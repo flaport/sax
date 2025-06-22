@@ -69,35 +69,11 @@ def bend(
     ```
 
     ```
-              out0
-              |
-             /
-            /
-    in0____/
-    ```
-
-    ```python
-    # mkdocs: render
-    import matplotlib.pyplot as plt
-    import numpy as np
-    import sax
-
-    wavelengths = np.linspace(1.5, 1.6, 101)
-    s = sax.models.bend(
-        wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
-    )
-    transmission = np.abs(s[("in0", "out0")]) ** 2
-    plt.plot(wavelengths, transmission)
-    plt.xlabel("Wavelength (μm)")
-    plt.ylabel("Transmission")
-    ```
-
-    ```
-              o2
-              |
-             /
-            /
-    o1_____/
+                   o2/out0
+                   |
+                  /
+                 /
+    o1/in0 _____/
     ```
 
     ```python
@@ -113,6 +89,8 @@ def bend(
         wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
     )
     transmission = np.abs(s[("o1", "o2")]) ** 2
+
+    plt.figure()
     plt.plot(wavelengths, transmission)
     plt.xlabel("Wavelength (μm)")
     plt.ylabel("Transmission")
