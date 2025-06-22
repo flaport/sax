@@ -85,9 +85,7 @@ def bend(
     sax.set_port_naming_strategy("optical")
 
     wavelengths = np.linspace(1.5, 1.6, 101)
-    s = sax.models.bend(
-        wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
-    )
+    s = sax.models.bend(wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5)
     transmission = np.abs(s[("o1", "o2")]) ** 2
 
     plt.figure()
