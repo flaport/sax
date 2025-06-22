@@ -136,7 +136,7 @@ def mmi1x2(
     fwhm: sax.FloatArrayLike = 0.2,
     loss_dB: sax.FloatArrayLike = 0.3,
 ) -> sax.SDict:
-    """Realistic 1x2 MMI splitter model with dispersion and loss.
+    r"""Realistic 1x2 MMI splitter model with dispersion and loss.
 
     This function models a realistic 1x2 multimode interference (MMI) splitter
     with wavelength-dependent transmission, insertion loss, and finite bandwidth.
@@ -275,7 +275,7 @@ def mmi2x2(
     splitting_ratio_cross: sax.FloatArrayLike = 0.5,
     splitting_ratio_thru: sax.FloatArrayLike = 0.5,
 ) -> sax.SDict:
-    """Realistic 2x2 MMI coupler model with dispersion and asymmetry.
+    r"""Realistic 2x2 MMI coupler model with dispersion and asymmetry.
 
     This function models a realistic 2x2 multimode interference (MMI) coupler
     with wavelength-dependent behavior, insertion loss, and the ability to
@@ -382,43 +382,42 @@ def mmi2x2(
         - Multimode interference patterns
         - Phase imbalance between outputs
 
-        ```
-                   length_mmi
-                    <------>
-                    ________
-                   |        |
-                __/          \__
-            o2  __            __  o3
-                  \          /_ _ _ _
-                  |         | _ _ _ _| gap_output_tapers
-                __/          \__
-            o1  __            __  o4
-                  \          /
-                   |________|
-                 | |
-                 <->
-            length_taper
-        ```
+    ```
+               length_mmi
+                <------>
+                ________
+               |        |
+            __/          \__
+        o2  __            __  o3
+              \          /_ _ _ _
+              |         | _ _ _ _| gap_output_tapers
+            __/          \__
+        o1  __            __  o4
+              \          /
+               |________|
+             | |
+             <->
+        length_taper
+    ```
 
-        ```python
-        # mkdocs: render
-        import matplotlib.pyplot as plt
-        import numpy as np
-        import sax
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
 
-        sax.set_port_naming_strategy("optical")
+    sax.set_port_naming_strategy("optical")
 
-        wavelengths = np.linspace(1.5, 1.6, 101)
-        s = sax.models.mmi2x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
-        bar_transmission = np.abs(s[("o1", "o3")]) ** 2
-        cross_transmission = np.abs(s[("o1", "o4")]) ** 2
-        plt.plot(wavelengths, bar_transmission, label="Bar")
-        plt.plot(wavelengths, cross_transmission, label="Cross")
-        plt.xlabel("Wavelength (μm)")
-        plt.ylabel("Transmission")
-        plt.legend()
-        plt.show()
-        ```
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.mmi2x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
+    bar_transmission = np.abs(s[("o1", "o3")]) ** 2
+    cross_transmission = np.abs(s[("o1", "o4")]) ** 2
+    plt.plot(wavelengths, bar_transmission, label="Bar")
+    plt.plot(wavelengths, cross_transmission, label="Cross")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Transmission")
+    plt.legend()
+    ```
     """
     loss_dB_cross = loss_dB_cross or loss_dB
     loss_dB_thru = loss_dB_thru or loss_dB
