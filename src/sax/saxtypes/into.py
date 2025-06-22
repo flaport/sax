@@ -26,8 +26,7 @@ __all__ = ["into", "try_into"]
 from collections.abc import Callable
 from typing import Any, TypeVar, cast, get_args, overload
 
-from pydantic import PlainValidator, TypeAdapter
-from pydantic_core._pydantic_core import ValidationError
+from pydantic import PlainValidator, TypeAdapter, ValidationError
 from typing_extensions import _AnnotatedAlias
 
 T = TypeVar("T")
