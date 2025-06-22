@@ -425,19 +425,15 @@ def mmi2x2(
     amplitude_ratio_thru = splitting_ratio_thru**0.5
     amplitude_ratio_cross = splitting_ratio_cross**0.5
 
-    loss_factor_thru = 10 ** (-loss_dB_thru / 20)
-    loss_factor_cross = 10 ** (-loss_dB_cross / 20)
-
+    # _mmi_amp already includes the loss, so we don't need to apply it again
     thru = (
         _mmi_amp(wl=wl, wl0=wl0 + shift, fwhm=fwhm, loss_dB=loss_dB_thru)
         * amplitude_ratio_thru
-        * loss_factor_thru
     )
     cross = (
         1j
         * _mmi_amp(wl=wl, wl0=wl0 + shift, fwhm=fwhm, loss_dB=loss_dB_cross)
         * amplitude_ratio_cross
-        * loss_factor_cross
     )
 
     p = sax.PortNamer(2, 2)
@@ -479,7 +475,8 @@ def _mmi_amp(
         The amplitude is the square root of the power transmission to maintain
         proper S-matrix scaling.
     """
-    max_power = 10 ** (-abs(loss_dB) / 10)
+    # Convert loss from dB to amplitude directly (not power)
+    max_amplitude = 10 ** (-abs(loss_dB) / 20)
     f = 1 / wl
     f0 = 1 / wl0
     f1 = 1 / (wl0 + fwhm / 2)
@@ -487,9 +484,11 @@ def _mmi_amp(
     _fwhm = f2 - f1
 
     sigma = _fwhm / (2 * jnp.sqrt(2 * jnp.log(2)))
-    power = jnp.exp(-((f - f0) ** 2) / (2 * sigma**2))
-    power = max_power * power / power.max()
-    return jnp.sqrt(power)
+    # Gaussian response in frequency domain
+    spectral_response = jnp.exp(-((f - f0) ** 2) / (2 * sigma**2))
+    # Apply loss to amplitude, not power
+    amplitude = max_amplitude * spectral_response / spectral_response.max()
+    return amplitude
 
 
 def _mmi_nxn(
@@ -574,7 +573,7 @@ def _mmi_nxn(
         for j in range(n):
             amplitude = _mmi_amp(wl, wl0 + _shift[j], fwhm, _loss_dB[j])
             amplitude *= jnp.sqrt(_splitting_matrix[i][j])
-            loss_factor = 10 ** (-_loss_dB[j] / 20)
-            S[(p[i], p[n + j])] = amplitude * loss_factor
+            # _mmi_amp already includes the loss, so no additional loss factor needed
+            S[(p[i], p[n + j])] = amplitude
 
     return sax.reciprocal(S)
