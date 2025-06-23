@@ -8,7 +8,9 @@ flat and hierarchical netlist representations.
 from __future__ import annotations
 
 from functools import partial
-from typing import Annotated, Any, Literal, NotRequired, TypeAlias, TypedDict
+from typing import Annotated, Any, Literal, NotRequired, TypeAlias
+
+from typing_extensions import TypedDict
 
 from sax.saxtypes.core import Name, val, val_name
 from sax.saxtypes.settings import Settings
