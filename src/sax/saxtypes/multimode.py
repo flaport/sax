@@ -59,6 +59,8 @@ def val_mode(obj: Any) -> Mode:
         The validated mode string.
 
     Examples:
+        Validating a string as a mode:
+
         ```python
         import sax.saxtypes.multimode as mm
 
@@ -88,6 +90,8 @@ def val_port_mode(obj: Any) -> PortMode:
         TypeError: If the string doesn't follow 'port@mode' format.
 
     Examples:
+        Validating a port-mode string:
+
         ```python
         import sax.saxtypes.multimode as mm
 
@@ -125,13 +129,14 @@ SDictMM: TypeAlias = dict[PortCombinationMM, ComplexArray]
 
 A mapping from a port combination to an S-parameter or an array of S-parameters.
 
-Example:
+Examples:
+    Creating an `SDictMM`:
 
-```python
-sdict: sax.SDict = {
-    ("in0", "out0"): 3.0,
-}
-```
+    ```python
+    sdict: sax.SDict = {
+        ("in0", "out0"): 3.0,
+    }
+    ```
 
 """
 
@@ -141,7 +146,8 @@ SDenseMM: TypeAlias = tuple[ComplexArray, PortMapMM]
 S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
 If (N+2)-D array then the S-matrix dimensions are the last two.
 
-Example:
+Examples:
+    Creating an `SDenseMM`:
 
     ```python
     Sd = jnp.arange(9, dtype=float).reshape(3, 3)
@@ -162,7 +168,8 @@ matrix. The port map maps a port name [`str`] to a port index [`int`].
 Only these four arrays **together** and in this specific **order** are considered a
 valid `SCoo` representation!
 
-Example:
+Examples:
+    Creating an `SCooMM':
 
     ```python
     Si = jnp.arange(3, dtype=int)

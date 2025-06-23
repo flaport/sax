@@ -172,6 +172,8 @@ def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to a boolean:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -220,6 +222,8 @@ def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to an integer:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -275,6 +279,8 @@ def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to a float:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -325,6 +331,8 @@ def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> Complex
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to a complex number:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -462,6 +470,8 @@ def val_bool_array(
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to a boolean array:
+
         ```python
         import sax.saxtypes as sxt
         import jax.numpy as jnp
@@ -513,6 +523,8 @@ def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntAr
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to an integer array:
+
         ```python
         import sax.saxtypes as sxt
         import jax.numpy as jnp
@@ -568,6 +580,8 @@ def val_float_array(
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to a float array:
+
         ```python
         import sax.saxtypes as sxt
         import jax.numpy as jnp
@@ -623,6 +637,8 @@ def val_complex_array(
         TypeError: If validation fails.
 
     Examples:
+        Validate and cast an object to a complex array:
+
         ```python
         import sax.saxtypes as sxt
         import jax.numpy as jnp
@@ -678,6 +694,8 @@ def val_int_array_1d(
         TypeError: If validation fails or array is not 1D.
 
     Examples:
+        Validate and cast an object to a 1D integer array:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -731,6 +749,8 @@ def val_float_array_1d(
         TypeError: If validation fails or array is not 1D.
 
     Examples:
+        Validate and cast an object to a 1D float array:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -784,6 +804,8 @@ def val_float_array_2d(
         TypeError: If validation fails or array is not 2D.
 
     Examples:
+        Validate and cast an object to a 2D float array:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -837,6 +859,8 @@ def val_complex_array_1d(
         TypeError: If validation fails or array is not 1D.
 
     Examples:
+        Validate and cast an object to a 1D complex array:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -928,6 +952,8 @@ def cast_string(obj: Any) -> str:
         The string representation of the object.
 
     Examples:
+        Validate and cast various types to string:
+
         ```python
         import sax.saxtypes.core as core
 
@@ -958,6 +984,8 @@ def val_name(
         TypeError: If the string is not a valid identifier.
 
     Examples:
+        Validate a string as a valid Python identifier:
+
         ```python
         import sax.saxtypes.core as core
 

@@ -69,6 +69,7 @@ extra_javascript:
 plugins:
   - search
   - autorefs
+  - mkdocs_matplotlib
   - mkdocstrings:
       handlers:
         python:

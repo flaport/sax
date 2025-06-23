@@ -26,8 +26,7 @@ __all__ = ["into", "try_into"]
 from collections.abc import Callable
 from typing import Any, TypeVar, cast, get_args, overload
 
-from pydantic import PlainValidator, TypeAdapter
-from pydantic_core._pydantic_core import ValidationError
+from pydantic import PlainValidator, TypeAdapter, ValidationError
 from typing_extensions import _AnnotatedAlias
 
 T = TypeVar("T")
@@ -111,6 +110,8 @@ class into(metaclass=Into):  # noqa: N801
     Raises TypeError if conversion fails.
 
     Examples:
+        Validate and cast objects to SAX or python types:
+
         ```python
         import sax.saxtypes as sxt
 
@@ -163,6 +164,8 @@ class try_into(metaclass=TryInto):  # noqa: N801
     Returns None instead of raising errors when conversion fails.
 
     Examples:
+        Validate and cast objects to SAX or python types safely:
+
         ```python
         import sax.saxtypes as sxt
 

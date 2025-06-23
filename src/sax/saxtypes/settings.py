@@ -30,6 +30,8 @@ def val_settings_value(value: Any) -> SettingsValue:
         The validated settings value.
 
     Examples:
+        Validate an object into a settings-value:
+
         ```python
         import sax.saxtypes.settings as settings
 
@@ -69,6 +71,8 @@ def val_settings(settings: dict) -> Settings:
         TypeError: If the input is not a dictionary.
 
     Examples:
+        Validate a dictionary into a settings mapping:
+
         ```python
         import sax.saxtypes.settings as settings
 
@@ -95,8 +99,9 @@ Top-level keys often correspond to global parameters or instance names,
 while nested dictionaries contain model-specific parameters.
 
 Examples:
+    Define settings for a model or circuit:
+
     ```python
-    # MZI interferometer settings
     mzi_settings: sax.Settings = {
         "wl": 1.5,  # global wavelength setting
         "lft": {"coupling": 0.5},  # settings for the left coupler
@@ -104,7 +109,6 @@ Examples:
         "rgt": {"coupling": 0.3},  # settings for the right coupler
     }
 
-    # Array parameter settings
     array_settings: sax.Settings = {
         "wavelengths": [1.50, 1.51, 1.52, 1.53, 1.54, 1.55],
         "temperature": 25.0,

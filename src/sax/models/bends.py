@@ -49,24 +49,50 @@ def bend(
     Examples:
         Basic bend simulation:
 
-        ```python
-        import numpy as np
-        import sax
+    ```python
+    import numpy as np
+    import sax
 
-        # Single wavelength simulation
-        s_matrix = sax.models.bend(wl=1.55, length=20.0, loss_dB_cm=0.2)
-        print(f"Transmission: {s_matrix[('in0', 'out0')]}")
-        ```
+    # Single wavelength simulation
+    s_matrix = sax.models.bend(wl=1.55, length=20.0, loss_dB_cm=0.2)
+    print(f"Transmission: {s_matrix[('in0', 'out0')]}")
+    ```
 
-        Multi-wavelength analysis:
+    Multi-wavelength analysis:
 
-        ```python
-        wavelengths = np.linspace(1.5, 1.6, 101)
-        s_matrices = sax.models.bend(
-            wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
-        )
-        transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
-        ```
+    ```python
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s_matrices = sax.models.bend(
+        wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
+    )
+    transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
+    ```
+
+    ```
+                   o2/out0
+                   |
+                  /
+                 /
+    o1/in0 _____/
+    ```
+
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
+
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.bend(wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5)
+    transmission = np.abs(s[("o1", "o2")]) ** 2
+
+    plt.figure()
+    plt.plot(wavelengths, transmission)
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Transmission")
+    ```
 
     Note:
         This model treats the bend as an equivalent straight waveguide and does not

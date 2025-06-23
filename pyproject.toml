@@ -84,7 +84,8 @@ dev = [
   "vega-datasets>=0.9.0",
   "nb-clean>=4.0.1",
   "ty>=0.0.1a11",
-  "nbstripout>=0.8.1"
+  "nbstripout>=0.8.1",
+  "mkdocs-matplotlib"
 ]
 
 [tool.pytest.ini_options]
@@ -112,6 +113,7 @@ ignore = [
   "N806",  # non-lowercase-variable-in-function
   "PD901",  # pandas-df-variable-name
   "PLC0414",  # useless-import-alias
+  "PLC0415",  # import-outside-top-level
   "PLR0913",  # too-many-arguments
   "PLR2004",  # magic-value-comparison
   "PLW2901",  # redefined-loop-name

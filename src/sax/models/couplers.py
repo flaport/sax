@@ -12,7 +12,7 @@ import sax
 @jax.jit
 @validate_call
 def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
-    """Ideal 2x2 directional coupler model.
+    r"""Ideal 2x2 directional coupler model.
 
     This function models an ideal 2x2 directional coupler with perfect coupling
     efficiency and no loss. The coupler divides input power between two output
@@ -82,6 +82,7 @@ def coupler_ideal(*, coupling: sax.FloatArrayLike = 0.5) -> sax.SDict:
         The 90-degree phase shift in cross-coupled terms (1j factor) is required
         for maintaining S-matrix unitarity and represents the physical phase
         relationship in evanescent coupling.
+
     """
     kappa = jnp.asarray(coupling**0.5)
     tau = jnp.asarray((1 - coupling) ** 0.5)
@@ -111,17 +112,6 @@ def coupler(
     dn2: sax.FloatArrayLike = 0.4821,
 ) -> sax.SDict:
     r"""Dispersive directional coupler model.
-
-    ```
-        o2 -----                      ----- o3
-                \ ◀     length     ▶ /
-                --------------------
-    coupling0/2      coupling      coupling0/2
-                --------------------
-                /                    \
-        o1 ----◤                      ----- o4
-                bend_radius
-    ```
 
     This function models a realistic directional coupler with wavelength-dependent
     coupling and chromatic dispersion effects. The model includes both the
@@ -208,6 +198,42 @@ def coupler(
         )
         ```
 
+    ```
+        in1/o2 -----                      ----- out1/o3
+                    \ ◀-----length-----▶ /
+                    --------------------
+        coupling0/2      coupling      coupling0/2
+                    --------------------
+                    /                    \
+        in0/o1 -----                      ----- out0/o4
+
+    ```
+
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
+
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.coupler(
+        wl=wavelengths,
+        length=15.7,
+        coupling0=0.0,
+        dn=0.02,
+    )
+    bar_power = np.abs(s[("o1", "o4")]) ** 2
+    cross_power = np.abs(s[("o1", "o3")]) ** 2
+    plt.figure()
+    plt.plot(wavelengths, bar_power, label="Bar")
+    plt.plot(wavelengths, cross_power, label="Cross")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Power")
+    plt.legend()
+    ```
+
     Note:
         The coupling strength follows the formula:
         κ_total = κ₀ + κ₁ + κ_length
@@ -253,17 +279,6 @@ def grating_coupler(
     bandwidth: sax.FloatArrayLike = 40e-3,
 ) -> sax.SDict:
     """Grating coupler model for fiber-chip coupling.
-
-    ```
-
-                       fiber out0
-
-                    /  /  /  /
-                   /  /  /  /
-
-                 _|-|_|-|_|-|___
-            in0  ______________|
-    ```
 
     This function models a grating coupler used to couple light between an
     optical fiber and an on-chip waveguide. The model includes wavelength-
@@ -362,6 +377,38 @@ def grating_coupler(
 
         For more accurate modeling, consider using measured spectral data
         or finite-element simulation results.
+
+    ```
+                      out0/o2
+                       fiber
+                   /  /  /  /
+                  /  /  /  /
+
+                _|-|_|-|_|-|__
+        in0/o1                |
+                 _____________|
+    ```
+
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
+
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.grating_coupler(
+        wl=wavelengths,
+        loss=3.0,
+        bandwidth=0.035,
+    )
+    plt.figure()
+    plt.plot(wavelengths, np.abs(s[("o1", "o2")]) ** 2, label="Transmission")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Power")
+    plt.legend()
+    ```
     """
     one = jnp.ones_like(wl)
     reflection = jnp.asarray(reflection) * one

@@ -136,7 +136,7 @@ def mmi1x2(
     fwhm: sax.FloatArrayLike = 0.2,
     loss_dB: sax.FloatArrayLike = 0.3,
 ) -> sax.SDict:
-    """Realistic 1x2 MMI splitter model with dispersion and loss.
+    r"""Realistic 1x2 MMI splitter model with dispersion and loss.
 
     This function models a realistic 1x2 multimode interference (MMI) splitter
     with wavelength-dependent transmission, insertion loss, and finite bandwidth.
@@ -211,6 +211,44 @@ def mmi1x2(
         - Polarization dependence
         - Temperature sensitivity
         - Phase errors between outputs
+
+    ```
+               length_mmi
+                <------>
+                ________
+               |        |
+               |         \__
+               |          __  o2
+            __/          /_ _ _ _
+         o1 __          | _ _ _ _| gap_mmi
+              \          \__
+               |          __  o3
+               |         /
+               |________|
+
+             <->
+        length_taper
+    ```
+
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
+
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.mmi1x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
+    transmission_o2 = np.abs(s[("o1", "o2")]) ** 2
+    transmission_o3 = np.abs(s[("o1", "o3")]) ** 2
+    plt.plot(wavelengths, transmission_o2, label="Output 1")
+    plt.plot(wavelengths, transmission_o3, label="Output 2")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Transmission")
+    plt.legend()
+    ```
+
     """
     thru = _mmi_amp(wl=wl, wl0=wl0, fwhm=fwhm, loss_dB=loss_dB) / 2**0.5
 
@@ -236,7 +274,7 @@ def mmi2x2(
     splitting_ratio_cross: sax.FloatArrayLike = 0.5,
     splitting_ratio_thru: sax.FloatArrayLike = 0.5,
 ) -> sax.SDict:
-    """Realistic 2x2 MMI coupler model with dispersion and asymmetry.
+    r"""Realistic 2x2 MMI coupler model with dispersion and asymmetry.
 
     This function models a realistic 2x2 multimode interference (MMI) coupler
     with wavelength-dependent behavior, insertion loss, and the ability to
@@ -342,6 +380,43 @@ def mmi2x2(
         - Temperature sensitivity
         - Multimode interference patterns
         - Phase imbalance between outputs
+
+    ```
+               length_mmi
+                <------>
+                ________
+               |        |
+            __/          \__
+        o2  __            __  o3
+              \          /_ _ _ _
+              |         | _ _ _ _| gap_output_tapers
+            __/          \__
+        o1  __            __  o4
+              \          /
+               |________|
+             | |
+             <->
+        length_taper
+    ```
+
+    ```python
+    # mkdocs: render
+    import matplotlib.pyplot as plt
+    import numpy as np
+    import sax
+
+    sax.set_port_naming_strategy("optical")
+
+    wavelengths = np.linspace(1.5, 1.6, 101)
+    s = sax.models.mmi2x2(wl=wavelengths, fwhm=0.15, loss_dB=0.5)
+    bar_transmission = np.abs(s[("o1", "o3")]) ** 2
+    cross_transmission = np.abs(s[("o1", "o4")]) ** 2
+    plt.plot(wavelengths, bar_transmission, label="Bar")
+    plt.plot(wavelengths, cross_transmission, label="Cross")
+    plt.xlabel("Wavelength (μm)")
+    plt.ylabel("Transmission")
+    plt.legend()
+    ```
     """
     loss_dB_cross = loss_dB_cross or loss_dB
     loss_dB_thru = loss_dB_thru or loss_dB
@@ -350,19 +425,15 @@ def mmi2x2(
     amplitude_ratio_thru = splitting_ratio_thru**0.5
     amplitude_ratio_cross = splitting_ratio_cross**0.5
 
-    loss_factor_thru = 10 ** (-loss_dB_thru / 20)
-    loss_factor_cross = 10 ** (-loss_dB_cross / 20)
-
+    # _mmi_amp already includes the loss, so we don't need to apply it again
     thru = (
         _mmi_amp(wl=wl, wl0=wl0 + shift, fwhm=fwhm, loss_dB=loss_dB_thru)
         * amplitude_ratio_thru
-        * loss_factor_thru
     )
     cross = (
         1j
         * _mmi_amp(wl=wl, wl0=wl0 + shift, fwhm=fwhm, loss_dB=loss_dB_cross)
         * amplitude_ratio_cross
-        * loss_factor_cross
     )
 
     p = sax.PortNamer(2, 2)
@@ -404,7 +475,8 @@ def _mmi_amp(
         The amplitude is the square root of the power transmission to maintain
         proper S-matrix scaling.
     """
-    max_power = 10 ** (-abs(loss_dB) / 10)
+    # Convert loss from dB to amplitude directly (not power)
+    max_amplitude = 10 ** (-abs(loss_dB) / 20)
     f = 1 / wl
     f0 = 1 / wl0
     f1 = 1 / (wl0 + fwhm / 2)
@@ -412,9 +484,11 @@ def _mmi_amp(
     _fwhm = f2 - f1
 
     sigma = _fwhm / (2 * jnp.sqrt(2 * jnp.log(2)))
-    power = jnp.exp(-((f - f0) ** 2) / (2 * sigma**2))
-    power = max_power * power / power.max()
-    return jnp.sqrt(power)
+    # Gaussian response in frequency domain
+    spectral_response = jnp.exp(-((f - f0) ** 2) / (2 * sigma**2))
+    # Apply loss to amplitude, not power
+    amplitude = max_amplitude * spectral_response / spectral_response.max()
+    return jnp.asarray(amplitude)
 
 
 def _mmi_nxn(
@@ -499,7 +573,7 @@ def _mmi_nxn(
         for j in range(n):
             amplitude = _mmi_amp(wl, wl0 + _shift[j], fwhm, _loss_dB[j])
             amplitude *= jnp.sqrt(_splitting_matrix[i][j])
-            loss_factor = 10 ** (-_loss_dB[j] / 20)
-            S[(p[i], p[n + j])] = amplitude * loss_factor
+            # _mmi_amp already includes the loss, so no additional loss factor needed
+            S[(p[i], p[n + j])] = amplitude
 
     return sax.reciprocal(S)
