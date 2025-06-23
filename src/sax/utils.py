@@ -280,7 +280,7 @@ def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
         for k, v in signature.parameters.items()
         if v.default is not inspect.Parameter.empty
     }
-    return sax.into[sax.Settings](settings)
+    return cast(sax.Settings, settings)
 
 
 def merge_dicts(*dicts: dict) -> dict:
@@ -535,7 +535,7 @@ def rename_params(model: sax.Model, renamings: dict[str, str]) -> sax.Model:
         msg = "Multiple old names point to the same new name!"
         raise ValueError(msg)
 
-    if (_model := sax.try_into[sax.Model](model)) is not None:
+    if callable(_model := cast(sax.Model, model)):
 
         @wraps(_model)
         def new_model(**settings: sax.SettingsValue) -> sax.SType:
@@ -603,23 +603,27 @@ def rename_ports(
         renamed_model = rename_ports(original_model, {"input": "in", "output": "out"})
         ```
     """
-    if (scoo := sax.try_into[sax.SCoo](S)) is not None:
-        Si, Sj, Sx, ports_map = scoo
-        ports_map = {renamings[p]: i for p, i in ports_map.items()}
-        return Si, Sj, Sx, ports_map
-    if (sdense := sax.try_into[sax.SDense](S)) is not None:
-        Sx, ports_map = sdense
-        ports_map = {renamings[p]: i for p, i in ports_map.items()}
-        return Sx, ports_map
-    if (sdict := sax.try_into[sax.SDict](S)) is not None:
-        return {(renamings[p1], renamings[p2]): v for (p1, p2), v in sdict.items()}
-    if (model := sax.try_into[sax.Model](S)) is not None:
+    if callable(model := S):
 
         @wraps(model)
         def new_model(**settings: sax.SettingsValue) -> sax.SType:
             return rename_ports(model(**settings), renamings)
 
         return cast(sax.Model, new_model)
+
+    if isinstance(sdict := S, dict):
+        return {(renamings[p1], renamings[p2]): v for (p1, p2), v in sdict.items()}
+
+    if len(scoo := cast(sax.SCoo, S)) == 4:
+        Si, Sj, Sx, ports_map = scoo
+        ports_map = {renamings[p]: i for p, i in ports_map.items()}
+        return Si, Sj, Sx, ports_map
+
+    if len(sdense := cast(sax.SDense, S)) == 2:
+        Sx, ports_map = sdense
+        ports_map = {renamings[p]: i for p, i in ports_map.items()}
+        return Sx, ports_map
+
     msg = f"Cannot rename ports for type {type(S)}"
     raise ValueError(msg)
 
@@ -800,7 +804,6 @@ def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]
 
 def _try_complex_float(f: Any) -> Any:  # noqa: ANN401
     """Try converting an object to float, return unchanged object on fail."""
-    # TODO: deprecate for `sax.into` options.
     with warnings.catch_warnings():
         warnings.filterwarnings(action="error", category=ComplexWarning)
         try:

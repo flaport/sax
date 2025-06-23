@@ -322,11 +322,12 @@ def get_ports(S: sax.SType) -> tuple[sax.Port, ...] | tuple[sax.PortMode]:
             f"get_ports(model). Got: {S}"
         )
         raise TypeError(msg)
-    if (sdict := sax.try_into[sax.SDict](S)) is not None:
+    if isinstance(sdict := S, dict):
         ports_set = {p1 for p1, _ in sdict} | {p2 for _, p2 in sdict}
         return tuple(natsorted(ports_set))
-    if (with_pm := sax.try_into[sax.SCoo | sax.SDense](S)) is not None:
-        *_, pm = with_pm
+
+    if isinstance(S, tuple):
+        *_, pm = cast(sax.SCoo | sax.SDense, S)
         return tuple(natsorted(pm.keys()))
 
     msg = f"Expected an SType. Got: {S!r} [{type(S)}]"
@@ -422,15 +423,15 @@ def get_port_combinations(S: sax.Model | sax.SType) -> tuple[tuple[str, str], ..
             f"get_ports(model). Got: {S}"
         )
         raise TypeError(msg)
-    if (sdict := sax.try_into[sax.SDict](S)) is not None:
+    if isinstance(sdict := S, dict):
         return tuple(sdict.keys())
-    if (scoo := sax.try_into[sax.SCoo](S)) is not None:
+    if len(scoo := cast(sax.SCoo, S)) == 4:
         Si, Sj, _, pm = scoo
         rpm = {int(i): str(p) for p, i in pm.items()}
         return tuple(
             natsorted((rpm[int(i)], rpm[int(j)]) for i, j in zip(Si, Sj, strict=False))
         )
-    if (sdense := sax.try_into[sax.SDense](S)) is not None:
+    if len(sdense := cast(sax.SDense, S)) == 2:
         _, pm = sdense
         return tuple(natsorted((p1, p2) for p1 in pm for p2 in pm))
     msg = "Could not extract ports for given S"

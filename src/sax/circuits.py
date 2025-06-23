@@ -284,7 +284,7 @@ def get_required_circuit_models(
         ```
     """
     instance_models = _extract_instance_models(netlist)
-    recnet: sax.RecursiveNetlist = into_recnet(
+    recnet = into_recnet(
         netlist,
     )
     recnet = remove_unused_instances(recnet)
@@ -555,12 +555,7 @@ def _enforce_return_type(model: sax.Model, return_type: Any) -> sax.Model:  # no
 
 
 def _extract_instance_models(netlist: sax.AnyNetlist) -> sax.Models:
-    if sax.try_into[sax.RecursiveNetlist](netlist) is not None:
-        models = {}
-        for net in netlist.values():
-            models.update(_extract_instance_models(cast(sax.Netlist, net)))
-        return models
-    if sax.try_into[sax.Netlist](netlist) is not None:
+    if _is_netlist(netlist):
         callable_instances = [f for f in netlist["instances"].values() if callable(f)]
         models = {}
         for f in callable_instances:
@@ -568,7 +563,22 @@ def _extract_instance_models(netlist: sax.AnyNetlist) -> sax.Models:
                 f = f.func
             models[f.__name__] = f
         return models
+
+    if _is_recursive_netlist(netlist):
+        models = {}
+        for net in netlist.values():
+            models.update(_extract_instance_models(cast(sax.Netlist, net)))
+        return models
+
     return {}
+
+
+def _is_netlist(netlist: sax.AnyNetlist) -> bool:
+    return isinstance(netlist, dict) and "instances" in netlist and "ports" in netlist
+
+
+def _is_recursive_netlist(netlist: sax.AnyNetlist) -> bool:
+    return isinstance(netlist, dict) and not _is_netlist(netlist)
 
 
 def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
@@ -624,15 +634,13 @@ def resolve_array_instances(netlist: sax.Netlist) -> sax.Netlist: ...
 
 
 def resolve_array_instances(netlist: sax.AnyNetlist) -> sax.AnyNetlist:
-    if (net := sax.try_into[sax.Netlist](netlist)) is not None:
+    if _is_netlist(net := cast(sax.Netlist, netlist)):
         net = {**net}  # shallow copy
         instances = {}
         for name, inst in net["instances"].items():
             instances.update(resolve_array_instance(name, inst))
         net["instances"] = instances
         return net
-    if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
-        return {
-            k: cast(sax.Netlist, resolve_array_instances(v)) for k, v in recnet.items()
-        }
+    if _is_recursive_netlist(recnet := cast(sax.RecursiveNetlist, netlist)):
+        return {k: resolve_array_instances(v) for k, v in recnet.items()}
     return netlist

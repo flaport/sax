@@ -50,19 +50,22 @@ def netlist(
         # Result: {"my_circuit": flat_net}
         ```
     """
-    if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
-        top_level = recnet.get(top_level_name, None)
-        if top_level is None:
-            return recnet
-        return {top_level_name: top_level, **recnet}
-    if (net := sax.try_into[sax.Netlist](netlist)) is not None:
-        return {top_level_name: net}
-    msg = (
-        "Invalid argument for `netlist`. "
-        "Expected type: dict | Netlist | RecursiveNetlist. "
-        f"Got: {type(netlist)}."
-    )
-    raise ValueError(msg)
+    if not isinstance(netlist, dict):
+        msg = (
+            "Invalid argument for `netlist`. "
+            "Expected type: dict | Netlist | RecursiveNetlist. "
+            f"Got: {type(netlist)}."
+        )
+        raise TypeError(msg)
+
+    if "instances" in netlist:
+        return {top_level_name: cast(sax.Netlist, netlist)}
+
+    recnet = cast(sax.RecursiveNetlist, netlist)
+    top_level = recnet.get(top_level_name, None)
+    if top_level is None:
+        return recnet
+    return {top_level_name: top_level, **recnet}
 
 
 def flatten_netlist(recnet: sax.RecursiveNetlist, sep: str = "~") -> sax.Netlist:
@@ -110,8 +113,8 @@ def remove_unused_instances(netlist: sax.RecursiveNetlist) -> sax.RecursiveNetli
 
 
 def remove_unused_instances(netlist: sax.AnyNetlist) -> sax.AnyNetlist:
-    if (net := sax.try_into[sax.Netlist](netlist)) is not None:
-        net = deepcopy(net)
+    if "instances" in netlist:
+        net = cast(sax.Netlist, deepcopy(netlist))
         names = _get_nodes_to_remove(_get_connectivity_graph(net), net)
         _remove_instances(net, names)
         _remove_connections(net, names)
