@@ -1,3 +1,17 @@
+<a id="0.15.6"></a>
+# [0.15.6](https://github.com/flaport/sax/releases/tag/0.15.6) - 2025-06-23
+
+# What's Changed
+
+## Bug Fixes
+
+- Fix sax on python 3.11 [#57](https://github.com/$OWNER/$REPOSITORY/pull/57)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.5...0.15.6
+
+[Changes][0.15.6]
+
+
 <a id="0.15.5"></a>
 # [0.15.5](https://github.com/flaport/sax/releases/tag/0.15.5) - 2025-06-23
 
@@ -640,6 +654,7 @@
 [Changes][0.8.7]
 
 
+[0.15.6]: https://github.com/flaport/sax/compare/0.15.5...0.15.6
 [0.15.5]: https://github.com/flaport/sax/compare/0.15.4...0.15.5
 [0.15.4]: https://github.com/flaport/sax/compare/0.15.3...0.15.4
 [0.15.3]: https://github.com/flaport/sax/compare/0.15.2...0.15.3
