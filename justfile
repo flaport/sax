@@ -53,7 +53,7 @@ tree:
   @tree -a -I .git --gitignore
 
 clean:
-  find . -name "*.ipynb" | xargs uv run nb-clean clean
+  find . -name "*.ipynb" | xargs just nbclean
   rm -rf .venv
   rm -rf docs/nbs/*
   rm -rf site
