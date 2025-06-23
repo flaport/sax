@@ -1,3 +1,21 @@
+<a id="0.15.4"></a>
+# [0.15.4](https://github.com/flaport/sax/releases/tag/0.15.4) - 2025-06-23
+
+# What's Changed
+
+## Bug Fixes
+
+- add plots for docstrings [#56](https://github.com/$OWNER/$REPOSITORY/pull/56)
+
+## Documentation
+
+- add plots for docstrings [#56](https://github.com/$OWNER/$REPOSITORY/pull/56)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.3...0.15.4
+
+[Changes][0.15.4]
+
+
 <a id="0.15.3"></a>
 # [0.15.3](https://github.com/flaport/sax/releases/tag/0.15.3) - 2025-06-21
 
@@ -610,6 +628,7 @@
 [Changes][0.8.7]
 
 
+[0.15.4]: https://github.com/flaport/sax/compare/0.15.3...0.15.4
 [0.15.3]: https://github.com/flaport/sax/compare/0.15.2...0.15.3
 [0.15.2]: https://github.com/flaport/sax/compare/0.15.1...0.15.2
 [0.15.1]: https://github.com/flaport/sax/compare/0.15.0...0.15.1
