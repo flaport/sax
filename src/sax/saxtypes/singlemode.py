@@ -58,6 +58,8 @@ def val_instance_name(obj: Any) -> Port:
         TypeError: If the string is not a valid instance name.
 
     Examples:
+        Validate a string as an instance name:
+
         ```python
         import sax.saxtypes.singlemode as sm
 
@@ -87,6 +89,8 @@ def val_port(obj: Any) -> Port:
         TypeError: If the string is not a valid port name.
 
     Examples:
+        Validate a string as a port name:
+
         ```python
         import sax.saxtypes.singlemode as sm
 
@@ -116,6 +120,8 @@ def val_instance_port(obj: Any) -> InstancePort:
         TypeError: If the string is not a valid instance port reference.
 
     Examples:
+        Validate a string as an instance port name:
+
         ```python
         import sax.saxtypes.singlemode as sm
 
@@ -152,7 +158,8 @@ SDictSM: TypeAlias = dict[PortCombinationSM, ComplexArray]
 
 A mapping from a port combination to an S-parameter or an array of S-parameters.
 
-Example:
+Examples:
+    Creating an `SDictSM`:
 
     ```python
     sdict: sax.SDict = {
@@ -168,7 +175,8 @@ SDenseSM: TypeAlias = tuple[ComplexArray, PortMapSM]
 S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
 If (N+2)-D array then the S-matrix dimensions are the last two.
 
-Example:
+Examples:
+    Creating an `SDenseSM`:
 
     ```python
     Sd = jnp.arange(9, dtype=float).reshape(3, 3)
@@ -189,7 +197,8 @@ matrix. The port map maps a port name [`str`] to a port index [`int`].
 Only these four arrays **together** and in this specific **order** are considered a
 valid `SCoo` representation!
 
-Example:
+Examples:
+    Creating an `SCooSM`:
 
     ```python
     Si = jnp.arange(3, dtype=int)
@@ -226,11 +235,9 @@ def val_sax_callable(model: Any) -> Callable:
         TypeError: If the function violates SAX model conventions.
 
     Examples:
+        Validate a callable SAX model:
+
         ```python
-        import sax.saxtypes.singlemode as sm
-
-
-        # Valid SAX model
         def my_model(wl=1.55, coupling=0.5):
             return {"in0,out0": 1.0}
 

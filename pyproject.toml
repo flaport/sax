@@ -113,6 +113,7 @@ ignore = [
   "N806",  # non-lowercase-variable-in-function
   "PD901",  # pandas-df-variable-name
   "PLC0414",  # useless-import-alias
+  "PLC0415",  # import-outside-top-level
   "PLR0913",  # too-many-arguments
   "PLR2004",  # magic-value-comparison
   "PLW2901",  # redefined-loop-name

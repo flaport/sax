@@ -169,13 +169,11 @@ class CircuitInfo(NamedTuple):
         backend: The backend algorithm used for circuit simulation.
 
     Examples:
-        ```python
-        import sax
+        Usage of CircuitInfo after creating a circuit function:
 
-        # After creating a circuit
+        ```python
         circuit_func, info = sax.circuit(netlist, models, backend="klu")
 
-        # Access circuit information
         print(f"Circuit uses {len(info.models)} models")
         print(f"Backend: {info.backend}")
         print(f"Circuit has {len(info.dag.nodes)} instances")

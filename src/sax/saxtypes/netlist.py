@@ -50,6 +50,8 @@ def val_instance(obj: Any) -> Instance:
         TypeError: If the object cannot be converted to a valid instance.
 
     Examples:
+        Validate python objects into an instance definition:
+
         ```python
         import sax.saxtypes.netlist as nl
 
@@ -150,6 +152,8 @@ def val_ports(obj: Any) -> Ports:
         TypeError: If fewer than two ports are defined.
 
     Examples:
+        Validate a ports definition for a netlist:
+
         ```python
         import sax.saxtypes.netlist as nl
 
@@ -280,6 +284,8 @@ def _instance_from_partial(p: partial) -> Instance:
         TypeError: If the partial is invalid.
 
     Examples:
+        Validate a partial function into an instance definition:
+
         ```python
         from functools import partial
 
