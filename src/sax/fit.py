@@ -6,6 +6,7 @@ import sys
 import warnings
 from collections.abc import Callable
 from functools import partial
+from pathlib import Path
 from typing import Annotated, Any, TypeAlias, overload
 
 import jax
@@ -199,21 +200,26 @@ def neural_fit_equations(result: NeuralFitResult) -> dict[str, Equation]:
 
 
 def write_neural_fit_functions(
-    result: NeuralFitResult, *, with_imports: bool = True
+    result: NeuralFitResult,
+    *,
+    with_imports: bool = True,
+    path: Path | None = None,
 ) -> None:
     """Write neural fit as a python function.
 
     Args:
         result: Result from neural_fit function.
         with_imports: Whether to include import statements in the output.
+        path: Path to write the function to. If None, writes to stdout.
     """
     act_fn = result["activation_fn"]
     eqs = neural_fit_equations(result)
+    write = sys.stdout.write if path is None else path.write_text
     for target, eq in eqs.items():
         if with_imports:
-            sys.stdout.write("import sax\n")
-            sys.stdout.write("import jax.numpy as jnp\n")
-        sys.stdout.write(
+            write("import sax\n")
+            write("import jax.numpy as jnp\n")
+        write(
             _render_function_template(
                 target=target, eq=eq, act=act_fn, args=result["features"]
             )
