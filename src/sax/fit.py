@@ -263,21 +263,38 @@ ActivationFunction: TypeAlias = Literal["tanh", "relu", "sigmoid"]
 
 
 class History(TypedDict):
-    """Losses for the neural network training."""
+    """Losses for the neural network training.
+
+    Attributes:
+        train_loss: List of training losses for each epoch.
+        val_loss: List of validation losses for each epoch.
+    """
 
     train_loss: list[float]
     val_loss: list[float]
 
 
 class Params(TypedDict):
-    """Parameters for a single layer in the neural network."""
+    """Parameters for a single layer in the neural network.
+
+    Attributes:
+        w: Weights for the layer.
+        b: Biases for the layer.
+    """
 
     w: Array
     b: Array
 
 
 class JohnsonParams(TypedDict):
-    """Parameters for Johnson distribution transformations."""
+    """Parameters for Johnson distribution transformations.
+
+    Attributes:
+        gamma: Johnson distribution gamma parameter.
+        delta: Johnson distribution delta parameter.
+        xi: Johnson distribution xi parameter.
+        lambda_: Johnson distribution lambda parameter.
+    """
 
     gamma: float
     delta: float
@@ -286,14 +303,27 @@ class JohnsonParams(TypedDict):
 
 
 class TransformParams(TypedDict):
-    """Parameters for covariate transformations."""
+    """Parameters for covariate transformations.
 
-    method: str
+    Attributes:
+        method: Transformation method used
+        params: Parameters for the transformation.
+    """
+
+    method: TransformMethod
     params: JohnsonParams
 
 
 class ModelComponents(TypedDict):
-    """Components of the trained neural model."""
+    """Components of the trained neural model.
+
+    Attributes:
+        params: List of parameters for each layer in the network.
+        forward_fn: Forward pass function for the neural network.
+        predict_fn: Prediction function that applies the forward pass to new data.
+        X_mean: Mean of the input features used for normalization.
+        X_std: Standard deviation of the input features used for normalization.
+    """
 
     params: list
     forward_fn: Callable
@@ -303,7 +333,14 @@ class ModelComponents(TypedDict):
 
 
 class PerformanceMetrics(TypedDict):
-    """Performance metrics for the fitted model."""
+    """Performance metrics for the fitted model.
+
+    Attributes:
+        mse: Mean squared error of predictions.
+        mae: Mean absolute error of predictions.
+        r_squared: R-squared value of the model.
+        best_validation_loss: Best validation loss achieved during training.
+    """
 
     mse: float
     mae: float
@@ -312,7 +349,13 @@ class PerformanceMetrics(TypedDict):
 
 
 class TourResult(TypedDict):
-    """Results from a single training tour."""
+    """Results from a single training tour.
+
+    Attributes:
+        tour: Tour number (0-indexed).
+        val_loss: Validation loss at the end of the tour.
+        history: Training history for this tour, including train and validation losses.
+    """
 
     tour: int
     val_loss: float
@@ -320,7 +363,13 @@ class TourResult(TypedDict):
 
 
 class TrainingInfo(TypedDict):
-    """Training information and history."""
+    """Training information and history.
+
+    Attributes:
+        best_history: Best training history across all tours.
+        tour_results: List of results from each training tour.
+        num_successful_tours: Number of tours that completed successfully.
+    """
 
     best_history: History
     tour_results: list[TourResult]
@@ -328,7 +377,18 @@ class TrainingInfo(TypedDict):
 
 
 class Hyperparameters(TypedDict):
-    """Hyperparameters used for training."""
+    """Hyperparameters used for training.
+
+    Attributes:
+        hidden_dims: Dimensions of hidden layers in the neural network.
+        activation: Activation function used in the network.
+        robust_fit: Whether to use robust (L1) loss instead of least squares.
+        penalty_method: Type of penalty applied to weights during training.
+        penalty_lambda: Strength of the penalty applied.
+        num_tours: Number of tours (restarts) for training.
+        learning_rate: Learning rate for the optimizer.
+        num_epochs: Number of epochs per tour for training.
+    """
 
     hidden_dims: tuple[int, ...]
     activation: str
@@ -341,7 +401,14 @@ class Hyperparameters(TypedDict):
 
 
 class Metadata(TypedDict):
-    """Metadata about the fitted model."""
+    """Metadata about the fitted model.
+
+    Attributes:
+        feature_columns: List of feature column names used in the model.
+        target_column: Name of the target column.
+        transform_params: Parameters used for transforming covariates, if any.
+        hyperparameters: Hyperparameters used for training the model.
+    """
 
     feature_columns: list[str]
     target_column: str
@@ -350,7 +417,15 @@ class Metadata(TypedDict):
 
 
 class NeuralFitResult(TypedDict):
-    """Complete result from neural_fit function."""
+    """Complete result from neural_fit function.
+
+    Attributes:
+        model: Components of the trained neural model.
+        performance: Performance metrics of the fitted model.
+        training: Training information and history.
+        metadata: Metadata about the fitted model, including hyperparameters and
+            feature/target information.
+    """
 
     model: ModelComponents
     performance: PerformanceMetrics
@@ -399,13 +474,13 @@ def _johnson_sb_transform(
 
 
 def _fit_johnson_parameters(
-    x: Array, method: Literal["su", "sb"] = "su"
+    x: Array, method: TransformMethod = "johnson_su"
 ) -> JohnsonParams:
     """Fit Johnson distribution parameters using method of moments.
 
     Args:
         x: Input data array.
-        method: Johnson distribution type, either "su" or "sb".
+        method: Johnson distribution type, either "johnson_su" or "johnson_sb".
 
     Returns:
         Dictionary containing fitted Johnson distribution parameters.
@@ -415,13 +490,13 @@ def _fit_johnson_parameters(
     x_skew = jnp.mean(((x - x_mean) / jnp.sqrt(x_var)) ** 3)
     x_kurt = jnp.mean(((x - x_mean) / jnp.sqrt(x_var)) ** 4)
 
-    if method == "su":
+    if method == "johnson_su":
         # Simplified parameter estimation for Johnson Su
         delta = 1.0 / jnp.sqrt(jnp.log(((x_kurt - 1) / 2) + 1))
         gamma = -x_skew * delta / 2
         lambda_ = jnp.sqrt(x_var / (jnp.exp(1 / delta**2) - 1))
         xi = x_mean - lambda_ * jnp.sinh(gamma / delta)
-    else:  # sb
+    elif method == "johnson_sb":
         # Simplified parameter estimation for Johnson Sb
         delta = 1.0 / jnp.sqrt(jnp.log(((x_kurt - 1) / 2) + 1))
         gamma = -x_skew * delta / 2
@@ -429,6 +504,9 @@ def _fit_johnson_parameters(
         x_min, x_max = jnp.min(x), jnp.max(x)
         lambda_ = x_max - x_min
         xi = x_min
+    else:
+        msg = f"Unknown Johnson method: {method}"
+        raise ValueError(msg)
 
     return JohnsonParams(
         gamma=float(gamma),
@@ -464,10 +542,10 @@ def _transform_covariates(
         x = jnp.array(df[col].values)
 
         if transform_method == "johnson_su":
-            params = _fit_johnson_parameters(x, "su")
+            params = _fit_johnson_parameters(x, "johnson_su")
             transformed = _johnson_su_transform(x, **params)
         elif transform_method == "johnson_sb":
-            params = _fit_johnson_parameters(x, "sb")
+            params = _fit_johnson_parameters(x, "johnson_sb")
             transformed = _johnson_sb_transform(x, **params)
         else:
             msg = f"Unknown transform method: {transform_method}"
