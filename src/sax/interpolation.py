@@ -1,5 +1,7 @@
 """Multi-dimensional interpolation utilitites."""
 
+from __future__ import annotations
+
 from collections.abc import Iterable, Sequence
 from functools import partial
 from typing import cast
@@ -13,6 +15,51 @@ from jaxtyping import Array
 from numpy.typing import NDArray
 
 import sax
+
+__all__ = [
+    "interpolate_xarray",
+    "to_df",
+    "to_xarray",
+]
+
+
+def interpolate_xarray(
+    xarr: xr.DataArray,
+    /,
+    **kwargs: sax.FloatArray,
+) -> dict[str, sax.FloatArray]:
+    """Interpolate a multi-dimensional xarray with JAX.
+
+    Args:
+        xarr: the xarray to do a grid-interpolation over
+        **kwargs: the other parameters to interpolate over
+    """
+    with jax.ensure_compile_time_eval():
+        data = jnp.asarray(xarr)
+
+        # don't use jnp.asarray here as values can be strings!
+        params = {k: np.asarray(xarr[k]) for k in xarr.dims}
+
+        strings: dict[str, dict[str, int]] = kwargs.pop("strings", {})  # type: ignore[reportAssignmentType]
+        target_name = xarr.dims[-1]
+        params.pop(target_name, None)
+        strings.pop(target_name, None)  # type: ignore[reportArgumentType]
+
+        # don't use jnp.asarray here as values can be strings!
+        targets = {
+            str(k): i for i, k in enumerate(np.asarray(xarr.coords[target_name]))
+        }
+
+        params["targets"] = np.arange(0, len(targets), 1, dtype=np.uint8)
+        strings = {**strings, "targets": targets}
+
+    s, axs, pos = _evaluate_general_corner_model(
+        data,
+        params,  # type: ignore[reportArgumentType]
+        strings,
+        **kwargs,
+    )
+    return {k: s.take(pos["targets"][k], axs["targets"]) for k in targets}
 
 
 def to_xarray(
@@ -52,46 +99,18 @@ def to_xarray(
     return xr.DataArray(data=data, coords=coords)
 
 
-def interpolate_xarray(
-    xarr: xr.DataArray,
-    /,
-    **kwargs: sax.FloatArray,
-) -> dict[str, sax.FloatArray]:
-    """Interpolate a multi-dimensional xarray with JAX.
-
-    Args:
-        xarr: the xarray to do a grid-interpolation over
-        **kwargs: the other parameters to interpolate over
-    """
-    with jax.ensure_compile_time_eval():
-        data = jnp.asarray(xarr)
-
-        # don't use jnp.asarray here as values can be strings!
-        params = {k: np.asarray(xarr[k]) for k in xarr.dims}
-
-        strings: dict[str, dict[str, int]] = kwargs.pop("strings", {})  # type: ignore[reportAssignmentType]
-        target_name = xarr.dims[-1]
-        params.pop(target_name, None)
-        strings.pop(target_name, None)  # type: ignore[reportArgumentType]
-
-        # don't use jnp.asarray here as values can be strings!
-        targets = {
-            str(k): i for i, k in enumerate(np.asarray(xarr.coords[target_name]))
-        }
-
-        params["targets"] = np.arange(0, len(targets), 1, dtype=np.uint8)
-        strings = {**strings, "targets": targets}
-
-    s, axs, pos = evaluate_general_corner_model(
-        data,
-        params,  # type: ignore[reportArgumentType]
-        strings,
-        **kwargs,
+def to_df(xarr: xr.DataArray, *, target_name: str = "target") -> pd.DataFrame:
+    """Converts a multi-dimensional xarray into a stacked dataframe."""
+    stacked = xarr.stack(__stacked_dim=xarr.dims)  # noqa: PD013
+    df = (
+        stacked.reset_index("__stacked_dim")
+        .to_dataframe(name=target_name)
+        .reset_index(drop=True)
     )
-    return {k: s.take(pos["targets"][k], axs["targets"]) for k in targets}
+    return df
 
 
-def evaluate_general_corner_model(
+def _evaluate_general_corner_model(
     data: Array,
     params: dict[str, Array],
     strings: dict[str, dict[str, int]],

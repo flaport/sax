@@ -50,6 +50,7 @@ nav:
       - forward only:  nbs/examples/09_forward_only_backend.md
       - neff dispersion: nbs/examples/10_wavelength_dependent_neff.md
       - hierarchical circuits: nbs/examples/11_hierarchical_circuits.md
+      - surface models: nbs/examples/12_surface_models.md
   - internals:
       - backends: nbs/internals/03_backends.md
       - circuit: nbs/internals/02_circuit.md
@@ -57,6 +58,7 @@ nav:
       - all models: nbs/internals/04_all_models.md
   - api reference:
       - sax: api.md
+      - sax.fit: fit.md
       - models: models.md
   - changelog: changelog.md
 
@@ -78,8 +80,10 @@ plugins:
             - https://docs.jax.dev/en/latest/objects.inv
             - https://docs.kidger.site/jaxtyping/objects.inv
             - https://docs.python.org/3/objects.inv
+            - https://docs.xarray.dev/en/stable/objects.inv
             - https://matplotlib.org/stable/objects.inv
             - https://numpy.org/doc/stable/objects.inv
+            - https://pandas.pydata.org/docs/objects.inv
             - https://python-markdown.github.io/objects.inv
             - https://scipy.github.io/devdocs/objects.inv
             - https://typing.readthedocs.io/en/latest/objects.inv

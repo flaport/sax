@@ -208,10 +208,11 @@ from .ports import (
 
 from .interpolation import (
     to_xarray,
+    to_df,
     interpolate_xarray,
 )
 
-
+from . import fit
 from . import models
 
 
@@ -353,6 +354,7 @@ __all__ = [  # noqa: RUF022
     "evaluate_circuit_additive",
     "evaluate_circuit_fg",
     "evaluate_circuit_forward",
+    "fit",
     "flatten_dict",
     "flatten_netlist",
     "get_mode",
@@ -388,6 +390,7 @@ __all__ = [  # noqa: RUF022
     "sdict",
     "set_port_naming_strategy",
     "singlemode",
+    "to_df",
     "to_xarray",
     "try_into",
     "unflatten_dict",
