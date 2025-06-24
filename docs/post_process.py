@@ -12,7 +12,10 @@ def _process_content(content: str) -> str:
 
     for i, block in enumerate(blocks):
         if i % 2:
-            blocks[i] = f"```{block}```"
+            if (admonition := parse_admonition(block)) is not None:
+                blocks[i] = admonition
+            else:
+                blocks[i] = f"```{block}```"
             continue
         lines = block.split("\n")
         for j, line in enumerate(lines):
@@ -31,6 +34,20 @@ def _process_content(content: str) -> str:
 
     content = "".join(blocks)
     return content
+
+
+def parse_admonition(content: str) -> str | None:
+    """Format content as an admonition."""
+    lines = content.strip().split("\n")
+    first = lines[0].strip()
+    rest = lines[1:]
+    if not (first.startswith("{") and first.endswith("}")):
+        return None
+    admonition_type = first[1:-1].strip()
+    ret = f"!!! {admonition_type}\n\n"
+    for line in rest:
+        ret += f"    {line.strip()}\n"
+    return ret
 
 
 if __name__ == "__main__":
