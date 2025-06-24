@@ -37,7 +37,7 @@ __all__ = [
 ]
 
 
-def neural_fit(
+def neural_fit(  # noqa: C901
     data: pd.DataFrame,
     target_column: str,
     feature_columns: list[str] | None = None,
@@ -54,6 +54,7 @@ def neural_fit(
     *,
     transform_covariates: bool = True,
     robust_fit: bool = False,
+    progress_bar: bool = True,
 ) -> NeuralFitResult:
     """Neural fitting function with JMP-like capabilities.
 
@@ -74,6 +75,7 @@ def neural_fit(
         validation_split: Fraction of data to use for validation.
         random_seed: Random seed for reproducibility.
         transform_covariates: Whether to transform continuous variables to normality.
+        progress_bar: Whether to show a progress bar during training.
 
     Returns:
         Dictionary containing trained model, parameters, and training history.
@@ -81,22 +83,20 @@ def neural_fit(
     Raises:
         RuntimeError: If all training tours fail.
     """
-    # Prepare data
-    df_work = data.copy()
-
     if feature_columns is None:
         feature_columns = [
             col
-            for col in df_work.select_dtypes(include=[np.number]).columns
+            for col in data.select_dtypes(include=[np.number]).columns
             if col != target_column
         ]
 
-    # Transform covariates if requested
-    transform_params = None
-    if transform_covariates:
-        df_work, transform_params = _transform_covariates(
-            df_work, target_column, transform_method
-        )
+    def transform_fn(data: pd.DataFrame) -> pd.DataFrame:
+        data = data.copy()
+        if transform_covariates:
+            return _transform_covariates(data, target_column, transform_method)
+        return data
+
+    df_work = transform_fn(data)
 
     # Prepare arrays
     X = jnp.array(df_work[feature_columns].values, dtype=jnp.float32)
@@ -139,6 +139,7 @@ def neural_fit(
                 penalty_method=penalty_method,
                 penalty_lambda=penalty_lambda,
                 validation_split=validation_split,
+                progress_bar=progress_bar,
             )
 
             final_val_loss = min(history["val_loss"])
@@ -160,7 +161,7 @@ def neural_fit(
         raise RuntimeError(msg)
 
     # Create prediction function
-    def predict(X_new: Array) -> Array:
+    def predict_fn(X_new: Array) -> Array:
         """Make predictions on new data.
 
         Args:
@@ -173,7 +174,7 @@ def neural_fit(
         return forward_fn(best_params, X_new_norm).squeeze()
 
     # Model performance on full dataset
-    y_pred = predict(X)
+    y_pred = predict_fn(X)
 
     if robust_fit:
         final_loss = jnp.mean(jnp.abs(y - y_pred))
@@ -200,7 +201,8 @@ def neural_fit(
         model=ModelComponents(
             params=best_params,
             forward_fn=forward_fn,
-            predict_fn=predict,
+            predict_fn=predict_fn,
+            transform_fn=transform_fn,
             X_mean=X_mean,
             X_std=X_std,
         ),
@@ -213,7 +215,7 @@ def neural_fit(
         metadata=Metadata(
             feature_columns=feature_columns,
             target_column=target_column,
-            transform_params=transform_params,
+            transform_params=df_work.attrs,  # type: ignore[reportArgumentType]
             hyperparameters=Hyperparameters(
                 hidden_dims=hidden_dims,
                 activation=activation,
@@ -228,23 +230,19 @@ def neural_fit(
     )
 
 
-def predict_neural_model(
-    model_result: NeuralFitResult, X_new: pd.DataFrame | Array
-) -> Array:
+def predict_neural_model(model_result: NeuralFitResult, df: pd.DataFrame) -> Array:
     """Make predictions using a fitted neural model.
 
     Args:
         model_result: Result from neural_fit function.
-        X_new: New data for prediction.
+        df: New data for prediction.
 
     Returns:
         Predictions array.
     """
-    if isinstance(X_new, pd.DataFrame):
-        feature_columns = model_result["metadata"]["feature_columns"]
-        X_array = jnp.array(X_new[feature_columns].values, dtype=jnp.float32)
-    else:
-        X_array = jnp.array(X_new, dtype=jnp.float32)
+    df_work = model_result["model"]["transform_fn"](df)
+    feature_columns = model_result["metadata"]["feature_columns"]
+    X_array = jnp.array(df_work[feature_columns].values, dtype=jnp.float32)
 
     return model_result["model"]["predict_fn"](X_array)
 
@@ -328,6 +326,7 @@ class ModelComponents(TypedDict):
     params: list
     forward_fn: Callable
     predict_fn: Callable
+    transform_fn: Callable
     X_mean: Array
     X_std: Array
 
@@ -520,7 +519,7 @@ def _transform_covariates(
     df: pd.DataFrame,
     target_col: str,
     transform_method: TransformMethod = "johnson_su",
-) -> tuple[pd.DataFrame, dict[str, TransformParams]]:
+) -> pd.DataFrame:
     """Transform continuous covariates to approximate normality.
 
     Args:
@@ -529,7 +528,7 @@ def _transform_covariates(
         transform_method: Transformation method to use.
 
     Returns:
-        Tuple of transformed dataframe and transformation parameters.
+        transformed dataframe with transformation parameters in its attrs.
     """
     df_transformed = df.copy()
     transform_params: dict[str, TransformParams] = {}
@@ -554,7 +553,8 @@ def _transform_covariates(
         df_transformed[col] = np.array(transformed)
         transform_params[col] = TransformParams(method=transform_method, params=params)
 
-    return df_transformed, transform_params
+    df_transformed.attrs.update(transform_params)  # type: ignore[reportArgumentType]
+    return df_transformed
 
 
 def _create_network(
@@ -691,6 +691,7 @@ def _train_network(
     validation_split: float = 0.2,
     *,
     robust_fit: bool = False,
+    progress_bar: bool = True,
 ) -> tuple[list, History]:
     """Train the neural network with validation.
 
@@ -706,6 +707,7 @@ def _train_network(
         penalty_lambda: Penalty strength.
         validation_split: Fraction of data for validation.
         robust_fit: Whether to use robust loss.
+        progress_bar: Whether to show a progress bar during training.
 
     Returns:
         Tuple of (best parameters, training history).
@@ -761,7 +763,8 @@ def _train_network(
 
     grad_fn = jax.grad(loss_fn)
 
-    for _ in range(num_epochs):
+    _tqdm = _noop if not progress_bar else partial(_get_tqdm(), total=num_epochs)
+    for _ in (pb := _tqdm(range(num_epochs))):
         # Compute gradients and update parameters
         grads = grad_fn(params)
         updates, opt_state = optimizer.update(grads, opt_state)
@@ -774,6 +777,12 @@ def _train_network(
         train_losses.append(float(train_loss))
         val_losses.append(float(val_loss))
 
+        if progress_bar:
+            pb.set_postfix(  # type: ignore[reportAttributeAccessIssue]
+                train_loss=f"{train_loss:.4f}",
+                val_loss=f"{val_loss:.4f}",
+            )
+
         # Early stopping based on validation loss
         if val_loss < best_val_loss:
             best_val_loss = val_loss
@@ -781,3 +790,15 @@ def _train_network(
 
     history: History = {"train_loss": train_losses, "val_loss": val_losses}
     return best_params, history
+
+
+def _get_tqdm() -> Callable:
+    """Get the tqdm function, handling imports."""
+    with warnings.catch_warnings():
+        warnings.filterwarnings("ignore")
+        from tqdm.autonotebook import tqdm
+    return tqdm
+
+
+def _noop(x: Any) -> Any:  # noqa: ANN401
+    return x
