@@ -208,6 +208,7 @@ from .ports import (
 
 from .interpolation import (
     to_xarray,
+    to_df,
     interpolate_xarray,
 )
 
@@ -389,6 +390,7 @@ __all__ = [  # noqa: RUF022
     "sdict",
     "set_port_naming_strategy",
     "singlemode",
+    "to_df",
     "to_xarray",
     "try_into",
     "unflatten_dict",
