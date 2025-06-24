@@ -5,7 +5,7 @@ from __future__ import annotations
 import warnings
 from collections.abc import Callable
 from functools import partial
-from typing import Annotated, Any, Literal, TypedDict
+from typing import Annotated, Any, Literal, TypeAlias
 
 import jax
 import jax.numpy as jnp
@@ -13,6 +13,28 @@ import numpy as np
 import optax
 import pandas as pd
 from jaxtyping import Array
+from typing_extensions import TypedDict
+
+__all__ = [
+    "ActivationFunction",
+    "History",
+    "Hyperparameters",
+    "JohnsonParams",
+    "Metadata",
+    "ModelComponents",
+    "NeuralFitResult",
+    "NeuralFitResult",
+    "PRNGKey",
+    "Params",
+    "PenaltyMethod",
+    "PerformanceMetrics",
+    "TourResult",
+    "TrainingInfo",
+    "TransformMethod",
+    "TransformParams",
+    "neural_fit",
+    "predict_neural_model",
+]
 
 
 def neural_fit(
@@ -227,11 +249,17 @@ def predict_neural_model(
     return model_result["model"]["predict_fn"](X_array)
 
 
-PRNGKey = Annotated[Any, "PRNGKey"]
+PRNGKey: TypeAlias = Annotated[Any, "PRNGKey"]
+"""The jax.PRNGKey used to generate random weights and biases."""
 
-PenaltyMethod = Literal["squared", "absolute", "weight_decay", "no_penalty"]
-TransformMethod = Literal["johnson_su", "johnson_sb"]
-ActivationFunction = Literal["tanh", "relu", "sigmoid"]
+PenaltyMethod: TypeAlias = Literal["squared", "absolute", "weight_decay", "no_penalty"]
+"""The type of weight penalty to apply during training to avoid overfitting."""
+
+TransformMethod: TypeAlias = Literal["johnson_su", "johnson_sb"]
+"""The method used to transform input parameters to approximate normality."""
+
+ActivationFunction: TypeAlias = Literal["tanh", "relu", "sigmoid"]
+"""The activation function used in the neural network layers."""
 
 
 class History(TypedDict):

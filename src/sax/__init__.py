@@ -211,7 +211,7 @@ from .interpolation import (
     interpolate_xarray,
 )
 
-
+from . import fit
 from . import models
 
 
@@ -353,6 +353,7 @@ __all__ = [  # noqa: RUF022
     "evaluate_circuit_additive",
     "evaluate_circuit_fg",
     "evaluate_circuit_forward",
+    "fit",
     "flatten_dict",
     "flatten_netlist",
     "get_mode",
