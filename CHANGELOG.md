@@ -1,3 +1,21 @@
+<a id="0.15.8"></a>
+# [0.15.8](https://github.com/flaport/sax/releases/tag/0.15.8) - 2025-06-24
+
+# What's Changed
+
+## New
+
+- Add neural fit surface models [#59](https://github.com/$OWNER/$REPOSITORY/pull/59)
+
+## Documentation
+
+- Add neural fit surface models [#59](https://github.com/$OWNER/$REPOSITORY/pull/59)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.7...0.15.8
+
+[Changes][0.15.8]
+
+
 <a id="0.15.7"></a>
 # [0.15.7](https://github.com/flaport/sax/releases/tag/0.15.7) - 2025-06-24
 
@@ -668,6 +686,7 @@
 [Changes][0.8.7]
 
 
+[0.15.8]: https://github.com/flaport/sax/compare/0.15.7...0.15.8
 [0.15.7]: https://github.com/flaport/sax/compare/0.15.6...0.15.7
 [0.15.6]: https://github.com/flaport/sax/compare/0.15.5...0.15.6
 [0.15.5]: https://github.com/flaport/sax/compare/0.15.4...0.15.5
