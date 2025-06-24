@@ -1,3 +1,17 @@
+<a id="0.15.7"></a>
+# [0.15.7](https://github.com/flaport/sax/releases/tag/0.15.7) - 2025-06-24
+
+# What's Changed
+
+## New
+
+- add xarray interpolation back [#58](https://github.com/$OWNER/$REPOSITORY/pull/58)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.6...0.15.7
+
+[Changes][0.15.7]
+
+
 <a id="0.15.6"></a>
 # [0.15.6](https://github.com/flaport/sax/releases/tag/0.15.6) - 2025-06-23
 
@@ -654,6 +668,7 @@
 [Changes][0.8.7]
 
 
+[0.15.7]: https://github.com/flaport/sax/compare/0.15.6...0.15.7
 [0.15.6]: https://github.com/flaport/sax/compare/0.15.5...0.15.6
 [0.15.5]: https://github.com/flaport/sax/compare/0.15.4...0.15.5
 [0.15.4]: https://github.com/flaport/sax/compare/0.15.3...0.15.4
