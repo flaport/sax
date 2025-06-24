@@ -28,6 +28,7 @@ dependencies = [
   "orjson>=3.0.0",
   "pydantic>=2.10.0",
   "pyyaml>=6.0.0",
+  "sympy>=1.14.0",
   "typing-extensions>=4.13.2",
   "xarray>=2025.1.2"
 ]

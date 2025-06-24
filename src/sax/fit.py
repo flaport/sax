@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import sys
 import warnings
 from collections.abc import Callable
 from functools import partial
@@ -12,6 +13,7 @@ import jax.numpy as jnp
 import numpy as np
 import optax
 import pandas as pd
+import sympy
 from jaxtyping import Array
 from typing_extensions import TypedDict
 
@@ -22,6 +24,8 @@ __all__ = [
     "PRNGKey",
     "Params",
     "neural_fit",
+    "neural_fit_equations",
+    "write_neural_fit_functions",
 ]
 
 
@@ -146,6 +150,78 @@ def neural_fit(
         final_loss=loss_fn(Y_norm, forward_fn(params, X_norm)),
     )
 
+
+def neural_fit_equations(result: NeuralFitResult) -> dict[str, Equation]:
+    """Convert neural fit result to symbolic equations.
+
+    Args:
+        result: Result from neural_fit function.
+
+    Returns:
+        Dictionary mapping target names to symbolic equations.
+    """
+    X_list = [sympy.Symbol(f) for f in result["features"]]
+    activation_fn = getattr(sympy, result["activation_fn"].__name__, None)
+    if activation_fn is None:
+        msg = f"Activation function {result['activation_fn']} is not supported."
+        raise ValueError(msg)
+    x = np.asarray(
+        [
+            (x - n) / s
+            for (x, n, s) in zip(
+                X_list,
+                np.atleast_1d(np.asarray(result["X_norm"].mean).squeeze()),
+                np.atleast_1d(np.asarray(result["X_norm"].std).squeeze()),
+                strict=True,
+            )
+        ]
+    )
+    for layer_params in result["params"][:-1]:
+        w = np.asarray(layer_params["w"])
+        b = np.asarray(layer_params["b"])
+        x = np.asarray([activation_fn(xx) for xx in (x @ w + b)])
+
+    w = np.asarray(result["params"][-1]["w"])
+    b = np.asarray(result["params"][-1]["b"])
+    Y_list = np.asarray(
+        [
+            y * s + n
+            for (y, n, s) in zip(
+                x @ w + b,
+                np.atleast_1d(np.asarray(result["Y_norm"].mean).squeeze()),
+                np.atleast_1d(np.asarray(result["Y_norm"].std).squeeze()),
+                strict=True,
+            )
+        ]
+    )
+    equations = dict(zip(result["targets"], Y_list, strict=True))
+    return equations
+
+
+def write_neural_fit_functions(
+    result: NeuralFitResult, *, with_imports: bool = True
+) -> None:
+    """Write neural fit as a python function.
+
+    Args:
+        result: Result from neural_fit function.
+        with_imports: Whether to include import statements in the output.
+    """
+    act_fn = result["activation_fn"]
+    eqs = neural_fit_equations(result)
+    for target, eq in eqs.items():
+        if with_imports:
+            sys.stdout.write("import sax\n")
+            sys.stdout.write("import jax.numpy as jnp\n")
+        sys.stdout.write(
+            _render_function_template(
+                target=target, eq=eq, act=act_fn, args=result["features"]
+            )
+        )
+
+
+Equation: TypeAlias = Annotated[Any, "Equation"]
+"""A sumpy-equation."""
 
 PRNGKey: TypeAlias = Annotated[Any, "PRNGKey"]
 """The jax.PRNGKey used to generate random weights and biases."""
@@ -353,3 +429,24 @@ def _get_tqdm() -> Callable:
 
 def _noop(x: Any) -> Any:  # noqa: ANN401
     return x
+
+
+argument_template = "    {arg}: sax.FloatArrayLike,"
+_function_template = """
+def {target}(
+{args}
+) -> sax.FloatArray:
+    return jnp.asarray({eq})
+
+"""
+
+
+def _render_function_template(
+    *, target: str, eq: Equation, act: Callable, args: list[str]
+) -> str:
+    rendered_args = "\n".join([argument_template.format(arg=arg) for arg in args])
+    return _function_template.format(
+        target=target,
+        eq=str(eq).replace(act.__name__, f"jnp.{act.__name__}"),
+        args=rendered_args,
+    )
