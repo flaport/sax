@@ -206,6 +206,11 @@ from .ports import (
     get_port_naming_strategy,
 )
 
+from .interpolation import (
+    to_xarray,
+    interpolate_xarray,
+)
+
 
 from . import models
 
@@ -336,6 +341,7 @@ __all__ = [  # noqa: RUF022
     "analyze_instances_additive",
     "analyze_instances_fg",
     "analyze_instances_forward",
+    "backends",
     "block_diag",
     "cartesian_product",
     "circuit",
@@ -359,6 +365,7 @@ __all__ = [  # noqa: RUF022
     "grouped_interp",
     "hash_dict",
     "huber_loss",
+    "interpolate_xarray",
     "into",
     "l2_reg",
     "load_netlist",
@@ -381,6 +388,7 @@ __all__ = [  # noqa: RUF022
     "sdict",
     "set_port_naming_strategy",
     "singlemode",
+    "to_xarray",
     "try_into",
     "unflatten_dict",
     "update_settings",
@@ -389,5 +397,4 @@ __all__ = [  # noqa: RUF022
     "wl_l",
     "wl_o",
     "wl_s",
-    "backends",
 ]
