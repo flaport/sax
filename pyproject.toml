@@ -51,7 +51,7 @@ license = {text = "Apache Software License"}
 name = "sax"
 readme = "README.md"
 requires-python = ">=3.11.0"
-version = "0.15.7"
+version = "0.15.8"
 
 [project.optional-dependencies]
 dev = [
@@ -180,7 +180,7 @@ message_template = "Bump to {new_version}"
 tag_template = "{new_version}"
 
 [tool.tbump.version]
-current = "0.15.7"
+current = "0.15.8"
 regex = '''
   (?P<major>\d+)
   \.
