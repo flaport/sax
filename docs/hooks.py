@@ -9,7 +9,16 @@ from pathlib import Path
 from textwrap import dedent
 from typing import Any
 
+import matplotlib.pyplot as plt
+
 import sax
+
+plt.rcParams.update(
+    {
+        "figure.figsize": (6, 2.5),
+        "axes.grid": True,
+    }
+)
 
 
 def on_startup(command: str, dirty: bool, **kwargs: Any) -> None:

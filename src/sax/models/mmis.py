@@ -168,7 +168,7 @@ def mmi2x2(
     wl0: sax.FloatArrayLike = sax.WL_C,
     fwhm: sax.FloatArrayLike = 0.2,
     loss_dB: sax.FloatArrayLike = 0.3,
-    shift: sax.FloatArrayLike = 0.005,
+    shift: sax.FloatArrayLike = 0.0,
     loss_dB_cross: sax.FloatArrayLike | None = None,
     loss_dB_thru: sax.FloatArrayLike | None = None,
     splitting_ratio_cross: sax.FloatArrayLike = 0.5,
@@ -189,7 +189,7 @@ def mmi2x2(
         wl0: Center wavelength of the MMI in micrometers.
         fwhm: Full width at half maximum bandwidth in micrometers.
         loss_dB: Insertion loss of the MMI at center wavelength.
-        shift: The shift in transmission due to fabrication tolerances.
+        shift: The peak shift of the cross-transmission in micrometers.
         loss_dB_cross: Optional separate insertion loss in dB for cross ports.
             If None, uses loss_dB. Allows modeling of asymmetric loss.
         loss_dB_thru: Optional separate insertion loss in dB for bar (through)
@@ -214,7 +214,7 @@ def mmi2x2(
         sax.set_port_naming_strategy("optical")
 
         wl = sax.wl_c()
-        s = sax.models.mmi2x2(wl=wl)
+        s = sax.models.mmi2x2(wl=wl, shift=0.001)
         thru = np.abs(s[("o1", "o4")]) ** 2
         cross = np.abs(s[("o1", "o3")]) ** 2
         plt.figure()
@@ -235,8 +235,7 @@ def mmi2x2(
 
     # _mmi_amp already includes the loss, so we don't need to apply it again
     thru = (
-        _mmi_amp(wl=wl, wl0=wl0 + shift, fwhm=fwhm, loss_dB=loss_dB_thru)
-        * amplitude_ratio_thru
+        _mmi_amp(wl=wl, wl0=wl0, fwhm=fwhm, loss_dB=loss_dB_thru) * amplitude_ratio_thru
     )
     cross = (
         1j
