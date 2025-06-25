@@ -1,3 +1,21 @@
+<a id="0.15.9"></a>
+# [0.15.9](https://github.com/flaport/sax/releases/tag/0.15.9) - 2025-06-25
+
+# What's Changed
+
+## Bug Fixes
+
+- Fix (recursive) netlist validation [#61](https://github.com/$OWNER/$REPOSITORY/pull/61)
+
+## Documentation
+
+- Improve docs with svgbob, prettier plots and conciser but complete model docs. [#60](https://github.com/$OWNER/$REPOSITORY/pull/60)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.8...0.15.9
+
+[Changes][0.15.9]
+
+
 <a id="0.15.8"></a>
 # [0.15.8](https://github.com/flaport/sax/releases/tag/0.15.8) - 2025-06-24
 
@@ -686,6 +704,7 @@
 [Changes][0.8.7]
 
 
+[0.15.9]: https://github.com/flaport/sax/compare/0.15.8...0.15.9
 [0.15.8]: https://github.com/flaport/sax/compare/0.15.7...0.15.8
 [0.15.7]: https://github.com/flaport/sax/compare/0.15.6...0.15.7
 [0.15.6]: https://github.com/flaport/sax/compare/0.15.5...0.15.6
