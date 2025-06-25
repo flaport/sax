@@ -1,5 +1,9 @@
 """MkDocs hooks for SAX-specific preprocessing."""
 
+import hashlib
+import shutil
+import subprocess
+from pathlib import Path
 from typing import Any
 
 import sax
@@ -146,6 +150,9 @@ def _parse_special(content: str) -> str | None:
 
 def _format_admonition(admonition_type: str, lines: list[str]) -> str:
     """Format lines as an admonition."""
+    print("ADMONITION!")
+    print(admonition_type)
+    print("\n".join(lines))
     ret = f"!!! {admonition_type}\n\n"
     for line in lines:
         ret += f"    {line.strip()}\n"
@@ -154,6 +161,43 @@ def _format_admonition(admonition_type: str, lines: list[str]) -> str:
 
 def _format_svgbob(lines: list[str]) -> str | None:
     """Format lines as a svgbob code block."""
-    # TODO: use svgbob_cli to generate svg,
-    # save the svg somewhere and include it as a picture int he markdown.
-    return None
+    print("SVGBOB!")
+    print("\n".join(lines))
+    if not lines:
+        return None
+
+    # Join the lines to create the ASCII art content
+    content = "\n".join(lines)
+
+    # Create a hash of the content to generate a unique filename
+    content_hash = hashlib.md5(content.encode()).hexdigest()[:8]
+    svg_filename = f"svgbob_{content_hash}.svg"
+    txt_filename = f"svgbob_{content_hash}.txt"
+
+    # Define the path where the SVG will be saved
+    docs_dir = Path(__file__).resolve().parent
+    assets_dir = docs_dir / "assets" / "svgbob"
+    svg_path = assets_dir / svg_filename
+    txt_path = assets_dir / txt_filename
+
+    # Create assets directory if it doesn't exist
+    assets_dir.mkdir(exist_ok=True)
+
+    # Check if SVG already exists (cache)
+    if svg_path.exists():
+        return f"![svgbob diagram](assets/svgbob/{svg_filename})\n"
+
+    txt_path.write_text(content)
+    svgbob = shutil.which("svgbob_cli")
+    if not svgbob:
+        print("Warning: svgbob_cli is not installed or not found in PATH.")  # noqa: T201
+        return None
+    try:
+        subprocess.check_call(  # noqa: S603
+            [svgbob, str(txt_path), "-o", str(svg_path)],
+        )
+    except Exception as e:  # noqa: BLE001
+        print(f"Warning: Error generating SVG with svgbob: {e}")  # noqa: T201
+        return None
+
+    return f"![svgbob diagram](assets/svgbob/{svg_filename})\n"
