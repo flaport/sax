@@ -191,11 +191,12 @@ def _format_admonition(admonition_type: str, lines: list[str]) -> str:
 
 
 def _svgbob_svg(source: str) -> str | None:
+    source = source.replace("&lt;", "<").replace("&gt;", ">")
     svgbob = shutil.which("svgbob_cli")
     if not svgbob:
         print("Warning: svgbob_cli is not installed or not found in PATH.")  # noqa: T201
         return None
-    content_hash = hashlib.md5(source.encode()).hexdigest()[:8]
+    content_hash = hashlib.md5(source.encode()).hexdigest()
     txt_filename = f"svgbob_{content_hash}.txt"
     temp_path = Path(tempfile.gettempdir()).resolve() / "svgbob" / txt_filename
     temp_path.parent.mkdir(exist_ok=True)
@@ -213,6 +214,9 @@ def _svgbob_source(
     rendered_lines: list[str], source_parts: list[list[str]]
 ) -> str | None:
     for source_lines in source_parts:
-        if source_lines[0].strip() in rendered_lines[0]:
+        if all(
+            sl.strip() in rl
+            for sl, rl in zip(source_lines, rendered_lines, strict=False)
+        ):
             return "\n".join(source_lines)
     return None

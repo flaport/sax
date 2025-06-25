@@ -150,6 +150,7 @@ select = ["ALL"]
   "T201"  # print
 ]
 "docs/hooks.py" = [
+  "INP001",  # implicit-namespace-package
   "ARG001",  # unused-function-argument
   "ANN401",  # any-type
   "FBT001"  # boolean-type-hint-positional-argument
