@@ -68,7 +68,7 @@ def bend(
     transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
     ```
 
-    ```
+    ```{svgbob}
                    o2/out0
                    |
                   /

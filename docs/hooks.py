@@ -85,8 +85,8 @@ def on_page_markdown(
     for i, block in enumerate(blocks):
         if i % 2:
             # This is a code block
-            if (admonition := _parse_admonition(block)) is not None:
-                blocks[i] = admonition
+            if (special := _parse_special(block)) is not None:
+                blocks[i] = special
             else:
                 blocks[i] = f"```{block}```"
             continue
@@ -131,15 +131,29 @@ def on_post_page(output: str, page: Any, config: Any, **kwargs: Any) -> str:
     return output
 
 
-def _parse_admonition(content: str) -> str | None:
-    """Format content as an admonition."""
+def _parse_special(content: str) -> str | None:
+    """Format contents of a special code block differently."""
     lines = content.strip().split("\n")
     first = lines[0].strip()
     rest = lines[1:]
     if not (first.startswith("{") and first.endswith("}")):
         return None
-    admonition_type = first[1:-1].strip()
+    code_block_type = first[1:-1].strip()
+    if code_block_type == "svgbob":
+        return _format_svgbob(rest)
+    return _format_admonition(code_block_type, rest)
+
+
+def _format_admonition(admonition_type: str, lines: list[str]) -> str:
+    """Format lines as an admonition."""
     ret = f"!!! {admonition_type}\n\n"
-    for line in rest:
+    for line in lines:
         ret += f"    {line.strip()}\n"
     return ret
+
+
+def _format_svgbob(lines: list[str]) -> str | None:
+    """Format lines as a svgbob code block."""
+    # TODO: use svgbob_cli to generate svg,
+    # save the svg somewhere and include it as a picture int he markdown.
+    return None

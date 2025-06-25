@@ -198,7 +198,7 @@ def coupler(
         )
         ```
 
-    ```
+    ```{svgbob}
         in1/o2 -----                      ----- out1/o3
                     \ ◀-----length-----▶ /
                     --------------------
@@ -378,7 +378,7 @@ def grating_coupler(
         For more accurate modeling, consider using measured spectral data
         or finite-element simulation results.
 
-    ```
+    ```{svgbob}
                       out0/o2
                        fiber
                    /  /  /  /
