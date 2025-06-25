@@ -1,9 +1,12 @@
 """MkDocs hooks for SAX-specific preprocessing."""
 
 import hashlib
+import re
 import shutil
 import subprocess
+import tempfile
 from pathlib import Path
+from textwrap import dedent
 from typing import Any
 
 import sax
@@ -116,11 +119,44 @@ def on_page_markdown(
     return content
 
 
-def on_page_content(
+def on_page_content(  # noqa: C901
     html: str, page: Any, config: Any, files: Any, **kwargs: Any
 ) -> str:
     """Called after markdown is converted to HTML."""
-    return html
+    if "```{svgbob}" not in html:
+        return html
+
+    source_parts = []
+    for part in html.split("```"):
+        if not part.startswith("{svgbob}"):
+            continue
+        lines = part.split("\n")[1:]
+        for i, line in enumerate(lines):
+            lines[i] = "".join(re.split(r"[<>]", line)[::2])
+        part = dedent("\n".join(lines))
+        source_parts.append(lines)
+
+    rendered_parts = []
+    for i, part in enumerate(html.split('<div class="language-text highlight">')):
+        if i > 0:
+            part = f'<div class="language-text highlight">{part}'
+        first, *rest = part.split("</span></code></pre></div>")
+        rest = "</span></code></pre></div>".join(rest)
+        first = f"{first}</span></code></pre></div>"
+        rendered_parts.append(first)
+        rendered_parts.append(rest)
+
+    for i, part in enumerate(rendered_parts):
+        if not part.startswith('<div class="language-text highlight">'):
+            continue
+        lines = part.split("\n")
+        if (svgbob_source := _svgbob_source(lines, source_parts)) is None:
+            continue
+        if (svg := _svgbob_svg(svgbob_source)) is None:
+            continue
+        rendered_parts[i] = svg
+
+    return "".join(rendered_parts)
 
 
 def on_page_context(
@@ -143,61 +179,40 @@ def _parse_special(content: str) -> str | None:
     if not (first.startswith("{") and first.endswith("}")):
         return None
     code_block_type = first[1:-1].strip()
-    if code_block_type == "svgbob":
-        return _format_svgbob(rest)
     return _format_admonition(code_block_type, rest)
 
 
 def _format_admonition(admonition_type: str, lines: list[str]) -> str:
     """Format lines as an admonition."""
-    print("ADMONITION!")
-    print(admonition_type)
-    print("\n".join(lines))
     ret = f"!!! {admonition_type}\n\n"
     for line in lines:
         ret += f"    {line.strip()}\n"
     return ret
 
 
-def _format_svgbob(lines: list[str]) -> str | None:
-    """Format lines as a svgbob code block."""
-    print("SVGBOB!")
-    print("\n".join(lines))
-    if not lines:
-        return None
-
-    # Join the lines to create the ASCII art content
-    content = "\n".join(lines)
-
-    # Create a hash of the content to generate a unique filename
-    content_hash = hashlib.md5(content.encode()).hexdigest()[:8]
-    svg_filename = f"svgbob_{content_hash}.svg"
-    txt_filename = f"svgbob_{content_hash}.txt"
-
-    # Define the path where the SVG will be saved
-    docs_dir = Path(__file__).resolve().parent
-    assets_dir = docs_dir / "assets" / "svgbob"
-    svg_path = assets_dir / svg_filename
-    txt_path = assets_dir / txt_filename
-
-    # Create assets directory if it doesn't exist
-    assets_dir.mkdir(exist_ok=True)
-
-    # Check if SVG already exists (cache)
-    if svg_path.exists():
-        return f"![svgbob diagram](assets/svgbob/{svg_filename})\n"
-
-    txt_path.write_text(content)
+def _svgbob_svg(source: str) -> str | None:
     svgbob = shutil.which("svgbob_cli")
     if not svgbob:
         print("Warning: svgbob_cli is not installed or not found in PATH.")  # noqa: T201
         return None
+    content_hash = hashlib.md5(source.encode()).hexdigest()[:8]
+    txt_filename = f"svgbob_{content_hash}.txt"
+    temp_path = Path(tempfile.gettempdir()).resolve() / "svgbob" / txt_filename
+    temp_path.parent.mkdir(exist_ok=True)
     try:
-        subprocess.check_call(  # noqa: S603
-            [svgbob, str(txt_path), "-o", str(svg_path)],
-        )
+        temp_path.write_text(source)
+        return subprocess.check_output([svgbob, str(temp_path)]).decode()  # noqa: S603
     except Exception as e:  # noqa: BLE001
         print(f"Warning: Error generating SVG with svgbob: {e}")  # noqa: T201
         return None
+    finally:
+        temp_path.unlink()
 
-    return f"![svgbob diagram](assets/svgbob/{svg_filename})\n"
+
+def _svgbob_source(
+    rendered_lines: list[str], source_parts: list[list[str]]
+) -> str | None:
+    for source_lines in source_parts:
+        if source_lines[0].strip() in rendered_lines[0]:
+            return "\n".join(source_lines)
+    return None
