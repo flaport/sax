@@ -73,7 +73,7 @@ WL_O_MIN: float = 1.260
 WL_O_MAX: float = 1.360
 """O-band maximum wavelength (μm)."""
 
-WL_O: float = 0.5 * (WL_O_MIN + WL_O_MAX)
+WL_O: float = 1.31
 """O-band center wavelength (μm)."""
 
 WL_E_MIN: float = 1.360
@@ -82,7 +82,7 @@ WL_E_MIN: float = 1.360
 WL_E_MAX: float = 1.460
 """E-band maximum wavelength (μm)."""
 
-WL_E: float = 0.5 * (WL_E_MIN + WL_E_MAX)
+WL_E: float = 1.41
 """E-band center wavelength (μm)."""
 
 WL_S_MIN: float = 1.460
@@ -91,7 +91,7 @@ WL_S_MIN: float = 1.460
 WL_S_MAX: float = 1.530
 """S-band maximum wavelength (μm)."""
 
-WL_S: float = 0.5 * (WL_S_MIN + WL_S_MAX)
+WL_S: float = 1.5
 """S-band center wavelength (μm)."""
 
 WL_C_MIN: float = 1.530
@@ -100,7 +100,7 @@ WL_C_MIN: float = 1.530
 WL_C_MAX: float = 1.565
 """C-band maximum wavelength (μm)."""
 
-WL_C: float = 0.5 * (WL_C_MIN + WL_C_MAX)
+WL_C: float = 1.55
 """C-band center wavelength (μm)."""
 
 WL_L_MIN: float = 1.565
@@ -109,7 +109,7 @@ WL_L_MIN: float = 1.565
 WL_L_MAX: float = 1.625
 """L-band maximum wavelength (μm)."""
 
-WL_L: float = 0.5 * (WL_L_MIN + WL_L_MAX)
+WL_L: float = 1.6
 """L-band center wavelength (μm)."""
 
 

@@ -11,8 +11,8 @@ from .straight import straight
 @jax.jit
 @validate_call
 def bend(
-    wl: sax.FloatArrayLike = 1.55,
-    wl0: sax.FloatArrayLike = 1.55,
+    wl: sax.FloatArrayLike = sax.WL_C,
+    wl0: sax.FloatArrayLike = sax.WL_C,
     neff: sax.FloatArrayLike = 2.34,
     ng: sax.FloatArrayLike = 3.4,
     length: sax.FloatArrayLike = 10.0,
@@ -20,10 +20,15 @@ def bend(
 ) -> sax.SDict:
     """Simple waveguide bend model.
 
-    This function models a simple bend in a waveguide by treating it as an
-    equivalent straight waveguide with the same effective length and properties.
-    The bend is approximated using the straight waveguide model, inheriting all
-    its dispersion and loss characteristics.
+    ```{svgbob}
+              out0
+              o2
+
+             /
+         __.'
+    o1
+    in0
+    ```
 
     Args:
         wl: Operating wavelength in micrometers. Can be a scalar or array for
@@ -50,53 +55,25 @@ def bend(
         Basic bend simulation:
 
     ```python
-    import numpy as np
-    import sax
-
-    # Single wavelength simulation
-    s_matrix = sax.models.bend(wl=1.55, length=20.0, loss_dB_cm=0.2)
-    print(f"Transmission: {s_matrix[('in0', 'out0')]}")
-    ```
-
-    Multi-wavelength analysis:
-
-    ```python
-    wavelengths = np.linspace(1.5, 1.6, 101)
-    s_matrices = sax.models.bend(
-        wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5
-    )
-    transmission = np.abs(s_matrices[("in0", "out0")]) ** 2
-    ```
-
-    ```
-                   o2/out0
-                   |
-                  /
-                 /
-    o1/in0 _____/
-    ```
-
-    ```python
     # mkdocs: render
     import matplotlib.pyplot as plt
     import numpy as np
     import sax
-
     sax.set_port_naming_strategy("optical")
 
-    wavelengths = np.linspace(1.5, 1.6, 101)
-    s = sax.models.bend(wl=wavelengths, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5)
-    transmission = np.abs(s[("o1", "o2")]) ** 2
+    wl = sax.wl_c()
+    s = sax.models.bend(wl=wl, length=50.0, loss_dB_cm=0.1, neff=2.35, ng=3.5)
+    thru = np.abs(s[("o1", "o2")]) ** 2
 
-    plt.figure()
-    plt.plot(wavelengths, transmission)
+    plt.plot(wl, thru)
     plt.xlabel("Wavelength (μm)")
-    plt.ylabel("Transmission")
+    plt.ylabel("thru")
     ```
 
     Note:
         This model treats the bend as an equivalent straight waveguide and does not
         account for:
+
         - Mode coupling between bend eigenmodes
         - Radiation losses due to bending
         - Polarization effects in bends

@@ -121,6 +121,7 @@ ignore = [
   "PLW2901",  # redefined-loop-name
   "RET504",  # unnecessary-assign
   "RUF002",  # ambiguous-unicode-character-docstring
+  "S324",  # hashlib-insecure-hash-function
   "TC001",  # typing-only-first-party-import
   "TC002",  # typing-only-third-party-import
   "TC003",  # typing-only-standard-library-import
@@ -147,6 +148,12 @@ select = ["ALL"]
   "S101",  # assert
   "SLF001",  # private-member-access
   "T201"  # print
+]
+"docs/hooks.py" = [
+  "INP001",  # implicit-namespace-package
+  "ARG001",  # unused-function-argument
+  "ANN401",  # any-type
+  "FBT001"  # boolean-type-hint-positional-argument
 ]
 "src/sax/saxtypes/*.py" = [
   "ANN401"  # any-type
