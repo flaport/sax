@@ -233,37 +233,42 @@ PRNGKey: TypeAlias = Annotated[Any, "PRNGKey"]
 """The jax.PRNGKey used to generate random weights and biases."""
 
 
-class Params(TypedDict):
-    """Parameters for a single layer in the neural network.
+Params = TypedDict(
+    "Params",
+    {
+        "w": Array,
+        "b": Array,
+    },
+)
+"""Parameters for a single layer in the neural network.
 
-    Attributes:
-        w: Weights for the layer.
-        b: Biases for the layer.
-    """
+Attributes:
+    w: Weights for the layer.
+    b: Biases for the layer.
+"""
 
-    w: Array
-    b: Array
+NeuralFitResult = TypedDict(
+    "NeuralFitResult",
+    {
+        "params": list[Params],
+        "features": list[str],
+        "targets": list[str],
+        "hidden_dims": tuple[int, ...],
+        "forward_fn": Callable,
+        "predict_fn": Callable,
+        "activation_fn": Callable,
+        "X_norm": sax.Normalization,
+        "Y_norm": sax.Normalization,
+        "learning_rate": float,
+        "num_epochs": int,
+        "final_loss": float,
+    },
+)
+"""Complete result from neural_fit function.
 
-
-class NeuralFitResult(TypedDict):
-    """Complete result from neural_fit function.
-
-    Attributes:
-        params: Trained model parameters.
-    """
-
-    params: list
-    features: list[str]
-    targets: list[str]
-    hidden_dims: tuple[int, ...]
-    forward_fn: Callable
-    predict_fn: Callable
-    activation_fn: Callable
-    X_norm: sax.Normalization
-    Y_norm: sax.Normalization
-    learning_rate: float
-    num_epochs: int
-    final_loss: float
+Attributes:
+    params: Trained model parameters.
+"""
 
 
 def create_network(

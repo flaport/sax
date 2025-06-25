@@ -33,4 +33,4 @@ def test_circuit() -> None:
 
 
 if __name__ == "__main__":
-    pass
+    print(test_circuit())

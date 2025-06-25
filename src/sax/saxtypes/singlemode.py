@@ -73,7 +73,7 @@ def val_instance_name(obj: Any) -> Port:
 
 
 InstanceName: TypeAlias = Annotated[str, val(val_instance_name)]
-"""An instance name allowing dots and angle brackets for hierarchical naming."""
+"""An instance name allowing allowing an array index suffix '<x.y>'."""
 
 
 def val_port(obj: Any) -> Port:
