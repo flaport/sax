@@ -86,6 +86,7 @@ def attenuator(
     in0             out0
      o1 =========== o2
     ```
+
     Args:
         wl: The wavelength in micrometers.
         loss: Attenuation in decibels (dB).

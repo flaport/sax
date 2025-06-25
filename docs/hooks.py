@@ -17,6 +17,19 @@ plt.rcParams.update(
     {
         "figure.figsize": (6, 2.5),
         "axes.grid": True,
+        "lines.color": "grey",
+        "patch.edgecolor": "grey",
+        "text.color": "grey",
+        "axes.facecolor": "ffffff00",
+        "axes.edgecolor": "grey",
+        "axes.labelcolor": "grey",
+        "xtick.color": "grey",
+        "ytick.color": "grey",
+        "grid.color": "grey",
+        "figure.facecolor": "ffffff00",
+        "figure.edgecolor": "ffffff00",
+        "savefig.facecolor": "ffffff00",
+        "savefig.edgecolor": "ffffff00",
     }
 )
 
@@ -211,7 +224,18 @@ def _svgbob_svg(source: str) -> str | None:
     temp_path.parent.mkdir(exist_ok=True)
     try:
         temp_path.write_text(source)
-        return subprocess.check_output([svgbob, str(temp_path)]).decode()  # noqa: S603
+        return subprocess.check_output(  # noqa: S603
+            [
+                svgbob,
+                "--background",
+                "#00000000",
+                "--stroke-color",
+                "grey",
+                "--fill-color",
+                "grey",
+                str(temp_path),
+            ]
+        ).decode()
     except Exception as e:  # noqa: BLE001
         print(f"Warning: Error generating SVG with svgbob: {e}")  # noqa: T201
         return None
