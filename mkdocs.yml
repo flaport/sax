@@ -59,7 +59,7 @@ nav:
   - api reference:
       - sax: api.md
       - sax.fit: fit.md
-      - models: models.md
+      - sax.models: models.md
   - changelog: changelog.md
 
 extra_css:

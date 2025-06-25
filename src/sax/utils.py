@@ -648,7 +648,7 @@ def hash_dict(dic: dict) -> int:
         ```
     """
     return int(
-        md5(  # noqa: S324
+        md5(
             orjson.dumps(
                 _numpyfy(dic), option=orjson.OPT_SERIALIZE_NUMPY | orjson.OPT_SORT_KEYS
             )
