@@ -72,6 +72,7 @@ plugins:
   - search
   - autorefs
   - mkdocs_matplotlib
+  - docs.mkdocs_sax_preprocessor:SaxPreprocessorPlugin
   - mkdocstrings:
       handlers:
         python:
