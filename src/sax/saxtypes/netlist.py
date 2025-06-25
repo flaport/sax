@@ -105,32 +105,42 @@ def val_instance(obj: Any) -> Instance:
     raise TypeError(msg)
 
 
-class ArrayConfig(TypedDict):
-    """Configuration for arrayed component instances.
+ArrayConfig = TypedDict(
+    "ArrayConfig",
+    {
+        "columns": int,
+        "rows": int,
+        "column_pitch": NotRequired[float],
+        "row_pitch": NotRequired[float],
+    },
+)
+"""Configuration for arrayed component instances.
 
-    Attributes:
-        columns: Number of columns in the array.
-        rows: Number of rows in the array.
-        column_pitch: Optional spacing between columns.
-        row_pitch: Optional spacing between rows.
-    """
+Attributes:
+    columns: Number of columns in the array.
+    rows: Number of rows in the array.
+    column_pitch: Optional spacing between columns.
+    row_pitch: Optional spacing between rows.
+"""
 
-    columns: int
-    rows: int
-    column_pitch: NotRequired[float]
-    row_pitch: NotRequired[float]
+Instance = Annotated[
+    TypedDict(
+        "Instance",
+        {
+            "component": Component,
+            "settings": NotRequired[Settings],
+            "array": NotRequired[ArrayConfig],
+        },
+    ),
+    val(val_instance),
+]
+"""An component instantiation in a netlist with optional settings and array config.
 
-
-class _Instance(TypedDict):
-    """Internal instance representation."""
-
-    component: Component
-    settings: NotRequired[Settings]
-    array: NotRequired[ArrayConfig]
-
-
-Instance: TypeAlias = Annotated[_Instance, val(val_instance)]
-"""An component instantiation in a netlist with optional settings and array config."""
+Attributes:
+    component: The name of the model.
+    settings: Optional settings for the instance.
+    array: Optional configuration for arrayed instances.
+"""
 
 Instances: TypeAlias = dict[InstanceName, Instance]
 """A mapping from instance names to their definitions."""
@@ -180,86 +190,95 @@ _PortPlacement: TypeAlias = Literal[
 ]
 
 
-class Placement(TypedDict):
-    """Physical placement information for an instance.
+Placement = TypedDict(
+    "Placement",
+    {
+        "x": str | float,
+        "y": str | float,
+        "dx": NotRequired[str | float],
+        "dy": NotRequired[str | float],
+        "rotation": NotRequired[float],
+        "mirror": NotRequired[bool],
+        "xmin": NotRequired[str | float | None],
+        "xmax": NotRequired[str | float | None],
+        "ymin": NotRequired[str | float | None],
+        "ymax": NotRequired[str | float | None],
+        "port": NotRequired[str | _PortPlacement | None],
+    },
+)
+"""Physical placement information for an instance.
 
-    Defines the position, orientation, and constraints for placing
-    an instance in physical layout coordinates.
+Defines the position, orientation, and constraints for placing
+an instance in physical layout coordinates.
 
-    Attributes:
-        x: X coordinate position.
-        y: Y coordinate position.
-        dx: Optional X offset.
-        dy: Optional Y offset.
-        rotation: Optional rotation angle in degrees.
-        mirror: Optional mirroring flag.
-        xmin: Optional minimum X constraint.
-        xmax: Optional maximum X constraint.
-        ymin: Optional minimum Y constraint.
-        ymax: Optional maximum Y constraint.
-        port: Optional port anchor specification.
-    """
-
-    x: str | float
-    y: str | float
-    dx: NotRequired[str | float]
-    dy: NotRequired[str | float]
-    rotation: NotRequired[float]
-    mirror: NotRequired[bool]
-    xmin: NotRequired[str | float | None]
-    xmax: NotRequired[str | float | None]
-    ymin: NotRequired[str | float | None]
-    ymax: NotRequired[str | float | None]
-    port: NotRequired[str | _PortPlacement | None]
+Attributes:
+    x: X coordinate position.
+    y: Y coordinate position.
+    dx: Optional X offset.
+    dy: Optional Y offset.
+    rotation: Optional rotation angle in degrees.
+    mirror: Optional mirroring flag.
+    xmin: Optional minimum X constraint.
+    xmax: Optional maximum X constraint.
+    ymin: Optional minimum Y constraint.
+    ymax: Optional maximum Y constraint.
+    port: Optional port anchor specification.
+"""
 
 
 Placements: TypeAlias = dict[InstanceName, Placement]
 """A mapping from instance names to their physical placements."""
 
 
-class Net(TypedDict):
-    """A logical connection between two ports.
+Net = TypedDict(
+    "Net",
+    {
+        "p1": InstancePort,
+        "p2": InstancePort,
+        "settings": NotRequired[Settings],
+        "name": NotRequired[str | None],
+    },
+)
+"""A logical connection between two ports.
 
-    Represents a point-to-point connection with optional metadata.
+Represents a point-to-point connection with optional metadata.
 
-    Attributes:
-        p1: First port in the connection.
-        p2: Second port in the connection.
-        settings: Optional connection settings.
-        name: Optional connection name.
-    """
-
-    p1: str
-    p2: str
-    settings: NotRequired[dict]
-    name: NotRequired[str | None]
+Attributes:
+    p1: First port in the connection.
+    p2: Second port in the connection.
+    settings: Optional connection settings.
+    name: Optional connection name.
+"""
 
 
 Nets: TypeAlias = list[Net]
 """A list of logical connections between ports."""
 
 
-class Netlist(TypedDict):
-    """A complete netlist definition for an optical circuit.
+Netlist = TypedDict(
+    "Netlist",
+    {
+        "instances": Instances,
+        "connections": NotRequired[Connections],
+        "ports": Ports,
+        "nets": NotRequired[Nets],
+        "placements": NotRequired[Placements],
+        "settings": NotRequired[Settings],
+    },
+)
+"""A complete netlist definition for an optical circuit.
 
-    Contains all information needed to define a circuit: instances,
-    connections, external ports, and optional placement/settings.
+Contains all information needed to define a circuit: instances,
+connections, external ports, and optional placement/settings.
 
-    Attributes:
-        instances: The component instances in the circuit.
-        connections: Point-to-point connections between instances.
-        ports: Mapping of external ports to internal instance ports.
-        nets: Alternative connection specification as a list.
-        placements: Physical placement information for instances.
-        settings: Global circuit settings.
-    """
-
-    instances: Instances
-    connections: NotRequired[Connections]
-    ports: Ports
-    nets: NotRequired[Nets]
-    placements: NotRequired[Placements]
-    settings: NotRequired[Settings]
+Attributes:
+    instances: The component instances in the circuit.
+    connections: Point-to-point connections between instances.
+    ports: Mapping of external ports to internal instance ports.
+    nets: Alternative connection specification as a list.
+    placements: Physical placement information for instances.
+    settings: Global circuit settings.
+"""
 
 
 RecursiveNetlist: TypeAlias = dict[Name, Netlist]

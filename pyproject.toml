@@ -130,7 +130,8 @@ ignore = [
   "TD002",  # missing-todo-author
   "TD003",  # missing-todo-link
   "TID252",  # relative-imports
-  "TRY003"  # raise-vanilla-args
+  "TRY003",  # raise-vanilla-args
+  "UP013"  # convert-typed-dict-functional-to-class
 ]
 select = ["ALL"]
 
