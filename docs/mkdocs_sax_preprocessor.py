@@ -53,6 +53,8 @@ class SaxPreprocessorPlugin(BasePlugin[SaxPreprocessorConfig]):
                     # This is inline code
                     if hasattr(sax, part):
                         parts[k] = f"[`{part}`][sax.{part}]"
+                    elif hasattr(sax.fit, part):
+                        parts[k] = f"[`{part}`][sax.fit.{part}]"
                     elif hasattr(sax.models, part):
                         parts[k] = f"[`{part}`][sax.models.{part}]"
                     else:
