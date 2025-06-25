@@ -60,7 +60,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 from jaxtyping import Array
-from pydantic import PlainValidator
+from pydantic import BeforeValidator, PlainValidator
 from pydantic_core import PydanticCustomError
 
 T = TypeVar("T")
@@ -69,20 +69,7 @@ ArrayLike: TypeAlias = Array | np.ndarray
 """Anything that can turn into an array with ndim>=1."""
 
 
-def val(fun: Callable, **val_kwargs: Any) -> PlainValidator:
-    """Create a Pydantic validator from a validation function.
-
-    Args:
-        fun: The validation function to wrap.
-        **val_kwargs: Additional keyword arguments to pass to the validation function.
-
-    Returns:
-        A Pydantic PlainValidator wrapping the function.
-
-    Raises:
-        PydanticCustomError: If validation fails.
-    """
-
+def _val(fun: Callable, **val_kwargs: Any) -> Callable:
     @wraps(fun)
     def new(*args: Any, **kwargs: Any) -> Any:
         kwargs.update(val_kwargs)
@@ -99,7 +86,39 @@ def val(fun: Callable, **val_kwargs: Any) -> PlainValidator:
                 cast(LiteralString, msg),
             ) from e
 
-    return PlainValidator(new)
+    return new
+
+
+def val(fun: Callable, **val_kwargs: Any) -> PlainValidator:
+    """Create a PlainValidator from a validation function.
+
+    Args:
+        fun: The validation function to wrap.
+        **val_kwargs: Additional keyword arguments to pass to the validation function.
+
+    Returns:
+        A Pydantic PlainValidator wrapping the function.
+
+    Raises:
+        PydanticCustomError: If validation fails.
+    """
+    return PlainValidator(_val(fun, **val_kwargs))
+
+
+def bval(fun: Callable, **val_kwargs: Any) -> BeforeValidator:
+    """Create a BeforeValidator from a validation function.
+
+    Args:
+        fun: The validation function to wrap.
+        **val_kwargs: Additional keyword arguments to pass to the validation function.
+
+    Returns:
+        A Pydantic PlainValidator wrapping the function.
+
+    Raises:
+        PydanticCustomError: If validation fails.
+    """
+    return BeforeValidator(_val(fun, **val_kwargs))
 
 
 def _val_item_type(

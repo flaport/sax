@@ -12,7 +12,7 @@ from typing import Annotated, Any, Literal, NotRequired, TypeAlias
 
 from typing_extensions import TypedDict
 
-from sax.saxtypes.core import Name, val, val_name
+from sax.saxtypes.core import Name, bval, val, val_name
 from sax.saxtypes.settings import Settings
 from sax.saxtypes.singlemode import InstanceName, InstancePort, Port
 
@@ -30,6 +30,10 @@ __all__ = [
     "Ports",
     "RecursiveNetlist",
 ]
+
+
+def extract_fields(dct: dict[str, Any], *, fields: tuple[str]) -> dict[str, Any]:
+    return {k: v for k, v in dct.items() if k in fields}
 
 
 Component: TypeAlias = Annotated[str, val(val_name, name="Component")]
@@ -105,15 +109,18 @@ def val_instance(obj: Any) -> Instance:
     raise TypeError(msg)
 
 
-ArrayConfig = TypedDict(
-    "ArrayConfig",
-    {
-        "columns": int,
-        "rows": int,
-        "column_pitch": NotRequired[float],
-        "row_pitch": NotRequired[float],
-    },
-)
+ArrayConfig = Annotated[
+    TypedDict(
+        "ArrayConfig",
+        {
+            "columns": int,
+            "rows": int,
+            "column_pitch": NotRequired[float],
+            "row_pitch": NotRequired[float],
+        },
+    ),
+    bval(extract_fields, fields=("columns", "rows", "column_pitch", "row_pitch")),
+]
 """Configuration for arrayed component instances.
 
 Attributes:
@@ -190,22 +197,40 @@ _PortPlacement: TypeAlias = Literal[
 ]
 
 
-Placement = TypedDict(
-    "Placement",
-    {
-        "x": str | float,
-        "y": str | float,
-        "dx": NotRequired[str | float],
-        "dy": NotRequired[str | float],
-        "rotation": NotRequired[float],
-        "mirror": NotRequired[bool],
-        "xmin": NotRequired[str | float | None],
-        "xmax": NotRequired[str | float | None],
-        "ymin": NotRequired[str | float | None],
-        "ymax": NotRequired[str | float | None],
-        "port": NotRequired[str | _PortPlacement | None],
-    },
-)
+Placement = Annotated[
+    TypedDict(
+        "Placement",
+        {
+            "x": str | float,
+            "y": str | float,
+            "dx": NotRequired[str | float],
+            "dy": NotRequired[str | float],
+            "rotation": NotRequired[float],
+            "mirror": NotRequired[bool],
+            "xmin": NotRequired[str | float | None],
+            "xmax": NotRequired[str | float | None],
+            "ymin": NotRequired[str | float | None],
+            "ymax": NotRequired[str | float | None],
+            "port": NotRequired[str | _PortPlacement | None],
+        },
+    ),
+    bval(
+        extract_fields,
+        fields=(
+            "x",
+            "y",
+            "dx",
+            "dy",
+            "rotation",
+            "mirror",
+            "xmin",
+            "xmax",
+            "ymin",
+            "ymax",
+            "port",
+        ),
+    ),
+]
 """Physical placement information for an instance.
 
 Defines the position, orientation, and constraints for placing
@@ -230,15 +255,18 @@ Placements: TypeAlias = dict[InstanceName, Placement]
 """A mapping from instance names to their physical placements."""
 
 
-Net = TypedDict(
-    "Net",
-    {
-        "p1": InstancePort,
-        "p2": InstancePort,
-        "settings": NotRequired[Settings],
-        "name": NotRequired[str | None],
-    },
-)
+Net = Annotated[
+    TypedDict(
+        "Net",
+        {
+            "p1": InstancePort,
+            "p2": InstancePort,
+            "settings": NotRequired[Settings],
+            "name": NotRequired[str | None],
+        },
+    ),
+    bval(extract_fields, fields=("p1", "p2", "settings", "name")),
+]
 """A logical connection between two ports.
 
 Represents a point-to-point connection with optional metadata.
@@ -255,17 +283,30 @@ Nets: TypeAlias = list[Net]
 """A list of logical connections between ports."""
 
 
-Netlist = TypedDict(
-    "Netlist",
-    {
-        "instances": Instances,
-        "connections": NotRequired[Connections],
-        "ports": Ports,
-        "nets": NotRequired[Nets],
-        "placements": NotRequired[Placements],
-        "settings": NotRequired[Settings],
-    },
-)
+Netlist = Annotated[
+    TypedDict(
+        "Netlist",
+        {
+            "instances": Instances,
+            "connections": NotRequired[Connections],
+            "ports": Ports,
+            "nets": NotRequired[Nets],
+            "placements": NotRequired[Placements],
+            "settings": NotRequired[Settings],
+        },
+    ),
+    bval(
+        extract_fields,
+        fields=(
+            "instances",
+            "connections",
+            "ports",
+            "nets",
+            "placements",
+            "settings",
+        ),
+    ),
+]
 """A complete netlist definition for an optical circuit.
 
 Contains all information needed to define a circuit: instances,
