@@ -330,10 +330,6 @@ def convert_nets_to_connections(
 def convert_nets_to_connections(
     netlist: sax.AnyNetlist,
 ) -> sax.AnyNetlist:
-    import json
-    from pathlib import Path
-
-    Path("/users/flaport/netlist.json").write_text(json.dumps(netlist, indent=2))
     if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
         return {k: convert_nets_to_connections(v) for k, v in recnet.items()}
     net: sax.Netlist = sax.into[sax.Netlist](netlist)
