@@ -122,19 +122,7 @@ def on_page_markdown(
 
         # This is regular markdown content
         lines = block.split("\n")
-        for j, line in enumerate(lines):
-            parts = line.split("`")
-            for k, part in enumerate(parts):
-                if k % 2 == 0:
-                    continue
-                # This is inline code
-                if hasattr(sax, part):
-                    parts[k] = f"[`{part}`][sax.{part}]"
-                elif hasattr(sax.models, part):
-                    parts[k] = f"[`{part}`][sax.models.{part}]"
-                else:
-                    parts[k] = f"`{part}`"
-            lines[j] = "".join(parts)
+        _insert_cross_refs(lines)
         blocks[i] = "\n".join(lines)
 
     content = "".join(blocks)
@@ -201,11 +189,24 @@ def _parse_special(content: str) -> str | None:
     if not (first.startswith("{") and first.endswith("}")):
         return None
     code_block_type = first[1:-1].strip()
+    if code_block_type == "svgbob":
+        source = "\n".join(rest)
+        content_hash = hashlib.md5(source.encode()).hexdigest()
+        svg_content = _svgbob_svg(source)
+        if not svg_content:
+            return None
+        docs_dir = Path(__file__).parent
+        svg_path = docs_dir / "assets" / "svgbob" / f"svgbob_{content_hash}.svg"
+        svg_path.parent.mkdir(exist_ok=True, parents=True)
+        svg_path.write_text(svg_content or "")
+        return f"\n\n![{svg_path.name}](/sax/{svg_path.relative_to(docs_dir)})\n\n"
     return _format_admonition(code_block_type, rest)
 
 
 def _format_admonition(admonition_type: str, lines: list[str]) -> str:
     """Format lines as an admonition."""
+    if admonition_type == "hint":
+        admonition_type = "info"
     ret = f"!!! {admonition_type}\n\n"
     for line in lines:
         ret += f"    {line.strip()}\n"
@@ -253,3 +254,25 @@ def _svgbob_source(
         ):
             return "\n".join(source_lines)
     return None
+
+
+def _insert_cross_refs(lines: list[str]) -> None:
+    """Insert cross-references in the markdown lines."""
+    for j, line in enumerate(lines):
+        parts = line.split("`")
+        for k, part in enumerate(parts):
+            if k % 2 == 0:
+                continue
+            # This is inline code
+            *first, short_part = part.split(".")
+            if first and first[0] != "sax":
+                continue
+            if hasattr(sax, short_part):
+                parts[k] = f"[`{part}`][sax.{short_part}]"
+            elif hasattr(sax.fit, short_part):
+                parts[k] = f"[`{part}`][sax.fit.{short_part}]"
+            elif hasattr(sax.models, part):
+                parts[k] = f"[`{part}`][sax.models.{short_part}]"
+            else:
+                parts[k] = f"`{part}`"
+        lines[j] = "".join(parts)
