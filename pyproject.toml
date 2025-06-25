@@ -161,9 +161,10 @@ select = ["ALL"]
 ]
 "src/tests/*" = [
   "D",  # pydocstyle
+  "INP001",  # implicit-namespace-package
   "PT011",  # pytest-raises-too-broad
   "S101",  # assert
-  "INP001"  # implicit-namespace-package
+  "T201"  # print
 ]
 
 [tool.ruff.lint.pydocstyle]

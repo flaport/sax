@@ -7,12 +7,14 @@ flat and hierarchical netlist representations.
 
 from __future__ import annotations
 
+import warnings
 from functools import partial
 from typing import Annotated, Any, Literal, NotRequired, TypeAlias
 
 from typing_extensions import TypedDict
 
 from sax.saxtypes.core import Name, bval, val, val_name
+from sax.saxtypes.into import into, try_into
 from sax.saxtypes.settings import Settings
 from sax.saxtypes.singlemode import InstanceName, InstancePort, Port
 
@@ -322,7 +324,39 @@ Attributes:
 """
 
 
-RecursiveNetlist: TypeAlias = dict[Name, Netlist]
+def val_recnet(obj: Any) -> RecursiveNetlist:
+    if not isinstance(obj, dict):
+        msg = f"Expected a dictionary for recursive netlist, got {type(obj)}."
+        raise TypeError(msg)
+
+    net = try_into[Netlist](obj)
+    if net is not None:
+        msg = f"Expected a recursive netlist, got a flat netlist: {net}."
+        raise TypeError(msg)
+
+    ret = {}
+    for name, netlist in obj.items():
+        name = into[Name](name)
+        net = try_into[Netlist](netlist)
+        if net is None:
+            msg = (
+                f"Could not validate netlist for {name!r}. "
+                "This netlist will be ignored."
+            )
+            warnings.warn(msg, stacklevel=2)
+            continue
+        if len(net.get("ports", {})) < 2:
+            msg = (
+                f"Netlist {name!r} has fewer than two ports defined. "
+                "This netlist will be ignored."
+            )
+            warnings.warn(msg, stacklevel=2)
+            continue
+        ret[name] = net
+    return ret
+
+
+RecursiveNetlist: TypeAlias = Annotated[dict[Name, Netlist], val(val_recnet)]
 """A hierarchical netlist containing multiple named circuits."""
 
 AnyNetlist: TypeAlias = Netlist | RecursiveNetlist | dict[str, dict[str, str]]
