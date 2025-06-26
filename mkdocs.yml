@@ -33,6 +33,7 @@ theme:
       primary: blue
       accent: deep purple
   features:
+    - content.code.copy
     - navigation.footer
   search: true
 
