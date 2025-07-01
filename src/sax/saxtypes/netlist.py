@@ -34,7 +34,7 @@ __all__ = [
 ]
 
 
-def extract_fields(dct: dict[str, Any], *, fields: tuple[str]) -> dict[str, Any]:
+def extract_fields(dct: dict[str, Any], *, fields: tuple[str, ...]) -> dict[str, Any]:
     return {k: v for k, v in dct.items() if k in fields}
 
 
@@ -285,6 +285,40 @@ Nets: TypeAlias = list[Net]
 """A list of logical connections between ports."""
 
 
+def val_netlist(obj: Any) -> dict:
+    if not isinstance(obj, dict):
+        msg = f"Expected a dictionary for recursive netlist, got {type(obj)}."
+        raise TypeError(msg)
+
+    obj = {**obj}
+
+    nets = list(obj.pop("nets", []))
+
+    if "routes" in obj:
+        for bundle_name, bundle in obj["routes"].items():
+            if not isinstance(bundle, dict):
+                msg = f"Expected a dictionary for routes, got {type(bundle)}."
+                raise TypeError(msg)
+            if "links" not in bundle:
+                msg = "Each route bundle must contain a 'links' key."
+                raise TypeError(msg)
+            for p1, p2 in bundle["links"].items():
+                p1 = into[InstancePort](p1)
+                p2 = into[InstancePort](p2)
+                nets.append({"p1": p1, "p2": p2, "name": bundle_name})
+
+    obj["nets"] = nets
+    fields = (
+        "instances",
+        "connections",
+        "ports",
+        "nets",
+        "placements",
+        "settings",
+    )
+    return extract_fields(obj, fields=fields)
+
+
 Netlist = Annotated[
     TypedDict(
         "Netlist",
@@ -297,17 +331,7 @@ Netlist = Annotated[
             "settings": NotRequired[Settings],
         },
     ),
-    bval(
-        extract_fields,
-        fields=(
-            "instances",
-            "connections",
-            "ports",
-            "nets",
-            "placements",
-            "settings",
-        ),
-    ),
+    bval(val_netlist),
 ]
 """A complete netlist definition for an optical circuit.
 

@@ -52,8 +52,7 @@ nbclean +filenames:
 tree:
   @tree -a -I .git --gitignore
 
-clean:
-  find . -name "*.ipynb" | xargs just nbclean
+clean: nbclean-all
   rm -rf .venv
   rm -rf docs/nbs/*
   rm -rf site
