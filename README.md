@@ -1,6 +1,6 @@
 # SAX
 
-> 0.15.9
+> 0.15.10
 
 ![SAX LOGO](docs/assets/logo.svg)
 
