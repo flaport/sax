@@ -41,7 +41,7 @@ def parse_lumerical_dat(content_or_filename: str | Path | sax.IOLike) -> pd.Data
     warnings.warn(msg, stacklevel=2, category=sax.ExperimentalWarning)
     content = sax.read(content_or_filename)
     _tree, df = cast(tuple[Tree, pd.DataFrame], _parser.parse(content))
-    return df
+    return df.rename(columns={"phase": "phi"})
 
 
 class _SparamsTransformer(Transformer):

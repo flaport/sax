@@ -26,7 +26,7 @@ __all__ = [
 def interpolate_xarray(
     xarr: xr.DataArray,
     /,
-    **kwargs: sax.FloatArray,
+    **kwargs: sax.FloatArray | str,
 ) -> dict[str, sax.FloatArray]:
     """Interpolate a multi-dimensional xarray with JAX.
 
@@ -37,29 +37,36 @@ def interpolate_xarray(
     with jax.ensure_compile_time_eval():
         data = jnp.asarray(xarr)
 
-        # don't use jnp.asarray here as values can be strings!
-        params = {k: np.asarray(xarr[k]) for k in xarr.dims}
-
-        strings: dict[str, dict[str, int]] = kwargs.pop("strings", {})  # type: ignore[reportAssignmentType]
-        target_name = xarr.dims[-1]
-        params.pop(target_name, None)
-        strings.pop(target_name, None)  # type: ignore[reportArgumentType]
-
-        # don't use jnp.asarray here as values can be strings!
-        targets = {
-            str(k): i for i, k in enumerate(np.asarray(xarr.coords[target_name]))
-        }
-
-        params["targets"] = np.arange(0, len(targets), 1, dtype=np.uint8)
-        strings = {**strings, "targets": targets}
+        params: dict[str, NDArray] = {str(k): np.asarray(xarr[k]) for k in xarr.dims}
+        new_params, strings = _extract_strings(params)
+        target_name = str(xarr.dims[-1])
+        targets = strings[target_name]
+        if target_name in kwargs:
+            msg = f"Cannot interpolate over target parameter {target_name}."
+            raise ValueError(msg)
+        string_kwargs = {k: v for k, v in kwargs.items() if k in strings}
+        new_kwargs = {**kwargs, **{k: [str(v)] for k, v in string_kwargs.items()}}
 
     s, axs, pos = _evaluate_general_corner_model(
         data,
-        params,  # type: ignore[reportArgumentType]
+        new_params,
         strings,
-        **kwargs,
+        **new_kwargs,
     )
-    return {k: s.take(pos["targets"][k], axs["targets"]) for k in targets}
+
+    axs_rev = dict(
+        sorted([(v, k) for k, v in axs.items() if k != target_name], reverse=True)
+    )
+
+    ss = {k: s.take(pos[target_name][k], axs[target_name]) for k in targets}
+    for ax, name in axs_rev.items():
+        if name in string_kwargs:
+            ss = {
+                kk: s.take(pos[name][string_kwargs[name]], ax)  # type: ignore[reportArgumentType]
+                for kk, s in ss.items()
+            }
+
+    return ss
 
 
 def to_xarray(
@@ -91,12 +98,7 @@ def to_xarray(
     data = df[target_names].to_numpy()
     data = data.reshape(*(v.shape[0] for v in params.values()))
     data = jnp.asarray(data)
-    coords, strings = _extract_strings(params)
-    coords["targets"] = np.asarray(list(strings.pop("targets")), dtype=object)  # type: ignore[reportArgumentType]
-    if strings:
-        msg = f"Found non-float columns in the dataframe: {strings}."
-        raise ValueError(msg)
-    return xr.DataArray(data=data, coords=coords)
+    return xr.DataArray(data=data, coords=params)
 
 
 def to_df(xarr: xr.DataArray, *, target_name: str = "target") -> pd.DataFrame:
@@ -183,7 +185,7 @@ def _get_coordinates(arrs1d: Sequence[Array], values: jnp.ndarray) -> list[Array
 
 
 def _extract_strings(
-    params: dict[str, Array | NDArray],
+    params: dict[str, Array | NDArray] | dict[str, Array] | dict[str, NDArray],
 ) -> tuple[dict[str, Array], dict[str, dict[str, int]]]:
     string_map = {}  # jax does not like strings
     new_params = {}
