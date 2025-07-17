@@ -21,6 +21,7 @@ dependencies = [
   "jax>=0.6.0",
   "jaxtyping>=0.2.38",
   "klujax>=0.4.1",
+  "lark>=1.2.2",
   "matplotlib>=3.0.0",
   "natsort>=8.0.0",
   "networkx>=3.0.0",
@@ -28,6 +29,7 @@ dependencies = [
   "orjson>=3.0.0",
   "pydantic>=2.10.0",
   "pyyaml>=6.0.0",
+  "scikit-rf>=1.8.0",
   "sympy>=1.14.0",
   "typing-extensions>=4.13.2",
   "xarray>=2025.1.2"
@@ -87,7 +89,8 @@ dev = [
   "nb-clean>=4.0.1",
   "ty>=0.0.1a11",
   "nbstripout>=0.8.1",
-  "mkdocs-matplotlib"
+  "mkdocs-matplotlib",
+  "scikit-rf>=1.8.0"
 ]
 
 [tool.pytest.ini_options]
@@ -155,6 +158,10 @@ select = ["ALL"]
   "ARG001",  # unused-function-argument
   "ANN401",  # any-type
   "FBT001"  # boolean-type-hint-positional-argument
+]
+"src/sax/parsers/*.py" = [
+  "E501",  # line-too-long
+  "N802"  # invalid-function-name
 ]
 "src/sax/saxtypes/*.py" = [
   "ANN401"  # any-type

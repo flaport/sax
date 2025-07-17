@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
 from functools import partial
+from itertools import product
 from typing import cast
 
 import jax
@@ -12,6 +13,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 from jaxtyping import Array
+from natsort import natsorted
 from numpy.typing import NDArray
 
 import sax
@@ -26,7 +28,7 @@ __all__ = [
 def interpolate_xarray(
     xarr: xr.DataArray,
     /,
-    **kwargs: sax.FloatArray,
+    **kwargs: sax.FloatArray | str,
 ) -> dict[str, sax.FloatArray]:
     """Interpolate a multi-dimensional xarray with JAX.
 
@@ -37,29 +39,36 @@ def interpolate_xarray(
     with jax.ensure_compile_time_eval():
         data = jnp.asarray(xarr)
 
-        # don't use jnp.asarray here as values can be strings!
-        params = {k: np.asarray(xarr[k]) for k in xarr.dims}
-
-        strings: dict[str, dict[str, int]] = kwargs.pop("strings", {})  # type: ignore[reportAssignmentType]
-        target_name = xarr.dims[-1]
-        params.pop(target_name, None)
-        strings.pop(target_name, None)  # type: ignore[reportArgumentType]
-
-        # don't use jnp.asarray here as values can be strings!
-        targets = {
-            str(k): i for i, k in enumerate(np.asarray(xarr.coords[target_name]))
-        }
-
-        params["targets"] = np.arange(0, len(targets), 1, dtype=np.uint8)
-        strings = {**strings, "targets": targets}
+        params: dict[str, NDArray] = {str(k): np.asarray(xarr[k]) for k in xarr.dims}
+        new_params, strings = _extract_strings(params)
+        target_name = str(xarr.dims[-1])
+        targets = strings[target_name]
+        if target_name in kwargs:
+            msg = f"Cannot interpolate over target parameter {target_name}."
+            raise ValueError(msg)
+        string_kwargs = {k: v for k, v in kwargs.items() if k in strings}
+        new_kwargs = {**kwargs, **{k: [str(v)] for k, v in string_kwargs.items()}}
 
     s, axs, pos = _evaluate_general_corner_model(
         data,
-        params,  # type: ignore[reportArgumentType]
+        new_params,
         strings,
-        **kwargs,
+        **new_kwargs,
     )
-    return {k: s.take(pos["targets"][k], axs["targets"]) for k in targets}
+
+    axs_rev = dict(
+        sorted([(v, k) for k, v in axs.items() if k != target_name], reverse=True)
+    )
+
+    ss = {k: s.take(pos[target_name][k], axs[target_name]) for k in targets}
+    for ax, name in axs_rev.items():
+        if name in string_kwargs:
+            ss = {
+                kk: s.take(pos[name][string_kwargs[name]], ax)  # type: ignore[reportArgumentType]
+                for kk, s in ss.items()
+            }
+
+    return ss
 
 
 def to_xarray(
@@ -91,23 +100,36 @@ def to_xarray(
     data = df[target_names].to_numpy()
     data = data.reshape(*(v.shape[0] for v in params.values()))
     data = jnp.asarray(data)
-    coords, strings = _extract_strings(params)
-    coords["targets"] = np.asarray(list(strings.pop("targets")), dtype=object)  # type: ignore[reportArgumentType]
-    if strings:
-        msg = f"Found non-float columns in the dataframe: {strings}."
-        raise ValueError(msg)
-    return xr.DataArray(data=data, coords=coords)
+    return xr.DataArray(data=data, coords=params)
 
 
-def to_df(xarr: xr.DataArray, *, target_name: str = "target") -> pd.DataFrame:
-    """Converts a multi-dimensional xarray into a stacked dataframe."""
-    stacked = xarr.stack(__stacked_dim=xarr.dims)  # noqa: PD013
-    df = (
-        stacked.reset_index("__stacked_dim")
-        .to_dataframe(name=target_name)
-        .reset_index(drop=True)
-    )
-    return df
+def to_df(
+    obj: xr.DataArray | sax.SType,
+    *,
+    target_name: str = "target",
+    **kwargs: sax.ArrayLike,
+) -> pd.DataFrame:
+    """Converts an object into a stacked dataframe.
+
+    Args:
+        obj: an xarray or a sax.SType object.
+        target_name: the name of the target column
+            in the dataframe (ignored when obj is an SType).
+        kwargs: the coordinates of the SType values axes
+            (ignored when obj is an xarray).
+    """
+    if isinstance(obj, xr.DataArray):
+        xarr = obj
+        stacked = xarr.stack(__stacked_dim=xarr.dims)  # noqa: PD013
+        df = (
+            stacked.reset_index("__stacked_dim")
+            .to_dataframe(name=target_name)
+            .reset_index(drop=True)
+        )
+        return df
+
+    stype = obj
+    return _sdict_to_df(stype, **kwargs)
 
 
 def _evaluate_general_corner_model(
@@ -183,7 +205,7 @@ def _get_coordinates(arrs1d: Sequence[Array], values: jnp.ndarray) -> list[Array
 
 
 def _extract_strings(
-    params: dict[str, Array | NDArray],
+    params: dict[str, Array | NDArray] | dict[str, Array] | dict[str, NDArray],
 ) -> tuple[dict[str, Array], dict[str, dict[str, int]]]:
     string_map = {}  # jax does not like strings
     new_params = {}
@@ -194,3 +216,61 @@ def _extract_strings(
         else:
             new_params[k] = np.array(v, dtype=float)
     return new_params, string_map
+
+
+def _sdict_to_df(stype: sax.SType, **coords: sax.ArrayLike) -> pd.DataFrame:
+    if not coords:
+        msg = "The coords of at least one dimension should be given."
+        raise ValueError(msg)
+    coords = {k: np.atleast_1d(v) for k, v in coords.items()}
+    sdict: sax.SDict = {k: jnp.atleast_1d(v) for k, v in sax.sdict(stype).items()}
+    sdict = dict(zip(sdict, jnp.broadcast_arrays(*sdict.values()), strict=True))
+    shape = jnp.asarray(next(iter(sdict.values()))).shape
+    if len(shape) != len(coords):
+        msg = "Specify at least one array of coordinates per dimension of the sdict."
+        raise ValueError(msg)
+    for i, (d, (k, a)) in enumerate(zip(shape, coords.items(), strict=True)):
+        if a.ndim != 1:
+            msg = f"Coords should be 1D arrays. {k}.ndim = {a.ndim}"
+            raise ValueError(msg)
+        if a.shape[0] != d:
+            msg = (
+                f"the length of coord {i} [len({k})={a.shape[0]}] should match "
+                f"the size of axis {i} [{d}] of each element in the sdict."
+            )
+            raise ValueError(msg)
+    ports, modes = set(), set()
+    for p1, p2 in sdict:
+        for p in [p1, p2]:
+            p, *m = p.split("@")
+            ports.add(p)
+            modes.add("".join(m))
+    ports = natsorted(ports)
+    modes = natsorted(modes)
+
+    sdict = {
+        k: jnp.stack([jnp.abs(v), jnp.angle(v)], axis=-1) for k, v in sdict.items()
+    }
+    coords["amp_phi"] = np.array(["amp", "phi"])
+
+    dfs = []
+    port_mode = lambda p, m: f"{p}@{m}" if m else p  # noqa: E731
+    zero = jnp.zeros_like(next(iter(sdict.values())))
+    for p1, m1, p2, m2 in product(ports, modes, ports, modes):
+        pm1, pm2 = port_mode(p1, m1), port_mode(p2, m2)
+        values = sdict.get((pm1, pm2), zero)
+        xarr = xr.DataArray(values, coords)
+        df = sax.to_df(xarr, target_name="amp")
+        phi = df["amp"].to_numpy()[1::2]
+        df = df.loc[::2, :].drop(columns=["amp_phi"]).reset_index(drop=True)
+        df["phi"] = phi
+        df["port_in"] = p1
+        df["port_out"] = p2
+        df["mode_in"] = m1 or "1"
+        df["mode_out"] = m2 or "1"
+        dfs.append(df)
+
+    df = pd.concat(dfs, axis=0)
+    columns = [*[c for c in df.columns if c not in ["amp", "phi"]], *["amp", "phi"]]
+
+    return cast(pd.DataFrame, df[columns].reset_index(drop=True))

@@ -203,7 +203,7 @@ def _create_dag(
         for instance in subnetlist["instances"].values():
             component = instance["component"]
             if component not in all_models:
-                all_models[component] = models.get(component, None)
+                all_models[component] = models.get(component)
                 g.add_node(component)
             g.add_edge(model_name, component)
 
