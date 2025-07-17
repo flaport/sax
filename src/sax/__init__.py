@@ -213,6 +213,7 @@ from .interpolation import (
 )
 
 from . import fit
+from . import parsers
 from . import models
 
 
@@ -380,6 +381,7 @@ __all__ = [  # noqa: RUF022
     "netlist",
     "normalization",
     "normalize",
+    "parsers",
     "read",
     "reciprocal",
     "rename_params",

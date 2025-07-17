@@ -60,6 +60,7 @@ nav:
   - api reference:
       - sax: api.md
       - sax.fit: fit.md
+      - sax.parsers: parsers.md
       - sax.models: models.md
   - changelog: changelog.md
 

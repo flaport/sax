@@ -273,6 +273,8 @@ def _insert_cross_refs(lines: list[str]) -> None:
                 parts[k] = f"[`{part}`][sax.fit.{short_part}]"
             elif hasattr(sax.models, part):
                 parts[k] = f"[`{part}`][sax.models.{short_part}]"
+            elif hasattr(sax.parsers, part):
+                parts[k] = f"[`{part}`][sax.parsers.{short_part}]"
             else:
                 parts[k] = f"`{part}`"
         lines[j] = "".join(parts)

@@ -21,6 +21,7 @@ dependencies = [
   "jax>=0.6.0",
   "jaxtyping>=0.2.38",
   "klujax>=0.4.1",
+  "lark>=1.2.2",
   "matplotlib>=3.0.0",
   "natsort>=8.0.0",
   "networkx>=3.0.0",
@@ -155,6 +156,10 @@ select = ["ALL"]
   "ARG001",  # unused-function-argument
   "ANN401",  # any-type
   "FBT001"  # boolean-type-hint-positional-argument
+]
+"src/sax/parsers/*.py" = [
+  "E501",  # line-too-long
+  "N802"  # invalid-function-name
 ]
 "src/sax/saxtypes/*.py" = [
   "ANN401"  # any-type
