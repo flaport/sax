@@ -51,6 +51,7 @@ from .core import (
     IOLike,
     Name,
 )
+from .custom_warnings import ExperimentalWarning
 from .into import (
     into,
     try_into,
@@ -131,6 +132,7 @@ __all__ = [
     "ComplexLike",
     "Component",
     "Connections",
+    "ExperimentalWarning",
     "Float",
     "FloatArray",
     "FloatArray1D",

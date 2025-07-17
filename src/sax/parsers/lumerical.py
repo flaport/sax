@@ -6,6 +6,7 @@ Based on the simphony lumerical parser.
 from __future__ import annotations
 
 import re
+import warnings
 from pathlib import Path
 from textwrap import dedent
 from typing import cast
@@ -32,6 +33,12 @@ def parse_lumerical_dat(content_or_filename: str | Path | sax.IOLike) -> pd.Data
     Note:
         This function was adapted from the `simphony` load_sparams function.
     """
+    msg = (
+        "The `parse_lumerical_dat` function is experimental. "
+        "If you encounter any issues, "
+        "Please file a bug report here: https://github.com/flaport/sax/issues ."
+    )
+    warnings.warn(msg, stacklevel=2, category=sax.ExperimentalWarning)
     content = sax.read(content_or_filename)
     _tree, df = cast(tuple[Tree, pd.DataFrame], _parser.parse(content))
     return df
