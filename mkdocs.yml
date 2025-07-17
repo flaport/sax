@@ -51,7 +51,8 @@ nav:
       - forward only:  nbs/examples/09_forward_only_backend.md
       - neff dispersion: nbs/examples/10_wavelength_dependent_neff.md
       - hierarchical circuits: nbs/examples/11_hierarchical_circuits.md
-      - surface models: nbs/examples/12_surface_models.md
+      - data parsers: nbs/examples/12_data_parsers.md
+      - surface models: nbs/examples/13_surface_models.md
   - internals:
       - backends: nbs/internals/03_backends.md
       - circuit: nbs/internals/02_circuit.md
