@@ -256,25 +256,26 @@ def _svgbob_source(
     return None
 
 
-def _insert_cross_refs(lines: list[str]) -> None:
+def _insert_cross_refs(lines: list[str]) -> None:  # noqa: C901
     """Insert cross-references in the markdown lines."""
-    for j, line in enumerate(lines):
+    cross_refs = {}
+    for line in lines:
         parts = line.split("`")
         for k, part in enumerate(parts):
             if k % 2 == 0:
                 continue
-            # This is inline code
             *first, short_part = part.split(".")
             if first and first[0] != "sax":
                 continue
             if hasattr(sax, short_part):
-                parts[k] = f"[`{part}`][sax.{short_part}]"
+                cross_refs[f"`{part}`"] = f"[`{part}`][sax.{short_part}]"
             elif hasattr(sax.fit, short_part):
-                parts[k] = f"[`{part}`][sax.fit.{short_part}]"
+                cross_refs[f"`{part}`"] = f"[`{part}`][sax.fit.{short_part}]"
             elif hasattr(sax.models, part):
-                parts[k] = f"[`{part}`][sax.models.{short_part}]"
+                cross_refs[f"`{part}`"] = f"[`{part}`][sax.models.{short_part}]"
             elif hasattr(sax.parsers, part):
-                parts[k] = f"[`{part}`][sax.parsers.{short_part}]"
-            else:
-                parts[k] = f"`{part}`"
-        lines[j] = "".join(parts)
+                cross_refs[f"`{part}`"] = f"[`{part}`][sax.parsers.{short_part}]"
+    for j, line in enumerate(lines):
+        for k, v in cross_refs.items():
+            line = line.replace(k, v)
+        lines[j] = line
