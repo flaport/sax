@@ -4,6 +4,7 @@ from __future__ import annotations
 
 from collections.abc import Iterable, Sequence
 from functools import partial
+from itertools import product
 from typing import cast
 
 import jax
@@ -12,6 +13,7 @@ import numpy as np
 import pandas as pd
 import xarray as xr
 from jaxtyping import Array
+from natsort import natsorted
 from numpy.typing import NDArray
 
 import sax
@@ -101,15 +103,33 @@ def to_xarray(
     return xr.DataArray(data=data, coords=params)
 
 
-def to_df(xarr: xr.DataArray, *, target_name: str = "target") -> pd.DataFrame:
-    """Converts a multi-dimensional xarray into a stacked dataframe."""
-    stacked = xarr.stack(__stacked_dim=xarr.dims)  # noqa: PD013
-    df = (
-        stacked.reset_index("__stacked_dim")
-        .to_dataframe(name=target_name)
-        .reset_index(drop=True)
-    )
-    return df
+def to_df(
+    obj: xr.DataArray | sax.SType,
+    *,
+    target_name: str = "target",
+    **kwargs: sax.ArrayLike,
+) -> pd.DataFrame:
+    """Converts an object into a stacked dataframe.
+
+    Args:
+        obj: an xarray or a sax.SType object.
+        target_name: the name of the target column
+            in the dataframe (ignored when obj is an SType).
+        kwargs: the coordinates of the SType values axes
+            (ignored when obj is an xarray).
+    """
+    if isinstance(obj, xr.DataArray):
+        xarr = obj
+        stacked = xarr.stack(__stacked_dim=xarr.dims)  # noqa: PD013
+        df = (
+            stacked.reset_index("__stacked_dim")
+            .to_dataframe(name=target_name)
+            .reset_index(drop=True)
+        )
+        return df
+
+    stype = obj
+    return _sdict_to_df(stype, **kwargs)
 
 
 def _evaluate_general_corner_model(
@@ -196,3 +216,61 @@ def _extract_strings(
         else:
             new_params[k] = np.array(v, dtype=float)
     return new_params, string_map
+
+
+def _sdict_to_df(stype: sax.SType, **coords: sax.ArrayLike) -> pd.DataFrame:
+    if not coords:
+        msg = "The coords of at least one dimension should be given."
+        raise ValueError(msg)
+    coords = {k: np.atleast_1d(v) for k, v in coords.items()}
+    sdict: sax.SDict = {k: jnp.atleast_1d(v) for k, v in sax.sdict(stype).items()}
+    sdict = dict(zip(sdict, jnp.broadcast_arrays(*sdict.values()), strict=True))
+    shape = jnp.asarray(next(iter(sdict.values()))).shape
+    if len(shape) != len(coords):
+        msg = "Specify at least one array of coordinates per dimension of the sdict."
+        raise ValueError(msg)
+    for i, (d, (k, a)) in enumerate(zip(shape, coords.items(), strict=True)):
+        if a.ndim != 1:
+            msg = f"Coords should be 1D arrays. {k}.ndim = {a.ndim}"
+            raise ValueError(msg)
+        if a.shape[0] != d:
+            msg = (
+                f"the length of coord {i} [len({k})={a.shape[0]}] should match "
+                f"the size of axis {i} [{d}] of each element in the sdict."
+            )
+            raise ValueError(msg)
+    ports, modes = set(), set()
+    for p1, p2 in sdict:
+        for p in [p1, p2]:
+            p, *m = p.split("@")
+            ports.add(p)
+            modes.add("".join(m))
+    ports = natsorted(ports)
+    modes = natsorted(modes)
+
+    sdict = {
+        k: jnp.stack([jnp.abs(v), jnp.angle(v)], axis=-1) for k, v in sdict.items()
+    }
+    coords["amp_phi"] = np.array(["amp", "phi"])
+
+    dfs = []
+    port_mode = lambda p, m: f"{p}@{m}" if m else p  # noqa: E731
+    zero = jnp.zeros_like(next(iter(sdict.values())))
+    for p1, m1, p2, m2 in product(ports, modes, ports, modes):
+        pm1, pm2 = port_mode(p1, m1), port_mode(p2, m2)
+        values = sdict.get((pm1, pm2), zero)
+        xarr = xr.DataArray(values, coords)
+        df = sax.to_df(xarr, target_name="amp")
+        phi = df["amp"].to_numpy()[1::2]
+        df = df.loc[::2, :].drop(columns=["amp_phi"]).reset_index(drop=True)
+        df["phi"] = phi
+        df["port_in"] = p1
+        df["port_out"] = p2
+        df["mode_in"] = m1 or "1"
+        df["mode_out"] = m2 or "1"
+        dfs.append(df)
+
+    df = pd.concat(dfs, axis=0)
+    columns = [*[c for c in df.columns if c not in ["amp", "phi"]], *["amp", "phi"]]
+
+    return cast(pd.DataFrame, df[columns].reset_index(drop=True))
