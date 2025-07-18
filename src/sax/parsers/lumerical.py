@@ -7,9 +7,11 @@ from __future__ import annotations
 
 import re
 import warnings
+from hashlib import md5
 from pathlib import Path
+from tempfile import gettempdir
 from textwrap import dedent
-from typing import cast
+from typing import cast, overload
 
 import numpy as np
 import pandas as pd
@@ -19,13 +21,20 @@ from typing_extensions import TypedDict
 
 import sax
 
+from .touchstone import _validate_columns
 
-def parse_lumerical_dat(content_or_filename: str | Path | sax.IOLike) -> pd.DataFrame:
+
+def parse_lumerical_dat(
+    content_or_filename: str | Path | sax.IOLike,
+    *,
+    convert_f_to_wl: bool = False,
+) -> pd.DataFrame:
     """Load S-parameters from a Lumerical .dat or .sparam file.
 
     Args:
         content_or_filename: Content as string (if contains newlines), file path,
             or file-like object with read() method.
+        convert_f_to_wl: If True, convert frequency to wavelength.
 
     Returns:
         a pandas DataFrame with the S-parameters.
@@ -41,7 +50,84 @@ def parse_lumerical_dat(content_or_filename: str | Path | sax.IOLike) -> pd.Data
     warnings.warn(msg, stacklevel=2, category=sax.ExperimentalWarning)
     content = sax.read(content_or_filename)
     _tree, df = cast(tuple[Tree, pd.DataFrame], _parser.parse(content))
-    return df.rename(columns={"phase": "phi"})
+    df = df.rename(columns={"phase": "phi"})
+    x = "f"
+    if convert_f_to_wl:
+        x = "wl"
+        df["wl"] = sax.C_UM_S / df.pop("f")
+    df["amp"] = df.pop("mag")
+    return cast(
+        pd.DataFrame,
+        df[[x, "port_in", "port_out", "mode_in", "mode_out", "amp", "phi"]],
+    )
+
+
+@overload
+def write_lumerical_dat(df: pd.DataFrame, path: None) -> str: ...
+
+
+@overload
+def write_lumerical_dat(df: pd.DataFrame, path: str | Path) -> Path: ...
+
+
+def write_lumerical_dat(
+    df: pd.DataFrame,
+    path: str | Path | None = None,
+) -> Path | str:
+    """Write S-parameters to a Lumerical .dat or .sparam file.
+
+    Args:
+        df: DataFrame in tidy format containing S-parameters.
+        path: Path to the output file. If None, the string content is returned
+
+    Returns:
+        Path to the written file or string content if path is None.
+    """
+    temppath = None
+    if path is None:
+        temppath = path = (
+            Path(gettempdir()).resolve()
+            / "sax"
+            / f"write_lumerical_{md5(df.to_numpy().tobytes()).hexdigest()}.dat"
+        )
+    in_amp_phi_format, in_wl_format = _validate_columns(df)
+    modes = {*df["mode_in"], *df["mode_out"]}
+    if in_amp_phi_format:
+        df["s"] = df["amp"] * np.exp(1j * df["phi"])
+        df = df.drop(columns=["amp", "phi"])
+    else:
+        df["s"] = df["re"] + 1j * df["im"]
+        df = df.drop(columns=["re", "im"])
+    if len(modes) > 1:
+        df["port_in"] = [
+            f"{p}@{m}" for p, m in zip(df["port_in"], df["mode_in"], strict=True)
+        ]
+        df["port_out"] = [
+            f"{p}@{m}" for p, m in zip(df["port_out"], df["mode_out"], strict=True)
+        ]
+    df = df.drop(columns=["mode_in", "mode_out"])
+    if in_wl_format:
+        df["f"] = sax.C_UM_S / df.pop("wl")
+    df = cast(pd.DataFrame, df[["f", "port_in", "port_out", "s"]])
+    xarr = sax.to_xarray(df, target_names=["s"])
+    freq = xarr.coords["f"].to_numpy()
+    sparams = xarr.to_numpy()[:, :, :, 0]
+    buf = Path(path).open("a")  # noqa: SIM115
+    try:
+        d = sparams.shape[1]
+        for in_ in range(d):
+            for out in range(d):
+                sp = sparams[:, in_, out]
+                temp = np.vstack((freq, np.abs(sp), np.unwrap(np.angle(sp)))).T
+                header = f'("port {out + 1}", "TE", 1, "port {in_ + 1}", 1, "transmission")\n'
+                header += f"{temp.shape}"
+                np.savetxt(buf, temp, header=header, comments="")
+    finally:
+        buf.close()
+
+    if temppath:
+        return temppath.read_text()
+    return Path(path).resolve()
 
 
 class _SparamsTransformer(Transformer):
@@ -55,7 +141,7 @@ class _SparamsTransformer(Transformer):
         self, ports: _PortsDict, shape: tuple[int, int], values: NDArray[np.float64]
     ) -> pd.DataFrame:
         sweepparams = ports["sweepparams"] or []
-        columns = np.array([*sweepparams, "freq", "mag", "phase"])
+        columns = np.array([*sweepparams, "f", "mag", "phase"])
         df = pd.DataFrame(values, columns=columns)
         rows, _ = shape
         if ports["groupdelay"] is not None:
@@ -63,7 +149,7 @@ class _SparamsTransformer(Transformer):
                 2
                 * np.pi
                 * float(ports["groupdelay"])
-                * (df.loc[:, "freq"] - df.loc[int(rows / 2), "freq"])
+                * (df.loc[:, "f"] - df.loc[int(rows / 2), "f"])
             )
             df.loc[:, "phase"] += groupshift
         df.loc[:, "port_out"] = ports["port_out"]
@@ -150,10 +236,6 @@ def _clean_string(s: str, dot: str = "p", minus: str = "m", other: str = "_") ->
         msg = f"failed to clean string to a valid python identifier: {s}"
         raise ValueError(msg)
     return s
-
-
-def _wl2freq(wl: NDArray[np.float64]) -> NDArray[np.float64]:
-    return sax.C_M_S / wl
 
 
 def _destring(string: str) -> str:

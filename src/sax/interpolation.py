@@ -82,6 +82,7 @@ def to_xarray(
         stacked_data: the data to convert
         target_names: the names of the target columns.
     """
+    target_names = list(target_names)
     df = stacked_data.copy()
     for name in target_names:
         if name not in df.columns:

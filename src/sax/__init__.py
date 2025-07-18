@@ -170,6 +170,7 @@ from .utils import (
     replace_kwargs,
     unflatten_dict,
     update_settings,
+    wide_to_tidy,
 )
 from .multimode import (
     multimode,
@@ -214,7 +215,12 @@ from .interpolation import (
 )
 
 from . import fit
-from . import parsers
+from .parsers import (
+    parse_lumerical_dat,
+    parse_touchstone,
+    write_lumerical_dat,
+    write_touchstone,
+)
 from . import models
 
 
@@ -383,6 +389,8 @@ __all__ = [  # noqa: RUF022
     "netlist",
     "normalization",
     "normalize",
+    "parse_lumerical_dat",
+    "parse_touchstone",
     "parsers",
     "read",
     "reciprocal",
@@ -399,9 +407,12 @@ __all__ = [  # noqa: RUF022
     "try_into",
     "unflatten_dict",
     "update_settings",
+    "wide_to_tidy",
     "wl_c",
     "wl_e",
     "wl_l",
     "wl_o",
     "wl_s",
+    "write_lumerical_dat",
+    "write_touchstone",
 ]
