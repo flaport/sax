@@ -5,7 +5,7 @@ from __future__ import annotations
 import inspect
 import re
 import warnings
-from collections.abc import Callable, Iterator
+from collections.abc import Callable, Iterable, Iterator
 from copy import deepcopy
 from functools import partial, wraps
 from hashlib import md5
@@ -16,6 +16,7 @@ import jax
 import jax.numpy as jnp
 import numpy as np
 import orjson
+import pandas as pd
 import yaml
 from numpy.exceptions import ComplexWarning
 
@@ -776,6 +777,70 @@ def denormalize(x: sax.ComplexArray, normalization: Normalization) -> sax.Comple
     return x * std + mean
 
 
+def wide_to_tidy(df: pd.DataFrame, ports: Iterable[str] | None = None) -> pd.DataFrame:
+    """Convert a wide-format S-parameter DataFrame to tidy format.
+
+    Args:
+        df: Wide-format DataFrame with columns for wavelength, real, and imaginary
+            parts of S-parameters.
+        ports: Optional list of port names. If not provided, ports will be
+            automatically generated as "o1", "o2", etc.
+
+    Returns:
+        Tidy-format DataFrame with columns:
+            - 'wl': Wavelength values.
+            - 'port_in': Input port names.
+            - 'port_out': Output port names.
+            - 'mode_in': Input mode labels.
+            - 'mode_out': Output mode labels.
+            - 're': Real part of S-parameters.
+            - 'im': Imaginary part of S-parameters.
+    """
+    df.columns = [re.sub("[^a-z0-9]", "", c.lower()) for c in df.columns]
+    df_im = df[["wl", *[c for c in df.columns if "im" in c]]]
+    df_im = df_im.melt(id_vars="wl", value_name="im")
+    if df_im.shape[0] == 0:
+        msg = (
+            "Given wide dataframe columns does not seem have columns "
+            "with a 'im' (imaginary) marker."
+        )
+        raise ValueError(msg)
+    df = cast(pd.DataFrame, df[["wl", *[c for c in df.columns if "re" in c]]])
+    df = df.melt(id_vars="wl", value_name="re")
+    if df.shape[0] == 0:
+        msg = (
+            "Given wide dataframe columns does not seem have columns "
+            "with a 're' (real) marker."
+        )
+        raise ValueError(msg)
+    port_idxs = [_get_port_idx_combos(s) for s in df["variable"]]
+    port_idxs = sorted({idx for idxs in port_idxs for idx in idxs})
+    if not ports:
+        ports = [f"o{i + 1}" for i in port_idxs]
+    else:
+        ports = list(ports)
+        for idx in port_idxs:
+            try:
+                ports[idx]
+            except KeyError as e:
+                msg = (
+                    f"Cannot map port index {idx} to a port name. "
+                    "is the given list of ports long enough?"
+                )
+                raise ValueError(msg) from e
+    port_combos = [_get_port_combos(s, ports) for s in df["variable"]]
+    df["port_in"] = [_get_port(p) for p, _ in port_combos]
+    df["mode_in"] = [_get_mode(p) for p, _ in port_combos]
+    df["port_out"] = [_get_port(q) for _, q in port_combos]
+    df["mode_out"] = [_get_mode(q) for _, q in port_combos]
+    df["im"] = df_im["im"]
+    df = cast(
+        pd.DataFrame,
+        df[["wl", "port_in", "port_out", "mode_in", "mode_out", "re", "im"]],
+    )
+    return df
+
+
 def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]:
     # inspired by https://stackoverflow.com/questions/7204805/how-to-merge-dictionaries-of-dictionaries
     keys = {
@@ -880,3 +945,24 @@ def _numpyfy(obj: Any) -> Any:  # noqa: ANN401
     if not isinstance(obj, dict):
         return np.asarray(obj)
     return {k: _numpyfy(v) for k, v in obj.items()}
+
+
+def _get_port_idx_combos(s: str) -> tuple[int, int]:
+    match1, match2, *_ = list(re.finditer("[0-9]", s))
+    idx1 = int(match1.group()) - 1
+    idx2 = int(match2.group()) - 1
+    return idx1, idx2
+
+
+def _get_port_combos(s: str, ports: list[str]) -> tuple[str, str]:
+    i, j = _get_port_idx_combos(s)
+    return ports[i], ports[j]
+
+
+def _get_port(pm: str) -> str:
+    return pm.split("@")[0]
+
+
+def _get_mode(pm: str) -> str:
+    _, *m = pm.split("@")
+    return "".join(m) or "1"
