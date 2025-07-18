@@ -1,3 +1,21 @@
+<a id="0.15.12"></a>
+# [0.15.12](https://github.com/flaport/sax/releases/tag/0.15.12) - 2025-07-18
+
+# What's Changed
+
+## New
+
+- improve parsers and add writers [#63](https://github.com/$OWNER/$REPOSITORY/pull/63)
+
+## Documentation
+
+- improve parsers and add writers [#63](https://github.com/$OWNER/$REPOSITORY/pull/63)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.11...0.15.12
+
+[Changes][0.15.12]
+
+
 <a id="0.15.11"></a>
 # [0.15.11](https://github.com/flaport/sax/releases/tag/0.15.11) - 2025-07-17
 
@@ -730,6 +748,7 @@
 [Changes][0.8.7]
 
 
+[0.15.12]: https://github.com/flaport/sax/compare/0.15.11...0.15.12
 [0.15.11]: https://github.com/flaport/sax/compare/0.15.10...0.15.11
 [0.15.10]: https://github.com/flaport/sax/compare/0.15.9...0.15.10
 [0.15.9]: https://github.com/flaport/sax/compare/0.15.8...0.15.9
