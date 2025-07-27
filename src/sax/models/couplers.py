@@ -260,8 +260,11 @@ def grating_coupler(
     ```
 
     Note:
-        The transmission profile follows a Gaussian shape:
-        T(λ) = T₀ * exp(-((λ-λ₀)/σ)²)
+        The transmission power profile follows a Gaussian shape:
+        P(λ) = P₀ * exp(-((λ-λ₀)/σ)²)
+
+        The amplitude transmission is:
+        A(λ) = A₀ * exp(-((λ-λ₀)/σ)²/2)
 
         Where σ = bandwidth / (2*√(2*ln(2))) converts FWHM to Gaussian width.
 
@@ -277,9 +280,10 @@ def grating_coupler(
     one = jnp.ones_like(wl)
     reflection = jnp.asarray(reflection) * one
     reflection_fiber = jnp.asarray(reflection_fiber) * one
-    amplitude = jnp.asarray(10 ** (-loss / 20))
-    sigma = jnp.asarray(bandwidth / (2 * jnp.sqrt(2 * jnp.log(2))))
-    transmission = jnp.asarray(amplitude * jnp.exp(-((wl - wl0) ** 2) / (2 * sigma**2)))
+    amplitude = jnp.asarray(10 ** (-loss / 20)) * one
+    wl0_array = jnp.asarray(wl0) * one
+    sigma = jnp.asarray(bandwidth / (2 * jnp.sqrt(2 * jnp.log(2)))) * one
+    transmission = amplitude * jnp.exp(-((wl - wl0_array) ** 2) / (4 * sigma**2))
     p = sax.PortNamer(1, 1)
     return sax.reciprocal(
         {
