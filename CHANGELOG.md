@@ -1,3 +1,17 @@
+<a id="0.15.13"></a>
+# [0.15.13](https://github.com/flaport/sax/releases/tag/0.15.13) - 2025-07-28
+
+# What's Changed
+
+## Other changes
+
+- fix bandwidth for gc [#64](https://github.com/$OWNER/$REPOSITORY/pull/64)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.12...0.15.13
+
+[Changes][0.15.13]
+
+
 <a id="0.15.12"></a>
 # [0.15.12](https://github.com/flaport/sax/releases/tag/0.15.12) - 2025-07-18
 
@@ -748,6 +762,7 @@
 [Changes][0.8.7]
 
 
+[0.15.13]: https://github.com/flaport/sax/compare/0.15.12...0.15.13
 [0.15.12]: https://github.com/flaport/sax/compare/0.15.11...0.15.12
 [0.15.11]: https://github.com/flaport/sax/compare/0.15.10...0.15.11
 [0.15.10]: https://github.com/flaport/sax/compare/0.15.9...0.15.10
