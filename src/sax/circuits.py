@@ -166,6 +166,7 @@ def circuit(
             flatnet["instances"],
             flatnet.get("connections", {}),
             flatnet["ports"],
+            flatnet.get("placements", {}),
             current_models,
             _backend,
             ignore_impossible_connections=ignore_impossible_connections,
@@ -301,6 +302,7 @@ def _flat_circuit(
     instances: sax.Instances,
     connections: sax.Connections,
     ports: sax.Ports,
+    placements: sax.Placements,
     models: sax.Models,
     backend: sax.Backend,
     *,
@@ -335,6 +337,9 @@ def _flat_circuit(
         }
         for name, inst in instances.items()
     }
+    for name, settings in netlist_settings.items():
+        if "placement" in settings:
+            settings["placement"] = sax.into[sax.Placement](placements.get(name, {}))
     default_settings = merge_dicts(model_settings, netlist_settings)
     default_settings = {_strip_array_index(k): v for k, v in default_settings.items()}
     analyzed = analyze_fn(dummy_instances, connections, ports)

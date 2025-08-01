@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import warnings
 from functools import partial
-from typing import Annotated, Any, Literal, NotRequired, TypeAlias
+from typing import Annotated, Any, NotRequired, TypeAlias, cast
 
 from typing_extensions import TypedDict
 
@@ -31,6 +31,7 @@ __all__ = [
     "Placements",
     "Ports",
     "RecursiveNetlist",
+    "default_placement",
 ]
 
 
@@ -154,6 +155,49 @@ Attributes:
 Instances: TypeAlias = dict[InstanceName, Instance]
 """A mapping from instance names to their definitions."""
 
+
+def val_placement(obj: Any) -> Placement:
+    """Validate and normalize a placement definition.
+
+    Args:
+        obj: The object to validate as a placement definition.
+
+    Returns:
+        A validated placement dictionary with x, y, rotation, and mirror.
+
+    Note:
+        The placement definition is significantly simplified compared to the
+        GDSFactory placement definition.
+    """
+    placement = {}
+    if not isinstance(obj, dict):
+        obj = {}
+    placement["x"] = (obj.get("x") or 0.0) + (obj.get("dx") or 0.0)
+    placement["y"] = (obj.get("y") or 0.0) + (obj.get("dy") or 0.0)
+    placement["rotation"] = round(obj.get("rotation") or 0.0) % 360
+    placement["mirror"] = bool(obj.get("mirror") or False)
+    return cast(Placement, placement)
+
+
+Placement = Annotated[
+    TypedDict(
+        "Placement",
+        {
+            "x": float,
+            "y": float,
+            "rotation": int,
+            "mirror": bool,
+        },
+    ),
+    val(val_placement),
+]
+"""A placement definition for an instance in a netlist."""
+
+Placements: TypeAlias = dict[InstanceName, Placement]
+"""A mapping from instance names to their placements."""
+
+default_placement: Placement = {"x": 0.0, "y": 0.0, "rotation": 0, "mirror": False}
+
 Connections: TypeAlias = dict[InstancePort, InstancePort]
 """A mapping defining point-to-point connections between instance ports."""
 
@@ -193,68 +237,6 @@ def val_ports(obj: Any) -> Ports:
 
 Ports: TypeAlias = Annotated[dict[Port, InstancePort], val(val_ports)]
 """A mapping from external circuit ports to internal instance ports."""
-
-_PortPlacement: TypeAlias = Literal[
-    "ce", "cw", "nc", "ne", "nw", "sc", "se", "sw", "cc", "center"
-]
-
-
-Placement = Annotated[
-    TypedDict(
-        "Placement",
-        {
-            "x": str | float,
-            "y": str | float,
-            "dx": NotRequired[str | float],
-            "dy": NotRequired[str | float],
-            "rotation": NotRequired[float],
-            "mirror": NotRequired[bool],
-            "xmin": NotRequired[str | float | None],
-            "xmax": NotRequired[str | float | None],
-            "ymin": NotRequired[str | float | None],
-            "ymax": NotRequired[str | float | None],
-            "port": NotRequired[str | _PortPlacement | None],
-        },
-    ),
-    bval(
-        extract_fields,
-        fields=(
-            "x",
-            "y",
-            "dx",
-            "dy",
-            "rotation",
-            "mirror",
-            "xmin",
-            "xmax",
-            "ymin",
-            "ymax",
-            "port",
-        ),
-    ),
-]
-"""Physical placement information for an instance.
-
-Defines the position, orientation, and constraints for placing
-an instance in physical layout coordinates.
-
-Attributes:
-    x: X coordinate position.
-    y: Y coordinate position.
-    dx: Optional X offset.
-    dy: Optional Y offset.
-    rotation: Optional rotation angle in degrees.
-    mirror: Optional mirroring flag.
-    xmin: Optional minimum X constraint.
-    xmax: Optional maximum X constraint.
-    ymin: Optional minimum Y constraint.
-    ymax: Optional maximum Y constraint.
-    port: Optional port anchor specification.
-"""
-
-
-Placements: TypeAlias = dict[InstanceName, Placement]
-"""A mapping from instance names to their physical placements."""
 
 
 Net = Annotated[

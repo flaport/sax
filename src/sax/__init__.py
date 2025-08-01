@@ -102,6 +102,7 @@ from .saxtypes import (
     STypeSM,
     Settings,
     SettingsValue,
+    default_placement,
     into,
     try_into,
 )
@@ -357,6 +358,7 @@ __all__ = [  # noqa: RUF022
     "circuit",
     "circuit_backends",
     "clean_string",
+    "default_placement",
     "denormalize",
     "draw_dag",
     "evaluate_circuit",

@@ -88,6 +88,7 @@ from .netlist import (
     Placements,
     Ports,
     RecursiveNetlist,
+    default_placement,
 )
 from .settings import (
     Settings,
@@ -212,6 +213,7 @@ __all__ = [
     "STypeSM",
     "Settings",
     "SettingsValue",
+    "default_placement",
     "into",
     "try_into",
 ]
