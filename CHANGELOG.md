@@ -1,3 +1,17 @@
+<a id="0.15.14"></a>
+# [0.15.14](https://github.com/flaport/sax/releases/tag/0.15.14) - 2025-08-01
+
+# What's Changed
+
+## New
+
+- placement parameter for model [#65](https://github.com/flaport/sax/pull/65)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.13...0.15.14
+
+[Changes][0.15.14]
+
+
 <a id="0.15.13"></a>
 # [0.15.13](https://github.com/flaport/sax/releases/tag/0.15.13) - 2025-07-28
 
@@ -762,6 +776,7 @@
 [Changes][0.8.7]
 
 
+[0.15.14]: https://github.com/flaport/sax/compare/0.15.13...0.15.14
 [0.15.13]: https://github.com/flaport/sax/compare/0.15.12...0.15.13
 [0.15.12]: https://github.com/flaport/sax/compare/0.15.11...0.15.12
 [0.15.11]: https://github.com/flaport/sax/compare/0.15.10...0.15.11
