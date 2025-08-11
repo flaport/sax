@@ -1,4 +1,5 @@
 # files
+*.DS_Store
 *.c
 *.cover
 *.egg
@@ -24,7 +25,6 @@
 .scrapy
 .spyderproject
 .spyproject
-.venv
 .webassets-cache
 MANIFEST
 celerybeat-schedule
@@ -37,6 +37,7 @@ ipython_config.py
 local_settings.py
 neff_data.csv
 nosetests.xml
+package-lock.json
 pip-delete-this-directory.txt
 pip-log.txt
 uv.lock
@@ -49,6 +50,9 @@ uv.lock
 .nox/
 .pytest_cache/
 .tox/
+.venv/
+.virtual_documents/
+.vscode/
 ENV/
 __pycache__/
 __pypackages__/
@@ -62,11 +66,13 @@ eggs/
 env.bak/
 env/
 extra/
+failed/
 htmlcov/
 instance/
 lib/
 lib64/
 modes/
+node_modules/
 parts/
 pip-wheel-metadata/
 profile_default/
@@ -79,4 +85,3 @@ venv.bak/
 venv/
 wheelhouse/
 wheels/
-failed/
