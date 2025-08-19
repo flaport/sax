@@ -90,7 +90,8 @@ dev = [
   "ty>=0.0.1a11",
   "nbstripout>=0.8.1",
   "mkdocs-matplotlib",
-  "scikit-rf>=1.8.0"
+  "scikit-rf>=1.8.0",
+  "pydot>=4.0.1"
 ]
 
 [tool.pytest.ini_options]
