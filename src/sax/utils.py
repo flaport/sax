@@ -10,7 +10,16 @@ from copy import deepcopy
 from functools import partial, wraps
 from hashlib import md5
 from pathlib import Path
-from typing import Any, NamedTuple, TypeVar, cast, overload
+from typing import (
+    Any,
+    NamedTuple,
+    TypeVar,
+    Unpack,
+    cast,
+    get_args,
+    get_origin,
+    overload,
+)
 
 import jax
 import jax.numpy as jnp
@@ -42,6 +51,7 @@ __all__ = [
     "rename_params",
     "rename_ports",
     "replace_kwargs",
+    "same_args_as",
     "unflatten_dict",
     "update_settings",
 ]
@@ -257,7 +267,7 @@ def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
 
     Inspects a model function's signature to extract default parameter values.
     This is useful for understanding what parameters a model accepts and their
-    default values.
+    default values. Also supports Unpack[TypedDict] annotations on **kwargs.
 
     Args:
         model: SAX model function or model factory to inspect.
@@ -276,11 +286,40 @@ def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
         ```
     """
     signature = inspect.signature(model)
-    settings: sax.Settings = {
-        k: (v.default if not isinstance(v, dict) else v)
-        for k, v in signature.parameters.items()
-        if v.default is not inspect.Parameter.empty
-    }
+    settings: sax.Settings = {}
+
+    for k, v in signature.parameters.items():
+        # Handle regular parameters with defaults
+        if v.default is not inspect.Parameter.empty:
+            settings[k] = v.default
+            continue
+
+        # Handle **kwargs with Unpack[TypedDict]
+        if (
+            v.kind == inspect.Parameter.VAR_KEYWORD
+            and v.annotation is not inspect.Parameter.empty
+        ):
+            origin = get_origin(v.annotation)
+            if origin is Unpack:
+                args = get_args(v.annotation)
+                if args and len(args) > 0:
+                    typed_dict_cls = args[0]
+                    # Check if it's a TypedDict by looking for __annotations__
+                    if hasattr(typed_dict_cls, "__annotations__"):
+                        annotations = typed_dict_cls.__annotations__
+                        for field_name in annotations:
+                            # Check if there's a default value (Python 3.13+)
+                            try:
+                                default_value = getattr(typed_dict_cls, field_name)
+                                # Verify it's not a method or function
+                                if not inspect.ismethod(
+                                    default_value
+                                ) and not inspect.isfunction(default_value):
+                                    settings[field_name] = default_value
+                            except AttributeError:
+                                # Field has no default value
+                                pass
+
     return cast(sax.Settings, settings)
 
 
@@ -839,6 +878,26 @@ def wide_to_tidy(df: pd.DataFrame, ports: Iterable[str] | None = None) -> pd.Dat
         df[["wl", "port_in", "port_out", "mode_in", "mode_out", "re", "im"]],
     )
     return df
+
+
+def same_args_as(
+    func: Callable[..., T],
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
+    """Have the same signature as the wrapped function."""
+
+    def decorator(wrapped_func: Callable[..., T]) -> Callable[..., T]:
+        name = wrapped_func.__name__
+        qualname = wrapped_func.__qualname__
+        module = wrapped_func.__module__
+        doc = wrapped_func.__doc__
+        new_func = wraps(func)(wrapped_func)
+        new_func.__name__ = name
+        new_func.__qualname__ = qualname
+        new_func.__module__ = module
+        new_func.__doc__ = doc
+        return new_func
+
+    return decorator
 
 
 def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]:
