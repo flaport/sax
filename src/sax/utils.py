@@ -51,6 +51,7 @@ __all__ = [
     "rename_params",
     "rename_ports",
     "replace_kwargs",
+    "same_args_as",
     "unflatten_dict",
     "update_settings",
 ]
@@ -877,6 +878,26 @@ def wide_to_tidy(df: pd.DataFrame, ports: Iterable[str] | None = None) -> pd.Dat
         df[["wl", "port_in", "port_out", "mode_in", "mode_out", "re", "im"]],
     )
     return df
+
+
+def same_args_as(
+    func: Callable[..., T],
+) -> Callable[[Callable[..., T]], Callable[..., T]]:
+    """Have the same signature as the wrapped function."""
+
+    def decorator(wrapped_func: Callable[..., T]) -> Callable[..., T]:
+        name = wrapped_func.__name__
+        qualname = wrapped_func.__qualname__
+        module = wrapped_func.__module__
+        doc = wrapped_func.__doc__
+        new_func = wraps(func)(wrapped_func)
+        new_func.__name__ = name
+        new_func.__qualname__ = qualname
+        new_func.__module__ = module
+        new_func.__doc__ = doc
+        return new_func
+
+    return decorator
 
 
 def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]:
