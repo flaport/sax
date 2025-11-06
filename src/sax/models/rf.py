@@ -13,8 +13,8 @@ import sax
 @validate_call
 def gamma_0_load(
     f: sax.FloatArrayLike = 5e9,
-    gamma_0: complex = 0,
-    n_ports: int = 1,
+    gamma_0: sax.ComplexLike = 0,
+    n_ports: sax.IntLike = 1,
 ) -> sax.SDict:
     r"""Connection with given reflection coefficient.
 
@@ -62,6 +62,7 @@ def gamma_0_load(
 
 
 @jax.jit
+@validate_call
 def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
     """Ideal three-port RF power divider/combiner (T-junction).
 
@@ -102,7 +103,8 @@ def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
 
 
 @jax.jit
-def impedance(z: complex = 50, z0: complex = 50) -> sax.SDict:
+@validate_call
+def impedance(z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50) -> sax.SDict:
     r"""Generalized two-port impedance element.
 
     Args:
@@ -141,7 +143,8 @@ def impedance(z: complex = 50, z0: complex = 50) -> sax.SDict:
 
 
 @jax.jit
-def admittance(y: complex = 1 / 50) -> sax.SDict:
+@validate_call
+def admittance(y: sax.ComplexLike = 1 / 50) -> sax.SDict:
     r"""Generalized two-port admittance element.
 
     Args:
@@ -179,10 +182,11 @@ def admittance(y: complex = 1 / 50) -> sax.SDict:
 
 
 @jax.jit
+@validate_call
 def capacitor(
     f: sax.FloatArrayLike = 5e9,
-    capacitance: float = 1e-15,
-    z0: complex = 50,
+    capacitance: sax.FloatLike = 1e-15,
+    z0: sax.ComplexLike = 50,
 ) -> sax.SDict:
     r"""Ideal two-port capacitor model.
 
@@ -220,10 +224,11 @@ def capacitor(
 
 
 @jax.jit
+@validate_call
 def inductor(
     f: sax.FloatArrayLike = 5e9,
-    inductance: float = 1e-12,
-    z0: complex = 50,
+    inductance: sax.FloatLike = 1e-12,
+    z0: sax.ComplexLike = 50,
 ) -> sax.SDict:
     r"""Ideal two-port inductor model.
 
