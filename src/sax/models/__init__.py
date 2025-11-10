@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+from . import rf
 from .bends import (
     bend,
 )
@@ -53,6 +54,7 @@ __all__ = [
     "model_4port",
     "passthru",
     "phase_shifter",
+    "rf",
     "splitter_ideal",
     "straight",
     "unitary",

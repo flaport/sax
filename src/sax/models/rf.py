@@ -4,13 +4,11 @@ from functools import partial
 
 import jax
 import jax.numpy as jnp
-from pydantic import validate_call
 
 import sax
 
 
-@partial(jax.jit, static_argnames=("n_ports"))
-@validate_call
+@partial(jax.jit, static_argnames=("n_ports",))
 def gamma_0_load(
     f: sax.FloatArrayLike = 5e9,
     gamma_0: sax.ComplexLike = 0,
@@ -62,7 +60,6 @@ def gamma_0_load(
 
 
 @jax.jit
-@validate_call
 def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
     """Ideal three-port RF power divider/combiner (T-junction).
 
@@ -103,17 +100,22 @@ def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
 
 
 @jax.jit
-@validate_call
-def impedance(z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50) -> sax.SDict:
+def impedance(
+    f: sax.FloatArrayLike, z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50
+) -> sax.SDict:
     r"""Generalized two-port impedance element.
 
     Args:
+        f: Frequency in Hz
         z: Impedance in Ω
         z0: Reference impedance in Ω.
 
     Returns:
         S-dictionary representing the impedance element
 
+    References:
+        [@pozar2012]
+
     Examples:
         ```python
         # mkdocs: render
@@ -124,7 +126,7 @@ def impedance(z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50) -> sax.SDict:
         sax.set_port_naming_strategy("optical")
 
         f = np.linspace(1e9, 10e9, 500)
-        s = sax.models.rf.impedance(z=75, z0=50)
+        s = sax.models.rf.impedance(f=f, z=75, z0=50)
         plt.figure()
         plt.plot(f / 1e9, np.abs(s[("o1", "o1")]), label="|S11|")
         plt.plot(f / 1e9, np.abs(s[("o1", "o2")]), label="|S12|")
@@ -134,25 +136,29 @@ def impedance(z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50) -> sax.SDict:
         plt.legend()
         ```
     """
+    f = jnp.asarray(f)
     sdict = {
-        ("o1", "o1"): jnp.asarray(z / (z + 2 * z0)),
-        ("o1", "o2"): jnp.asarray(2 * z0 / (2 * z0 + z)),
-        ("o2", "o2"): jnp.asarray(z / (z + 2 * z0)),
+        ("o1", "o1"): jnp.full(f.shape, z / (z + 2 * z0)),
+        ("o1", "o2"): jnp.full(f.shape, 2 * z0 / (2 * z0 + z)),
+        ("o2", "o2"): jnp.full(f.shape, z / (z + 2 * z0)),
     }
     return sax.reciprocal(sdict)
 
 
 @jax.jit
-@validate_call
-def admittance(y: sax.ComplexLike = 1 / 50) -> sax.SDict:
+def admittance(f: sax.FloatArrayLike, y: sax.ComplexLike = 1 / 50) -> sax.SDict:
     r"""Generalized two-port admittance element.
 
     Args:
+        f: Frequency in Hz
         y: Admittance in siemens
 
     Returns:
         S-dictionary representing the admittance element
 
+    References:
+        [@pozar2012]
+
     Examples:
         ```python
         # mkdocs: render
@@ -163,7 +169,7 @@ def admittance(y: sax.ComplexLike = 1 / 50) -> sax.SDict:
         sax.set_port_naming_strategy("optical")
 
         f = np.linspace(1e9, 10e9, 500)
-        s = sax.models.rf.admittance(y=1 / 75)
+        s = sax.models.rf.admittance(f=f, y=1 / 75)
         plt.figure()
         plt.plot(f / 1e9, np.abs(s[("o1", "o1")]), label="|S11|")
         plt.plot(f / 1e9, np.abs(s[("o1", "o2")]), label="|S12|")
@@ -173,16 +179,16 @@ def admittance(y: sax.ComplexLike = 1 / 50) -> sax.SDict:
         plt.legend()
         ```
     """
+    f = jnp.asarray(f)
     sdict = {
-        ("o1", "o1"): jnp.asarray(1 / (1 + y)),
-        ("o1", "o2"): jnp.asarray(y / (1 + y)),
-        ("o2", "o2"): jnp.asarray(1 / (1 + y)),
+        ("o1", "o1"): jnp.full(f.shape, 1 / (1 + y)),
+        ("o1", "o2"): jnp.full(f.shape, y / (1 + y)),
+        ("o2", "o2"): jnp.full(f.shape, 1 / (1 + y)),
     }
     return sax.reciprocal(sdict)
 
 
-@jax.jit
-@validate_call
+@partial(jax.jit, static_argnames=("capacitance",))
 def capacitor(
     f: sax.FloatArrayLike = 5e9,
     capacitance: sax.FloatLike = 1e-15,
@@ -197,6 +203,9 @@ def capacitor(
 
     Returns:
         S-dictionary representing the capacitor element
+
+    References:
+        [@pozar2012]
 
     Examples:
         ```python
@@ -220,11 +229,10 @@ def capacitor(
     """
     angular_frequency = 2 * jnp.pi * jnp.asarray(f)
     capacitor_impedance = 1 / (1j * angular_frequency * capacitance)
-    return impedance(z=capacitor_impedance, z0=z0)
+    return impedance(f=f, z=capacitor_impedance, z0=z0)
 
 
-@jax.jit
-@validate_call
+@partial(jax.jit, static_argnames=("inductance",))
 def inductor(
     f: sax.FloatArrayLike = 5e9,
     inductance: sax.FloatLike = 1e-12,
@@ -239,6 +247,9 @@ def inductor(
 
     Returns:
         S-dictionary representing the inductor element
+
+    References:
+        [@pozar2012]
 
     Examples:
         ```python
@@ -262,4 +273,4 @@ def inductor(
     """
     angular_frequency = 2 * jnp.pi * jnp.asarray(f)
     inductor_impedance = 1j * angular_frequency * inductance
-    return impedance(z=inductor_impedance, z0=z0)
+    return impedance(f=f, z=inductor_impedance, z0=z0)
