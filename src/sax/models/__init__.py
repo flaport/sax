@@ -27,13 +27,6 @@ from .mmis import (
     mmi2x2,
     mmi2x2_ideal,
 )
-from .rf import (
-    admittance,
-    capacitor,
-    gamma_0_load,
-    impedance,
-    inductor,
-)
 from .splitters import (
     splitter_ideal,
 )
@@ -44,18 +37,13 @@ from .straight import (
 )
 
 __all__ = [
-    "admittance",
     "attenuator",
     "bend",
-    "capacitor",
     "copier",
     "coupler",
     "coupler_ideal",
     "crossing_ideal",
-    "gamma_0_load",
     "grating_coupler",
-    "impedance",
-    "inductor",
     "mmi1x2",
     "mmi1x2_ideal",
     "mmi2x2",
