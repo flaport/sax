@@ -62,6 +62,7 @@ nav:
       - sax: api.md
       - sax.fit: fit.md
       - sax.models: models.md
+      - sax.models.rf: models_rf.md
   - changelog: changelog.md
 
 extra_css:
