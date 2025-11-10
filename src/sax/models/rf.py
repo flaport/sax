@@ -114,6 +114,9 @@ def impedance(z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50) -> sax.SDict:
     Returns:
         S-dictionary representing the impedance element
 
+    References:
+        [@pozar2012]
+
     Examples:
         ```python
         # mkdocs: render
@@ -152,6 +155,9 @@ def admittance(y: sax.ComplexLike = 1 / 50) -> sax.SDict:
 
     Returns:
         S-dictionary representing the admittance element
+
+    References:
+        [@pozar2012]
 
     Examples:
         ```python
@@ -198,6 +204,9 @@ def capacitor(
     Returns:
         S-dictionary representing the capacitor element
 
+    References:
+        [@pozar2012]
+
     Examples:
         ```python
         # mkdocs: render
@@ -239,6 +248,9 @@ def inductor(
 
     Returns:
         S-dictionary representing the inductor element
+
+    References:
+        [@pozar2012]
 
     Examples:
         ```python
