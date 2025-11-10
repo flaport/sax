@@ -99,7 +99,7 @@ def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
     return sax.reciprocal(sdict)
 
 
-@partial(jax.jit, static_argnames=("z0",))
+@jax.jit
 def impedance(
     f: sax.FloatArrayLike, z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50
 ) -> sax.SDict:
@@ -145,6 +145,7 @@ def impedance(
     return sax.reciprocal(sdict)
 
 
+@jax.jit
 def admittance(f: sax.FloatArrayLike, y: sax.ComplexLike = 1 / 50) -> sax.SDict:
     r"""Generalized two-port admittance element.
 
@@ -187,7 +188,7 @@ def admittance(f: sax.FloatArrayLike, y: sax.ComplexLike = 1 / 50) -> sax.SDict:
     return sax.reciprocal(sdict)
 
 
-@partial(jax.jit, static_argnames=("capacitance", "z0"))
+@partial(jax.jit, static_argnames=("capacitance",))
 def capacitor(
     f: sax.FloatArrayLike = 5e9,
     capacitance: sax.FloatLike = 1e-15,
@@ -231,7 +232,7 @@ def capacitor(
     return impedance(f=f, z=capacitor_impedance, z0=z0)
 
 
-@partial(jax.jit, static_argnames=("inductance", "z0"))
+@partial(jax.jit, static_argnames=("inductance",))
 def inductor(
     f: sax.FloatArrayLike = 5e9,
     inductance: sax.FloatLike = 1e-12,
