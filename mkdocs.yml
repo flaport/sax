@@ -115,8 +115,9 @@ plugins:
 
 markdown_extensions:
   - attr_list
+  - footnotes
   - toc:
-      permalink: true
+        permalink: true
   - pymdownx.emoji
   - pymdownx.highlight:
       anchor_linenums: true
