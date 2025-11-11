@@ -14,10 +14,10 @@ inits:
   cd src/sax && uv run mkinit --relative --recursive --write && uv run ruff format __init__.py
 
 ipykernel:
-  uv run python -m ipykernel install --user --name sax --display-name sax
+  uv run --extra dev python -m ipykernel install --user --name sax --display-name sax
 
 test: ipykernel
-  uv run pytest -s -n logical
+  uv run --extra dev pytest -s -n logical
 
 docs:
   sed 's|](docs/|](|g' README.md > docs/index.md
