@@ -45,25 +45,25 @@ class TestRFModels:
         self._assert_s_param(s, ("o1", "o1"), -1 / 3)
         self._assert_s_param(s, ("o1", "o2"), 2 / 3)
 
-    def test_impedance(self) -> None:
+    def test_impedance(self, freq_single: float) -> None:
         """Test impedance element."""
-        s = rf.impedance(z=75, z0=50)
+        s = rf.impedance(f=freq_single, z=75, z0=50)
 
-        self._assert_s_params_dict(s)
+        self._assert_s_params_dict(s, expected_shape=())
         self._assert_s_param(s, ("o1", "o1"), 75 / (75 + 100))
 
-    def test_admittance(self) -> None:
+    def test_admittance(self, freq_single: float) -> None:
         """Test admittance element."""
-        s = rf.admittance(y=1 / 75)
+        s = rf.admittance(f=freq_single, y=1 / 75)
 
-        self._assert_s_params_dict(s)
+        self._assert_s_params_dict(s, expected_shape=())
         self._assert_s_param(s, ("o1", "o1"), 1 / (1 + 1 / 75))
 
     def test_capacitor(self, freq_single: float) -> None:
         """Test capacitor element."""
         s = rf.capacitor(f=freq_single, capacitance=1e-12, z0=50)
 
-        self._assert_s_params_dict(s)
+        self._assert_s_params_dict(s, expected_shape=())
 
         angular_frequency = 2 * jnp.pi * freq_single
         capacitor_impedance = 1 / (1j * angular_frequency * 1e-12)
