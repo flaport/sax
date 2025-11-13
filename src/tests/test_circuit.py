@@ -32,5 +32,35 @@ def test_circuit() -> None:
     )
 
 
+def test_1port_circuit() -> None:
+    """Test that 1-port circuits are supported."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+        },
+        "connections": {},
+        "ports": {
+            "in": "wg1,in0",
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    circuit, info = sax.circuit(netlist, models)
+    result = circuit()
+
+    # Verify the circuit has exactly 1 port
+    ports = sax.get_ports(result)
+    assert len(ports) == 1
+    assert "in" in ports
+
+    # Verify the S-matrix has the expected structure
+    assert ("in", "in") in result
+
+
 if __name__ == "__main__":
     print(test_circuit())
+    print(test_1port_circuit())
+

@@ -606,10 +606,10 @@ def _validate_netlist_ports(netlist: sax.RecursiveNetlist) -> None:
     ports_str = ", ".join(list(top_level["ports"]))
     if not ports_str:
         ports_str = "no ports given"
-    if len(top_level["ports"]) < 2:
+    if len(top_level["ports"]) < 1:
         msg = (
             "Cannot create circuit: "
-            f"at least 2 ports need to be defined. Got {ports_str}."
+            f"at least 1 port needs to be defined. Got {ports_str}."
         )
         raise ValueError(msg)
 
