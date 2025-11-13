@@ -31,7 +31,7 @@ jobs:
       - name: Install Just
         uses: taiki-e/install-action@just
       - name: Run tests
-        run: just dev test
+        run: just test
       - name: Upload artifacts [tests]
         uses: actions/upload-artifact@master
         with:
