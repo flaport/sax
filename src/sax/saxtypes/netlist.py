@@ -205,7 +205,7 @@ Connections: TypeAlias = dict[InstancePort, InstancePort]
 def val_ports(obj: Any) -> Ports:
     """Validate a ports definition for a netlist.
 
-    Ensures that at least one port is defined (minimum for a meaningful circuit).
+    Ensures that at least one port is defined.
 
     Args:
         obj: The object to validate as a ports definition.
