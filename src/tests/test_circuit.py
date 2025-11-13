@@ -48,7 +48,7 @@ def test_1port_circuit() -> None:
         "waveguide": sax.models.straight,
     }
 
-    circuit, info = sax.circuit(netlist, models)
+    circuit, _info = sax.circuit(netlist, models)
     result = circuit()
 
     # Verify the circuit has exactly 1 port
