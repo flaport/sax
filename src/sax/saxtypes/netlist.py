@@ -353,8 +353,7 @@ def val_recnet(obj: Any) -> RecursiveNetlist:
             continue
         if len(net.get("ports", {})) < 1:
             msg = (
-                f"Netlist {name!r} has no ports defined. "
-                "This netlist will be ignored."
+                f"Netlist {name!r} has no ports defined. This netlist will be ignored."
             )
             warnings.warn(msg, stacklevel=2)
             continue

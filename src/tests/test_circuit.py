@@ -63,4 +63,3 @@ def test_1port_circuit() -> None:
 if __name__ == "__main__":
     print(test_circuit())
     print(test_1port_circuit())
-
