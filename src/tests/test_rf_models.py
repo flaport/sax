@@ -1,3 +1,5 @@
+from itertools import product
+
 import jax.numpy as jnp
 import pytest
 
@@ -81,20 +83,22 @@ class TestRFModels:
         expected_s11 = inductor_impedance / (inductor_impedance + 100)
         self._assert_s_param(s, ("o1", "o1"), expected_s11)
 
-    def test_electrical_short(self, freq_array: jnp.ndarray) -> None:
+    @pytest.mark.parametrize("n_ports", [1, 2, 3])
+    def test_electrical_short(self, freq_array: jnp.ndarray, n_ports: int) -> None:
         """Test electrical_short with frequency array."""
-        s = rf.electrical_short(f=freq_array, n_ports=2)
+        s = rf.electrical_short(f=freq_array, n_ports=n_ports)
 
         self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
-        self._assert_s_param(s, ("o1", "o1"), -1)
-        self._assert_s_param(s, ("o2", "o2"), -1)
-        self._assert_s_param(s, ("o1", "o2"), 0)
+        for i, j in product(range(1, n_ports + 1), repeat=2):
+            expected_value = -1 if i == j else 0
+            self._assert_s_param(s, (f"o{i}", f"o{j}"), expected_value)
 
-    def test_electrical_open(self, freq_array: jnp.ndarray) -> None:
+    @pytest.mark.parametrize("n_ports", [1, 2, 3])
+    def test_electrical_open(self, freq_array: jnp.ndarray, n_ports: int) -> None:
         """Test electrical_open with frequency array."""
-        s = rf.electrical_open(f=freq_array, n_ports=2)
+        s = rf.electrical_open(f=freq_array, n_ports=n_ports)
 
         self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
-        self._assert_s_param(s, ("o1", "o1"), 1)
-        self._assert_s_param(s, ("o2", "o2"), 1)
-        self._assert_s_param(s, ("o1", "o2"), 0)
+        for i, j in product(range(1, n_ports + 1), repeat=2):
+            expected_value = 1 if i == j else 0
+            self._assert_s_param(s, (f"o{i}", f"o{j}"), expected_value)
