@@ -205,7 +205,7 @@ Connections: TypeAlias = dict[InstancePort, InstancePort]
 def val_ports(obj: Any) -> Ports:
     """Validate a ports definition for a netlist.
 
-    Ensures that at least two ports are defined (minimum for a meaningful circuit).
+    Ensures that at least one port is defined.
 
     Args:
         obj: The object to validate as a ports definition.
@@ -214,7 +214,7 @@ def val_ports(obj: Any) -> Ports:
         The validated ports mapping.
 
     Raises:
-        TypeError: If fewer than two ports are defined.
+        TypeError: If no ports are defined.
 
     Examples:
         Validate a ports definition for a netlist:
@@ -229,8 +229,8 @@ def val_ports(obj: Any) -> Ports:
     from .into import into
 
     ports: dict[str, InstancePort] = into[dict[str, InstancePort]](obj)
-    if len(ports) < 2:
-        msg = "A sax netlist needs to have at least two ports defined."
+    if len(ports) < 1:
+        msg = "A sax netlist needs to have at least one port defined."
         raise TypeError(msg)
     return ports
 
@@ -351,10 +351,9 @@ def val_recnet(obj: Any) -> RecursiveNetlist:
             )
             warnings.warn(msg, stacklevel=2)
             continue
-        if len(net.get("ports", {})) < 2:
+        if len(net.get("ports", {})) < 1:
             msg = (
-                f"Netlist {name!r} has fewer than two ports defined. "
-                "This netlist will be ignored."
+                f"Netlist {name!r} has no ports defined. This netlist will be ignored."
             )
             warnings.warn(msg, stacklevel=2)
             continue
