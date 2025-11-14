@@ -33,7 +33,7 @@ class TestRFModels:
         """Test gamma_0_load with frequency array."""
         s = rf.gamma_0_load(f=freq_array, gamma_0=0.5, n_ports=2)
 
-        self._assert_s_params_dict(s, expected_shape=(10,))
+        self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
         self._assert_s_param(s, ("o1", "o1"), 0.5)
         self._assert_s_param(s, ("o1", "o2"), 0)
 
@@ -41,7 +41,7 @@ class TestRFModels:
         """Test tee splitter."""
         s = rf.tee(f=freq_array)
 
-        self._assert_s_params_dict(s, expected_shape=(10,))
+        self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
         self._assert_s_param(s, ("o1", "o1"), -1 / 3)
         self._assert_s_param(s, ("o1", "o2"), 2 / 3)
 
@@ -80,3 +80,21 @@ class TestRFModels:
         inductor_impedance = 1j * angular_frequency * 1e-9
         expected_s11 = inductor_impedance / (inductor_impedance + 100)
         self._assert_s_param(s, ("o1", "o1"), expected_s11)
+
+    def test_electrical_short(self, freq_array: jnp.ndarray) -> None:
+        """Test electrical_short with frequency array."""
+        s = rf.electrical_short(f=freq_array, n_ports=2)
+
+        self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
+        self._assert_s_param(s, ("o1", "o1"), -1)
+        self._assert_s_param(s, ("o2", "o2"), -1)
+        self._assert_s_param(s, ("o1", "o2"), 0)
+
+    def test_electrical_open(self, freq_array: jnp.ndarray) -> None:
+        """Test electrical_open with frequency array."""
+        s = rf.electrical_open(f=freq_array, n_ports=2)
+
+        self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
+        self._assert_s_param(s, ("o1", "o1"), 1)
+        self._assert_s_param(s, ("o2", "o2"), 1)
+        self._assert_s_param(s, ("o1", "o2"), 0)
