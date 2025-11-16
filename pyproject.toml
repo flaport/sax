@@ -111,6 +111,8 @@ docstring-code-format = true
 ignore = [
   "COM812",  # missing-trailing-comma
   "D105",  # undocumented-magic-method
+  "D203",  # incorrect-blank-line-before-class
+  "D213",  # multi-line-summary-second-line
   "E741",  # ambiguous-variable-name
   "ERA001",  # commented-out-code
   "FIX001",  # line-contains-fixme
