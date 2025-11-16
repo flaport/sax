@@ -274,3 +274,46 @@ def inductor(
     angular_frequency = 2 * jnp.pi * jnp.asarray(f)
     inductor_impedance = 1j * angular_frequency * inductance
     return impedance(f=f, z=inductor_impedance, z0=z0)
+
+
+@partial(jax.jit, inline=True, static_argnames=("n_ports"))
+def electrical_short(
+    f: sax.FloatArrayLike = 5e9,
+    n_ports: int = 1,
+) -> sax.SDict:
+    r"""Electrical short connection Sax model.
+
+    Args:
+        f: Array of frequency points in Hz
+        n_ports: Number of ports to set as shorted
+
+    Returns:
+        S-dictionary where :math:`S = -I_\text{n\_ports}`
+
+    References:
+        [@pozar2012]
+    """
+    return gamma_0_load(f=f, gamma_0=-1, n_ports=n_ports)
+
+
+@partial(jax.jit, inline=True, static_argnames=("n_ports"))
+def electrical_open(
+    f: sax.FloatArrayLike = 5e9,
+    n_ports: int = 1,
+) -> sax.SDict:
+    r"""Electrical open connection Sax model.
+
+    Useful for specifying some ports to remain open while not exposing
+    them for connections in circuits.
+
+    Args:
+        f: Array of frequency points in Hz
+        n_ports: Number of ports to set as opened
+
+    Returns:
+        S-dictionary where :math:`S = I_\text{n\_ports}`
+
+    References:
+        [@pozar2012]
+    """
+    return gamma_0_load(f=f, gamma_0=1, n_ports=n_ports)
