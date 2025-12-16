@@ -245,8 +245,8 @@ def get_neural_fit_functions_str(
 def eval_neural_fit(
     result: NeuralFitResult,
     func: str,
-    **kwargs: Any,
-) -> Any:
+    **kwargs: Any,  # noqa: ANN401
+) -> Any:  # noqa: ANN401
     """Evaluate a neural fit.
 
     Args:
@@ -257,7 +257,7 @@ def eval_neural_fit(
     """
     namespace = {}
     s = get_neural_fit_functions_str(result, with_imports=True)
-    exec(s, namespace)
+    exec(s, namespace)  # noqa: S102
     return namespace[func](**kwargs)
 
 
