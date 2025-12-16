@@ -1,3 +1,29 @@
+<a id="0.15.16"></a>
+# [0.15.16](https://github.com/flaport/sax/releases/tag/0.15.16) - 2025-12-16
+
+# What's Changed
+
+## New
+
+- Add electrical_short and electrical_open RF models [#75](https://github.com/flaport/sax/pull/75)
+
+## Bug Fixes
+
+- Fix lumerical parser [#77](https://github.com/flaport/sax/pull/77)
+- Fix: Correct RF model tests for scalar frequency [#72](https://github.com/flaport/sax/pull/72)
+
+## Other changes
+
+- Support 1-port circuits [#74](https://github.com/flaport/sax/pull/74)
+- Specify dev. deps. in `just test` command [#73](https://github.com/flaport/sax/pull/73)
+- Add BibTeX citation support and fix RF models [#71](https://github.com/flaport/sax/pull/71)
+- Implement generic RF models [#70](https://github.com/flaport/sax/pull/70)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.15...0.15.16
+
+[Changes][0.15.16]
+
+
 <a id="0.15.15"></a>
 # [0.15.15](https://github.com/flaport/sax/releases/tag/0.15.15) - 2025-11-04
 
@@ -790,6 +816,7 @@
 [Changes][0.8.7]
 
 
+[0.15.16]: https://github.com/flaport/sax/compare/0.15.15...0.15.16
 [0.15.15]: https://github.com/flaport/sax/compare/0.15.14...0.15.15
 [0.15.14]: https://github.com/flaport/sax/compare/0.15.13...0.15.14
 [0.15.13]: https://github.com/flaport/sax/compare/0.15.12...0.15.13
