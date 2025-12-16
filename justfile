@@ -1,5 +1,5 @@
 dev:
-  uv venv --python 3.12
+  uv venv --python 3.12 --clear
   uv sync --all-extras
   uv pip install -e .
   uv run pre-commit install
@@ -9,9 +9,6 @@ dist:
 
 uv:
   curl -LsSf https://astral.sh/uv/install.sh | sh
-
-inits:
-  cd src/sax && uv run mkinit --relative --recursive --write && uv run ruff format __init__.py
 
 ipykernel:
   uv run --extra dev python -m ipykernel install --user --name sax --display-name sax
