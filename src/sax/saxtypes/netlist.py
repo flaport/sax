@@ -98,10 +98,14 @@ def val_instance(obj: Any) -> Instance:
             "component": component,
             "settings": settings,
         }
-        if isinstance(array, dict) and "columns" in array and "rows" in array:
+        if (
+            isinstance(array, dict)
+            and ("columns" in array or "num_a" in array)
+            and ("rows" in array or "num_b" in array)
+        ):
             inst["array"] = {
-                "columns": int(array["columns"]),
-                "rows": int(array["rows"]),
+                "columns": int(array.get("columns", array.get("num_a", 1))),
+                "rows": int(array.get("rows", array.get("num_b", 1))),
             }
             if "column_pitch" in array:
                 inst["array"]["column_pitch"] = float(array["column_pitch"])
@@ -110,6 +114,22 @@ def val_instance(obj: Any) -> Instance:
         return inst
     msg = f"Cannot coerce {obj} [{type(obj)}] into a component dictionary."
     raise TypeError(msg)
+
+
+def val_array_config(obj: Any) -> ArrayConfig:
+    """Validate and normalize an arrayconfig."""
+    array = {}
+    if not isinstance(obj, dict):
+        obj = {}
+    if not any(k in obj for k in ("columns", "rows", "num_a", "num_b")):
+        msg = (
+            "Array configuration must contain either 'columns' and 'rows' "
+            "or 'num_a' and 'num_b'."
+        )
+        raise TypeError(msg)
+    array["columns"] = obj.get("columns", obj.get("num_a", 1))
+    array["rows"] = obj.get("rows", obj.get("num_b", 1))
+    return cast(ArrayConfig, array)
 
 
 ArrayConfig = Annotated[
@@ -122,7 +142,7 @@ ArrayConfig = Annotated[
             "row_pitch": NotRequired[float],
         },
     ),
-    bval(extract_fields, fields=("columns", "rows", "column_pitch", "row_pitch")),
+    bval(val_array_config),
 ]
 """Configuration for arrayed component instances.
 
