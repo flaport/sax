@@ -1,3 +1,15 @@
+<a id="0.15.17"></a>
+# [0.15.17](https://github.com/flaport/sax/releases/tag/0.15.17) - 2025-12-22
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.16...0.15.17
+
+[Changes][0.15.17]
+
+
 <a id="0.15.16"></a>
 # [0.15.16](https://github.com/flaport/sax/releases/tag/0.15.16) - 2025-12-16
 
@@ -816,6 +828,7 @@
 [Changes][0.8.7]
 
 
+[0.15.17]: https://github.com/flaport/sax/compare/0.15.16...0.15.17
 [0.15.16]: https://github.com/flaport/sax/compare/0.15.15...0.15.16
 [0.15.15]: https://github.com/flaport/sax/compare/0.15.14...0.15.15
 [0.15.14]: https://github.com/flaport/sax/compare/0.15.13...0.15.14
