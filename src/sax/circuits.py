@@ -140,6 +140,7 @@ def circuit(
         netlist,
         top_level_name=top_level_name,
     )
+    patch_netlist_array_instances(recnet)
     recnet = convert_nets_to_connections(recnet)
     recnet = resolve_array_instances(recnet)
     recnet = remove_unused_instances(recnet)
@@ -649,3 +650,37 @@ def resolve_array_instances(netlist: sax.AnyNetlist) -> sax.AnyNetlist:
     if _is_recursive_netlist(recnet := cast(sax.RecursiveNetlist, netlist)):
         return {k: resolve_array_instances(v) for k, v in recnet.items()}
     return netlist
+
+
+def patch_netlist_array_instances(netlist: sax.RecursiveNetlist) -> None:  # noqa: C901
+    """Patch array instances into netlist."""
+
+    def patch_flatnet(flatnet: sax.Netlist) -> None:
+        array_insts = {}
+
+        def inner() -> None:
+            i1 = p.split(",")[0]
+            i2 = q.split(",")[0]
+            for i in [i1, i2]:
+                if "<" in i:
+                    i0 = i.split("<")[0]
+                    c, r = [int(x) for x in i.split("<")[1].split(">")[0].split(".")]
+                    if i0 not in array_insts:
+                        array_insts[i0] = {"columns": 0, "rows": 0}
+                    array_insts[i0]["columns"] = max(array_insts[i0]["columns"], c + 1)
+                    array_insts[i0]["rows"] = max(array_insts[i0]["rows"], r + 1)
+
+        for net in flatnet.get("nets", []):
+            p, q = net["p1"], net["p2"]
+            inner()
+        for p, q in flatnet.get("connections", {}).items():  # noqa: B007
+            inner()
+        for p in flatnet.get("ports", {}).values():
+            q = p
+            inner()
+
+        for k, v in array_insts.items():
+            flatnet["instances"][k]["array"] = v
+
+    for v in netlist.values():
+        patch_flatnet(v)
