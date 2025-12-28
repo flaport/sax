@@ -49,10 +49,10 @@ def gamma_0_load(
     """
     f = jnp.asarray(f)
     sdict = {
-        (f"o{i}", f"o{i}"): jnp.full(len(f), gamma_0) for i in range(1, n_ports + 1)
+        (f"o{i}", f"o{i}"): jnp.full(f.shape, gamma_0) for i in range(1, n_ports + 1)
     }
     sdict |= {
-        (f"o{i}", f"o{j}"): jnp.zeros(len(f), dtype=complex)
+        (f"o{i}", f"o{j}"): jnp.zeros(f.shape, dtype=complex)
         for i in range(1, n_ports + 1)
         for j in range(i + 1, n_ports + 1)
     }
@@ -90,9 +90,9 @@ def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
         ```
     """
     f = jnp.asarray(f)
-    sdict = {(f"o{i}", f"o{i}"): jnp.full(len(f), -1 / 3) for i in range(1, 4)}
+    sdict = {(f"o{i}", f"o{i}"): jnp.full(f.shape, -1 / 3) for i in range(1, 4)}
     sdict |= {
-        (f"o{i}", f"o{j}"): jnp.full(len(f), 2 / 3)
+        (f"o{i}", f"o{j}"): jnp.full(f.shape, 2 / 3)
         for i in range(1, 4)
         for j in range(i + 1, 4)
     }
