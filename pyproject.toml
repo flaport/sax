@@ -18,7 +18,7 @@ classifiers = [
 ]
 dependencies = [
   "flax>=0.10.0",
-  "jax>=0.6.0",
+  "jax<0.9",
   "jaxtyping>=0.2.38",
   "klujax>=0.4.1",
   "lark>=1.2.2",
@@ -58,6 +58,7 @@ version = "0.15.18"
 [project.optional-dependencies]
 dev = [
   "altair>=5.5.0",
+  "optax>=0.2.0",
   "build>=1.2.0",
   "gdsfactory>=9.7.0",
   "griffe>=1.5.6",
