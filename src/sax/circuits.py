@@ -14,7 +14,12 @@ import numpy as np
 import sax
 
 from .backends import circuit_backends
-from .netlists import convert_nets_to_connections, remove_unused_instances
+from .models.probes import ideal_probe
+from .netlists import (
+    convert_nets_to_connections,
+    expand_probes,
+    remove_unused_instances,
+)
 from .netlists import netlist as into_recnet
 from .s import get_ports, scoo, sdense, sdict
 from .utils import get_settings, merge_dicts, replace_kwargs, update_settings
@@ -30,6 +35,7 @@ def circuit(
     backend: sax.BackendLike = "default",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
+    probes: dict[str, str] | None = None,
 ) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
 
 
@@ -42,6 +48,7 @@ def circuit(
     return_type: Literal["SDict"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
+    probes: dict[str, str] | None = None,
 ) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
 
 
@@ -54,6 +61,7 @@ def circuit(
     return_type: Literal["SDense"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
+    probes: dict[str, str] | None = None,
 ) -> tuple[sax.SDenseModel, sax.CircuitInfo]: ...
 
 
@@ -66,6 +74,7 @@ def circuit(
     return_type: Literal["SCoo"],
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
+    probes: dict[str, str] | None = None,
 ) -> tuple[sax.SCooModel, sax.CircuitInfo]: ...
 
 
@@ -77,6 +86,7 @@ def circuit(
     return_type: Literal["SDict", "SDense", "SCoo"] = "SDict",
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
+    probes: dict[str, str] | None = None,
 ) -> tuple[sax.Model, sax.CircuitInfo]:
     """Create a circuit function for a given netlist.
 
@@ -97,6 +107,11 @@ def circuit(
             Defaults to "top_level".
         ignore_impossible_connections: If True, ignore connections to missing
             instance ports instead of raising an error. Defaults to False.
+        probes: Optional dictionary mapping probe names to instance ports where
+            measurement probes should be inserted. Each probe intercepts a
+            connection and exposes forward and backward traveling wave ports.
+            For a probe named "X" at instance port "inst,port", two new circuit
+            ports are created: "X_fwd" and "X_bwd". Defaults to None.
 
     Returns:
         Tuple containing:
@@ -142,6 +157,9 @@ def circuit(
     )
     patch_netlist_array_instances(recnet)
     recnet = convert_nets_to_connections(recnet)
+    if probes:
+        recnet = expand_probes(recnet, probes)
+        models = {"_ideal_probe": ideal_probe, **(models or {})}
     recnet = resolve_array_instances(recnet)
     recnet = remove_unused_instances(recnet)
     _validate_netlist_ports(recnet)

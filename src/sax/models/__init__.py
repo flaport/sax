@@ -28,6 +28,9 @@ from .mmis import (
     mmi2x2,
     mmi2x2_ideal,
 )
+from .probes import (
+    ideal_probe,
+)
 from .splitters import (
     splitter_ideal,
 )
@@ -45,6 +48,7 @@ __all__ = [
     "coupler_ideal",
     "crossing_ideal",
     "grating_coupler",
+    "ideal_probe",
     "mmi1x2",
     "mmi1x2_ideal",
     "mmi2x2",
