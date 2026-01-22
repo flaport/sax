@@ -14,6 +14,7 @@ import sax
 __all__ = [  # noqa: RUF022
     "netlist",
     "flatten_netlist",
+    "expand_probes",
 ]
 
 
@@ -381,3 +382,143 @@ def _nets_to_connections(
             )
         _add_connection(p, q)
     return connections
+
+
+@overload
+def expand_probes(
+    netlist: sax.Netlist,
+    probes: dict[str, str],
+) -> sax.Netlist: ...
+
+
+@overload
+def expand_probes(
+    netlist: sax.RecursiveNetlist,
+    probes: dict[str, str],
+) -> sax.RecursiveNetlist: ...
+
+
+def expand_probes(
+    netlist: sax.AnyNetlist,
+    probes: dict[str, str],
+) -> sax.AnyNetlist:
+    """Expand probes into ideal_probe instances and update connections/ports.
+
+    This function inserts ideal 4-port measurement probes at specified connection
+    points in the netlist. Each probe intercepts a connection and exposes forward
+    and backward traveling wave ports.
+
+    Args:
+        netlist: The netlist to expand probes in.
+        probes: A mapping from probe names to instance ports where probes should
+            be inserted. The instance port must be part of an existing connection.
+            Example: ``{"mid": "wg1,out"}``
+
+    Returns:
+        A new netlist with probe instances inserted and connections/ports updated.
+        For each probe named "X", two new ports are added: "X_fwd" and "X_bwd".
+
+    Raises:
+        ValueError: If a probe references an instance port that is not part of
+            any connection, or if probe ports would conflict with existing ports.
+
+    Example:
+        ```python
+        netlist = {
+            "instances": {"wg1": "waveguide", "wg2": "waveguide"},
+            "connections": {"wg1,out": "wg2,in"},
+            "ports": {"in": "wg1,in", "out": "wg2,out"},
+        }
+        probes = {"mid": "wg1,out"}
+        expanded = expand_probes(netlist, probes)
+        # expanded now has instances: wg1, wg2, _probe_mid
+        # expanded now has ports: in, out, mid_fwd, mid_bwd
+        ```
+    """
+    if not probes:
+        return netlist
+
+    # Handle recursive netlist: only expand probes in top-level
+    if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
+        top_level_name = next(iter(recnet))
+        top_level = recnet[top_level_name]
+        expanded_top = expand_probes(top_level, probes)
+        return {
+            top_level_name: expanded_top,
+            **{k: v for k, v in recnet.items() if k != top_level_name},
+        }
+
+    # It's a flat netlist
+    net: sax.Netlist = deepcopy(sax.into[sax.Netlist](netlist))
+    connections = dict(net.get("connections", {}).items())
+    inverse_connections = {v: k for k, v in connections.items()}
+    ports = dict(net["ports"].items())
+    instances = dict(net["instances"].items())
+
+    for probe_name, instance_port in probes.items():
+        # Validate probe name won't conflict with existing ports
+        fwd_port = f"{probe_name}_fwd"
+        bwd_port = f"{probe_name}_bwd"
+        if fwd_port in ports or bwd_port in ports:
+            msg = (
+                f"Probe '{probe_name}' would create ports '{fwd_port}'/'{bwd_port}' "
+                f"which conflict with existing ports."
+            )
+            raise ValueError(msg)
+
+        # Validate instance name won't conflict
+        probe_instance_name = f"_probe_{probe_name}"
+        if probe_instance_name in instances:
+            msg = (
+                f"Probe instance name '{probe_instance_name}' conflicts with "
+                f"an existing instance."
+            )
+            raise ValueError(msg)
+
+        # Find the connection containing this instance port.
+        # Track orientation so _fwd means "signal flowing INTO instance_port"
+        if instance_port in connections:
+            # instance_port is on the left side: instance_port -> other_port
+            # Signal flows OUT of instance_port, so we need to flip the probe
+            other_port = connections[instance_port]
+            del connections[instance_port]
+            del inverse_connections[other_port]
+            # probe,in connects to other_port (source of signal INTO instance_port)
+            # probe,out connects to instance_port (destination)
+            in_side = other_port
+            out_side = instance_port
+        elif instance_port in inverse_connections:
+            # instance_port is on the right side: other_port -> instance_port
+            # Signal flows INTO instance_port, so probe is correctly oriented
+            other_port = inverse_connections[instance_port]
+            del connections[other_port]
+            del inverse_connections[instance_port]
+            # probe,in connects to other_port (source of signal INTO instance_port)
+            # probe,out connects to instance_port (destination)
+            in_side = other_port
+            out_side = instance_port
+        else:
+            msg = (
+                f"Probe '{probe_name}' references instance port '{instance_port}' "
+                f"which is not part of any connection."
+            )
+            raise ValueError(msg)
+
+        # Insert probe instance
+        instances[probe_instance_name] = {"component": "_ideal_probe"}
+
+        # Create new connections: in_side -> probe,in and probe,out -> out_side
+        # This orients the probe so _fwd captures signal flowing INTO instance_port
+        connections[in_side] = f"{probe_instance_name},in"
+        inverse_connections[f"{probe_instance_name},in"] = in_side
+        connections[f"{probe_instance_name},out"] = out_side
+        inverse_connections[out_side] = f"{probe_instance_name},out"
+
+        # Add probe ports
+        ports[fwd_port] = f"{probe_instance_name},tap_fwd"
+        ports[bwd_port] = f"{probe_instance_name},tap_bwd"
+
+    net["instances"] = instances
+    net["connections"] = connections
+    net["ports"] = ports
+    return net
