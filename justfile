@@ -1,8 +1,22 @@
-dev:
+dev: bver
   uv venv --python 3.12 --clear
   uv sync --all-extras
   uv pip install -e .
   uv run pre-commit install
+
+# Version bumping
+[linux,macos]
+bver:
+    curl -LsSf https://github.com/flaport/bver/releases/latest/download/install.sh | sh
+
+# Version bumping
+[windows]
+bver:
+    powershell -ExecutionPolicy ByPass -c "irm https://github.com/flaport/bver/releases/latest/download/install.ps1 | iex"
+
+# bump version
+bump version="patch":
+    bver bump "{{ version }}"
 
 dist:
   uv run python -m build --wheel
