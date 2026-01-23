@@ -8,46 +8,50 @@ on:
 
 jobs:
   build:
-    name: Build Wheels
+    name: Build wheel and sdist
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-      - name: Install UV
-        uses: astral-sh/setup-uv@v5
-      - name: Install Just
-        uses: taiki-e/install-action@just
-      - name: Create Venv
-        run: just dev
-      - name: Build Wheels
-        run: just dist
-      - name: Upload Artifacts
-        uses: actions/upload-artifact@v4
+      - uses: actions/checkout@v3
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Install build
+        run: pip install build
+      - name: Build wheel and sdist
+        run: python -m build
+      - name: Show artifacts
+        run: ls dist
+      - uses: actions/upload-artifact@v4
         with:
           name: dist
-          path: ./dist
+          path: dist/*
 
   release-pypi:
     name: PyPI Release
     runs-on: ubuntu-latest
+    if: startsWith(github.ref, 'refs/tags/')
     needs:
       - build
     permissions:
       id-token: write
       contents: write
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-      - name: Download Wheels
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.x"
+      - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           name: dist
-          path: ./dist
-      - name: PyPI Release
+          path: dist
+      - name: Show dist contents
+        run: ls dist
+      - name: Release PYPI
         uses: pypa/gh-action-pypi-publish@release/v1
+      - name: Release GH
+        uses: softprops/action-gh-release@v1
         with:
-          user: __token__
-          password: ${{ secrets.PYPI_TOKEN }}
+          files: dist/*
 
   release-gh:
     name: GitHub Release
