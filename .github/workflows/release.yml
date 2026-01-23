@@ -48,10 +48,6 @@ jobs:
         run: ls dist
       - name: Release PYPI
         uses: pypa/gh-action-pypi-publish@release/v1
-      - name: Release GH
-        uses: softprops/action-gh-release@v1
-        with:
-          files: dist/*
 
   release-gh:
     name: GitHub Release
