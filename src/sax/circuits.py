@@ -352,9 +352,8 @@ def _flat_circuit(
 
         instances: dict[str, sax.SType] = {}
         for inst_name, model in inst2model.items():
-            instances[inst_name] = model(
-                **full_settings.get(_strip_array_index(inst_name), {})
-            )
+            inst_settings = full_settings.get(_strip_array_index(inst_name), {})
+            instances[inst_name] = model(**inst_settings)
 
         return evaluate_fn(analyzed, instances)
 
