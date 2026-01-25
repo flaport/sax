@@ -909,10 +909,18 @@ def _generate_merged_dict(dict1: dict, dict2: dict) -> Iterator[tuple[Any, Any]]
     for k in keys:
         if k in dict1 and k in dict2:
             v1, v2 = dict1[k], dict2[k]
-            if isinstance(v1, dict) and isinstance(v2, dict):
-                v = dict(_generate_merged_dict(v1, v2))
+            if isinstance(v1, dict) or isinstance(v2, dict):
+                # note: we used to have only merging when both where dicts,
+                # but this way is more flexible - if one is not a dict, we
+                # just replace it with an empty dict and continue merging.
+                v = dict(
+                    _generate_merged_dict(
+                        {} if not isinstance(v1, dict) else v1,
+                        {} if not isinstance(v2, dict) else v2,
+                    )
+                )
             else:
-                # If one of the values is not a dict, you can't continue merging it.
+                # If neither of the values is a dict, you can't continue merging it.
                 # Value from second dict overrides one in first and we move on.
                 v = v2
         elif k in dict1:
