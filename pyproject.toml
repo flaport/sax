@@ -53,7 +53,7 @@ license = {text = "Apache Software License"}
 name = "sax"
 readme = "README.md"
 requires-python = ">=3.11.0"
-version = "0.16.0"
+version = "0.16.1"
 
 [project.optional-dependencies]
 dev = [
@@ -95,8 +95,9 @@ dev = [
   "pydot>=4.0.1"
 ]
 
-[tool.bver]
-git-action = "commit-tag-and-push"
+[[tool.bver.file]]
+kind = "python"
+src = "pyproject.toml"
 
 [[tool.bver.file]]
 src = "README.md"
@@ -104,6 +105,9 @@ src = "README.md"
 [[tool.bver.file]]
 kind = "python"
 src = "src/sax/__init__.py"
+
+[tool.bver.git]
+action = "commit-tag-and-push"
 
 [tool.pytest.ini_options]
 addopts = '--tb=short'
