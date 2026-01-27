@@ -1,3 +1,49 @@
+<a id="0.16.2"></a>
+# [0.16.2](https://github.com/flaport/sax/releases/tag/0.16.2) - 2026-01-27
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.1...0.16.2
+
+[Changes][0.16.2]
+
+
+<a id="0.16.1"></a>
+# [0.16.1](https://github.com/flaport/sax/releases/tag/0.16.1) - 2026-01-25
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.19...0.16.1
+
+[Changes][0.16.1]
+
+
+<a id="0.15.19"></a>
+# [0.15.19](https://github.com/flaport/sax/releases/tag/0.15.19) - 2026-01-25
+
+# What's Changed
+
+## New
+
+- Add probes feature for circuit measurement taps [#79](https://github.com/flaport/sax/pull/79)
+
+## Documentation
+
+- Add probes feature for circuit measurement taps [#79](https://github.com/flaport/sax/pull/79)
+
+## Other changes
+
+- update notebooks [#80](https://github.com/flaport/sax/pull/80)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.18...0.15.19
+
+[Changes][0.15.19]
+
+
 <a id="0.15.18"></a>
 # [0.15.18](https://github.com/flaport/sax/releases/tag/0.15.18) - 2025-12-23
 
@@ -840,6 +886,9 @@
 [Changes][0.8.7]
 
 
+[0.16.2]: https://github.com/flaport/sax/compare/0.16.1...0.16.2
+[0.16.1]: https://github.com/flaport/sax/compare/0.15.19...0.16.1
+[0.15.19]: https://github.com/flaport/sax/compare/0.15.18...0.15.19
 [0.15.18]: https://github.com/flaport/sax/compare/0.15.17...0.15.18
 [0.15.17]: https://github.com/flaport/sax/compare/0.15.16...0.15.17
 [0.15.16]: https://github.com/flaport/sax/compare/0.15.15...0.15.16
