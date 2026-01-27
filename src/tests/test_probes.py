@@ -300,16 +300,21 @@ def test_probe_values_match_transmission() -> None:
     assert ("out", "mid_bwd") in result
 
 
-def test_probe_error_on_non_connected_port() -> None:
-    """Test that probes raise error when referencing non-connected ports."""
+def test_probe_on_unconnected_port() -> None:
+    """Test that probes on unconnected ports create a fwd-only port alias."""
     netlist = {
         "instances": {
             "wg1": "waveguide",
+            "wg2": "waveguide",
+            "wg3": "waveguide",
         },
-        "connections": {},
+        "connections": {
+            "wg1,out0": "wg2,in0",
+            "wg2,out0": "wg3,in0",
+        },
         "ports": {
             "in": "wg1,in0",
-            "out": "wg1,out0",
+            "out": "wg3,out0",
         },
     }
 
@@ -317,12 +322,19 @@ def test_probe_error_on_non_connected_port() -> None:
         "waveguide": sax.models.straight,
     }
 
-    with pytest.raises(ValueError, match="not part of any connection"):
-        sax.circuit(
-            netlist,
-            models,
-            probes={"mid": "wg1,out0"},
-        )
+    # wg1,in0 is not part of any connection (it's a top-level port).
+    # Probing it should create only tap_fwd as an alias.
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"tap": "wg1,in0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    # Only tap_fwd should be created (no tap_bwd for unconnected port)
+    assert "tap_fwd" in ports
+    assert "tap_bwd" not in ports
+    assert set(ports) == {"in", "out", "tap_fwd"}
 
 
 def test_probe_error_on_port_conflict() -> None:
@@ -442,7 +454,7 @@ if __name__ == "__main__":
     test_multiple_probes()
     test_probe_in_mzi_circuit()
     test_probe_values_match_transmission()
-    test_probe_error_on_non_connected_port()
+    test_probe_on_unconnected_port()
     test_probe_error_on_port_conflict()
     test_probe_error_on_instance_conflict()
     test_empty_probes_dict()
