@@ -3,7 +3,7 @@
 from __future__ import annotations
 
 __author__ = "Floris Laporte"
-__version__ = "0.16.1"
+__version__ = "0.16.2"
 
 # isort: off
 from .saxtypes import (
