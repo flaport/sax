@@ -133,7 +133,7 @@ def val_array_config(obj: Any) -> ArrayConfig:
 
 
 ArrayConfig = Annotated[
-    TypedDict(
+    TypedDict(  # type: ignore[invalid-type-form]
         "ArrayConfig",
         {
             "columns": int,
@@ -154,7 +154,7 @@ Attributes:
 """
 
 Instance = Annotated[
-    TypedDict(
+    TypedDict(  # type: ignore[invalid-type-form]
         "Instance",
         {
             "component": Component,
@@ -200,7 +200,7 @@ def val_placement(obj: Any) -> Placement:
 
 
 Placement = Annotated[
-    TypedDict(
+    TypedDict(  # type: ignore[invalid-type-form]
         "Placement",
         {
             "x": float,
@@ -257,7 +257,7 @@ type Ports = Annotated[dict[Port, InstancePort], val(val_ports)]
 
 
 Net = Annotated[
-    TypedDict(
+    TypedDict(  # type: ignore[invalid-type-form]
         "Net",
         {
             "p1": InstancePort,
@@ -319,7 +319,7 @@ def val_netlist(obj: Any) -> dict:
 
 
 Netlist = Annotated[
-    TypedDict(
+    TypedDict(  # type: ignore[invalid-type-form]
         "Netlist",
         {
             "instances": Instances,
