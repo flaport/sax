@@ -67,7 +67,8 @@ def interpolate_xarray(
     for ax, name in axs_rev.items():
         if name in string_kwargs:
             ss = {
-                kk: s.take(pos[name][string_kwargs[name]], ax) for kk, s in ss.items()
+                kk: s.take(pos[name][str(string_kwargs[name])], ax)
+                for kk, s in ss.items()
             }
 
     return ss
@@ -140,7 +141,7 @@ def _evaluate_general_corner_model(
     params: dict[str, Array],
     strings: dict[str, dict[str, int]],
     /,
-    **kwargs: Array,
+    **kwargs: Array | str | list[str],
 ) -> tuple[Array, dict[str, int], dict[str, dict[str, int]]]:
     """Hypercube representation interpolator.
 

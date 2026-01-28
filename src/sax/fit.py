@@ -7,7 +7,7 @@ import sys
 import warnings
 from collections.abc import Callable
 from functools import partial
-from typing import IO, Annotated, Any, overload
+from typing import IO, Annotated, Any, cast, overload
 
 import jax
 import jax.numpy as jnp
@@ -427,7 +427,7 @@ def train_network(
     """
     params = init_fn(key)
     optimizer = optax.adam(learning_rate)
-    opt_state = optimizer.init(params)
+    opt_state = optimizer.init(cast(optax.Params, params))
 
     # Loss function with penalty
     loss_fn = jax.jit(

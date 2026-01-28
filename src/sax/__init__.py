@@ -217,6 +217,7 @@ from sax.interpolation import (
 )
 
 from sax import fit
+from sax import parsers
 from sax.parsers import (
     parse_lumerical_dat,
     parse_touchstone,

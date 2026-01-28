@@ -183,7 +183,7 @@ def circuit(
         current_models[model_name] = circuit = _flat_circuit(
             flatnet["instances"],
             flatnet.get("connections", {}),
-            flatnet["ports"],
+            flatnet.get("ports", {}),
             flatnet.get("placements", {}),
             current_models,
             _backend,
@@ -620,10 +620,10 @@ def _validate_dag(dag: nx.DiGraph) -> nx.DiGraph:
 def _validate_netlist_ports(netlist: sax.RecursiveNetlist) -> None:
     top_level_name = next(iter(netlist))
     top_level = netlist[top_level_name]
-    ports_str = ", ".join(list(top_level["ports"]))
+    ports_str = ", ".join(list(top_level.get("ports", {})))
     if not ports_str:
         ports_str = "no ports given"
-    if len(top_level["ports"]) < 1:
+    if len(top_level.get("ports", {})) < 1:
         msg = (
             "Cannot create circuit: "
             f"at least 1 port needs to be defined. Got {ports_str}."
