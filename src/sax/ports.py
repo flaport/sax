@@ -3,11 +3,11 @@
 from __future__ import annotations
 
 import re
-from typing import Literal, TypeAlias
+from typing import Literal
 
 import sax
 
-PortNamingStrategy: TypeAlias = Literal["optical", "inout"]
+type PortNamingStrategy = Literal["optical", "inout"]
 
 PORT_NAMING_STRATEGY: PortNamingStrategy = "inout"
 

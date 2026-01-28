@@ -49,7 +49,6 @@ from typing import (
     Literal,
     LiteralString,
     Protocol,
-    TypeAlias,
     TypeVar,
     cast,
     get_args,
@@ -65,7 +64,7 @@ from pydantic_core import PydanticCustomError
 
 T = TypeVar("T")
 
-ArrayLike: TypeAlias = Array | np.ndarray
+type ArrayLike = Array | np.ndarray
 """Anything that can turn into an array with ndim>=1."""
 
 
@@ -121,7 +120,7 @@ def bval(fun: Callable, **val_kwargs: Any) -> BeforeValidator:
     return BeforeValidator(_val(fun, **val_kwargs))
 
 
-def _val_item_type(
+def _val_item_type[T](
     obj: Any,
     *,
     strict: bool,
@@ -212,7 +211,7 @@ def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
     )
 
 
-Bool: TypeAlias = Annotated[bool | np.bool_, val(val_bool, strict=False)]
+type Bool = Annotated[bool | np.bool_, val(val_bool, strict=False)]
 """Any boolean value (Python bool or NumPy boolean)."""
 
 
@@ -269,7 +268,7 @@ def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
     )
 
 
-Int: TypeAlias = Annotated[int | np.signedinteger, val(val_int, strict=False)]
+type Int = Annotated[int | np.signedinteger, val(val_int, strict=False)]
 """Any signed integer (Python int or NumPy signed integer)."""
 
 
@@ -319,7 +318,7 @@ def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike
     )
 
 
-Float: TypeAlias = Annotated[float | np.floating, val(val_float, strict=False)]
+type Float = Annotated[float | np.floating, val(val_float, strict=False)]
 """Any floating-point number (Python float or NumPy floating)."""
 
 
@@ -371,9 +370,7 @@ def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> Complex
     )
 
 
-Complex: TypeAlias = Annotated[
-    complex | np.complexfloating, val(val_complex, strict=False)
-]
+type Complex = Annotated[complex | np.complexfloating, val(val_complex, strict=False)]
 """Any complex number (Python complex or NumPy complex floating)."""
 
 
@@ -511,7 +508,7 @@ def val_bool_array(
     )
 
 
-BoolArray: TypeAlias = Annotated[Array, np.bool_, val(val_bool_array, strict=False)]
+type BoolArray = Annotated[Array, np.bool_, val(val_bool_array, strict=False)]
 """N-dimensional boolean array (JAX Array with boolean dtype)."""
 
 
@@ -564,9 +561,7 @@ def val_int_array(obj: Any, *, strict: bool = False, cast: bool = True) -> IntAr
     )
 
 
-IntArray: TypeAlias = Annotated[
-    Array, np.signedinteger, val(val_int_array, strict=False)
-]
+type IntArray = Annotated[Array, np.signedinteger, val(val_int_array, strict=False)]
 """N-dimensional signed integer array (JAX Array with integer dtype)."""
 
 
@@ -621,9 +616,7 @@ def val_float_array(
     )
 
 
-FloatArray: TypeAlias = Annotated[
-    Array, np.floating, val(val_float_array, strict=False)
-]
+type FloatArray = Annotated[Array, np.floating, val(val_float_array, strict=False)]
 """N-dimensional floating-point array (JAX Array with float dtype)."""
 
 
@@ -678,7 +671,7 @@ def val_complex_array(
     )
 
 
-ComplexArray: TypeAlias = Annotated[
+type ComplexArray = Annotated[
     Array, np.complexfloating, val(val_complex_array, strict=False)
 ]
 """N-dimensional complex array (JAX Array with complex dtype)."""
@@ -733,7 +726,7 @@ def val_int_array_1d(
     )
 
 
-IntArray1D: TypeAlias = Annotated[
+type IntArray1D = Annotated[
     ArrayLike, np.signedinteger, 1, val(val_int_array_1d, strict=False)
 ]
 """1-dimensional signed integer array (JAX Array with integer dtype)."""
@@ -788,7 +781,7 @@ def val_float_array_1d(
     )
 
 
-FloatArray1D: TypeAlias = Annotated[
+type FloatArray1D = Annotated[
     ArrayLike, np.floating, 1, val(val_float_array_1d, strict=False)
 ]
 """1-dimensional floating-point array (JAX Array with float dtype)."""
@@ -843,7 +836,7 @@ def val_float_array_2d(
     )
 
 
-FloatArray2D: TypeAlias = Annotated[
+type FloatArray2D = Annotated[
     ArrayLike, np.floating, 2, val(val_float_array_2d, strict=False)
 ]
 """2-dimensional floating-point array (JAX Array with float dtype)."""
@@ -899,63 +892,61 @@ def val_complex_array_1d(
     )
 
 
-ComplexArray1D: TypeAlias = Annotated[
+type ComplexArray1D = Annotated[
     ArrayLike, np.complexfloating, 1, val(val_complex_array_1d, strict=False)
 ]
 """1-dimensional complex array (JAX Array with complex dtype)."""
 
-BoolLike: TypeAlias = Annotated[bool | np.bool_, val(val_bool, cast=False)]
+type BoolLike = Annotated[bool | np.bool_, val(val_bool, cast=False)]
 """Anything that can be cast into a Bool without loss of data."""
 
-IntLike: TypeAlias = Annotated[int | np.integer, val(val_int, cast=False)]
+type IntLike = Annotated[int | np.integer, val(val_int, cast=False)]
 """Anything that can be cast into an Int without loss of data."""
 
-FloatLike: TypeAlias = Annotated[
-    IntLike | float | np.floating, val(val_float, cast=False)
-]
+type FloatLike = Annotated[IntLike | float | np.floating, val(val_float, cast=False)]
 """Anything that can be cast into a Float without loss of data."""
 
-ComplexLike: TypeAlias = Annotated[
+type ComplexLike = Annotated[
     FloatLike | complex | np.inexact, val(val_complex, cast=False)
 ]
 """Anything that can be cast into a Complex without loss of data."""
 
-BoolArrayLike: TypeAlias = Annotated[
+type BoolArrayLike = Annotated[
     ArrayLike | BoolLike, np.bool_, val(val_bool_array, cast=False)
 ]
 """Anything that can be cast into an N-dimensional Bool array without loss of data."""
 
-IntArrayLike: TypeAlias = Annotated[
+type IntArrayLike = Annotated[
     ArrayLike | IntLike, np.integer, val(val_int_array, cast=False)
 ]
 """Anything that can be cast into an N-dimensional Int array without loss of data."""
 
-FloatArrayLike: TypeAlias = Annotated[
+type FloatArrayLike = Annotated[
     ArrayLike | FloatLike, np.floating, val(val_float_array, cast=False)
 ]
 """Anything that can be cast into an N-dimensional Float array without loss of data."""
 
-ComplexArrayLike: TypeAlias = Annotated[
+type ComplexArrayLike = Annotated[
     ArrayLike | ComplexLike, np.inexact, val(val_complex_array, cast=False)
 ]
 """Anything that can be cast into an N-dim Complex array without loss of data."""
 
-IntArray1DLike: TypeAlias = Annotated[
+type IntArray1DLike = Annotated[
     IntArrayLike, np.integer, 1, val(val_int_array_1d, cast=False)
 ]
 """Anything that can be cast into a 1-dimensional integer array without loss of data."""
 
-FloatArray1DLike: TypeAlias = Annotated[
+type FloatArray1DLike = Annotated[
     FloatArrayLike, np.floating, 1, val(val_float_array_1d, cast=False)
 ]
 """Anything that can be cast into a 1-dimensional float array without loss of data."""
 
-FloatArray2DLike: TypeAlias = Annotated[
+type FloatArray2DLike = Annotated[
     FloatArrayLike, np.floating, 2, val(val_float_array_2d, cast=False)
 ]
 """Anything that can be cast into a 2-dimensional float array without loss of data."""
 
-ComplexArray1DLike: TypeAlias = Annotated[
+type ComplexArray1DLike = Annotated[
     ComplexArrayLike, np.inexact, 1, val(val_complex_array_1d, cast=False)
 ]
 """Anything that can be cast into a 1-dimensional complex array without loss of data."""
@@ -1030,7 +1021,7 @@ def val_name(
     return s
 
 
-Name: TypeAlias = Annotated[str, val(val_name)]
+type Name = Annotated[str, val(val_name)]
 """A valid Python identifier - contains only letters, numbers, and underscores."""
 
 

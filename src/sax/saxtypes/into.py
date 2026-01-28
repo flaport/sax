@@ -70,7 +70,7 @@ class Into(type):
         return _wrapped_validator(cast(type[T], key))
 
 
-def _wrapped_validator(key: type[T]) -> Callable[..., T]:
+def _wrapped_validator[T](key: type[T]) -> Callable[..., T]:
     """Create a wrapped validator function for a given type.
 
     Args:

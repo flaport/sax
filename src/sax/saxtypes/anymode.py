@@ -31,7 +31,7 @@ __all__ = [
     "SType",
 ]
 
-from typing import Annotated, Any, Literal, NamedTuple, TypeAlias
+from typing import Annotated, Any, Literal, NamedTuple
 
 import networkx as nx
 
@@ -71,46 +71,46 @@ from .singlemode import (
     STypeSM,
 )
 
-Model: TypeAlias = ModelSM | ModelMM
+type Model = ModelSM | ModelMM
 """A SAX model function that works with either single-mode or multi-mode circuits."""
 
-ModelFactory: TypeAlias = ModelFactorySM | ModelFactoryMM
+type ModelFactory = ModelFactorySM | ModelFactoryMM
 """A SAX model factory function that works with single-mode or multi-mode circuits."""
 
-PortCombination: TypeAlias = PortCombinationSM | PortCombinationMM
+type PortCombination = PortCombinationSM | PortCombinationMM
 """A pair of port names, either single-mode or multi-mode format."""
 
-PortMap: TypeAlias = PortMapSM | PortMapMM
+type PortMap = PortMapSM | PortMapMM
 """A mapping from port names to matrix indices, supporting both mode types."""
 
-SCoo: TypeAlias = SCooSM | SCooMM
+type SCoo = SCooSM | SCooMM
 """A sparse COO format S-matrix, supporting both single-mode and multi-mode."""
 
-SCooModel: TypeAlias = SCooModelSM | SCooModelMM
+type SCooModel = SCooModelSM | SCooModelMM
 """A model function that produces SCoo S-matrices in either mode format."""
 
-SCooModelFactory: TypeAlias = SCooModelFactorySM | SCooModelFactoryMM
+type SCooModelFactory = SCooModelFactorySM | SCooModelFactoryMM
 """A model factory that produces SCoo models in either mode format."""
 
-SDense: TypeAlias = SDenseSM | SDenseMM
+type SDense = SDenseSM | SDenseMM
 """A dense S-matrix representation, supporting both single-mode and multi-mode."""
 
-SDenseModel: TypeAlias = SDenseModelSM | SDenseModelMM
+type SDenseModel = SDenseModelSM | SDenseModelMM
 """A model function that produces SDense S-matrices in either mode format."""
 
-SDenseModelFactory: TypeAlias = SDenseModelFactorySM | SDenseModelFactoryMM
+type SDenseModelFactory = SDenseModelFactorySM | SDenseModelFactoryMM
 """A model factory that produces SDense models in either mode format."""
 
-SDict: TypeAlias = SDictSM | SDictMM
+type SDict = SDictSM | SDictMM
 """A dictionary-based sparse S-matrix, supporting both single-mode and multi-mode."""
 
-SDictModel: TypeAlias = SDictModelSM | SDictModelMM
+type SDictModel = SDictModelSM | SDictModelMM
 """A model function that produces SDict S-matrices in either mode format."""
 
-SDictModelFactory: TypeAlias = SDictModelFactorySM | SDictModelFactoryMM
+type SDictModelFactory = SDictModelFactorySM | SDictModelFactoryMM
 """A model factory that produces SDict models in either mode format."""
 
-SType: TypeAlias = STypeSM | STypeMM
+type SType = STypeSM | STypeMM
 """Any S-matrix type (SDict, SDense, SCoo) in single-mode or multi-mode format."""
 
 
@@ -145,15 +145,15 @@ def val_backend(backend: Any) -> Backend:
     return backend
 
 
-Backend: TypeAlias = Annotated[
+type Backend = Annotated[
     Literal["filipsson_gunnar", "additive", "forward", "klu"], val(val_backend)
 ]
 """Available SAX backend algorithms for circuit simulation."""
 
-BackendLike: TypeAlias = Backend | Literal["default", "fg"]
+type BackendLike = Backend | Literal["default", "fg"]
 """Backend specification allowing 'default' to use the system default backend."""
 
-Models: TypeAlias = ModelsSM | ModelsMM
+type Models = ModelsSM | ModelsMM
 """A collection of model functions, supporting both single-mode and multi-mode."""
 
 

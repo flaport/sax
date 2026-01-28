@@ -9,7 +9,7 @@ from __future__ import annotations
 
 import warnings
 from functools import partial
-from typing import Annotated, Any, NotRequired, TypeAlias, cast
+from typing import Annotated, Any, NotRequired, cast
 
 from typing_extensions import TypedDict
 
@@ -39,7 +39,7 @@ def extract_fields(dct: dict[str, Any], *, fields: tuple[str, ...]) -> dict[str,
     return {k: v for k, v in dct.items() if k in fields}
 
 
-Component: TypeAlias = Annotated[str, val(val_name, name="Component")]
+type Component = Annotated[str, val(val_name, name="Component")]
 """The name of a component model (must be a valid Python identifier)."""
 
 
@@ -172,7 +172,7 @@ Attributes:
     array: Optional configuration for arrayed instances.
 """
 
-Instances: TypeAlias = dict[InstanceName, Instance]
+type Instances = dict[InstanceName, Instance]
 """A mapping from instance names to their definitions."""
 
 
@@ -213,12 +213,12 @@ Placement = Annotated[
 ]
 """A placement definition for an instance in a netlist."""
 
-Placements: TypeAlias = dict[InstanceName, Placement]
+type Placements = dict[InstanceName, Placement]
 """A mapping from instance names to their placements."""
 
 default_placement: Placement = {"x": 0.0, "y": 0.0, "rotation": 0, "mirror": False}
 
-Connections: TypeAlias = dict[InstancePort, InstancePort]
+type Connections = dict[InstancePort, InstancePort]
 """A mapping defining point-to-point connections between instance ports."""
 
 
@@ -252,7 +252,7 @@ def val_ports(obj: Any) -> Ports:
     return ports
 
 
-Ports: TypeAlias = Annotated[dict[Port, InstancePort], val(val_ports)]
+type Ports = Annotated[dict[Port, InstancePort], val(val_ports)]
 """A mapping from external circuit ports to internal instance ports."""
 
 
@@ -280,7 +280,7 @@ Attributes:
 """
 
 
-Nets: TypeAlias = list[Net]
+type Nets = list[Net]
 """A list of logical connections between ports."""
 
 
@@ -372,10 +372,10 @@ def val_recnet(obj: Any) -> RecursiveNetlist:
     return ret
 
 
-RecursiveNetlist: TypeAlias = Annotated[dict[Name, Netlist], val(val_recnet)]
+type RecursiveNetlist = Annotated[dict[Name, Netlist], val(val_recnet)]
 """A hierarchical netlist containing multiple named circuits."""
 
-AnyNetlist: TypeAlias = Netlist | RecursiveNetlist | dict[str, dict[str, str]]
+type AnyNetlist = Netlist | RecursiveNetlist | dict[str, dict[str, str]]
 """Any valid netlist format: flat, recursive, or simplified dictionary."""
 
 

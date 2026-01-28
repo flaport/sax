@@ -33,7 +33,6 @@ from collections.abc import Callable
 from typing import (
     Annotated,
     Any,
-    TypeAlias,
 )
 
 from .core import ComplexArray, IntArray1D, Name, val
@@ -73,7 +72,7 @@ def val_mode(obj: Any) -> Mode:
     return str(obj)  # just a string to allow '@0' etc.
 
 
-Mode: TypeAlias = Annotated[str, val(val_mode)]
+type Mode = Annotated[str, val(val_mode)]
 """A mode identifier string (e.g., '0', 'TE0', 'TM1')."""
 
 
@@ -112,19 +111,19 @@ def val_port_mode(obj: Any) -> PortMode:
     return f"{port}@{mode}"
 
 
-PortMode: TypeAlias = Annotated[str, val(val_port_mode)]
+type PortMode = Annotated[str, val(val_port_mode)]
 """A port-mode specification in the format 'port_name@mode_name'."""
 
 
-PortMapMM: TypeAlias = dict[PortMode, int]
+type PortMapMM = dict[PortMode, int]
 """A mapping from multi-mode port-mode names to their matrix indices."""
 
 
-PortCombinationMM: TypeAlias = tuple[PortMode, PortMode]
+type PortCombinationMM = tuple[PortMode, PortMode]
 """A pair of multi-mode port-mode names representing an S-parameter."""
 
 
-SDictMM: TypeAlias = dict[PortCombinationMM, ComplexArray]
+type SDictMM = dict[PortCombinationMM, ComplexArray]
 """A sparse dictionary-based S-matrix representation.
 
 A mapping from a port combination to an S-parameter or an array of S-parameters.
@@ -140,7 +139,7 @@ Examples:
 
 """
 
-SDenseMM: TypeAlias = tuple[ComplexArray, PortMapMM]
+type SDenseMM = tuple[ComplexArray, PortMapMM]
 """A dense S-matrix representation.
 
 S-matrix (2D array) or multidimensional batched S-matrix (N+2)-D array with a port map.
@@ -157,7 +156,7 @@ Examples:
 
 """
 
-SCooMM: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArray, PortMapMM]
+type SCooMM = tuple[IntArray1D, IntArray1D, ComplexArray, PortMapMM]
 """A sparse S-matrix in COO format (recommended for internal library use only).
 
 An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three
@@ -185,7 +184,7 @@ Note:
 
 """
 
-STypeMM: TypeAlias = SDictMM | SCooMM | SDenseMM
+type STypeMM = SDictMM | SCooMM | SDenseMM
 """Any S-Matrix type [SDict, SDense, SCOO]."""
 
 
@@ -204,20 +203,18 @@ def val_model(model: Any) -> ModelMM:
     return val_not_callable_annotated(val_sax_callable(model))
 
 
-SDictModelMM: TypeAlias = Annotated[Callable[..., SDictMM], val(val_model)]
+type SDictModelMM = Annotated[Callable[..., SDictMM], val(val_model)]
 """A keyword-only function that produces a multi-mode SDict S-matrix."""
 
-SDenseModelMM: TypeAlias = Annotated[Callable[..., SDenseMM], val(val_model)]
+type SDenseModelMM = Annotated[Callable[..., SDenseMM], val(val_model)]
 """A keyword-only function that produces a multi-mode SDense S-matrix."""
 
 
-SCooModelMM: TypeAlias = Annotated[Callable[..., SCooMM], val(val_model)]
+type SCooModelMM = Annotated[Callable[..., SCooMM], val(val_model)]
 """A keyword-only function that produces a multi-mode SCoo S-matrix."""
 
 
-ModelMM: TypeAlias = Annotated[
-    SDenseModelMM | SCooModelMM | SDictModelMM, val(val_model)
-]
+type ModelMM = Annotated[SDenseModelMM | SCooModelMM | SDictModelMM, val(val_model)]
 """A keyword-only function that produces any multi-mode S-matrix type."""
 
 
@@ -236,28 +233,26 @@ def val_model_factory(model: Any) -> ModelFactoryMM:
     return val_callable_annotated(val_sax_callable(model))
 
 
-SDictModelFactoryMM: TypeAlias = Annotated[
+type SDictModelFactoryMM = Annotated[
     Callable[..., SDictModelMM], val(val_model_factory)
 ]
 """A keyword-only function that produces a multi-mode SDict model."""
 
 
-SDenseModelFactoryMM: TypeAlias = Annotated[
+type SDenseModelFactoryMM = Annotated[
     Callable[..., SDenseModelMM], val(val_model_factory)
 ]
 """A keyword-only function that produces a multi-mode SDense model."""
 
-SCooModelFactoryMM: TypeAlias = Annotated[
-    Callable[..., SCooModelMM], val(val_model_factory)
-]
+type SCooModelFactoryMM = Annotated[Callable[..., SCooModelMM], val(val_model_factory)]
 """A keyword-only function that produces a multi-mode SCoo model."""
 
 
-ModelFactoryMM: TypeAlias = Annotated[
+type ModelFactoryMM = Annotated[
     SDictModelFactoryMM | SDenseModelFactoryMM | SCooModelFactoryMM,
     val(val_model_factory),
 ]
 """A keyword-only function that produces any multi-mode model."""
 
-ModelsMM: TypeAlias = dict[Name, ModelMM]
+type ModelsMM = dict[Name, ModelMM]
 """A mapping from model names to multi-mode model functions."""

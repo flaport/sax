@@ -12,7 +12,7 @@ __all__ = [
     "SettingsValue",
 ]
 
-from typing import Annotated, Any, TypeAlias
+from typing import Annotated, Any
 
 from .core import val, val_complex_array
 
@@ -49,9 +49,9 @@ def val_settings_value(value: Any) -> SettingsValue:
     return val_complex_array(value, strict=False, cast=False)
 
 
-SettingsValue: TypeAlias = Annotated[Any, val(val_settings_value)]
+type SettingsValue = Annotated[Any, val(val_settings_value)]
 """Any value that can be stored in a settings dictionary"""
-# SettingsValue: TypeAlias = Annotated[
+# type SettingsValue = Annotated[
 #     Settings | ComplexArrayLike | str | None, val(val_settings_value)
 # ]
 
@@ -91,7 +91,7 @@ def val_settings(settings: dict) -> Settings:
     return {k: val_settings_value(v) for k, v in settings.items()}
 
 
-Settings: TypeAlias = Annotated[dict[str, SettingsValue], val(val_settings)]
+type Settings = Annotated[dict[str, SettingsValue], val(val_settings)]
 """A (possibly nested) settings mapping for configuring models and circuits.
 
 Settings provide a hierarchical way to configure SAX models and circuits.

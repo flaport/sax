@@ -57,7 +57,7 @@ __all__ = [
 ]
 
 
-def maybe(
+def maybe[T](
     func: Callable[..., T], /, exc: type[Exception] = Exception
 ) -> Callable[..., T | None]:
     """Create a safe version of a function that returns None on exceptions.
@@ -881,7 +881,7 @@ def wide_to_tidy(df: pd.DataFrame, ports: Iterable[str] | None = None) -> pd.Dat
     return df
 
 
-def same_args_as(
+def same_args_as[T](
     func: Callable[..., T],
 ) -> Callable[[Callable[..., T]], Callable[..., T]]:
     """Have the same signature as the wrapped function."""

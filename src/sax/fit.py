@@ -7,7 +7,7 @@ import sys
 import warnings
 from collections.abc import Callable
 from functools import partial
-from typing import IO, Annotated, Any, TypeAlias, overload
+from typing import IO, Annotated, Any, overload
 
 import jax
 import jax.numpy as jnp
@@ -261,10 +261,10 @@ def eval_neural_fit(
     return namespace[func](**kwargs)
 
 
-Equation: TypeAlias = Annotated[Any, "Equation"]
+type Equation = Annotated[Any, "Equation"]
 """A sumpy-equation."""
 
-PRNGKey: TypeAlias = Annotated[Any, "PRNGKey"]
+type PRNGKey = Annotated[Any, "PRNGKey"]
 """The jax.PRNGKey used to generate random weights and biases."""
 
 
