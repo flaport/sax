@@ -584,7 +584,7 @@ def _extract_instance_models(netlist: sax.AnyNetlist) -> sax.Models:
         for f in callable_instances:
             while isinstance(f, partial):
                 f = f.func
-            models[f.__name__] = f  # type: ignore[possibly-missing-attribute]
+            models[f.__name__] = f
         return models
 
     if _is_recursive_netlist(netlist):

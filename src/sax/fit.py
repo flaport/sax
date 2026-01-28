@@ -451,7 +451,7 @@ def train_network(
     for _ in (pb := _tqdm(range(num_epochs))):
         grads = grad_fn(params)
         updates, opt_state = optimizer.update(grads, opt_state)
-        params: list[Params] = optax.apply_updates(params, updates)  # type: ignore[reportArgumentType, reportAssignmentType]
+        params: list[Params] = optax.apply_updates(params, updates)
         loss = loss_fn(params)
         losses.append(float(loss))
         if progress_bar:
@@ -491,7 +491,7 @@ def _render_function_template(
     *, target: str, eq: Equation, act: Callable, args: list[str]
 ) -> str:
     rendered_args = "\n".join([argument_template.format(arg=arg) for arg in args])
-    act_name = act.__name__  # type: ignore[unresolved-attribute]
+    act_name = act.__name__
     return _function_template.format(
         target=target,
         eq=str(eq).replace(act_name, f"jnp.{act_name}"),

@@ -56,7 +56,7 @@ def interpolate_xarray(
         data,
         new_params,
         strings,
-        **new_kwargs,  # type: ignore[invalid-argument-type]
+        **new_kwargs,
     )
 
     axs_rev = dict(
@@ -67,8 +67,7 @@ def interpolate_xarray(
     for ax, name in axs_rev.items():
         if name in string_kwargs:
             ss = {
-                kk: s.take(pos[name][string_kwargs[name]], ax)  # type: ignore[reportArgumentType]
-                for kk, s in ss.items()
+                kk: s.take(pos[name][string_kwargs[name]], ax) for kk, s in ss.items()
             }
 
     return ss

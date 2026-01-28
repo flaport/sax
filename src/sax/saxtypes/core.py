@@ -150,7 +150,7 @@ def _val_item_type[T](
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
         arr = maybe(np.asarray)(item)
-        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):  # type: ignore[arg-type]
+        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):
             msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
             raise TypeError(msg)
         if strict:
@@ -1108,4 +1108,4 @@ def _x64_enabled() -> bool:
     Returns:
         True if 64-bit precision is enabled, False otherwise.
     """
-    return jax.config.jax_enable_x64  # type: ignore[reportAttributeAccessIssue]
+    return jax.config.jax_enable_x64

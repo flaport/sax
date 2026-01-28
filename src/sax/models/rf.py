@@ -293,7 +293,7 @@ def electrical_short(
     References:
         [@pozar2012]
     """
-    return gamma_0_load(f=f, gamma_0=-1, n_ports=n_ports)  # type: ignore[return-value]
+    return gamma_0_load(f=f, gamma_0=-1, n_ports=n_ports)
 
 
 @partial(jax.jit, inline=True, static_argnames=("n_ports"))
@@ -316,4 +316,4 @@ def electrical_open(
     References:
         [@pozar2012]
     """
-    return gamma_0_load(f=f, gamma_0=1, n_ports=n_ports)  # type: ignore[return-value]
+    return gamma_0_load(f=f, gamma_0=1, n_ports=n_ports)
