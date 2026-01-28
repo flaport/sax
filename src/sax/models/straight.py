@@ -116,7 +116,7 @@ def attenuator(
         ```
     """
     one = jnp.ones_like(jnp.asarray(wl))
-    transmission = jnp.asarray(10 ** (-loss / 20), dtype=complex) * one
+    transmission = jnp.asarray(10 ** (-jnp.asarray(loss) / 20), dtype=complex) * one
     p = sax.PortNamer(1, 1)
     return sax.reciprocal(
         {
@@ -176,7 +176,7 @@ def phase_shifter(
     """
     deltaphi = voltage * jnp.pi
     phase = 2 * jnp.pi * neff * length / wl + deltaphi
-    amplitude = jnp.asarray(10 ** (-loss * length / 20), dtype=complex)
+    amplitude = jnp.asarray(10 ** (-jnp.asarray(loss) * length / 20), dtype=complex)
     transmission = amplitude * jnp.exp(1j * phase)
     p = sax.PortNamer(1, 1)
     return sax.reciprocal(

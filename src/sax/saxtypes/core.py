@@ -124,7 +124,7 @@ def _val_item_type[T](
     obj: Any,
     *,
     strict: bool,
-    cast: bool,
+    do_cast: bool,
     type_cast: Callable[..., T],
     type_def: Any,
     type_name: str,
@@ -134,7 +134,7 @@ def _val_item_type[T](
     Args:
         obj: The object to validate.
         strict: Whether to use strict validation.
-        cast: Whether to cast the result to the target type.
+        do_cast: Whether to cast the result to the target type.
         type_cast: Function to cast to the target type.
         type_def: Type definition for validation.
         type_name: Name of the type for error messages.
@@ -150,7 +150,9 @@ def _val_item_type[T](
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
         arr = maybe(np.asarray)(item)
-        if arr is None or not np.can_cast(arr, type_cast, casting="same_kind"):
+        if arr is None or not np.can_cast(
+            arr, cast(Any, type_cast), casting="same_kind"
+        ):
             msg = f"NOT_{type_name.upper()}: Cannot validate {obj!r} into {type_name}."
             raise TypeError(msg)
         if strict:
@@ -160,7 +162,7 @@ def _val_item_type[T](
                 f"Note: use {type_name}Like type for less strict type checking."
             )
             raise TypeError(msg)
-    if cast:
+    if do_cast:
         return type_cast(item)
     return item
 
@@ -204,7 +206,7 @@ def val_bool(obj: Any, *, strict: bool = False, cast: bool = True) -> BoolLike:
     return _val_item_type(
         obj,
         strict=strict,
-        cast=cast,
+        do_cast=cast,
         type_cast=bool,
         type_def=Bool,
         type_name="Bool",
@@ -261,7 +263,7 @@ def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
     return _val_item_type(
         obj,
         strict=strict,
-        cast=cast,
+        do_cast=cast,
         type_cast=int,
         type_def=Int,
         type_name="Int" if strict else "IntLike",
@@ -311,7 +313,7 @@ def val_float(obj: Any, *, strict: bool = False, cast: bool = True) -> FloatLike
     return _val_item_type(
         obj,
         strict=strict,
-        cast=cast,
+        do_cast=cast,
         type_cast=float,
         type_def=Float,
         type_name="Float" if strict else "FloatLike",
@@ -363,7 +365,7 @@ def val_complex(obj: Any, *, strict: bool = False, cast: bool = True) -> Complex
     return _val_item_type(
         obj,
         strict=strict,
-        cast=cast,
+        do_cast=cast,
         type_cast=complex,
         type_def=Complex,
         type_name="Complex" if strict else "ComplexLike",
@@ -1108,4 +1110,4 @@ def _x64_enabled() -> bool:
     Returns:
         True if 64-bit precision is enabled, False otherwise.
     """
-    return jax.config.jax_enable_x64
+    return bool(getattr(jax.config, "jax_enable_x64", False))

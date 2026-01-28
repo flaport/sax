@@ -364,7 +364,7 @@ def replace_kwargs(func: Callable, **kwargs: sax.SettingsValue) -> None:
         inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, default=v)
         for k, v in kwargs.items()
     ]
-    func.__signature__ = sig.replace(parameters=settings)
+    func.__signature__ = sig.replace(parameters=settings)  # type: ignore[unresolved-attribute]
 
 
 def update_settings(
@@ -886,8 +886,8 @@ def same_args_as[T](
     """Have the same signature as the wrapped function."""
 
     def decorator(wrapped_func: Callable[..., T]) -> Callable[..., T]:
-        name = wrapped_func.__name__
-        qualname = wrapped_func.__qualname__
+        name = getattr(wrapped_func, "__name__", "name")
+        qualname = getattr(wrapped_func, "__qualname__", "qualname")
         module = wrapped_func.__module__
         doc = wrapped_func.__doc__
         new_func = wraps(func)(wrapped_func)
@@ -1005,7 +1005,7 @@ def _replace_kwargs(func: Callable, **kwargs: Any) -> None:  # noqa: ANN401
         inspect.Parameter(k, inspect.Parameter.KEYWORD_ONLY, default=v)
         for k, v in kwargs.items()
     ]
-    func.__signature__ = sig.replace(parameters=settings)
+    func.__signature__ = sig.replace(parameters=settings)  # type: ignore[unresolved-attribute]
 
 
 def _numpyfy(obj: Any) -> Any:  # noqa: ANN401
