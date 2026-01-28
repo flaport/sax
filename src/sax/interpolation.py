@@ -47,13 +47,16 @@ def interpolate_xarray(
             msg = f"Cannot interpolate over target parameter {target_name}."
             raise ValueError(msg)
         string_kwargs = {k: v for k, v in kwargs.items() if k in strings}
-        new_kwargs = {**kwargs, **{k: [str(v)] for k, v in string_kwargs.items()}}
+        new_kwargs: dict[str, Array | str | list[str]] = {
+            **kwargs,
+            **{k: [str(v)] for k, v in string_kwargs.items()},
+        }
 
     s, axs, pos = _evaluate_general_corner_model(
         data,
         new_params,
         strings,
-        **new_kwargs,
+        **new_kwargs,  # type: ignore[invalid-argument-type]
     )
 
     axs_rev = dict(

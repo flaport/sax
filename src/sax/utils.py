@@ -320,7 +320,7 @@ def get_settings(model: sax.Model | sax.ModelFactory) -> sax.Settings:
                                 # Field has no default value
                                 pass
 
-    return cast(sax.Settings, settings)
+    return settings
 
 
 def merge_dicts(*dicts: dict) -> dict:
@@ -575,7 +575,7 @@ def rename_params(model: sax.Model, renamings: dict[str, str]) -> sax.Model:
         msg = "Multiple old names point to the same new name!"
         raise ValueError(msg)
 
-    if callable(_model := cast(sax.Model, model)):
+    if callable(_model := model):
 
         @wraps(_model)
         def new_model(**settings: sax.SettingsValue) -> sax.SType:
@@ -652,6 +652,7 @@ def rename_ports(
         return cast(sax.Model, new_model)
 
     if isinstance(sdict := S, dict):
+        sdict = cast(sax.SDict, sdict)
         return {(renamings[p1], renamings[p2]): v for (p1, p2), v in sdict.items()}
 
     if len(scoo := cast(sax.SCoo, S)) == 4:
@@ -886,8 +887,8 @@ def same_args_as(
     """Have the same signature as the wrapped function."""
 
     def decorator(wrapped_func: Callable[..., T]) -> Callable[..., T]:
-        name = wrapped_func.__name__
-        qualname = wrapped_func.__qualname__
+        name = wrapped_func.__name__  # type: ignore[unresolved-attribute]
+        qualname = wrapped_func.__qualname__  # type: ignore[unresolved-attribute]
         module = wrapped_func.__module__
         doc = wrapped_func.__doc__
         new_func = wraps(func)(wrapped_func)

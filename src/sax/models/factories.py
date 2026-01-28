@@ -337,6 +337,6 @@ def passthru(
         reciprocal=reciprocal,
         diagonal=True,
     )
-    passthru.__name__ = f"passthru_{num_links}_{num_links}"
-    passthru.__qualname__ = f"passthru_{num_links}_{num_links}"
+    passthru.__name__ = f"passthru_{num_links}_{num_links}"  # type: ignore[unresolved-attribute]
+    passthru.__qualname__ = f"passthru_{num_links}_{num_links}"  # type: ignore[unresolved-attribute]
     return jax.jit(passthru)

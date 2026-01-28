@@ -216,7 +216,7 @@ SCooModelMM: TypeAlias = Annotated[Callable[..., SCooMM], val(val_model)]
 
 
 ModelMM: TypeAlias = Annotated[
-    SDenseModelMM | SCooModelMM | SDictModelMM, val(val_model)  # type: ignore[reportInvalidTypeForm]
+    SDenseModelMM | SCooModelMM | SDictModelMM, val(val_model)
 ]
 """A keyword-only function that produces any multi-mode S-matrix type."""
 

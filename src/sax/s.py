@@ -77,7 +77,7 @@ def sdict(S: sax.Model | sax.SType) -> sax.SDictModel | sax.SDict:
         return model
 
     if isinstance(_sdict := S, dict):
-        return _sdict
+        return cast(sax.SDict, _sdict)
 
     if len(_scoo := cast(tuple, S)) == 4:
         return _scoo_to_sdict(*_scoo)
@@ -138,7 +138,7 @@ def scoo(S: sax.Model | sax.SType) -> sax.SCooModel | sax.SCoo:
         return model
 
     if isinstance(_sdict := S, dict):
-        return _sdict_to_scoo(_sdict)
+        return _sdict_to_scoo(cast(sax.SDict, _sdict))
 
     if len(_scoo := cast(tuple, S)) == 4:
         return _scoo
@@ -199,7 +199,7 @@ def sdense(S: sax.SType | sax.Model) -> sax.SDenseModel | sax.SDense:
         return model
 
     if isinstance(_sdict := S, dict):
-        return _sdict_to_sdense(_sdict)
+        return _sdict_to_sdense(cast(sax.SDict, _sdict))
 
     if len(_scoo := cast(tuple, S)) == 4:
         return _scoo_to_sdense(*_scoo)

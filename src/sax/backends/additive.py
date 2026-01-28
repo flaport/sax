@@ -178,7 +178,7 @@ def _graph_edges(
                 (instance, p2),
                 {"type": "S", "length": jnp.asarray(length).ravel()},
             )
-            for (p1, p2), length in sax.sdict(s).items()  # type: ignore[reportAttributeAccessIssue]
+            for (p1, p2), length in sax.sdict(s).items()
         ]
 
     return edges

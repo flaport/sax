@@ -427,7 +427,7 @@ def train_network(
     """
     params = init_fn(key)
     optimizer = optax.adam(learning_rate)
-    opt_state = optimizer.init(params)  # type: ignore[reportAgumentType]
+    opt_state = optimizer.init(params)
 
     # Loss function with penalty
     loss_fn = jax.jit(
@@ -491,8 +491,9 @@ def _render_function_template(
     *, target: str, eq: Equation, act: Callable, args: list[str]
 ) -> str:
     rendered_args = "\n".join([argument_template.format(arg=arg) for arg in args])
+    act_name = act.__name__  # type: ignore[unresolved-attribute]
     return _function_template.format(
         target=target,
-        eq=str(eq).replace(act.__name__, f"jnp.{act.__name__}"),
+        eq=str(eq).replace(act_name, f"jnp.{act_name}"),
         args=rendered_args,
     )
