@@ -45,8 +45,8 @@ repos:
 
   - repo: local
     hooks:
-      - id: ty
-        name: ty
-        entry: uv run --no-sync ty check
+      - id: pyright
+        name: pyright
+        entry: uv run --no-sync pyright
         language: system
         files: \.(py)$
