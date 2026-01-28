@@ -166,7 +166,7 @@ def rename_instances(
         i2 = mapping.get(i2, i2)
         new["connections"][f"{i1},{p1}"] = f"{i2},{p2}"
     new["ports"] = {}
-    for q, ip in net["ports"].items():
+    for q, ip in net.get("ports", {}).items():
         i, p = ip.split(",")
         i = mapping.get(i, i)
         new["ports"][q] = f"{i},{p}"
@@ -211,10 +211,10 @@ def rename_models(
 
 
 def _remove_ports(net: sax.Netlist, names: set[sax.InstanceName]) -> None:
-    for pname, conn in list(net["ports"].items()):
+    for pname, conn in list(net.get("ports", {}).items()):
         name, _ = conn.split(",")
-        if name in names and pname in net["ports"]:
-            del net["ports"][pname]
+        if name in names and pname in net.get("ports", {}):
+            del net.get("ports", {})[pname]
 
 
 def _remove_connections(net: sax.Netlist, names: set[sax.InstanceName]) -> None:
@@ -236,7 +236,7 @@ def _remove_instances(net: sax.Netlist, names: set[sax.InstanceName]) -> None:
 
 def _get_nodes_to_remove(graph: nx.Graph, netlist: sax.Netlist) -> set[str]:
     nodes = set()
-    for port in netlist["ports"]:
+    for port in netlist.get("ports", {}):
         nodes |= nx.descendants(graph, port)
     return set(graph.nodes) - nodes
 
@@ -248,7 +248,7 @@ def _get_connectivity_netlist(netlist: sax.Netlist) -> dict:
             (c1.split(",")[0], c2.split(",")[0])
             for c1, c2 in netlist.get("connections", {}).items()
         ],
-        "ports": [(p, c.split(",")[0]) for p, c in netlist["ports"].items()],
+        "ports": [(p, c.split(",")[0]) for p, c in netlist.get("ports", {}).items()],
     }
 
 
@@ -276,7 +276,7 @@ def _flatten_netlist_into(  # noqa: PLR0912,C901
         _flatten_netlist_into(recnet, child_net, sep)
         for iname, iinstance in child_net["instances"].items():
             net["instances"][f"{name}{sep}{iname}"] = iinstance
-        ports = {k: f"{name}{sep}{v}" for k, v in child_net["ports"].items()}
+        ports = {k: f"{name}{sep}{v}" for k, v in child_net.get("ports", {}).items()}
         net["connections"] = net.get("connections", {})
         for ip1, ip2 in list(net["connections"].items()):
             n1, p1 = ip1.split(",")
@@ -301,7 +301,7 @@ def _flatten_netlist_into(  # noqa: PLR0912,C901
         child_net["connections"] = child_net.get("connections", {})
         for ip1, ip2 in child_net["connections"].items():
             net["connections"][f"{name}{sep}{ip1}"] = f"{name}{sep}{ip2}"
-        for p, ip2 in list(net["ports"].items()):
+        for p, ip2 in list(net.get("ports", {}).items()):
             try:
                 n2, p2 = ip2.split(",")
             except ValueError:
@@ -311,9 +311,9 @@ def _flatten_netlist_into(  # noqa: PLR0912,C901
                 continue
             if n2 == name:
                 if p2 in ports:
-                    net["ports"][p] = ports[p2]
+                    net.get("ports", {})[p] = ports[p2]
                 else:
-                    del net["ports"][p]
+                    del net.get("ports", {})[p]
 
 
 @overload
@@ -411,16 +411,18 @@ def expand_probes(
     Args:
         netlist: The netlist to expand probes in.
         probes: A mapping from probe names to instance ports where probes should
-            be inserted. The instance port must be part of an existing connection.
+            be inserted. If the instance port is part of an existing connection,
+            a 4-port probe is inserted. If the instance port is unconnected,
+            only the "X_fwd" port is created as a direct alias.
             Example: ``{"mid": "wg1,out"}``
 
     Returns:
         A new netlist with probe instances inserted and connections/ports updated.
-        For each probe named "X", two new ports are added: "X_fwd" and "X_bwd".
+        For probes on connected ports, two new ports are added: "X_fwd" and "X_bwd".
+        For probes on unconnected ports, only "X_fwd" is added.
 
     Raises:
-        ValueError: If a probe references an instance port that is not part of
-            any connection, or if probe ports would conflict with existing ports.
+        ValueError: If probe ports would conflict with existing ports.
 
     Example:
         ```python
@@ -452,7 +454,7 @@ def expand_probes(
     net: sax.Netlist = deepcopy(sax.into[sax.Netlist](netlist))
     connections = dict(net.get("connections", {}).items())
     inverse_connections = {v: k for k, v in connections.items()}
-    ports = dict(net["ports"].items())
+    ports = dict(net.get("ports", {}).items())
     instances = dict(net["instances"].items())
 
     for probe_name, instance_port in probes.items():
@@ -498,11 +500,9 @@ def expand_probes(
             in_side = other_port
             out_side = instance_port
         else:
-            msg = (
-                f"Probe '{probe_name}' references instance port '{instance_port}' "
-                f"which is not part of any connection."
-            )
-            raise ValueError(msg)
+            # Unconnected port: just expose it as a top-level port (fwd only)
+            ports[fwd_port] = instance_port
+            continue
 
         # Insert probe instance
         instances[probe_instance_name] = {"component": "_ideal_probe"}

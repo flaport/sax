@@ -249,9 +249,6 @@ def val_ports(obj: Any) -> Ports:
     from .into import into
 
     ports: dict[str, InstancePort] = into[dict[str, InstancePort]](obj)
-    if len(ports) < 1:
-        msg = "A sax netlist needs to have at least one port defined."
-        raise TypeError(msg)
     return ports
 
 
@@ -327,7 +324,7 @@ Netlist = Annotated[
         {
             "instances": Instances,
             "connections": NotRequired[Connections],
-            "ports": Ports,
+            "ports": NotRequired[Ports],
             "nets": NotRequired[Nets],
             "placements": NotRequired[Placements],
             "settings": NotRequired[Settings],
@@ -368,12 +365,6 @@ def val_recnet(obj: Any) -> RecursiveNetlist:
             msg = (
                 f"Could not validate netlist for {name!r}. "
                 "This netlist will be ignored."
-            )
-            warnings.warn(msg, stacklevel=2)
-            continue
-        if len(net.get("ports", {})) < 1:
-            msg = (
-                f"Netlist {name!r} has no ports defined. This netlist will be ignored."
             )
             warnings.warn(msg, stacklevel=2)
             continue
