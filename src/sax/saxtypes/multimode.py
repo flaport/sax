@@ -35,8 +35,8 @@ from typing import (
     Any,
 )
 
-from .core import ComplexArray, IntArray1D, Name, val
-from .singlemode import (
+from sax.saxtypes.core import ComplexArray, IntArray1D, Name, val
+from sax.saxtypes.singlemode import (
     cast_string,
     val_callable_annotated,
     val_not_callable_annotated,

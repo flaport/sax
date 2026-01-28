@@ -12,17 +12,16 @@ import networkx as nx
 import numpy as np
 
 import sax
-
-from .backends import circuit_backends
-from .models.probes import ideal_probe
-from .netlists import (
+from sax.backends import circuit_backends
+from sax.models.probes import ideal_probe
+from sax.netlists import (
     convert_nets_to_connections,
     expand_probes,
     remove_unused_instances,
 )
-from .netlists import netlist as into_recnet
-from .s import get_ports, scoo, sdense, sdict
-from .utils import get_settings, merge_dicts, replace_kwargs, update_settings
+from sax.netlists import netlist as into_recnet
+from sax.s import get_ports, scoo, sdense, sdict
+from sax.utils import get_settings, merge_dicts, replace_kwargs, update_settings
 
 __all__ = ["circuit", "draw_dag", "get_required_circuit_models"]
 

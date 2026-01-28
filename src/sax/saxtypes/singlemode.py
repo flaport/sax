@@ -39,7 +39,7 @@ from typing import (
     get_origin,
 )
 
-from .core import ComplexArray, IntArray1D, Name, cast_string, val, val_name
+from sax.saxtypes.core import ComplexArray, IntArray1D, Name, cast_string, val, val_name
 
 T = TypeVar("T")
 

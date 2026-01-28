@@ -35,8 +35,8 @@ from typing import Annotated, Any, Literal, NamedTuple
 
 import networkx as nx
 
-from .core import Name, val
-from .multimode import (
+from sax.saxtypes.core import Name, val
+from sax.saxtypes.multimode import (
     ModelFactoryMM,
     ModelMM,
     ModelsMM,
@@ -53,7 +53,7 @@ from .multimode import (
     SDictModelMM,
     STypeMM,
 )
-from .singlemode import (
+from sax.saxtypes.singlemode import (
     ModelFactorySM,
     ModelSM,
     ModelsSM,

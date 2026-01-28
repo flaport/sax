@@ -2,19 +2,19 @@
 
 from __future__ import annotations
 
-from . import rf
-from .bends import (
+from sax.models import rf
+from sax.models.bends import (
     bend,
 )
-from .couplers import (
+from sax.models.couplers import (
     coupler,
     coupler_ideal,
     grating_coupler,
 )
-from .crossings import (
+from sax.models.crossings import (
     crossing_ideal,
 )
-from .factories import (
+from sax.models.factories import (
     copier,
     model_2port,
     model_3port,
@@ -22,19 +22,19 @@ from .factories import (
     passthru,
     unitary,
 )
-from .mmis import (
+from sax.models.mmis import (
     mmi1x2,
     mmi1x2_ideal,
     mmi2x2,
     mmi2x2_ideal,
 )
-from .probes import (
+from sax.models.probes import (
     ideal_probe,
 )
-from .splitters import (
+from sax.models.splitters import (
     splitter_ideal,
 )
-from .straight import (
+from sax.models.straight import (
     attenuator,
     phase_shifter,
     straight,

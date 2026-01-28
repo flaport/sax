@@ -5,9 +5,8 @@ import jax.numpy as jnp
 from pydantic import validate_call
 
 import sax
-
-from .couplers import coupler_ideal
-from .splitters import splitter_ideal
+from sax.models.couplers import coupler_ideal
+from sax.models.splitters import splitter_ideal
 
 
 @jax.jit

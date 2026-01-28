@@ -4,8 +4,7 @@ import jax
 from pydantic import validate_call
 
 import sax
-
-from .straight import straight
+from sax.models.straight import straight
 
 
 @jax.jit

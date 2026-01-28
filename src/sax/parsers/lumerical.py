@@ -20,8 +20,7 @@ from numpy.typing import NDArray
 from typing_extensions import TypedDict
 
 import sax
-
-from .touchstone import _validate_columns
+from sax.parsers.touchstone import _validate_columns
 
 
 def parse_lumerical_dat(

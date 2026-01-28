@@ -145,7 +145,7 @@ def _val_item_type[T](
     Raises:
         TypeError: If validation fails.
     """
-    from ..utils import maybe
+    from sax.utils import maybe
 
     item = _val_0d(obj, type_name=type_name).item()
     if not isinstance(item, _get_annotated_type(type_def)):
@@ -251,7 +251,7 @@ def val_int(obj: Any, *, strict: bool = False, cast: bool = True) -> IntLike:
         result = sxt.val_int("5")  # 5 (cast from string)
         ```
     """
-    from ..utils import maybe
+    from sax.utils import maybe
 
     if strict and maybe(partial(val_bool, strict=False, cast=False))(obj) is not None:
         msg = (

@@ -6,23 +6,22 @@ import warnings
 from collections.abc import Callable
 
 import sax
-
-from .additive import (
+from sax.backends.additive import (
     analyze_circuit_additive,
     analyze_instances_additive,
     evaluate_circuit_additive,
 )
-from .filipsson_gunnar import (
+from sax.backends.filipsson_gunnar import (
     analyze_circuit_fg,
     analyze_instances_fg,
     evaluate_circuit_fg,
 )
-from .forward_only import (
+from sax.backends.forward_only import (
     analyze_circuit_forward,
     analyze_instances_forward,
     evaluate_circuit_forward,
 )
-from .klu import (
+from sax.backends.klu import (
     analyze_circuit_klu,
     analyze_instances_klu,
     evaluate_circuit_klu,

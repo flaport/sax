@@ -6,7 +6,7 @@ __author__ = "Floris Laporte"
 __version__ = "0.16.2"
 
 # isort: off
-from .saxtypes import (
+from sax.saxtypes import (
     AnyNetlist,
     ArrayLike,
     Backend,
@@ -106,7 +106,7 @@ from .saxtypes import (
     into,
     try_into,
 )
-from .constants import (
+from sax.constants import (
     C_M_S,
     C_UM_S,
     DEFAULT_MODE,
@@ -134,12 +134,12 @@ from .constants import (
     wl_o,
     wl_s,
 )
-from .loss import (
+from sax.loss import (
     huber_loss,
     l2_reg,
     mse,
 )
-from .s import (
+from sax.s import (
     block_diag,
     get_mode,
     get_modes,
@@ -150,7 +150,7 @@ from .s import (
     sdense,
     sdict,
 )
-from .utils import (
+from sax.utils import (
     Normalization,
     cartesian_product,
     clean_string,
@@ -174,21 +174,21 @@ from .utils import (
     update_settings,
     wide_to_tidy,
 )
-from .multimode import (
+from sax.multimode import (
     multimode,
     singlemode,
 )
-from .netlists import (
+from sax.netlists import (
     flatten_netlist,
     netlist,
 )
-from .circuits import (
+from sax.circuits import (
     circuit,
     draw_dag,
     get_required_circuit_models,
 )
-from . import backends
-from .backends import (
+from sax import backends
+from sax.backends import (
     analyze_circuit,
     analyze_circuit_additive,
     analyze_circuit_fg,
@@ -204,26 +204,26 @@ from .backends import (
     evaluate_circuit_forward,
 )
 
-from .ports import (
+from sax.ports import (
     PortNamer,
     set_port_naming_strategy,
     get_port_naming_strategy,
 )
 
-from .interpolation import (
+from sax.interpolation import (
     to_xarray,
     to_df,
     interpolate_xarray,
 )
 
-from . import fit
-from .parsers import (
+from sax import fit
+from sax.parsers import (
     parse_lumerical_dat,
     parse_touchstone,
     write_lumerical_dat,
     write_touchstone,
 )
-from . import models
+from sax import models
 
 
 __all__ = [  # noqa: RUF022

@@ -246,7 +246,7 @@ def val_ports(obj: Any) -> Ports:
         ports = nl.val_ports({"in": "coupler1,in0", "out": "coupler1,out0"})
         ```
     """
-    from .into import into
+    from sax.saxtypes.into import into
 
     ports: dict[str, InstancePort] = into[dict[str, InstancePort]](obj)
     return ports

@@ -30,8 +30,7 @@ import yaml
 from numpy.exceptions import ComplexWarning
 
 import sax
-
-from .s import reciprocal
+from sax.s import reciprocal
 
 T = TypeVar("T")
 

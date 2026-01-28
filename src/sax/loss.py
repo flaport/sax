@@ -6,7 +6,7 @@ from typing import cast
 
 import jax.numpy as jnp
 
-from .saxtypes import ComplexArray
+from sax.saxtypes import ComplexArray
 
 __all__ = [
     "huber_loss",

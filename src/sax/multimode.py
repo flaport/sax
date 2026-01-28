@@ -10,8 +10,7 @@ import jax.numpy as jnp
 from natsort import natsorted
 
 import sax
-
-from .constants import DEFAULT_MODE, DEFAULT_MODES
+from sax.constants import DEFAULT_MODE, DEFAULT_MODES
 
 __all__ = [
     "multimode",

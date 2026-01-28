@@ -14,7 +14,7 @@ __all__ = [
 
 from typing import Annotated, Any
 
-from .core import val, val_complex_array
+from sax.saxtypes.core import val, val_complex_array
 
 
 def val_settings_value(value: Any) -> SettingsValue:

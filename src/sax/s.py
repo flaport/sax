@@ -13,8 +13,7 @@ from natsort import natsorted
 from pydantic import validate_call
 
 import sax
-
-from .multimode import _consolidate_sdense
+from sax.multimode import _consolidate_sdense
 
 __all__ = [
     "block_diag",

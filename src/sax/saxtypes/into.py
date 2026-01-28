@@ -152,7 +152,7 @@ class TryInto(type):
         Returns:
             A converter function that returns the converted object or None on failure.
         """
-        from ..utils import maybe
+        from sax.utils import maybe
 
         return maybe(into[key])
 

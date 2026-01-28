@@ -2,7 +2,7 @@
 
 from __future__ import annotations
 
-from .anymode import (
+from sax.saxtypes.anymode import (
     Backend,
     BackendLike,
     CircuitInfo,
@@ -22,7 +22,7 @@ from .anymode import (
     SDictModelFactory,
     SType,
 )
-from .core import (
+from sax.saxtypes.core import (
     ArrayLike,
     Bool,
     BoolArray,
@@ -51,12 +51,12 @@ from .core import (
     IOLike,
     Name,
 )
-from .custom_warnings import ExperimentalWarning
-from .into import (
+from sax.saxtypes.custom_warnings import ExperimentalWarning
+from sax.saxtypes.into import (
     into,
     try_into,
 )
-from .multimode import (
+from sax.saxtypes.multimode import (
     Mode,
     ModelFactoryMM,
     ModelMM,
@@ -75,7 +75,7 @@ from .multimode import (
     SDictModelMM,
     STypeMM,
 )
-from .netlist import (
+from sax.saxtypes.netlist import (
     AnyNetlist,
     Component,
     Connections,
@@ -90,11 +90,11 @@ from .netlist import (
     RecursiveNetlist,
     default_placement,
 )
-from .settings import (
+from sax.saxtypes.settings import (
     Settings,
     SettingsValue,
 )
-from .singlemode import (
+from sax.saxtypes.singlemode import (
     InstanceName,
     InstancePort,
     ModelFactorySM,
