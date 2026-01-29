@@ -1,3 +1,17 @@
+<a id="0.16.3"></a>
+# [0.16.3](https://github.com/flaport/sax/releases/tag/0.16.3) - 2026-01-29
+
+# What's Changed
+
+## Other changes
+
+- Improve probes [#81](https://github.com/flaport/sax/pull/81)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.2...0.16.3
+
+[Changes][0.16.3]
+
+
 <a id="0.16.2"></a>
 # [0.16.2](https://github.com/flaport/sax/releases/tag/0.16.2) - 2026-01-27
 
@@ -886,6 +900,7 @@
 [Changes][0.8.7]
 
 
+[0.16.3]: https://github.com/flaport/sax/compare/0.16.2...0.16.3
 [0.16.2]: https://github.com/flaport/sax/compare/0.16.1...0.16.2
 [0.16.1]: https://github.com/flaport/sax/compare/0.15.19...0.16.1
 [0.15.19]: https://github.com/flaport/sax/compare/0.15.18...0.15.19
