@@ -29,7 +29,7 @@ __all__ = ["circuit", "draw_dag", "get_required_circuit_models"]
 
 @overload
 def circuit(
-    netlist: sax.AnyNetlist,
+    netlist: dict[str, Any],
     models: sax.Models | None = None,
     *,
     backend: sax.BackendLike = "default",
@@ -41,7 +41,7 @@ def circuit(
 
 @overload
 def circuit(
-    netlist: sax.AnyNetlist,
+    netlist: dict[str, Any],
     models: sax.Models | None = None,
     *,
     backend: sax.BackendLike = "default",
@@ -54,7 +54,7 @@ def circuit(
 
 @overload
 def circuit(
-    netlist: sax.AnyNetlist,
+    netlist: dict[str, Any],
     models: sax.Models | None = None,
     *,
     backend: sax.BackendLike = "default",
@@ -67,7 +67,7 @@ def circuit(
 
 @overload
 def circuit(
-    netlist: sax.AnyNetlist,
+    netlist: dict[str, Any],
     models: sax.Models | None = None,
     *,
     backend: sax.BackendLike = "default",
@@ -79,7 +79,7 @@ def circuit(
 
 
 def circuit(
-    netlist: sax.AnyNetlist,
+    netlist: dict[str, Any],
     models: sax.Models | None = None,
     *,
     backend: sax.BackendLike = "default",
