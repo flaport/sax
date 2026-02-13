@@ -8,6 +8,7 @@ import jax.numpy as jnp
 import networkx as nx
 
 import sax
+from sax.netlists import _nets_to_connections_strict
 
 __all__ = [
     "analyze_circuit_additive",
@@ -58,7 +59,7 @@ def analyze_instances_additive(
 
 def analyze_circuit_additive(
     analyzed_instances: dict[sax.InstanceName, sax.SDict],  # noqa: ARG001
-    connections: sax.Connections,
+    nets: sax.Nets,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
     """Analyze circuit topology for the additive backend.
@@ -70,7 +71,7 @@ def analyze_circuit_additive(
     Args:
         analyzed_instances: Instance S-matrices from analyze_instances_additive.
             Not used in this analysis step but required for interface consistency.
-        connections: Dictionary mapping instance ports to each other, defining
+        nets: List of net dictionaries with "p1" and "p2" keys defining
             internal circuit connections.
         ports: Dictionary mapping external port names to instance ports.
 
@@ -79,11 +80,12 @@ def analyze_circuit_additive(
 
     Example:
         ```python
-        connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        nets = [{"p1": "wg1,out", "p2": "dc1,in1"}, {"p1": "dc1,out1", "p2": "wg2,in"}]
         ports = {"in": "wg1,in", "out": "wg2,out"}
-        analyzed = analyze_circuit_additive(analyzed_instances, connections, ports)
+        analyzed = analyze_circuit_additive(analyzed_instances, nets, ports)
         ```
     """
+    connections = _nets_to_connections_strict(nets)
     return connections, ports
 
 

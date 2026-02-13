@@ -8,6 +8,7 @@ import jax
 from jaxtyping import Array
 
 import sax
+from sax.netlists import _nets_to_connections_strict
 
 __all__ = [
     "analyze_circuit_fg",
@@ -65,7 +66,7 @@ def analyze_instances_fg(
 
 def analyze_circuit_fg(
     analyzed_instances: dict[str, sax.SDict],  # noqa: ARG001
-    connections: sax.Connections,
+    nets: sax.Nets,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
     """Analyze circuit topology for the Filipsson-Gunnar backend.
@@ -77,7 +78,7 @@ def analyze_circuit_fg(
     Args:
         analyzed_instances: Instance S-matrices from analyze_instances_fg.
             Not used in this analysis step but required for interface consistency.
-        connections: Dictionary mapping instance ports to each other, defining
+        nets: List of net dictionaries with "p1" and "p2" keys defining
             internal circuit connections.
         ports: Dictionary mapping external port names to instance ports.
 
@@ -86,11 +87,12 @@ def analyze_circuit_fg(
 
     Example:
         ```python
-        connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        nets = [{"p1": "wg1,out", "p2": "dc1,in1"}, {"p1": "dc1,out1", "p2": "wg2,in"}]
         ports = {"in": "wg1,in", "out": "wg2,out"}
-        analyzed = analyze_circuit_fg(analyzed_instances, connections, ports)
+        analyzed = analyze_circuit_fg(analyzed_instances, nets, ports)
         ```
     """
+    connections = _nets_to_connections_strict(nets)
     return connections, ports  # skip analysis for now
 
 

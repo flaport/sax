@@ -226,6 +226,12 @@ def _remove_connections(net: sax.Netlist, names: set[sax.InstanceName]) -> None:
                 del net["connections"][conn1]
     if not net["connections"]:
         del net["connections"]
+    if "nets" in net:
+        net["nets"] = [
+            n
+            for n in net.get("nets", [])
+            if n["p1"].split(",")[0] not in names and n["p2"].split(",")[0] not in names
+        ]
 
 
 def _remove_instances(net: sax.Netlist, names: set[sax.InstanceName]) -> None:
@@ -247,6 +253,10 @@ def _get_connectivity_netlist(netlist: sax.Netlist) -> dict:
         "connections": [
             (c1.split(",")[0], c2.split(",")[0])
             for c1, c2 in netlist.get("connections", {}).items()
+        ]
+        + [
+            (n["p1"].split(",")[0], n["p2"].split(",")[0])
+            for n in netlist.get("nets", [])
         ],
         "ports": [(p, c.split(",")[0]) for p, c in netlist.get("ports", {}).items()],
     }
@@ -314,6 +324,26 @@ def _flatten_netlist_into(  # noqa: PLR0912,C901
                     net.get("ports", {})[p] = ports[p2]
                 else:
                     del net.get("ports", {})[p]
+
+
+def _connections_to_nets(connections: sax.Connections) -> sax.Nets:
+    return [{"p1": k, "p2": v} for k, v in connections.items()]
+
+
+def _nets_to_connections_strict(nets: sax.Nets) -> sax.Connections:
+    connections: sax.Connections = {}
+    seen: set[str] = set()
+    for net in nets:
+        for p in (net["p1"], net["p2"]):
+            if p in seen:
+                msg = (
+                    "Multiply connected ports are only supported with the 'klu' "
+                    f"backend. Port {p!r} appears in multiple connections."
+                )
+                raise ValueError(msg)
+            seen.add(p)
+        connections[net["p1"]] = net["p2"]
+    return connections
 
 
 @overload
