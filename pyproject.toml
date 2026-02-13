@@ -83,7 +83,6 @@ dev = [
   "pytest>=8.3.0",
   "ruff>=0.9.0",
   "scikit-learn>=1.6.1",
-  "bver",
   "tmm>=0.2.0",
   "towncrier>=24.0.0",
   "vega-datasets>=0.9.0",
@@ -134,7 +133,6 @@ ignore = [
   "FIX004",  # line-contains-hack
   "N803",  # invalid-argument-name
   "N806",  # non-lowercase-variable-in-function
-  "PD901",  # pandas-df-variable-name
   "PLC0414",  # useless-import-alias
   "PLC0415",  # import-outside-top-level
   "PLR0913",  # too-many-arguments
