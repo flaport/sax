@@ -1,3 +1,17 @@
+<a id="0.16.5"></a>
+# [0.16.5](https://github.com/flaport/sax/releases/tag/0.16.5) - 2026-02-13
+
+# What's Changed
+
+## New
+
+- Allow multiply connected ports in klu backend [#83](https://github.com/flaport/sax/pull/83)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.4...0.16.5
+
+[Changes][0.16.5]
+
+
 <a id="0.16.4"></a>
 # [0.16.4](https://github.com/flaport/sax/releases/tag/0.16.4) - 2026-02-06
 
@@ -912,6 +926,7 @@
 [Changes][0.8.7]
 
 
+[0.16.5]: https://github.com/flaport/sax/compare/0.16.4...0.16.5
 [0.16.4]: https://github.com/flaport/sax/compare/0.16.3...0.16.4
 [0.16.3]: https://github.com/flaport/sax/compare/0.16.2...0.16.3
 [0.16.2]: https://github.com/flaport/sax/compare/0.16.1...0.16.2
