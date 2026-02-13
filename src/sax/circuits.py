@@ -16,7 +16,7 @@ import sax
 from .backends import circuit_backends
 from .models.probes import ideal_probe
 from .netlists import (
-    convert_nets_to_connections,
+    _connections_to_nets,
     expand_probes,
     remove_unused_instances,
 )
@@ -156,7 +156,7 @@ def circuit(
         top_level_name=top_level_name,
     )
     patch_netlist_array_instances(recnet)
-    recnet = convert_nets_to_connections(recnet)
+    recnet = sax.into[sax.RecursiveNetlist](recnet)
     if probes:
         recnet = expand_probes(recnet, probes)
         models = {"_ideal_probe": ideal_probe, **(models or {})}
@@ -184,6 +184,7 @@ def circuit(
         current_models[model_name] = circuit = _flat_circuit(
             flatnet["instances"],
             flatnet.get("connections", {}),
+            flatnet.get("nets", []),
             flatnet.get("ports", {}),
             flatnet.get("placements", {}),
             current_models,
@@ -320,6 +321,7 @@ def get_required_circuit_models(
 def _flat_circuit(
     instances: sax.Instances,
     connections: sax.Connections,
+    nets: sax.Nets,
     ports: sax.Ports,
     placements: sax.Placements,
     models: sax.Models,
@@ -332,8 +334,9 @@ def _flat_circuit(
     inst_port_mode = {
         k: _port_modes_dict(get_ports(s)) for k, s in dummy_instances.items()
     }
-    connections = _get_multimode_connections(
-        connections,
+    all_nets = _connections_to_nets(connections) + list(nets)
+    all_nets = _get_multimode_nets(
+        all_nets,
         inst_port_mode,
         ignore_impossible_connections=ignore_impossible_connections,
     )
@@ -361,7 +364,7 @@ def _flat_circuit(
             settings["placement"] = sax.into[sax.Placement](placements.get(name, {}))
     default_settings = merge_dicts(model_settings, netlist_settings)
     default_settings = {_strip_array_index(k): v for k, v in default_settings.items()}
-    analyzed = analyze_fn(dummy_instances, connections, ports)
+    analyzed = analyze_fn(dummy_instances, all_nets, ports)
 
     def _circuit(**settings: sax.SettingsValue) -> sax.SType:
         full_settings = merge_dicts(default_settings, settings)
@@ -482,16 +485,16 @@ def _port_modes_dict(
     return result
 
 
-def _get_multimode_connections(
-    connections: sax.Connections,
+def _get_multimode_nets(
+    nets: sax.Nets,
     inst_port_mode: dict[sax.InstanceName, dict[sax.Port, set[sax.Mode]]],
     *,
     ignore_impossible_connections: bool = False,
-) -> sax.Connections:
-    mm_connections = {}
-    for inst_port1, inst_port2 in connections.items():
-        inst1, port1 = inst_port1.split(",")
-        inst2, port2 = inst_port2.split(",")
+) -> sax.Nets:
+    mm_nets: sax.Nets = []
+    for net in nets:
+        inst1, port1 = net["p1"].split(",")
+        inst2, port2 = net["p2"].split(",")
         try:
             modes1 = inst_port_mode[inst1][port1]
         except KeyError as e:
@@ -513,21 +516,24 @@ def _get_multimode_connections(
             )
             raise KeyError(msg) from e
         if not modes1 and not modes2:
-            mm_connections[f"{inst1},{port1}"] = f"{inst2},{port2}"
+            mm_nets.append({"p1": net["p1"], "p2": net["p2"]})
         elif (not modes1) or (not modes2):
             msg = (
                 "trying to connect a multimode model to single mode model.\n"
                 "Please update your models dictionary.\n"
-                f"Problematic connection: '{inst_port1}':'{inst_port2}'"
+                f"Problematic connection: '{net['p1']}':'{net['p2']}'"
             )
-            raise ValueError(
-                msg,
-            )
+            raise ValueError(msg)
         else:
             common_modes = modes1.intersection(modes2)
             for mode in sorted(common_modes):
-                mm_connections[f"{inst1},{port1}@{mode}"] = f"{inst2},{port2}@{mode}"
-    return mm_connections
+                mm_nets.append(
+                    {
+                        "p1": f"{inst1},{port1}@{mode}",
+                        "p2": f"{inst2},{port2}@{mode}",
+                    }
+                )
+    return mm_nets
 
 
 def _get_multimode_ports(
