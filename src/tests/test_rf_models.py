@@ -1,8 +1,12 @@
+from functools import partial
 from itertools import product
 
+import jax
 import jax.numpy as jnp
 import pytest
+from jax.typing import ArrayLike
 
+import sax
 from sax.models import rf
 
 
@@ -102,3 +106,68 @@ class TestRFModels:
         for i, j in product(range(1, n_ports + 1), repeat=2):
             expected_value = 1 if i == j else 0
             self._assert_s_param(s, (f"o{i}", f"o{j}"), expected_value)
+
+    @staticmethod
+    @partial(jax.jit, static_argnames=("L", "C", "Z0"))
+    def lc_shunt_component(
+        f: ArrayLike = jnp.array([5e9]),  # noqa: B008
+        L: sax.FloatLike = 1e-9,
+        C: sax.FloatLike = 1e-12,
+        Z0: sax.FloatLike = 50,
+    ) -> sax.SDict:
+        """SAX component for a 1-port shunted LC resonator."""
+        f = jnp.asarray(f)
+        models = {
+            "L": rf.inductor,
+            "C": rf.capacitor,
+            "short": rf.electrical_short,
+            "tee": rf.tee,
+        }
+
+        circuit, _ = sax.circuit(
+            netlist={
+                "instances": {
+                    "L": {
+                        "component": "L",
+                        "settings": {"inductance": L, "z0": Z0},
+                    },
+                    "C": {
+                        "component": "C",
+                        "settings": {"capacitance": C, "z0": Z0},
+                    },
+                    "tee_1": {
+                        "component": "tee",
+                    },
+                    "tee_2": {
+                        "component": "tee",
+                    },
+                    "gnd": {
+                        "component": "short",
+                    },
+                },
+                "connections": {
+                    "L,o1": "tee_1,o1",
+                    "C,o1": "tee_1,o2",
+                    "L,o2": "tee_2,o1",
+                    "C,o2": "tee_2,o2",
+                    "gnd,o1": "tee_2,o3",
+                },
+                "ports": {
+                    "o1": "tee_1,o3",
+                },
+            },
+            models=models,
+        )
+
+        return circuit(f=f)
+
+    def test_lc_shunt_component(self, freq_array: jnp.ndarray) -> None:
+        """Test LC shunt component circuit."""
+        s = type(self).lc_shunt_component(
+            f=freq_array,
+            L=1e-9,
+            C=1e-12,
+            Z0=50,
+        )
+
+        self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
