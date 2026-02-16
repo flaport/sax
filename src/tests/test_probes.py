@@ -395,6 +395,110 @@ def test_probe_error_on_instance_conflict() -> None:
         )
 
 
+def test_probe_on_nets_connection() -> None:
+    """Test probe insertion when connections are in nets format."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "nets": [
+            {"p1": "wg1,out0", "p2": "wg2,in0"},
+        ],
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    # Without probes
+    circuit_no_probe, _ = sax.circuit(netlist, models)
+    result_no_probe = circuit_no_probe()
+    ports_no_probe = sax.get_ports(result_no_probe)
+    assert set(ports_no_probe) == {"in", "out"}
+
+    # With probe on p1 side of net
+    circuit_with_probe, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"mid": "wg1,out0"},
+    )
+    result_with_probe = circuit_with_probe()
+    ports_with_probe = sax.get_ports(result_with_probe)
+    assert set(ports_with_probe) == {"in", "out", "mid_fwd", "mid_bwd"}
+
+
+def test_probe_on_nets_p2_side() -> None:
+    """Test probe on the p2 side of a nets-format connection."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "nets": [
+            {"p1": "wg1,out0", "p2": "wg2,in0"},
+        ],
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    # Probe on p2 side of net
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"mid": "wg2,in0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+
+
+def test_probe_on_nets_with_multiple_nets() -> None:
+    """Test probe insertion with multiple nets, only one being probed."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+            "wg3": "waveguide",
+        },
+        "nets": [
+            {"p1": "wg1,out0", "p2": "wg2,in0"},
+            {"p1": "wg2,out0", "p2": "wg3,in0"},
+        ],
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg3,out0",
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"mid": "wg2,in0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+
+    # Transmission should still work
+    assert ("in", "out") in result
+    assert ("in", "mid_fwd") in result
+
+
 def test_empty_probes_dict() -> None:
     """Test that empty probes dict is a no-op."""
     netlist = {
