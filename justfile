@@ -1,6 +1,6 @@
 dev: bver
   uv venv --python 3.12 --clear
-  uv sync --all-extras
+  uv sync --dev
   uv pip install -e .
   uv run pre-commit install
 
@@ -25,10 +25,10 @@ uv:
   curl -LsSf https://astral.sh/uv/install.sh | sh
 
 ipykernel:
-  uv run --extra dev python -m ipykernel install --user --name sax --display-name sax
+  uv run --dev python -m ipykernel install --user --name sax --display-name sax
 
 test: ipykernel
-  uv run --extra dev pytest -s -n logical
+  uv run --dev pytest -s -n logical
 
 docs:
   sed 's|](docs/|](|g' README.md > docs/index.md
