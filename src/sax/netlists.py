@@ -428,7 +428,7 @@ def expand_probes(
 ) -> sax.RecursiveNetlist: ...
 
 
-def expand_probes(
+def expand_probes(  # noqa: PLR0915,C901
     netlist: sax.AnyNetlist,
     probes: dict[str, str],
 ) -> sax.AnyNetlist:
@@ -484,6 +484,7 @@ def expand_probes(
     net: sax.Netlist = deepcopy(sax.into[sax.Netlist](netlist))
     connections = dict(net.get("connections", {}).items())
     inverse_connections = {v: k for k, v in connections.items()}
+    nets = list(net.get("nets", []))
     ports = dict(net.get("ports", {}).items())
     instances = dict(net["instances"].items())
 
@@ -509,27 +510,41 @@ def expand_probes(
 
         # Find the connection containing this instance port.
         # Track orientation so _fwd means "signal flowing INTO instance_port"
+        # Check connections dict first, then nets list.
+        in_side = None
+        out_side = None
+
         if instance_port in connections:
             # instance_port is on the left side: instance_port -> other_port
-            # Signal flows OUT of instance_port, so we need to flip the probe
             other_port = connections[instance_port]
             del connections[instance_port]
             del inverse_connections[other_port]
-            # probe,in connects to other_port (source of signal INTO instance_port)
-            # probe,out connects to instance_port (destination)
             in_side = other_port
             out_side = instance_port
         elif instance_port in inverse_connections:
             # instance_port is on the right side: other_port -> instance_port
-            # Signal flows INTO instance_port, so probe is correctly oriented
             other_port = inverse_connections[instance_port]
             del connections[other_port]
             del inverse_connections[instance_port]
-            # probe,in connects to other_port (source of signal INTO instance_port)
-            # probe,out connects to instance_port (destination)
             in_side = other_port
             out_side = instance_port
         else:
+            # Check nets list
+            for i, n in enumerate(nets):
+                if n["p1"] == instance_port:
+                    other_port = n["p2"]
+                    nets.pop(i)
+                    in_side = other_port
+                    out_side = instance_port
+                    break
+                if n["p2"] == instance_port:
+                    other_port = n["p1"]
+                    nets.pop(i)
+                    in_side = other_port
+                    out_side = instance_port
+                    break
+
+        if in_side is None:
             # Unconnected port: just expose it as a top-level port (fwd only)
             ports[fwd_port] = instance_port
             continue
@@ -550,5 +565,6 @@ def expand_probes(
 
     net["instances"] = instances
     net["connections"] = connections
+    net["nets"] = nets
     net["ports"] = ports
     return net
