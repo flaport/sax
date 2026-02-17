@@ -1,3 +1,25 @@
+<a id="0.16.7"></a>
+# [0.16.7](https://github.com/flaport/sax/releases/tag/0.16.7) - 2026-02-17
+
+# What's Changed
+
+## New
+
+- Add failing example circuit of an LC shunt [#76](https://github.com/flaport/sax/pull/76)
+
+## Bug Fixes
+
+- Update rf models from qpdk [#85](https://github.com/flaport/sax/pull/85)
+
+## Maintenance
+
+- Refactor development dependencies into logical groups [#87](https://github.com/flaport/sax/pull/87)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.6...0.16.7
+
+[Changes][0.16.7]
+
+
 <a id="0.16.6"></a>
 # [0.16.6](https://github.com/flaport/sax/releases/tag/0.16.6) - 2026-02-16
 
@@ -940,6 +962,7 @@
 [Changes][0.8.7]
 
 
+[0.16.7]: https://github.com/flaport/sax/compare/0.16.6...0.16.7
 [0.16.6]: https://github.com/flaport/sax/compare/0.16.5...0.16.6
 [0.16.5]: https://github.com/flaport/sax/compare/0.16.4...0.16.5
 [0.16.4]: https://github.com/flaport/sax/compare/0.16.3...0.16.4
