@@ -551,6 +551,155 @@ def test_probe_with_none() -> None:
     assert set(ports) == {"in", "out"}
 
 
+def test_port_on_internal_node_becomes_probe() -> None:
+    """Test that a port mapping to an internal connection node becomes a probe."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+            "mid": "wg1,out0",  # Internal node — should become a probe
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    with pytest.warns(UserWarning, match="internal node"):
+        circuit_fn, _ = sax.circuit(netlist, models)
+
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    # "mid" should have been replaced by "mid_fwd" and "mid_bwd"
+    assert "mid" not in ports
+    assert "mid_fwd" in ports
+    assert "mid_bwd" in ports
+    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+
+
+def test_port_on_internal_node_doesnt_affect_transmission() -> None:
+    """Test that auto-probes don't affect the circuit's real ports."""
+    netlist_plain = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+        },
+    }
+
+    netlist_with_internal_port = {
+        **netlist_plain,
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+            "mid": "wg2,in0",  # Internal node
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    circuit_plain, _ = sax.circuit(netlist_plain, models)
+    with pytest.warns(UserWarning, match="internal node"):
+        circuit_probed, _ = sax.circuit(netlist_with_internal_port, models)
+
+    result_plain = circuit_plain(wl=1.55)
+    result_probed = circuit_probed(wl=1.55)
+
+    # Transmission between real ports should be identical
+    assert result_plain["in", "out"] == result_probed["in", "out"]
+    assert result_plain["out", "in"] == result_probed["out", "in"]
+
+
+def test_mixed_explicit_and_auto_probes() -> None:
+    """Test that explicit probes= and auto-detected port probes work together."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+            "wg3": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+            "wg2,out0": "wg3,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg3,out0",
+            "auto_mid": "wg1,out0",  # Auto-detected probe
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    with pytest.warns(UserWarning, match="internal node"):
+        circuit_fn, _ = sax.circuit(
+            netlist,
+            models,
+            probes={"explicit_mid": "wg2,out0"},
+        )
+
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    expected_ports = {
+        "in",
+        "out",
+        "auto_mid_fwd",
+        "auto_mid_bwd",
+        "explicit_mid_fwd",
+        "explicit_mid_bwd",
+    }
+    assert set(ports) == expected_ports
+
+
+def test_port_on_internal_node_with_nets_format() -> None:
+    """Test auto-probe detection when connections are in nets format."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "nets": [
+            {"p1": "wg1,out0", "p2": "wg2,in0"},
+        ],
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+            "mid": "wg2,in0",  # Internal node (via nets)
+        },
+    }
+
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    with pytest.warns(UserWarning, match="internal node"):
+        circuit_fn, _ = sax.circuit(netlist, models)
+
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "mid" not in ports
+    assert "mid_fwd" in ports
+    assert "mid_bwd" in ports
+    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+
+
 if __name__ == "__main__":
     test_ideal_probe_model()
     test_basic_probe_insertion()
@@ -563,4 +712,8 @@ if __name__ == "__main__":
     test_probe_error_on_instance_conflict()
     test_empty_probes_dict()
     test_probe_with_none()
+    test_port_on_internal_node_becomes_probe()
+    test_port_on_internal_node_doesnt_affect_transmission()
+    test_mixed_explicit_and_auto_probes()
+    test_port_on_internal_node_with_nets_format()
     print("All tests passed!")

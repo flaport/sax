@@ -15,6 +15,7 @@ __all__ = [  # noqa: RUF022
     "netlist",
     "flatten_netlist",
     "expand_probes",
+    "extract_port_probes",
 ]
 
 
@@ -568,3 +569,75 @@ def expand_probes(  # noqa: PLR0915,C901
     net["nets"] = nets
     net["ports"] = ports
     return net
+
+
+@overload
+def extract_port_probes(
+    netlist: sax.Netlist,
+) -> tuple[sax.Netlist, dict[str, str]]: ...
+
+
+@overload
+def extract_port_probes(
+    netlist: sax.RecursiveNetlist,
+) -> tuple[sax.RecursiveNetlist, dict[str, str]]: ...
+
+
+def extract_port_probes(
+    netlist: sax.AnyNetlist,
+) -> tuple[sax.AnyNetlist, dict[str, str]]:
+    """Extract ports on internal nodes and convert them to probes.
+
+    When a netlist port maps to an instance port that is already part of a
+    connection (in ``connections`` or ``nets``), it is removed from ports and
+    returned as a probe instead.  A warning is issued for each such port.
+
+    Args:
+        netlist: The netlist to inspect (flat or recursive).
+
+    Returns:
+        A tuple of (modified_netlist, probes) where *probes* maps the original
+        port name to the instance port string, ready to pass to
+        :func:`expand_probes`.
+    """
+    # Handle recursive netlist: only inspect the top-level
+    if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
+        top_level_name = next(iter(recnet))
+        top_level = recnet[top_level_name]
+        modified_top, probes = extract_port_probes(top_level)
+        result: sax.RecursiveNetlist = {
+            top_level_name: modified_top,
+            **{k: v for k, v in recnet.items() if k != top_level_name},
+        }
+        return result, probes
+
+    # Flat netlist
+    net: sax.Netlist = deepcopy(sax.into[sax.Netlist](netlist))
+    connections = net.get("connections", {})
+    nets = net.get("nets", [])
+    ports = dict(net.get("ports", {}).items())
+
+    # Collect all instance ports that are internal (part of a connection)
+    internal_ports: set[str] = set()
+    for left, right in connections.items():
+        internal_ports.add(left)
+        internal_ports.add(right)
+    for n in nets:
+        internal_ports.add(n["p1"])
+        internal_ports.add(n["p2"])
+
+    probes: dict[str, str] = {}
+    for port_name, instance_port in list(ports.items()):
+        if instance_port in internal_ports:
+            warnings.warn(
+                f"Port '{port_name}' maps to internal node '{instance_port}' "
+                f"which is already part of a connection. "
+                f"It will be interpreted as a probe (creating '{port_name}_fwd' "
+                f"and '{port_name}_bwd' ports).",
+                stacklevel=2,
+            )
+            probes[port_name] = instance_port
+            del ports[port_name]
+
+    net["ports"] = ports
+    return net, probes
