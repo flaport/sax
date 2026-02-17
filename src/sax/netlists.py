@@ -571,6 +571,18 @@ def expand_probes(  # noqa: PLR0915,C901
     return net
 
 
+@overload
+def extract_port_probes(
+    netlist: sax.Netlist,
+) -> tuple[sax.Netlist, dict[str, str]]: ...
+
+
+@overload
+def extract_port_probes(
+    netlist: sax.RecursiveNetlist,
+) -> tuple[sax.RecursiveNetlist, dict[str, str]]: ...
+
+
 def extract_port_probes(
     netlist: sax.AnyNetlist,
 ) -> tuple[sax.AnyNetlist, dict[str, str]]:
@@ -593,10 +605,11 @@ def extract_port_probes(
         top_level_name = next(iter(recnet))
         top_level = recnet[top_level_name]
         modified_top, probes = extract_port_probes(top_level)
-        return {
+        result: sax.RecursiveNetlist = {
             top_level_name: modified_top,
             **{k: v for k, v in recnet.items() if k != top_level_name},
-        }, probes
+        }
+        return result, probes
 
     # Flat netlist
     net: sax.Netlist = deepcopy(sax.into[sax.Netlist](netlist))
