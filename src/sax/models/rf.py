@@ -7,13 +7,16 @@ import jax.numpy as jnp
 
 import sax
 
+DEFAULT_FREQUENCY = 5e9
 
-@partial(jax.jit, static_argnames=("n_ports",))
+
+@partial(jax.jit, inline=True, static_argnames=("n_ports"))
 def gamma_0_load(
-    f: sax.FloatArrayLike = 5e9,
-    gamma_0: sax.ComplexLike = 0,
-    n_ports: sax.IntLike = 1,
-) -> sax.SDict:
+    *,
+    f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
+    gamma_0: sax.Complex = 0,
+    n_ports: int = 1,
+) -> sax.SType:
     r"""Connection with given reflection coefficient.
 
     Args:
@@ -23,7 +26,7 @@ def gamma_0_load(
             are set to Γ₀ and the off-diagonal ports to 0.
 
     Returns:
-        S-dictionary where :math:`S = \Gamma_0I_\text{n\_ports}`
+        sax.SType: S-parameters dictionary where :math:`S = \Gamma_0I_\text{n\_ports}`
 
     Examples:
         ```python
@@ -48,19 +51,21 @@ def gamma_0_load(
         ```
     """
     f = jnp.asarray(f)
+    f_flat = f.ravel()
     sdict = {
-        (f"o{i}", f"o{i}"): jnp.full(len(f), gamma_0) for i in range(1, n_ports + 1)
+        (f"o{i}", f"o{i}"): jnp.full(f_flat.shape[0], gamma_0)
+        for i in range(1, n_ports + 1)
     }
     sdict |= {
-        (f"o{i}", f"o{j}"): jnp.zeros(len(f), dtype=complex)
+        (f"o{i}", f"o{j}"): jnp.zeros(f_flat.shape[0], dtype=complex)
         for i in range(1, n_ports + 1)
         for j in range(i + 1, n_ports + 1)
     }
-    return sax.reciprocal(sdict)
+    return sax.reciprocal({k: v.reshape(*f.shape) for k, v in sdict.items()})
 
 
-@jax.jit
-def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
+@partial(jax.jit, inline=True)
+def tee(*, f: sax.FloatArrayLike = DEFAULT_FREQUENCY) -> sax.SDict:
     """Ideal three-port RF power divider/combiner (T-junction).
 
     Args:
@@ -90,18 +95,22 @@ def tee(f: sax.FloatArrayLike = 5e9) -> sax.SDict:
         ```
     """
     f = jnp.asarray(f)
-    sdict = {(f"o{i}", f"o{i}"): jnp.full(len(f), -1 / 3) for i in range(1, 4)}
+    f_flat = f.ravel()
+    sdict = {(f"o{i}", f"o{i}"): jnp.full(f_flat.shape[0], -1 / 3) for i in range(1, 4)}
     sdict |= {
-        (f"o{i}", f"o{j}"): jnp.full(len(f), 2 / 3)
+        (f"o{i}", f"o{j}"): jnp.full(f_flat.shape[0], 2 / 3)
         for i in range(1, 4)
         for j in range(i + 1, 4)
     }
-    return sax.reciprocal(sdict)
+    return sax.reciprocal({k: v.reshape(*f.shape) for k, v in sdict.items()})
 
 
-@jax.jit
+@partial(jax.jit, inline=True)
 def impedance(
-    f: sax.FloatArrayLike, z: sax.ComplexLike = 50, z0: sax.ComplexLike = 50
+    *,
+    f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
+    z: sax.ComplexLike = 50,
+    z0: sax.ComplexLike = 50,
 ) -> sax.SDict:
     r"""Generalized two-port impedance element.
 
@@ -136,17 +145,19 @@ def impedance(
         plt.legend()
         ```
     """
-    f = jnp.asarray(f)
+    one = jnp.ones_like(jnp.asarray(f))
     sdict = {
-        ("o1", "o1"): jnp.full(f.shape, z / (z + 2 * z0)),
-        ("o1", "o2"): jnp.full(f.shape, 2 * z0 / (2 * z0 + z)),
-        ("o2", "o2"): jnp.full(f.shape, z / (z + 2 * z0)),
+        ("o1", "o1"): z / (z + 2 * z0) * one,
+        ("o1", "o2"): 2 * z0 / (2 * z0 + z) * one,
+        ("o2", "o2"): z / (z + 2 * z0) * one,
     }
     return sax.reciprocal(sdict)
 
 
-@jax.jit
-def admittance(f: sax.FloatArrayLike, y: sax.ComplexLike = 1 / 50) -> sax.SDict:
+@partial(jax.jit, inline=True)
+def admittance(
+    *, f: sax.FloatArrayLike = DEFAULT_FREQUENCY, y: sax.ComplexLike = 1 / 50
+) -> sax.SDict:
     r"""Generalized two-port admittance element.
 
     Args:
@@ -179,18 +190,19 @@ def admittance(f: sax.FloatArrayLike, y: sax.ComplexLike = 1 / 50) -> sax.SDict:
         plt.legend()
         ```
     """
-    f = jnp.asarray(f)
+    one = jnp.ones_like(jnp.asarray(f))
     sdict = {
-        ("o1", "o1"): jnp.full(f.shape, 1 / (1 + y)),
-        ("o1", "o2"): jnp.full(f.shape, y / (1 + y)),
-        ("o2", "o2"): jnp.full(f.shape, 1 / (1 + y)),
+        ("o1", "o1"): 1 / (1 + y) * one,
+        ("o1", "o2"): y / (1 + y) * one,
+        ("o2", "o2"): 1 / (1 + y) * one,
     }
     return sax.reciprocal(sdict)
 
 
-@partial(jax.jit, static_argnames=("capacitance",))
+@partial(jax.jit, inline=True)
 def capacitor(
-    f: sax.FloatArrayLike = 5e9,
+    *,
+    f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
     capacitance: sax.FloatLike = 1e-15,
     z0: sax.ComplexLike = 50,
 ) -> sax.SDict:
@@ -232,9 +244,10 @@ def capacitor(
     return impedance(f=f, z=capacitor_impedance, z0=z0)
 
 
-@partial(jax.jit, static_argnames=("inductance",))
+@partial(jax.jit, inline=True)
 def inductor(
-    f: sax.FloatArrayLike = 5e9,
+    *,
+    f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
     inductance: sax.FloatLike = 1e-12,
     z0: sax.ComplexLike = 50,
 ) -> sax.SDict:
@@ -278,7 +291,8 @@ def inductor(
 
 @partial(jax.jit, inline=True, static_argnames=("n_ports"))
 def electrical_short(
-    f: sax.FloatArrayLike = 5e9,
+    *,
+    f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
     n_ports: int = 1,
 ) -> sax.SDict:
     r"""Electrical short connection Sax model.
@@ -298,7 +312,8 @@ def electrical_short(
 
 @partial(jax.jit, inline=True, static_argnames=("n_ports"))
 def electrical_open(
-    f: sax.FloatArrayLike = 5e9,
+    *,
+    f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
     n_ports: int = 1,
 ) -> sax.SDict:
     r"""Electrical open connection Sax model.
