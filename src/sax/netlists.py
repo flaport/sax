@@ -544,7 +544,7 @@ def expand_probes(  # noqa: PLR0915,C901
                     out_side = instance_port
                     break
 
-        if in_side is None:
+        if in_side is None or out_side is None:
             # Unconnected port: just expose it as a top-level port (fwd only)
             ports[fwd_port] = instance_port
             continue
