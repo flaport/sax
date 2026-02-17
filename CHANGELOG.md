@@ -1,3 +1,17 @@
+<a id="0.16.8"></a>
+# [0.16.8](https://github.com/flaport/sax/releases/tag/0.16.8) - 2026-02-17
+
+# What's Changed
+
+## Other changes
+
+- Interpret ports on internal nodes as probes [#90](https://github.com/flaport/sax/pull/90)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.7...0.16.8
+
+[Changes][0.16.8]
+
+
 <a id="0.16.7"></a>
 # [0.16.7](https://github.com/flaport/sax/releases/tag/0.16.7) - 2026-02-17
 
@@ -962,6 +976,7 @@
 [Changes][0.8.7]
 
 
+[0.16.8]: https://github.com/flaport/sax/compare/0.16.7...0.16.8
 [0.16.7]: https://github.com/flaport/sax/compare/0.16.6...0.16.7
 [0.16.6]: https://github.com/flaport/sax/compare/0.16.5...0.16.6
 [0.16.5]: https://github.com/flaport/sax/compare/0.16.4...0.16.5
