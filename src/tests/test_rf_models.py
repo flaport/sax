@@ -102,3 +102,14 @@ class TestRFModels:
         for i, j in product(range(1, n_ports + 1), repeat=2):
             expected_value = 1 if i == j else 0
             self._assert_s_param(s, (f"o{i}", f"o{j}"), expected_value)
+
+    def test_lc_shunt_component(self, freq_array: jnp.ndarray) -> None:
+        """Test LC shunt component circuit."""
+        s = rf.lc_shunt_component(
+            f=freq_array,
+            inductance=1e-9,
+            capacitance=1e-12,
+            z0=50,
+        )
+
+        self._assert_s_params_dict(s, expected_shape=(len(freq_array),))
