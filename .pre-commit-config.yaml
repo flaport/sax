@@ -18,16 +18,14 @@ repos:
         exclude: 'changelog\.d/.*|CHANGELOG\.md'
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.9.5
+    rev: v0.14.1
     hooks:
       - id: ruff-format
-        stages: [pre-commit]
-        args: ["--config", "pyproject.toml"]
-        types_or: [python, jupyter]
-      - id: ruff
-        stages: [pre-commit]
-        args: ["--fix", "--config", "pyproject.toml"]
-        types_or: [python]
+        args: ['--config', 'pyproject.toml']
+        types_or: [python, jupyter, pyi]
+      - id: ruff-check
+        types_or: [python, pyi]
+        args: ['--fix', '--config', 'pyproject.toml']
 
   - repo: https://github.com/macisamuele/language-formatters-pre-commit-hooks
     rev: v2.14.0

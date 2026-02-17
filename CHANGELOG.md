@@ -1,3 +1,153 @@
+<a id="0.16.6"></a>
+# [0.16.6](https://github.com/flaport/sax/releases/tag/0.16.6) - 2026-02-16
+
+# What's Changed
+
+## Bug Fixes
+
+- fix probes: take into account the nets [#89](https://github.com/flaport/sax/pull/89)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.5...0.16.6
+
+[Changes][0.16.6]
+
+
+<a id="0.16.5"></a>
+# [0.16.5](https://github.com/flaport/sax/releases/tag/0.16.5) - 2026-02-13
+
+# What's Changed
+
+## New
+
+- Allow multiply connected ports in klu backend [#83](https://github.com/flaport/sax/pull/83)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.4...0.16.5
+
+[Changes][0.16.5]
+
+
+<a id="0.16.4"></a>
+# [0.16.4](https://github.com/flaport/sax/releases/tag/0.16.4) - 2026-02-06
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.3...0.16.4
+
+[Changes][0.16.4]
+
+
+<a id="0.16.3"></a>
+# [0.16.3](https://github.com/flaport/sax/releases/tag/0.16.3) - 2026-01-29
+
+# What's Changed
+
+## Other changes
+
+- Improve probes [#81](https://github.com/flaport/sax/pull/81)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.2...0.16.3
+
+[Changes][0.16.3]
+
+
+<a id="0.16.2"></a>
+# [0.16.2](https://github.com/flaport/sax/releases/tag/0.16.2) - 2026-01-27
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.1...0.16.2
+
+[Changes][0.16.2]
+
+
+<a id="0.16.1"></a>
+# [0.16.1](https://github.com/flaport/sax/releases/tag/0.16.1) - 2026-01-25
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.19...0.16.1
+
+[Changes][0.16.1]
+
+
+<a id="0.15.19"></a>
+# [0.15.19](https://github.com/flaport/sax/releases/tag/0.15.19) - 2026-01-25
+
+# What's Changed
+
+## New
+
+- Add probes feature for circuit measurement taps [#79](https://github.com/flaport/sax/pull/79)
+
+## Documentation
+
+- Add probes feature for circuit measurement taps [#79](https://github.com/flaport/sax/pull/79)
+
+## Other changes
+
+- update notebooks [#80](https://github.com/flaport/sax/pull/80)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.18...0.15.19
+
+[Changes][0.15.19]
+
+
+<a id="0.15.18"></a>
+# [0.15.18](https://github.com/flaport/sax/releases/tag/0.15.18) - 2025-12-23
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.17...0.15.18
+
+[Changes][0.15.18]
+
+
+<a id="0.15.17"></a>
+# [0.15.17](https://github.com/flaport/sax/releases/tag/0.15.17) - 2025-12-22
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.16...0.15.17
+
+[Changes][0.15.17]
+
+
+<a id="0.15.16"></a>
+# [0.15.16](https://github.com/flaport/sax/releases/tag/0.15.16) - 2025-12-16
+
+# What's Changed
+
+## New
+
+- Add electrical_short and electrical_open RF models [#75](https://github.com/flaport/sax/pull/75)
+
+## Bug Fixes
+
+- Fix lumerical parser [#77](https://github.com/flaport/sax/pull/77)
+- Fix: Correct RF model tests for scalar frequency [#72](https://github.com/flaport/sax/pull/72)
+
+## Other changes
+
+- Support 1-port circuits [#74](https://github.com/flaport/sax/pull/74)
+- Specify dev. deps. in `just test` command [#73](https://github.com/flaport/sax/pull/73)
+- Add BibTeX citation support and fix RF models [#71](https://github.com/flaport/sax/pull/71)
+- Implement generic RF models [#70](https://github.com/flaport/sax/pull/70)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.15.15...0.15.16
+
+[Changes][0.15.16]
+
+
 <a id="0.15.15"></a>
 # [0.15.15](https://github.com/flaport/sax/releases/tag/0.15.15) - 2025-11-04
 
@@ -790,6 +940,16 @@
 [Changes][0.8.7]
 
 
+[0.16.6]: https://github.com/flaport/sax/compare/0.16.5...0.16.6
+[0.16.5]: https://github.com/flaport/sax/compare/0.16.4...0.16.5
+[0.16.4]: https://github.com/flaport/sax/compare/0.16.3...0.16.4
+[0.16.3]: https://github.com/flaport/sax/compare/0.16.2...0.16.3
+[0.16.2]: https://github.com/flaport/sax/compare/0.16.1...0.16.2
+[0.16.1]: https://github.com/flaport/sax/compare/0.15.19...0.16.1
+[0.15.19]: https://github.com/flaport/sax/compare/0.15.18...0.15.19
+[0.15.18]: https://github.com/flaport/sax/compare/0.15.17...0.15.18
+[0.15.17]: https://github.com/flaport/sax/compare/0.15.16...0.15.17
+[0.15.16]: https://github.com/flaport/sax/compare/0.15.15...0.15.16
 [0.15.15]: https://github.com/flaport/sax/compare/0.15.14...0.15.15
 [0.15.14]: https://github.com/flaport/sax/compare/0.15.13...0.15.14
 [0.15.13]: https://github.com/flaport/sax/compare/0.15.12...0.15.13

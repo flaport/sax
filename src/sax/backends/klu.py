@@ -63,7 +63,7 @@ def analyze_instances_klu(
 
 def analyze_circuit_klu(
     analyzed_instances: dict[sax.InstanceName, sax.SCoo],
-    connections: sax.Connections,
+    nets: sax.Nets,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
     """Analyze circuit topology for the KLU sparse matrix backend.
@@ -75,8 +75,8 @@ def analyze_circuit_klu(
     Args:
         analyzed_instances: Instance S-matrices from analyze_instances_klu in
             SCoo format.
-        connections: Dictionary mapping instance ports to each other, defining
-            internal circuit connections.
+        nets: List of net dictionaries with "p1" and "p2" keys defining
+            internal circuit connections. Supports multiply connected ports.
         ports: Dictionary mapping external port names to instance ports.
 
     Returns:
@@ -90,12 +90,11 @@ def analyze_circuit_klu(
 
     Example:
         ```python
-        connections = {"wg1,out": "dc1,in1", "dc1,out1": "wg2,in"}
+        nets = [{"p1": "wg1,out", "p2": "dc1,in1"}, {"p1": "dc1,out1", "p2": "wg2,in"}]
         ports = {"in": "wg1,in", "out": "wg2,out"}
-        analyzed = analyze_circuit_klu(analyzed_instances, connections, ports)
+        analyzed = analyze_circuit_klu(analyzed_instances, nets, ports)
         ```
     """
-    connections = {**connections, **{v: k for k, v in connections.items()}}
     inverse_ports = {v: k for k, v in ports.items()}
     port_map = {k: i for i, k in enumerate(ports)}
 
@@ -113,11 +112,15 @@ def analyze_circuit_klu(
     Si = jnp.concatenate(Si, -1)
     Sj = jnp.concatenate(Sj, -1)
 
-    Cmap = {
-        int(instance_ports[k]): int(instance_ports[v]) for k, v in connections.items()
-    }
-    Ci = jnp.array(list(Cmap.keys()), dtype=jnp.int32)
-    Cj = jnp.array(list(Cmap.values()), dtype=jnp.int32)
+    pairs: set[tuple[int, int]] = set()
+    for net in nets:
+        p1_idx = int(instance_ports[net["p1"]])
+        p2_idx = int(instance_ports[net["p2"]])
+        pairs.add((p1_idx, p2_idx))
+        pairs.add((p2_idx, p1_idx))
+    sorted_pairs = sorted(pairs)
+    Ci = jnp.array([p[0] for p in sorted_pairs], dtype=jnp.int32)
+    Cj = jnp.array([p[1] for p in sorted_pairs], dtype=jnp.int32)
 
     Cextmap = {
         int(instance_ports[k]): int(port_map[v]) for k, v in inverse_ports.items()
@@ -126,18 +129,18 @@ def analyze_circuit_klu(
     Cextj = jnp.stack(list(Cextmap.values()), 0)
     Cext = jnp.zeros((n_col, n_rhs), dtype=complex).at[Cexti, Cextj].set(1.0)
 
-    mask = Cj[None, :] == Si[:, None]
-    CSi = jnp.broadcast_to(Ci[None, :], mask.shape)[mask]
-
-    mask = (Cj[:, None] == Si[None, :]).any(0)
-    CSj = Sj[mask]
+    match_2d = Cj[None, :] == Si[:, None]  # (len_Si, len_Cj)
+    CSi = jnp.broadcast_to(Ci[None, :], match_2d.shape)[match_2d]
+    s_idx_grid = jnp.broadcast_to(jnp.arange(len(Si))[:, None], match_2d.shape)
+    cs_s_indices = s_idx_grid[match_2d]
+    CSj = Sj[cs_s_indices]
 
     Ii = Ij = jnp.arange(n_col)
     I_CSi = jnp.concatenate([CSi, Ii], -1)
     I_CSj = jnp.concatenate([CSj, Ij], -1)
     return (
         n_col,
-        mask,
+        cs_s_indices,
         Si,
         Sj,
         Cext,
@@ -200,7 +203,7 @@ def evaluate_circuit_klu(
 
     (
         n_col,
-        mask,
+        cs_s_indices,
         Si,
         Sj,
         Cext,
@@ -225,7 +228,7 @@ def evaluate_circuit_klu(
     Sx = jnp.concatenate(
         [jnp.broadcast_to(sx, (*batch_shape, sx.shape[-1])) for sx in Sx], -1
     )
-    CSx = Sx[..., mask]
+    CSx = Sx[..., cs_s_indices]
     Ix = jnp.ones((*batch_shape, n_col))
     I_CSx = jnp.concatenate([-CSx, Ix], -1)
 

@@ -2,12 +2,12 @@
 
 from __future__ import annotations
 
+import io
 import sys
 import warnings
 from collections.abc import Callable
 from functools import partial
-from pathlib import Path
-from typing import Annotated, Any, TypeAlias, overload
+from typing import IO, Annotated, Any, TypeAlias, overload
 
 import jax
 import jax.numpy as jnp
@@ -24,6 +24,7 @@ __all__ = [
     "NeuralFitResult",
     "PRNGKey",
     "Params",
+    "get_neural_fit_functions_str",
     "neural_fit",
     "neural_fit_equations",
     "write_neural_fit_functions",
@@ -201,29 +202,63 @@ def neural_fit_equations(result: NeuralFitResult) -> dict[str, Equation]:
 
 def write_neural_fit_functions(
     result: NeuralFitResult,
+    io: IO = sys.stdout,
     *,
     with_imports: bool = True,
-    path: Path | None = None,
 ) -> None:
     """Write neural fit as a python function.
 
     Args:
         result: Result from neural_fit function.
+        io: where to write the functions to
         with_imports: Whether to include import statements in the output.
-        path: Path to write the function to. If None, writes to stdout.
     """
     act_fn = result["activation_fn"]
     eqs = neural_fit_equations(result)
-    write = sys.stdout.write if path is None else path.write_text
     for target, eq in eqs.items():
         if with_imports:
-            write("import sax\n")
-            write("import jax.numpy as jnp\n")
-        write(
+            io.write("import sax\n")
+            io.write("import jax.numpy as jnp\n")
+        io.write(
             _render_function_template(
                 target=target, eq=eq, act=act_fn, args=result["features"]
             )
         )
+
+
+def get_neural_fit_functions_str(
+    result: NeuralFitResult,
+    *,
+    with_imports: bool = True,
+) -> str:
+    """Get the neural fit function string.
+
+    Args:
+        result: Result from neural_fit function.
+        with_imports: Whether to include import statements in the output.
+    """
+    buf = io.StringIO()
+    write_neural_fit_functions(result, buf, with_imports=with_imports)
+    return buf.getvalue()
+
+
+def eval_neural_fit(
+    result: NeuralFitResult,
+    func: str,
+    **kwargs: Any,  # noqa: ANN401
+) -> Any:  # noqa: ANN401
+    """Evaluate a neural fit.
+
+    Args:
+        result: Result from neural_fit function.
+        func: which output function to use.
+        kwargs: Parameters to evaluate the function at
+            (should match the columns in the dataframe the neural fit was trained on).
+    """
+    namespace = {}
+    s = get_neural_fit_functions_str(result, with_imports=True)
+    exec(s, namespace)  # noqa: S102
+    return namespace[func](**kwargs)
 
 
 Equation: TypeAlias = Annotated[Any, "Equation"]

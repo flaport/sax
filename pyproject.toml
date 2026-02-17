@@ -2,6 +2,53 @@
 build-backend = "setuptools.build_meta"
 requires = ["setuptools>=61", "uv", "build", "wheel"]
 
+[dependency-groups]
+dev = [
+  {include-group = "docs"},
+  {include-group = "lint"},
+  {include-group = "test"},
+  "build>=1.2.0",
+  "gdsfactory>=9.34.1",
+  "meow-sim>=0.14.0",
+  "mkinit>=1.1.0",
+  "optax>=0.2.0",
+  "scikit-learn>=1.6.1",
+  "tmm>=0.2.0",
+  "towncrier>=24.0.0",
+  "ty>=0.0.1a11"
+]
+docs = [
+  "altair>=5.5.0",
+  "griffe>=1.5.6",
+  "ipykernel>=6.29.5",
+  "matplotlib>=3.10.0",
+  "mkautodoc>=0.2.0",
+  "mkdocs-autorefs>=1.3.0",
+  "mkdocs-bibtex>=4.4.0",
+  "mkdocs-material>=9.6.0",
+  "mkdocs-matplotlib",
+  "mkdocs>=1.6.1",
+  "mkdocstrings[python]>=0.27.0",
+  "nbconvert>=7.16.6",
+  "plotly>=6.0.0",
+  "pydot>=4.0.1",
+  "vega-datasets>=0.9.0"
+]
+lint = [
+  "nb-clean>=4.0.1",
+  "nbstripout>=0.8.1",
+  "pre-commit>=4.1.0",
+  "pyright>=1.1.0",
+  "ruff>=0.9.0"
+]
+test = [
+  "papermill>=2.6.0",
+  "pytest-cov>=6.0.0",
+  "pytest-randomly>=3.16.0",
+  "pytest-xdist>=3.6.0",
+  "pytest>=8.3.0"
+]
+
 [project]
 authors = [{name = "Floris Laporte", email = "floris.laporte@gmail.com"}]
 classifiers = [
@@ -18,7 +65,7 @@ classifiers = [
 ]
 dependencies = [
   "flax>=0.10.0",
-  "jax>=0.6.0",
+  "jax",
   "jaxtyping>=0.2.38",
   "klujax>=0.4.1",
   "lark>=1.2.2",
@@ -53,47 +100,21 @@ license = {text = "Apache Software License"}
 name = "sax"
 readme = "README.md"
 requires-python = ">=3.11.0"
-version = "0.15.15"
+version = "0.16.6"
 
-[project.optional-dependencies]
-dev = [
-  "altair>=5.5.0",
-  "build>=1.2.0",
-  "gdsfactory>=9.7.0",
-  "griffe>=1.5.6",
-  "ipykernel>=6.29.5",
-  "ipykernel>=6.29.5",
-  "matplotlib>=3.10.0",
-  "meow-sim>=0.14.0",
-  "mkautodoc>=0.2.0",
-  "mkdocs-autorefs>=1.3.0",
-  "mkdocs-bibtex>=4.4.0",
-  "mkdocs-material>=9.6.0",
-  "mkdocs>=1.6.1",
-  "mkdocstrings[python]>=0.27.0",
-  "mkinit>=1.1.0",
-  "nbconvert>=7.16.6",
-  "papermill>=2.6.0",
-  "plotly>=6.0.0",
-  "pre-commit>=4.1.0",
-  "pyright>=1.1.0",
-  "pytest-cov>=6.0.0",
-  "pytest-randomly>=3.16.0",
-  "pytest-xdist>=3.6.0",
-  "pytest>=8.3.0",
-  "ruff>=0.9.0",
-  "scikit-learn>=1.6.1",
-  "tbump>=6.0.0",
-  "tmm>=0.2.0",
-  "towncrier>=24.0.0",
-  "vega-datasets>=0.9.0",
-  "nb-clean>=4.0.1",
-  "ty>=0.0.1a11",
-  "nbstripout>=0.8.1",
-  "mkdocs-matplotlib",
-  "scikit-rf>=1.8.0",
-  "pydot>=4.0.1"
-]
+[[tool.bver.file]]
+kind = "python"
+src = "pyproject.toml"
+
+[[tool.bver.file]]
+src = "README.md"
+
+[[tool.bver.file]]
+kind = "python"
+src = "src/sax/__init__.py"
+
+[tool.bver.git]
+action = "commit-tag-and-push"
 
 [tool.pytest.ini_options]
 addopts = '--tb=short'
@@ -120,7 +141,6 @@ ignore = [
   "FIX004",  # line-contains-hack
   "N803",  # invalid-argument-name
   "N806",  # non-lowercase-variable-in-function
-  "PD901",  # pandas-df-variable-name
   "PLC0414",  # useless-import-alias
   "PLC0415",  # import-outside-top-level
   "PLR0913",  # too-many-arguments
@@ -183,28 +203,3 @@ convention = "google"
 
 [tool.setuptools.packages.find]
 where = ["src"]
-
-[tool.tbump]
-
-[[tool.tbump.file]]
-src = "README.md"
-
-[[tool.tbump.file]]
-src = "pyproject.toml"
-
-[[tool.tbump.file]]
-src = "src/sax/__init__.py"
-
-[tool.tbump.git]
-message_template = "Bump to {new_version}"
-tag_template = "{new_version}"
-
-[tool.tbump.version]
-current = "0.15.15"
-regex = '''
-  (?P<major>\d+)
-  \.
-  (?P<minor>\d+)
-  \.
-  (?P<patch>\d+)
-  '''

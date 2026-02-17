@@ -209,6 +209,10 @@ class _SparamsTransformer(Transformer):
         raise ValueError(msg)
 
     @v_args(inline=True)
+    def groupdelay(self, value: Token) -> float:
+        return float(value)
+
+    @v_args(inline=True)
     def sweepparams(self, params: Token) -> list[str]:
         return _destring(str(params)).split(";")
 

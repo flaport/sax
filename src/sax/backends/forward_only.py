@@ -8,6 +8,7 @@ import jax.numpy as jnp
 import networkx as nx
 
 import sax
+from sax.netlists import _nets_to_connections_strict
 
 __all__ = [
     "analyze_circuit_forward",
@@ -63,7 +64,7 @@ def analyze_instances_forward(
 
 def analyze_circuit_forward(
     analyzed_instances: dict[sax.InstanceName, sax.SDict],  # noqa: ARG001
-    connections: sax.Connections,
+    nets: sax.Nets,
     ports: sax.Ports,
 ) -> Any:  # noqa: ANN401
     """Analyze circuit topology for the forward-only backend.
@@ -75,7 +76,7 @@ def analyze_circuit_forward(
     Args:
         analyzed_instances: Instance S-matrices from analyze_instances_forward.
             Not used in this analysis step but required for interface consistency.
-        connections: Dictionary mapping instance ports to each other, defining
+        nets: List of net dictionaries with "p1" and "p2" keys defining
             internal circuit connections.
         ports: Dictionary mapping external port names to instance ports.
 
@@ -84,11 +85,12 @@ def analyze_circuit_forward(
 
     Example:
         ```python
-        connections = {"wg1,out": "amp1,in", "amp1,out": "wg2,in"}
+        nets = [{"p1": "wg1,out", "p2": "amp1,in"}, {"p1": "amp1,out", "p2": "wg2,in"}]
         ports = {"in": "wg1,in", "out": "wg2,out"}
-        analyzed = analyze_circuit_forward(analyzed_instances, connections, ports)
+        analyzed = analyze_circuit_forward(analyzed_instances, nets, ports)
         ```
     """
+    connections = _nets_to_connections_strict(nets)
     return connections, ports
 
 

@@ -1,8 +1,22 @@
-dev:
-  uv venv --python 3.12
-  uv sync --all-extras
+dev: bver
+  uv venv --python 3.12 --clear
+  uv sync --dev
   uv pip install -e .
   uv run pre-commit install
+
+# Version bumping
+[linux,macos]
+bver:
+    curl -LsSf https://github.com/flaport/bver/releases/latest/download/install.sh | sh
+
+# Version bumping
+[windows]
+bver:
+    powershell -ExecutionPolicy ByPass -c "irm https://github.com/flaport/bver/releases/latest/download/install.ps1 | iex"
+
+# bump version
+bump version="patch":
+    bver bump "{{ version }}"
 
 dist:
   uv run python -m build --wheel
@@ -10,14 +24,11 @@ dist:
 uv:
   curl -LsSf https://astral.sh/uv/install.sh | sh
 
-inits:
-  cd src/sax && uv run mkinit --relative --recursive --write && uv run ruff format __init__.py
-
 ipykernel:
-  uv run --extra dev python -m ipykernel install --user --name sax --display-name sax
+  uv run --dev python -m ipykernel install --user --name sax --display-name sax
 
 test: ipykernel
-  uv run --extra dev pytest -s -n logical
+  uv run --dev pytest -s -n logical
 
 docs:
   sed 's|](docs/|](|g' README.md > docs/index.md
