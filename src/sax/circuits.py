@@ -18,6 +18,7 @@ from .models.probes import ideal_probe
 from .netlists import (
     _connections_to_nets,
     expand_probes,
+    extract_port_probes,
     remove_unused_instances,
 )
 from .netlists import netlist as into_recnet
@@ -157,6 +158,9 @@ def circuit(
     )
     patch_netlist_array_instances(recnet)
     recnet = sax.into[sax.RecursiveNetlist](recnet)
+    recnet, auto_probes = extract_port_probes(recnet)
+    if auto_probes:
+        probes = {**(probes or {}), **auto_probes}
     if probes:
         recnet = expand_probes(recnet, probes)
         models = {"_ideal_probe": ideal_probe, **(models or {})}
