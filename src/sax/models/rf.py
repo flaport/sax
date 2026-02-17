@@ -332,3 +332,33 @@ def electrical_open(
         [@pozar2012]
     """
     return gamma_0_load(f=f, gamma_0=1, n_ports=n_ports)
+
+
+@jax.jit
+def lc_shunt_component(
+    f: sax.FloatArrayLike = 5e9,
+    inductance: sax.FloatLike = 1e-9,
+    capacitance: sax.FloatLike = 1e-12,
+    z0: sax.FloatLike = 50,
+) -> sax.SDict:
+    """SAX component for a 1-port shunted LC resonator."""
+    f = jnp.asarray(f)
+    instances = {
+        "L": inductor(f=f, inductance=inductance, z0=z0),
+        "C": capacitor(f=f, capacitance=capacitance, z0=z0),
+        "gnd": electrical_short(f=f, n_ports=1),
+        "tee_1": tee(f=f),
+        "tee_2": tee(f=f),
+    }
+    connections = {
+        "L,o1": "tee_1,o1",
+        "C,o1": "tee_1,o2",
+        "L,o2": "tee_2,o1",
+        "C,o2": "tee_2,o2",
+        "gnd,o1": "tee_2,o3",
+    }
+    ports = {
+        "o1": "tee_1,o3",
+    }
+
+    return sax.backends.evaluate_circuit_fg((connections, ports), instances)
