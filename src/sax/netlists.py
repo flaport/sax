@@ -439,13 +439,18 @@ def expand_probes(  # noqa: PLR0915,C901
     points in the netlist. Each probe intercepts a connection and exposes forward
     and backward traveling wave ports.
 
+    Probes can target instance ports at any level of a recursive netlist using
+    dot-separated paths. For example, ``"sub1.wg1,out0"`` targets port ``out0``
+    of instance ``wg1`` inside the component used by instance ``sub1``.
+
     Args:
         netlist: The netlist to expand probes in.
         probes: A mapping from probe names to instance ports where probes should
-            be inserted. If the instance port is part of an existing connection,
-            a 4-port probe is inserted. If the instance port is unconnected,
-            only the "X_fwd" port is created as a direct alias.
-            Example: ``{"mid": "wg1,out"}``
+            be inserted. Instance ports can use dot-separated paths to target
+            sub-circuits (e.g. ``"sub1.wg1,out0"``). If the instance port is
+            part of an existing connection, a 4-port probe is inserted. If the
+            instance port is unconnected, only the "X_fwd" port is created as a
+            direct alias.
 
     Returns:
         A new netlist with probe instances inserted and connections/ports updated.
@@ -453,7 +458,8 @@ def expand_probes(  # noqa: PLR0915,C901
         For probes on unconnected ports, only "X_fwd" is added.
 
     Raises:
-        ValueError: If probe ports would conflict with existing ports.
+        ValueError: If probe ports would conflict with existing ports, or if a
+            hierarchical path references a nonexistent instance or component.
 
     Example:
         ```python
@@ -471,15 +477,9 @@ def expand_probes(  # noqa: PLR0915,C901
     if not probes:
         return netlist
 
-    # Handle recursive netlist: only expand probes in top-level
+    # Handle recursive netlist
     if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
-        top_level_name = next(iter(recnet))
-        top_level = recnet[top_level_name]
-        expanded_top = expand_probes(top_level, probes)
-        return {
-            top_level_name: expanded_top,
-            **{k: v for k, v in recnet.items() if k != top_level_name},
-        }
+        return _expand_probes_recursive(recnet, probes)
 
     # It's a flat netlist
     net: sax.Netlist = deepcopy(sax.into[sax.Netlist](netlist))
@@ -569,6 +569,88 @@ def expand_probes(  # noqa: PLR0915,C901
     net["nets"] = nets
     net["ports"] = ports
     return net
+
+
+def _expand_probes_recursive(  # noqa: C901
+    netlist: sax.RecursiveNetlist,
+    probes: dict[str, str],
+) -> sax.RecursiveNetlist:
+    """Expand probes in a recursive netlist, supporting hierarchical paths."""
+    recnet = deepcopy(netlist)
+    top_level_name = next(iter(recnet))
+
+    # Separate top-level probes from hierarchical probes
+    top_level_probes: dict[str, str] = {}
+    # Group hierarchical probes by target component
+    # Maps: target_component -> {probe_name: instance_port}
+    component_probes: dict[str, dict[str, str]] = {}
+    # Maps: probe_name -> [(instance_name, parent_component), ...]
+    probe_paths: dict[str, list[tuple[str, str]]] = {}
+
+    for probe_name, instance_port in probes.items():
+        parts = instance_port.split(".")
+        if len(parts) == 1:
+            top_level_probes[probe_name] = instance_port
+        else:
+            # Walk the hierarchy to find the target component
+            current_component = top_level_name
+            path: list[tuple[str, str]] = []
+            for instance_name in parts[:-1]:
+                current_netlist = recnet[current_component]
+                instances = current_netlist.get("instances", {})
+                if instance_name not in instances:
+                    msg = (
+                        f"Hierarchical probe '{probe_name}': instance "
+                        f"'{instance_name}' not found in component "
+                        f"'{current_component}'. "
+                        f"Available instances: {list(instances.keys())}"
+                    )
+                    raise ValueError(msg)
+                inst = instances[instance_name]
+                child_component = inst["component"] if isinstance(inst, dict) else inst
+                if child_component not in recnet:
+                    msg = (
+                        f"Hierarchical probe '{probe_name}': component "
+                        f"'{child_component}' (used by instance "
+                        f"'{instance_name}' in '{current_component}') "
+                        f"is not defined in the recursive netlist. "
+                        f"Only sub-circuits (not primitives) can be probed."
+                    )
+                    raise ValueError(msg)
+                path.append((instance_name, current_component))
+                current_component = child_component
+
+            target_instance_port = parts[-1]
+            if current_component not in component_probes:
+                component_probes[current_component] = {}
+            component_probes[current_component][probe_name] = target_instance_port
+            probe_paths[probe_name] = path
+
+    # Expand top-level probes using existing flat-netlist logic
+    if top_level_probes:
+        recnet[top_level_name] = expand_probes(recnet[top_level_name], top_level_probes)
+
+    # Expand hierarchical probes at their target component level
+    for component_name, comp_probes in component_probes.items():
+        recnet[component_name] = expand_probes(recnet[component_name], comp_probes)
+
+    # Bubble up: expose probe ports through each intermediate level
+    for probe_name, path in probe_paths.items():
+        fwd_port = f"{probe_name}_fwd"
+        bwd_port = f"{probe_name}_bwd"
+        for instance_name, parent_component in reversed(path):
+            parent_ports = recnet[parent_component].get("ports", {})
+            if fwd_port in parent_ports or bwd_port in parent_ports:
+                msg = (
+                    f"Hierarchical probe '{probe_name}' would create ports "
+                    f"'{fwd_port}'/'{bwd_port}' which conflict with existing "
+                    f"ports in component '{parent_component}'."
+                )
+                raise ValueError(msg)
+            parent_ports[fwd_port] = f"{instance_name},{fwd_port}"
+            parent_ports[bwd_port] = f"{instance_name},{bwd_port}"
+
+    return recnet
 
 
 @overload
