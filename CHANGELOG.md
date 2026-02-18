@@ -1,3 +1,17 @@
+<a id="0.16.9"></a>
+# [0.16.9](https://github.com/flaport/sax/releases/tag/0.16.9) - 2026-02-18
+
+# What's Changed
+
+## New
+
+- Support hierarchical probes with dot-separated paths [#91](https://github.com/flaport/sax/pull/91)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.8...0.16.9
+
+[Changes][0.16.9]
+
+
 <a id="0.16.8"></a>
 # [0.16.8](https://github.com/flaport/sax/releases/tag/0.16.8) - 2026-02-17
 
@@ -976,6 +990,7 @@
 [Changes][0.8.7]
 
 
+[0.16.9]: https://github.com/flaport/sax/compare/0.16.8...0.16.9
 [0.16.8]: https://github.com/flaport/sax/compare/0.16.7...0.16.8
 [0.16.7]: https://github.com/flaport/sax/compare/0.16.6...0.16.7
 [0.16.6]: https://github.com/flaport/sax/compare/0.16.5...0.16.6
