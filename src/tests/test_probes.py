@@ -700,6 +700,271 @@ def test_port_on_internal_node_with_nets_format() -> None:
     assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
 
 
+# --- Hierarchical probe tests ---
+
+
+def _hierarchical_mzi_netlist() -> dict:
+    """Helper: a 2-level hierarchical MZI netlist for testing."""
+    return {
+        "top_level": {
+            "instances": {
+                "mzi": {"component": "mzi_component"},
+            },
+            "connections": {},
+            "ports": {
+                "in0": "mzi,in0",
+                "in1": "mzi,in1",
+                "out0": "mzi,out0",
+                "out1": "mzi,out1",
+            },
+        },
+        "mzi_component": {
+            "instances": {
+                "lft": {"component": "coupler"},
+                "top": {"component": "waveguide"},
+                "btm": {"component": "waveguide"},
+                "rgt": {"component": "coupler"},
+            },
+            "connections": {
+                "lft,out0": "btm,in0",
+                "btm,out0": "rgt,in0",
+                "lft,out1": "top,in0",
+                "top,out0": "rgt,in1",
+            },
+            "ports": {
+                "in0": "lft,in0",
+                "in1": "lft,in1",
+                "out0": "rgt,out0",
+                "out1": "rgt,out1",
+            },
+        },
+    }
+
+
+def _hierarchical_models() -> dict:
+    return {
+        "coupler": sax.models.coupler_ideal,
+        "waveguide": sax.models.straight,
+    }
+
+
+def test_hierarchical_probe_one_level() -> None:
+    """Test probe into a sub-circuit using dot-separated path."""
+    netlist = _hierarchical_mzi_netlist()
+    models = _hierarchical_models()
+
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"top_arm": "mzi.top,in0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "top_arm_fwd" in ports
+    assert "top_arm_bwd" in ports
+    expected = {"in0", "in1", "out0", "out1", "top_arm_fwd", "top_arm_bwd"}
+    assert set(ports) == expected
+
+
+def test_hierarchical_probe_two_levels() -> None:
+    """Test probe two levels deep in the hierarchy."""
+    netlist = {
+        "outer": {
+            "instances": {
+                "inner_inst": {"component": "inner"},
+            },
+            "connections": {},
+            "ports": {
+                "in": "inner_inst,in",
+                "out": "inner_inst,out",
+            },
+        },
+        "inner": {
+            "instances": {
+                "sub_inst": {"component": "sub"},
+            },
+            "connections": {},
+            "ports": {
+                "in": "sub_inst,in",
+                "out": "sub_inst,out",
+            },
+        },
+        "sub": {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "wg2": {"component": "waveguide"},
+            },
+            "connections": {
+                "wg1,out0": "wg2,in0",
+            },
+            "ports": {
+                "in": "wg1,in0",
+                "out": "wg2,out0",
+            },
+        },
+    }
+    models = {"waveguide": sax.models.straight}
+
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"deep": "inner_inst.sub_inst.wg1,out0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "deep_fwd" in ports
+    assert "deep_bwd" in ports
+    assert set(ports) == {"in", "out", "deep_fwd", "deep_bwd"}
+
+
+def test_hierarchical_probe_doesnt_affect_transmission() -> None:
+    """Test that hierarchical probes don't affect transmission of real ports."""
+    netlist = _hierarchical_mzi_netlist()
+    models = _hierarchical_models()
+
+    # Without probes
+    circuit_plain, _ = sax.circuit(netlist, models)
+    result_plain = circuit_plain(wl=1.55)
+
+    # With hierarchical probe
+    circuit_probed, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"top_arm": "mzi.top,in0"},
+    )
+    result_probed = circuit_probed(wl=1.55)
+
+    assert result_plain["in0", "out0"] == result_probed["in0", "out0"]
+    assert result_plain["in0", "out1"] == result_probed["in0", "out1"]
+
+
+def test_hierarchical_probe_shared_component() -> None:
+    """Test probing one instance when a shared component is used by multiple."""
+    netlist = {
+        "top_level": {
+            "instances": {
+                "a": {"component": "sub"},
+                "b": {"component": "sub"},
+            },
+            "connections": {
+                "a,out": "b,in",
+            },
+            "ports": {
+                "in": "a,in",
+                "out": "b,out",
+            },
+        },
+        "sub": {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "wg2": {"component": "waveguide"},
+            },
+            "connections": {
+                "wg1,out0": "wg2,in0",
+            },
+            "ports": {
+                "in": "wg1,in0",
+                "out": "wg2,out0",
+            },
+        },
+    }
+    models = {"waveguide": sax.models.straight}
+
+    # Probe only through instance 'a', not 'b'
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"mid_a": "a.wg1,out0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    # Only 'a's probe ports should be exposed at the top level
+    assert "mid_a_fwd" in ports
+    assert "mid_a_bwd" in ports
+    assert set(ports) == {"in", "out", "mid_a_fwd", "mid_a_bwd"}
+
+
+def test_mixed_top_level_and_hierarchical_probes() -> None:
+    """Test combining top-level and hierarchical probes in the same call."""
+    netlist = {
+        "top_level": {
+            "instances": {
+                "sub": {"component": "sub_circuit"},
+                "wg_top": {"component": "waveguide"},
+            },
+            "connections": {
+                "sub,out": "wg_top,in0",
+            },
+            "ports": {
+                "in": "sub,in",
+                "out": "wg_top,out0",
+            },
+        },
+        "sub_circuit": {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "wg2": {"component": "waveguide"},
+            },
+            "connections": {
+                "wg1,out0": "wg2,in0",
+            },
+            "ports": {
+                "in": "wg1,in0",
+                "out": "wg2,out0",
+            },
+        },
+    }
+    models = {"waveguide": sax.models.straight}
+
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={
+            "top_probe": "sub,out",  # Top-level probe
+            "deep_probe": "sub.wg1,out0",  # Hierarchical probe
+        },
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    expected = {
+        "in",
+        "out",
+        "top_probe_fwd",
+        "top_probe_bwd",
+        "deep_probe_fwd",
+        "deep_probe_bwd",
+    }
+    assert set(ports) == expected
+
+
+def test_hierarchical_probe_invalid_path_instance() -> None:
+    """Test that a bad instance name in the hierarchy path gives a clear error."""
+    netlist = _hierarchical_mzi_netlist()
+    models = _hierarchical_models()
+
+    # 'bad_inst' is not an instance in the top-level
+    with pytest.raises(ValueError, match="not found"):
+        sax.circuit(
+            netlist,
+            models,
+            probes={"bad": "bad_inst.top,in0"},
+        )
+
+
+def test_hierarchical_probe_primitive_component() -> None:
+    """Test that probing into a primitive (leaf) component gives a clear error."""
+    netlist = _hierarchical_mzi_netlist()
+    models = _hierarchical_models()
+
+    # 'top' is a waveguide instance (primitive model, no sub-netlist)
+    with pytest.raises(ValueError, match="not defined in the recursive netlist"):
+        sax.circuit(
+            netlist,
+            models,
+            probes={"bad": "mzi.top.deeper,in0"},
+        )
+
+
 if __name__ == "__main__":
     test_ideal_probe_model()
     test_basic_probe_insertion()
@@ -716,4 +981,11 @@ if __name__ == "__main__":
     test_port_on_internal_node_doesnt_affect_transmission()
     test_mixed_explicit_and_auto_probes()
     test_port_on_internal_node_with_nets_format()
+    test_hierarchical_probe_one_level()
+    test_hierarchical_probe_two_levels()
+    test_hierarchical_probe_doesnt_affect_transmission()
+    test_hierarchical_probe_shared_component()
+    test_mixed_top_level_and_hierarchical_probes()
+    test_hierarchical_probe_invalid_path_instance()
+    test_hierarchical_probe_primitive_component()
     print("All tests passed!")
