@@ -11,9 +11,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
       - name: Install UV
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
       - name: Install Just
         uses: taiki-e/install-action@just
       - name: Set up python
@@ -22,12 +22,15 @@ jobs:
         uses: pre-commit/action@v3.0.1
 
   test:
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, macos-latest, windows-latest]
     steps:
       - name: Checkout
-        uses: actions/checkout@v3
+        uses: actions/checkout@v6
       - name: Install UV
-        uses: astral-sh/setup-uv@v5
+        uses: astral-sh/setup-uv@v7
       - name: Install Just
         uses: taiki-e/install-action@just
       - name: Run tests
@@ -35,5 +38,5 @@ jobs:
       - name: Upload artifacts [tests]
         uses: actions/upload-artifact@master
         with:
-          name: tests
+          name: tests-${{ matrix.os }}
           path: ./src/tests
