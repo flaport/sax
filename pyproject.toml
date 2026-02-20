@@ -64,7 +64,6 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Physics"
 ]
 dependencies = [
-  "flax>=0.10.0",
   "jax",
   "jaxtyping>=0.2.38",
   "klujax>=0.4.1",
