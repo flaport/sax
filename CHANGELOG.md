@@ -1,3 +1,17 @@
+<a id="0.16.10"></a>
+# [0.16.10](https://github.com/flaport/sax/releases/tag/0.16.10) - 2026-02-20
+
+# What's Changed
+
+## Bug Fixes
+
+- Implement multi-OS testing matrix [#93](https://github.com/flaport/sax/pull/93)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.9...0.16.10
+
+[Changes][0.16.10]
+
+
 <a id="0.16.9"></a>
 # [0.16.9](https://github.com/flaport/sax/releases/tag/0.16.9) - 2026-02-18
 
@@ -990,6 +1004,7 @@
 [Changes][0.8.7]
 
 
+[0.16.10]: https://github.com/flaport/sax/compare/0.16.9...0.16.10
 [0.16.9]: https://github.com/flaport/sax/compare/0.16.8...0.16.9
 [0.16.8]: https://github.com/flaport/sax/compare/0.16.7...0.16.8
 [0.16.7]: https://github.com/flaport/sax/compare/0.16.6...0.16.7
