@@ -1,3 +1,17 @@
+<a id="0.16.11"></a>
+# [0.16.11](https://github.com/flaport/sax/releases/tag/0.16.11) - 2026-02-20
+
+# What's Changed
+
+## New
+
+- Add missing runtime dependencies (pandas, optax, tqdm) [#94](https://github.com/flaport/sax/pull/94)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.10...0.16.11
+
+[Changes][0.16.11]
+
+
 <a id="0.16.10"></a>
 # [0.16.10](https://github.com/flaport/sax/releases/tag/0.16.10) - 2026-02-20
 
@@ -1004,6 +1018,7 @@
 [Changes][0.8.7]
 
 
+[0.16.11]: https://github.com/flaport/sax/compare/0.16.10...0.16.11
 [0.16.10]: https://github.com/flaport/sax/compare/0.16.9...0.16.10
 [0.16.9]: https://github.com/flaport/sax/compare/0.16.8...0.16.9
 [0.16.8]: https://github.com/flaport/sax/compare/0.16.7...0.16.8
