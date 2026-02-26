@@ -60,6 +60,65 @@ def test_1port_circuit() -> None:
     assert ("in", "in") in result
 
 
+def test_circuit_with_portless_subnetlist() -> None:
+    """Test that a sub-netlist without a 'ports' key is filtered out (#95)."""
+    netlist = {
+        "top_level": {
+            "instances": {
+                "wg": {"component": "waveguide"},
+            },
+            "connections": {},
+            "ports": {
+                "in": "wg,in0",
+                "out": "wg,out0",
+            },
+        },
+        # Sub-netlist with no "ports" key at all
+        "unused_sub": {
+            "instances": {
+                "x": {"component": "waveguide"},
+            },
+            "connections": {},
+        },
+    }
+
+    models = {"waveguide": sax.models.straight}
+    circuit, _ = sax.circuit(netlist, models)
+    result = circuit()
+    assert set(sax.get_ports(result)) == {"in", "out"}
+
+
+def test_circuit_with_empty_ports_subnetlist() -> None:
+    """Test that a sub-netlist with 'ports': {} is filtered out (#95)."""
+    netlist = {
+        "top_level": {
+            "instances": {
+                "wg": {"component": "waveguide"},
+            },
+            "connections": {},
+            "ports": {
+                "in": "wg,in0",
+                "out": "wg,out0",
+            },
+        },
+        # Sub-netlist with empty ports dict
+        "unused_sub": {
+            "instances": {
+                "x": {"component": "waveguide"},
+            },
+            "connections": {},
+            "ports": {},
+        },
+    }
+
+    models = {"waveguide": sax.models.straight}
+    circuit, _ = sax.circuit(netlist, models)
+    result = circuit()
+    assert set(sax.get_ports(result)) == {"in", "out"}
+
+
 if __name__ == "__main__":
     print(test_circuit())
     print(test_1port_circuit())
+    print(test_circuit_with_portless_subnetlist())
+    print(test_circuit_with_empty_ports_subnetlist())
