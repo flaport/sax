@@ -68,6 +68,14 @@ def gamma_0_load(
 def tee(*, f: sax.FloatArrayLike = DEFAULT_FREQUENCY) -> sax.SDict:
     """Ideal three-port RF power divider/combiner (T-junction).
 
+    ```{svgbob}
+            o2
+            *
+            |
+            |
+     o1 *---+---* o3
+    ```
+
     Args:
         f: Array of frequency points in Hz
 
@@ -341,7 +349,24 @@ def lc_shunt_component(
     capacitance: sax.FloatLike = 1e-12,
     z0: sax.FloatLike = 50,
 ) -> sax.SDict:
-    """SAX component for a 1-port shunted LC resonator."""
+    """SAX component for a 1-port shunted LC resonator.
+
+    ```{svgbob}
+             o1
+             *
+             |
+        +----+----+
+        |         |
+       --- C      C L
+       ---        C
+        |         |
+        +----+----+
+             |
+           -----
+            ---
+             -
+    ```
+    """
     f = jnp.asarray(f)
     instances = {
         "L": inductor(f=f, inductance=inductance, z0=z0),
