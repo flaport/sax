@@ -1,3 +1,21 @@
+<a id="0.16.12"></a>
+# [0.16.12](https://github.com/flaport/sax/releases/tag/0.16.12) - 2026-03-03
+
+# What's Changed
+
+## Bug Fixes
+
+- Fix portless sub-netlists and internal-port handling [#97](https://github.com/flaport/sax/pull/97)
+
+## Maintenance
+
+- Add svgbob diagrams for RF components [#98](https://github.com/flaport/sax/pull/98)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.11...0.16.12
+
+[Changes][0.16.12]
+
+
 <a id="0.16.11"></a>
 # [0.16.11](https://github.com/flaport/sax/releases/tag/0.16.11) - 2026-02-20
 
@@ -1018,6 +1036,7 @@
 [Changes][0.8.7]
 
 
+[0.16.12]: https://github.com/flaport/sax/compare/0.16.11...0.16.12
 [0.16.11]: https://github.com/flaport/sax/compare/0.16.10...0.16.11
 [0.16.10]: https://github.com/flaport/sax/compare/0.16.9...0.16.10
 [0.16.9]: https://github.com/flaport/sax/compare/0.16.8...0.16.9
