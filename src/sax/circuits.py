@@ -28,6 +28,18 @@ from .utils import get_settings, merge_dicts, replace_kwargs, update_settings
 __all__ = ["circuit", "draw_dag", "get_required_circuit_models"]
 
 
+def _filter_portless_subnets(
+    netlist: sax.RecursiveNetlist,
+) -> sax.RecursiveNetlist:
+    """Remove sub-netlists that have no ports (except the top-level entry)."""
+    top_level_name = next(iter(netlist))
+    return {
+        name: flatnet
+        for name, flatnet in netlist.items()
+        if name == top_level_name or flatnet.get("ports", {})
+    }
+
+
 @overload
 def circuit(
     netlist: dict[str, Any],
@@ -37,6 +49,7 @@ def circuit(
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
     probes: dict[str, str] | None = None,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
 
 
@@ -50,6 +63,7 @@ def circuit(
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
     probes: dict[str, str] | None = None,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.SDictModel, sax.CircuitInfo]: ...
 
 
@@ -63,6 +77,7 @@ def circuit(
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
     probes: dict[str, str] | None = None,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.SDenseModel, sax.CircuitInfo]: ...
 
 
@@ -76,6 +91,7 @@ def circuit(
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
     probes: dict[str, str] | None = None,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.SCooModel, sax.CircuitInfo]: ...
 
 
@@ -88,6 +104,7 @@ def circuit(
     top_level_name: str = "top_level",
     ignore_impossible_connections: bool = False,
     probes: dict[str, str] | None = None,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.Model, sax.CircuitInfo]:
     """Create a circuit function for a given netlist.
 
@@ -113,6 +130,10 @@ def circuit(
             connection and exposes forward and backward traveling wave ports.
             For a probe named "X" at instance port "inst,port", two new circuit
             ports are created: "X_fwd" and "X_bwd". Defaults to None.
+        on_internal_port: How to handle top-level ports that map to internal
+            connection nodes. ``"warn"`` (default) drops them with a warning,
+            ``"ignore"`` drops them silently, ``"as_probes"`` converts them
+            to measurement probes (legacy behaviour).
 
     Returns:
         Tuple containing:
@@ -158,13 +179,14 @@ def circuit(
     )
     patch_netlist_array_instances(recnet)
     recnet = sax.into[sax.RecursiveNetlist](recnet)
-    recnet, auto_probes = extract_port_probes(recnet)
+    recnet, auto_probes = extract_port_probes(recnet, on_internal_port)
     if auto_probes:
         probes = {**(probes or {}), **auto_probes}
     if probes:
         recnet = expand_probes(recnet, probes)
         models = {"_ideal_probe": ideal_probe, **(models or {})}
     recnet = resolve_array_instances(recnet)
+    recnet = _filter_portless_subnets(recnet)
     recnet = remove_unused_instances(recnet)
     _validate_netlist_ports(recnet)
     dependency_dag = _create_dag(recnet, models, validate=True)

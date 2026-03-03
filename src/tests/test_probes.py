@@ -551,8 +551,8 @@ def test_probe_with_none() -> None:
     assert set(ports) == {"in", "out"}
 
 
-def test_port_on_internal_node_becomes_probe() -> None:
-    """Test that a port mapping to an internal connection node becomes a probe."""
+def test_port_on_internal_node_is_dropped() -> None:
+    """Test that a port mapping to an internal connection node is dropped."""
     netlist = {
         "instances": {
             "wg1": "waveguide",
@@ -564,7 +564,7 @@ def test_port_on_internal_node_becomes_probe() -> None:
         "ports": {
             "in": "wg1,in0",
             "out": "wg2,out0",
-            "mid": "wg1,out0",  # Internal node — should become a probe
+            "mid": "wg1,out0",  # Internal node — should be dropped
         },
     }
 
@@ -577,15 +577,14 @@ def test_port_on_internal_node_becomes_probe() -> None:
 
     result = circuit_fn()
     ports = sax.get_ports(result)
-    # "mid" should have been replaced by "mid_fwd" and "mid_bwd"
     assert "mid" not in ports
-    assert "mid_fwd" in ports
-    assert "mid_bwd" in ports
-    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+    assert "mid_fwd" not in ports
+    assert "mid_bwd" not in ports
+    assert set(ports) == {"in", "out"}
 
 
 def test_port_on_internal_node_doesnt_affect_transmission() -> None:
-    """Test that auto-probes don't affect the circuit's real ports."""
+    """Test that dropping internal-node ports doesn't affect transmission."""
     netlist_plain = {
         "instances": {
             "wg1": "waveguide",
@@ -605,7 +604,7 @@ def test_port_on_internal_node_doesnt_affect_transmission() -> None:
         "ports": {
             "in": "wg1,in0",
             "out": "wg2,out0",
-            "mid": "wg2,in0",  # Internal node
+            "mid": "wg2,in0",  # Internal node — will be dropped
         },
     }
 
@@ -615,18 +614,22 @@ def test_port_on_internal_node_doesnt_affect_transmission() -> None:
 
     circuit_plain, _ = sax.circuit(netlist_plain, models)
     with pytest.warns(UserWarning, match="internal node"):
-        circuit_probed, _ = sax.circuit(netlist_with_internal_port, models)
+        circuit_dropped, _ = sax.circuit(netlist_with_internal_port, models)
 
     result_plain = circuit_plain(wl=1.55)
-    result_probed = circuit_probed(wl=1.55)
+    result_dropped = circuit_dropped(wl=1.55)
+
+    # Both circuits should have identical ports
+    assert set(sax.get_ports(result_plain)) == {"in", "out"}
+    assert set(sax.get_ports(result_dropped)) == {"in", "out"}
 
     # Transmission between real ports should be identical
-    assert result_plain["in", "out"] == result_probed["in", "out"]
-    assert result_plain["out", "in"] == result_probed["out", "in"]
+    assert result_plain["in", "out"] == result_dropped["in", "out"]
+    assert result_plain["out", "in"] == result_dropped["out", "in"]
 
 
-def test_mixed_explicit_and_auto_probes() -> None:
-    """Test that explicit probes= and auto-detected port probes work together."""
+def test_internal_port_dropped_explicit_probe_kept() -> None:
+    """Test that internal-node ports are dropped while explicit probes still work."""
     netlist = {
         "instances": {
             "wg1": "waveguide",
@@ -640,7 +643,7 @@ def test_mixed_explicit_and_auto_probes() -> None:
         "ports": {
             "in": "wg1,in0",
             "out": "wg3,out0",
-            "auto_mid": "wg1,out0",  # Auto-detected probe
+            "auto_mid": "wg1,out0",  # Internal node — will be dropped
         },
     }
 
@@ -657,11 +660,10 @@ def test_mixed_explicit_and_auto_probes() -> None:
 
     result = circuit_fn()
     ports = sax.get_ports(result)
+    # auto_mid is dropped, only explicit_mid probe ports remain
     expected_ports = {
         "in",
         "out",
-        "auto_mid_fwd",
-        "auto_mid_bwd",
         "explicit_mid_fwd",
         "explicit_mid_bwd",
     }
@@ -669,7 +671,7 @@ def test_mixed_explicit_and_auto_probes() -> None:
 
 
 def test_port_on_internal_node_with_nets_format() -> None:
-    """Test auto-probe detection when connections are in nets format."""
+    """Test internal-node port detection when connections are in nets format."""
     netlist = {
         "instances": {
             "wg1": "waveguide",
@@ -681,7 +683,7 @@ def test_port_on_internal_node_with_nets_format() -> None:
         "ports": {
             "in": "wg1,in0",
             "out": "wg2,out0",
-            "mid": "wg2,in0",  # Internal node (via nets)
+            "mid": "wg2,in0",  # Internal node (via nets) — will be dropped
         },
     }
 
@@ -695,9 +697,9 @@ def test_port_on_internal_node_with_nets_format() -> None:
     result = circuit_fn()
     ports = sax.get_ports(result)
     assert "mid" not in ports
-    assert "mid_fwd" in ports
-    assert "mid_bwd" in ports
-    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+    assert "mid_fwd" not in ports
+    assert "mid_bwd" not in ports
+    assert set(ports) == {"in", "out"}
 
 
 # --- Hierarchical probe tests ---
@@ -965,6 +967,194 @@ def test_hierarchical_probe_primitive_component() -> None:
         )
 
 
+def test_hierarchical_composition_ports_dropped() -> None:
+    """Test that multiple ports on internal nodes are all dropped (#96)."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+            "wg3": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+            "wg2,out0": "wg3,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg3,out0",
+            "mid1": "wg1,out0",  # internal
+            "mid2": "wg2,out0",  # internal
+        },
+    }
+
+    models = {"waveguide": sax.models.straight}
+
+    with pytest.warns(UserWarning, match="internal node"):
+        circuit_fn, _ = sax.circuit(netlist, models)
+
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "mid1" not in ports
+    assert "mid2" not in ports
+    assert "mid1_fwd" not in ports
+    assert "mid2_fwd" not in ports
+    assert set(ports) == {"in", "out"}
+
+
+def test_explicit_probes_still_work_after_dropping_internal_ports() -> None:
+    """Explicit probes= still creates _fwd/_bwd after internal ports drop."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+            "wg3": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+            "wg2,out0": "wg3,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg3,out0",
+            "bad_port": "wg1,out0",  # internal — will be dropped
+        },
+    }
+
+    models = {"waveguide": sax.models.straight}
+
+    with pytest.warns(UserWarning, match="internal node"):
+        circuit_fn, _ = sax.circuit(
+            netlist,
+            models,
+            probes={"mid": "wg2,out0"},
+        )
+
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "bad_port" not in ports
+    assert "bad_port_fwd" not in ports
+    assert "mid_fwd" in ports
+    assert "mid_bwd" in ports
+    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+
+
+def test_probe_into_portless_subnetlist() -> None:
+    """A portless sub-netlist gets ports via a hierarchical probe (#95 + #96).
+
+    This proves the filter-after-probes ordering is correct: expand_probes
+    adds ports to the sub-netlist, so it is no longer portless when the
+    filter runs.
+    """
+    netlist = {
+        "top_level": {
+            "instances": {
+                "sub_inst": {"component": "sub_circuit"},
+            },
+            "connections": {},
+            "ports": {
+                "in": "sub_inst,in",
+                "out": "sub_inst,out",
+            },
+        },
+        "sub_circuit": {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "wg2": {"component": "waveguide"},
+            },
+            "connections": {
+                "wg1,out0": "wg2,in0",
+            },
+            "ports": {
+                "in": "wg1,in0",
+                "out": "wg2,out0",
+            },
+        },
+        # This sub-netlist has no ports — it would be filtered out
+        # unless a hierarchical probe adds ports to it first.
+        "deep_sub": {
+            "instances": {
+                "wg": {"component": "waveguide"},
+            },
+            "connections": {},
+        },
+    }
+
+    models = {"waveguide": sax.models.straight}
+
+    # Probe into the sub_circuit (not into deep_sub).
+    # deep_sub is still portless and gets filtered, but that's fine.
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"tap": "sub_inst.wg1,out0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "tap_fwd" in ports
+    assert "tap_bwd" in ports
+    assert set(ports) == {"in", "out", "tap_fwd", "tap_bwd"}
+
+
+def test_on_internal_port_ignore() -> None:
+    """Test that on_internal_port='ignore' drops silently without warning."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+            "mid": "wg1,out0",  # internal
+        },
+    }
+
+    models = {"waveguide": sax.models.straight}
+
+    import warnings
+
+    with warnings.catch_warnings():
+        warnings.simplefilter("error")
+        circuit_fn, _ = sax.circuit(netlist, models, on_internal_port="ignore")
+
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert set(ports) == {"in", "out"}
+
+
+def test_on_internal_port_as_probes() -> None:
+    """Test that on_internal_port='as_probes' gives the legacy probe behaviour."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+            "mid": "wg1,out0",  # internal — should become a probe
+        },
+    }
+
+    models = {"waveguide": sax.models.straight}
+
+    with pytest.warns(UserWarning, match="internal node"):
+        circuit_fn, _ = sax.circuit(netlist, models, on_internal_port="as_probes")
+
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "mid" not in ports
+    assert "mid_fwd" in ports
+    assert "mid_bwd" in ports
+    assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
+
+
 if __name__ == "__main__":
     test_ideal_probe_model()
     test_basic_probe_insertion()
@@ -977,9 +1167,9 @@ if __name__ == "__main__":
     test_probe_error_on_instance_conflict()
     test_empty_probes_dict()
     test_probe_with_none()
-    test_port_on_internal_node_becomes_probe()
+    test_port_on_internal_node_is_dropped()
     test_port_on_internal_node_doesnt_affect_transmission()
-    test_mixed_explicit_and_auto_probes()
+    test_internal_port_dropped_explicit_probe_kept()
     test_port_on_internal_node_with_nets_format()
     test_hierarchical_probe_one_level()
     test_hierarchical_probe_two_levels()
@@ -988,4 +1178,9 @@ if __name__ == "__main__":
     test_mixed_top_level_and_hierarchical_probes()
     test_hierarchical_probe_invalid_path_instance()
     test_hierarchical_probe_primitive_component()
+    test_hierarchical_composition_ports_dropped()
+    test_explicit_probes_still_work_after_dropping_internal_ports()
+    test_probe_into_portless_subnetlist()
+    test_on_internal_port_ignore()
+    test_on_internal_port_as_probes()
     print("All tests passed!")

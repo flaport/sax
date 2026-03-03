@@ -4,7 +4,7 @@ from __future__ import annotations
 
 import warnings
 from copy import deepcopy
-from typing import cast, overload
+from typing import Literal, cast, overload
 
 import networkx as nx
 from natsort import natsorted
@@ -656,37 +656,46 @@ def _expand_probes_recursive(  # noqa: C901
 @overload
 def extract_port_probes(
     netlist: sax.Netlist,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.Netlist, dict[str, str]]: ...
 
 
 @overload
 def extract_port_probes(
     netlist: sax.RecursiveNetlist,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.RecursiveNetlist, dict[str, str]]: ...
 
 
 def extract_port_probes(
     netlist: sax.AnyNetlist,
+    on_internal_port: Literal["warn", "ignore", "as_probes"] = "warn",
 ) -> tuple[sax.AnyNetlist, dict[str, str]]:
-    """Extract ports on internal nodes and convert them to probes.
+    """Handle ports that map to internal connection nodes.
 
     When a netlist port maps to an instance port that is already part of a
-    connection (in ``connections`` or ``nets``), it is removed from ports and
-    returned as a probe instead.  A warning is issued for each such port.
+    connection (in ``connections`` or ``nets``), the behaviour depends on
+    *on_internal_port*:
+
+    * ``"warn"`` (default) — drop the port and emit a warning.
+    * ``"ignore"`` — drop the port silently.
+    * ``"as_probes"`` — convert the port to a probe (creating ``_fwd`` /
+      ``_bwd`` ports), matching the legacy behaviour.
 
     Args:
         netlist: The netlist to inspect (flat or recursive).
+        on_internal_port: How to handle ports on internal nodes.
 
     Returns:
-        A tuple of (modified_netlist, probes) where *probes* maps the original
-        port name to the instance port string, ready to pass to
-        :func:`expand_probes`.
+        A tuple of (modified_netlist, probes) where *probes* maps original
+        port names to instance port strings.  The dict is empty unless
+        *on_internal_port* is ``"as_probes"``.
     """
     # Handle recursive netlist: only inspect the top-level
     if (recnet := sax.try_into[sax.RecursiveNetlist](netlist)) is not None:
         top_level_name = next(iter(recnet))
         top_level = recnet[top_level_name]
-        modified_top, probes = extract_port_probes(top_level)
+        modified_top, probes = extract_port_probes(top_level, on_internal_port)
         result: sax.RecursiveNetlist = {
             top_level_name: modified_top,
             **{k: v for k, v in recnet.items() if k != top_level_name},
@@ -711,14 +720,26 @@ def extract_port_probes(
     probes: dict[str, str] = {}
     for port_name, instance_port in list(ports.items()):
         if instance_port in internal_ports:
-            warnings.warn(
-                f"Port '{port_name}' maps to internal node '{instance_port}' "
-                f"which is already part of a connection. "
-                f"It will be interpreted as a probe (creating '{port_name}_fwd' "
-                f"and '{port_name}_bwd' ports).",
-                stacklevel=2,
-            )
-            probes[port_name] = instance_port
+            if on_internal_port == "as_probes":
+                warnings.warn(
+                    f"Port '{port_name}' maps to internal node "
+                    f"'{instance_port}' which is already part of a "
+                    f"connection. It will be interpreted as a probe "
+                    f"(creating '{port_name}_fwd' and "
+                    f"'{port_name}_bwd' ports).",
+                    stacklevel=2,
+                )
+                probes[port_name] = instance_port
+            elif on_internal_port == "warn":
+                warnings.warn(
+                    f"Port '{port_name}' maps to internal node "
+                    f"'{instance_port}' which is already part of a "
+                    f"connection. It will be dropped. Use the probes= "
+                    f"argument of circuit() to explicitly create "
+                    f"measurement probes.",
+                    stacklevel=2,
+                )
+            # "ignore" falls through — just delete silently
             del ports[port_name]
 
     net["ports"] = ports

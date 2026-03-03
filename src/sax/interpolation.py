@@ -116,8 +116,10 @@ def to_df(
         obj: an xarray or a sax.SType object.
         target_name: the name of the target column
             in the dataframe (ignored when obj is an SType).
-        kwargs: the coordinates of the SType values axes
-            (ignored when obj is an xarray).
+        kwargs: the coordinates of the SType values axes. You probably want to supply
+            'wl' or 'f' here, i.e. the coordinates you supplied to generate the SType.
+            The kwargs are ignored when the object is an xarray as the coordinates are
+            already embedded in the xarray in that case.
     """
     if isinstance(obj, xr.DataArray):
         xarr = obj
