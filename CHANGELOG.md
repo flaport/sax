@@ -1,3 +1,15 @@
+<a id="0.16.13"></a>
+# [0.16.13](https://github.com/flaport/sax/releases/tag/0.16.13) - 2026-03-04
+
+# What's Changed
+
+* No changes
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.12...0.16.13
+
+[Changes][0.16.13]
+
+
 <a id="0.16.12"></a>
 # [0.16.12](https://github.com/flaport/sax/releases/tag/0.16.12) - 2026-03-03
 
@@ -1036,6 +1048,7 @@
 [Changes][0.8.7]
 
 
+[0.16.13]: https://github.com/flaport/sax/compare/0.16.12...0.16.13
 [0.16.12]: https://github.com/flaport/sax/compare/0.16.11...0.16.12
 [0.16.11]: https://github.com/flaport/sax/compare/0.16.10...0.16.11
 [0.16.10]: https://github.com/flaport/sax/compare/0.16.9...0.16.10
