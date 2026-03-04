@@ -429,7 +429,7 @@ def expand_probes(
 ) -> sax.RecursiveNetlist: ...
 
 
-def expand_probes(  # noqa: PLR0915,C901
+def expand_probes(  # noqa: PLR0912,PLR0915,C901
     netlist: sax.AnyNetlist,
     probes: dict[str, str],
 ) -> sax.AnyNetlist:
@@ -546,17 +546,30 @@ def expand_probes(  # noqa: PLR0915,C901
                     break
 
         if in_side is None or out_side is None:
-            # Unconnected port: just expose it as a top-level port (fwd only)
-            ports[fwd_port] = instance_port
-            continue
+            # instance_port is not in any connection or net.
+            # Check if it's exposed as a component port (boundary case).
+            port_name = None
+            for pn, ip in ports.items():
+                if ip == instance_port:
+                    port_name = pn
+                    break
+
+            if port_name is not None:
+                # Rewrite the existing port to enter through the probe
+                in_side = f"{probe_instance_name},in"
+                ports[port_name] = in_side
+            # else: truly unconnected — probe,in will be dangling
+
+            out_side = instance_port
 
         # Insert probe instance
         instances[probe_instance_name] = {"component": "_ideal_probe"}
 
         # Create new connections: in_side -> probe,in and probe,out -> out_side
         # This orients the probe so _fwd captures signal flowing INTO instance_port
-        connections[in_side] = f"{probe_instance_name},in"
-        inverse_connections[f"{probe_instance_name},in"] = in_side
+        if in_side is not None and in_side != f"{probe_instance_name},in":
+            connections[in_side] = f"{probe_instance_name},in"
+            inverse_connections[f"{probe_instance_name},in"] = in_side
         connections[f"{probe_instance_name},out"] = out_side
         inverse_connections[out_side] = f"{probe_instance_name},out"
 

@@ -300,8 +300,8 @@ def test_probe_values_match_transmission() -> None:
     assert ("out", "mid_bwd") in result
 
 
-def test_probe_on_unconnected_port() -> None:
-    """Test that probes on unconnected ports create a fwd-only port alias."""
+def test_probe_on_boundary_port_flat() -> None:
+    """Test probe on an instance port exposed as a component port."""
     netlist = {
         "instances": {
             "wg1": "waveguide",
@@ -322,8 +322,8 @@ def test_probe_on_unconnected_port() -> None:
         "waveguide": sax.models.straight,
     }
 
-    # wg1,in0 is not part of any connection (it's a top-level port).
-    # Probing it should create only tap_fwd as an alias.
+    # wg1,in0 is exposed as a component port ("in"), so probing it should
+    # insert a full probe with both tap_fwd and tap_bwd.
     circuit_fn, _ = sax.circuit(
         netlist,
         models,
@@ -331,10 +331,46 @@ def test_probe_on_unconnected_port() -> None:
     )
     result = circuit_fn()
     ports = sax.get_ports(result)
-    # Only tap_fwd should be created (no tap_bwd for unconnected port)
     assert "tap_fwd" in ports
-    assert "tap_bwd" not in ports
-    assert set(ports) == {"in", "out", "tap_fwd"}
+    assert "tap_bwd" in ports
+    assert set(ports) == {"in", "out", "tap_fwd", "tap_bwd"}
+
+
+def test_probe_on_truly_unconnected_port() -> None:
+    """Test probe on a dangling instance port (not in connections, nets, or ports)."""
+    models = {
+        "waveguide": sax.models.straight,
+    }
+
+    # wg2,out0 is exposed as port "out" (boundary case, tested above).
+    # But wg1,in0 is also boundary. Let's test a truly dangling port:
+    # wg3,out0 below is not connected to anything and not exposed as a port.
+    netlist_with_dangling = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+            "wg3": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+        },
+    }
+
+    # wg3,in0 is truly unconnected — not in any connection and not a port.
+    # Probing it should still produce both _fwd and _bwd for consistency.
+    circuit_fn, _ = sax.circuit(
+        netlist_with_dangling,
+        models,
+        probes={"tap": "wg3,in0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "tap_fwd" in ports
+    assert "tap_bwd" in ports
 
 
 def test_probe_error_on_port_conflict() -> None:
@@ -1155,6 +1191,122 @@ def test_on_internal_port_as_probes() -> None:
     assert set(ports) == {"in", "out", "mid_fwd", "mid_bwd"}
 
 
+def test_probe_on_boundary_port() -> None:
+    """Test probe on an instance port exposed as a component port."""
+    netlist = {
+        "instances": {
+            "wg1": "waveguide",
+            "wg2": "waveguide",
+        },
+        "connections": {
+            "wg1,out0": "wg2,in0",
+        },
+        "ports": {
+            "in": "wg1,in0",
+            "out": "wg2,out0",
+        },
+    }
+    models = {"waveguide": sax.models.straight}
+
+    # Probe on wg1,in0 which is at the component boundary (exposed as port "in")
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"tap": "wg1,in0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "tap_fwd" in ports
+    assert "tap_bwd" in ports
+    assert set(ports) == {"in", "out", "tap_fwd", "tap_bwd"}
+
+
+def test_hierarchical_probe_on_boundary_port() -> None:
+    """Test hierarchical probe on an instance port exposed as sub-circuit port."""
+    netlist = {
+        "top_level": {
+            "instances": {
+                "sub": {"component": "sub_circuit"},
+            },
+            "connections": {},
+            "ports": {
+                "in": "sub,in",
+                "out": "sub,out",
+            },
+        },
+        "sub_circuit": {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "wg2": {"component": "waveguide"},
+            },
+            "connections": {
+                "wg1,out0": "wg2,in0",
+            },
+            "ports": {
+                "in": "wg1,in0",
+                "out": "wg2,out0",
+            },
+        },
+    }
+    models = {"waveguide": sax.models.straight}
+
+    # Probe wg1,in0 inside sub_circuit — this port is at the boundary
+    circuit_fn, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"tap": "sub.wg1,in0"},
+    )
+    result = circuit_fn()
+    ports = sax.get_ports(result)
+    assert "tap_fwd" in ports
+    assert "tap_bwd" in ports
+    assert set(ports) == {"in", "out", "tap_fwd", "tap_bwd"}
+
+
+def test_hierarchical_probe_boundary_doesnt_affect_transmission() -> None:
+    """Test that a boundary probe doesn't change the in->out transmission."""
+    netlist = {
+        "top_level": {
+            "instances": {
+                "sub": {"component": "sub_circuit"},
+            },
+            "connections": {},
+            "ports": {
+                "in": "sub,in",
+                "out": "sub,out",
+            },
+        },
+        "sub_circuit": {
+            "instances": {
+                "wg1": {"component": "waveguide"},
+                "wg2": {"component": "waveguide"},
+            },
+            "connections": {
+                "wg1,out0": "wg2,in0",
+            },
+            "ports": {
+                "in": "wg1,in0",
+                "out": "wg2,out0",
+            },
+        },
+    }
+    models = {"waveguide": sax.models.straight}
+
+    # Without probes
+    circuit_plain, _ = sax.circuit(netlist, models)
+    result_plain = circuit_plain(wl=1.55)
+
+    # With boundary probe
+    circuit_probed, _ = sax.circuit(
+        netlist,
+        models,
+        probes={"tap": "sub.wg1,in0"},
+    )
+    result_probed = circuit_probed(wl=1.55)
+
+    assert result_plain["in", "out"] == result_probed["in", "out"]
+
+
 if __name__ == "__main__":
     test_ideal_probe_model()
     test_basic_probe_insertion()
@@ -1162,7 +1314,8 @@ if __name__ == "__main__":
     test_multiple_probes()
     test_probe_in_mzi_circuit()
     test_probe_values_match_transmission()
-    test_probe_on_unconnected_port()
+    test_probe_on_boundary_port_flat()
+    test_probe_on_truly_unconnected_port()
     test_probe_error_on_port_conflict()
     test_probe_error_on_instance_conflict()
     test_empty_probes_dict()
@@ -1183,4 +1336,7 @@ if __name__ == "__main__":
     test_probe_into_portless_subnetlist()
     test_on_internal_port_ignore()
     test_on_internal_port_as_probes()
+    test_probe_on_boundary_port()
+    test_hierarchical_probe_on_boundary_port()
+    test_hierarchical_probe_boundary_doesnt_affect_transmission()
     print("All tests passed!")
