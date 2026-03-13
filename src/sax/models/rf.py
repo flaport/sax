@@ -842,7 +842,8 @@ def transmission_line_s_params(
 
     $$
     \begin{aligned}
-        S_{11} &= \frac{A + B/Z_{\mathrm{ref}} - CZ_{\mathrm{ref}} - D}{A + B/Z_{\mathrm{ref}} + CZ_{\mathrm{ref}} + D} \\
+        S_{11} &= \frac{A + B/Z_{\mathrm{ref}} - CZ_{\mathrm{ref}} - D}{
+            A + B/Z_{\mathrm{ref}} + CZ_{\mathrm{ref}} + D} \\
         S_{21} &= \frac{2}{A + B/Z_{\mathrm{ref}} + CZ_{\mathrm{ref}} + D}
     \end{aligned}
     $$
@@ -964,9 +965,9 @@ def microstrip(
 ) -> sax.SDict:
     r"""S-parameter model for a straight microstrip transmission line.
 
-    Computes S-parameters analytically using the Hammerstad-Jensen closed-form expressions
-    for effective permittivity and characteristic impedance, as described
-    in Pozar.
+    Computes S-parameters analytically using the Hammerstad-Jensen closed-form
+    expressions for effective permittivity and characteristic impedance, as
+    described in Pozar.
     Conductor thickness corrections follow
     Gupta et al.
 
