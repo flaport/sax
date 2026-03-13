@@ -22,6 +22,7 @@ from sax.saxtypes.core import FloatArray1D
 __all__ = [
     "C_M_S",
     "C_UM_S",
+    "DEFAULT_FREQUENCY",
     "DEFAULT_MODE",
     "DEFAULT_MODES",
     "DEFAULT_WL_STEP",
@@ -57,6 +58,9 @@ C_M_S: float = 299792458.0
 
 C_UM_S: float = 1e6 * C_M_S
 """Speed of light in vacuum (μm/s)."""
+
+DEFAULT_FREQUENCY: float = 5e9
+"""Default radio frequency (Hz)."""
 
 DEFAULT_MODE: str = "TE"
 """Default optical mode."""
