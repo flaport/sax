@@ -33,6 +33,12 @@ repos:
       - id: pretty-format-toml
         args: [--autofix]
 
+  - repo: https://github.com/FlamingTempura/bibtex-tidy
+    rev: v1.14.0
+    hooks:
+      - id: bibtex-tidy
+        args: ['--align=1', '--curly', '--months', '--sort', '--duplicates', '--strip-enclosing-braces']
+
   - repo: local
     hooks:
       - id: nbclean
