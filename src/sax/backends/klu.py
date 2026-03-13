@@ -6,15 +6,35 @@ from typing import Any
 
 import jax
 import jax.numpy as jnp
+import klujax
 from natsort import natsorted
+from typing_extensions import TypedDict
 
 import sax
 
 __all__ = [
+    "KLUAnalyzed",
     "analyze_circuit_klu",
     "analyze_instances_klu",
     "evaluate_circuit_klu",
 ]
+
+
+class KLUAnalyzed(TypedDict):
+    """Pre-computed analysis data for the KLU sparse matrix backend."""
+
+    n_col: int
+    cs_s_indices: Any  # jax array: indices into Sx for CS product
+    Si: Any  # jax array: row indices of block-diagonal S
+    Sj: Any  # jax array: col indices of block-diagonal S
+    Cext: Any  # jax array: external port coupling matrix (n_col x n_rhs)
+    Cexti: Any  # jax array: row indices of Cext nonzeros
+    Cextj: Any  # jax array: col indices of Cext nonzeros
+    I_CSi: Any  # jax array: row indices of (I-CS) system matrix
+    I_CSj: Any  # jax array: col indices of (I-CS) system matrix
+    instance_names: tuple[str, ...]  # ordered instance names
+    port_map: tuple[str, ...]  # external port names in order
+    symbolic: klujax.KLUHandleManager  # pre-computed symbolic sparsity analysis
 
 
 def analyze_instances_klu(
@@ -65,12 +85,14 @@ def analyze_circuit_klu(
     analyzed_instances: dict[sax.InstanceName, sax.SCoo],
     nets: sax.Nets,
     ports: sax.Ports,
-) -> Any:  # noqa: ANN401
+) -> KLUAnalyzed:
     """Analyze circuit topology for the KLU sparse matrix backend.
 
     Performs detailed circuit analysis to set up the sparse matrix system for
-    the KLU solver. This analysis creates the connection matrices and index
-    mappings needed for efficient sparse matrix operations.
+    the KLU solver. This includes building the connection and S-matrix index
+    arrays, and running KLU's symbolic sparsity analysis on the (I-CS) system
+    matrix. The symbolic analysis is cached so that subsequent evaluations
+    only need numeric factorization.
 
     Args:
         analyzed_instances: Instance S-matrices from analyze_instances_klu in
@@ -80,13 +102,9 @@ def analyze_circuit_klu(
         ports: Dictionary mapping external port names to instance ports.
 
     Returns:
-        Complex analysis data structure containing sparse matrix indices,
-        connection mappings, and external port information optimized for
-        the KLU solver.
-
-    Note:
-        This analysis step is computationally intensive but enables very fast
-        circuit evaluation, especially for large circuits with many components.
+        KLUAnalyzed TypedDict containing sparse matrix indices, connection
+        mappings, external port information, and pre-computed symbolic
+        analysis for the KLU solver.
 
     Example:
         ```python
@@ -135,57 +153,56 @@ def analyze_circuit_klu(
     cs_s_indices = s_idx_grid[match_2d]
     CSj = Sj[cs_s_indices]
 
-    Ii = Ij = jnp.arange(n_col)
-    I_CSi = jnp.concatenate([CSi, Ii], -1)
-    I_CSj = jnp.concatenate([CSj, Ij], -1)
-    return (
-        n_col,
-        cs_s_indices,
-        Si,
-        Sj,
-        Cext,
-        Cexti,
-        Cextj,
-        I_CSi,
-        I_CSj,
-        tuple((k, v[1]) for k, v in analyzed_instances.items()),
-        tuple(port_map),
+    Ii = Ij = jnp.arange(n_col, dtype=jnp.int32)
+    I_CSi = jnp.concatenate([CSi, Ii], -1).astype(jnp.int32)
+    I_CSj = jnp.concatenate([CSj, Ij], -1).astype(jnp.int32)
+
+    symbolic = klujax.analyze(I_CSi, I_CSj, n_col)
+
+    return KLUAnalyzed(
+        n_col=n_col,
+        cs_s_indices=cs_s_indices,
+        Si=Si,
+        Sj=Sj,
+        Cext=Cext,
+        Cexti=Cexti,
+        Cextj=Cextj,
+        I_CSi=I_CSi,
+        I_CSj=I_CSj,
+        instance_names=tuple(analyzed_instances.keys()),
+        port_map=tuple(port_map),
+        symbolic=symbolic,
     )
 
 
 def evaluate_circuit_klu(
-    analyzed: Any,  # noqa: ANN401
+    analyzed: KLUAnalyzed,
     instances: dict[sax.InstanceName, sax.SType],
 ) -> sax.SDense:
     """Evaluate circuit S-matrix using the KLU sparse matrix solver.
 
     Computes the circuit S-matrix by solving the sparse linear system
     (I - CS)x = C_ext using the high-performance KLU sparse matrix solver.
-    This approach is highly efficient for large circuits.
+    Uses the pre-computed symbolic analysis from analyze_circuit_klu to skip
+    redundant sparsity analysis on each evaluation.
 
     The algorithm:
     1. Assembles the sparse connection matrix C and S-matrix blocks
     2. Forms the system matrix (I - CS) where I is identity
-    3. Solves the linear system using KLU factorization
+    3. Solves the linear system using KLU factorization (with cached symbolic)
     4. Extracts the external port S-matrix from the solution
 
     Args:
-        analyzed: Complex analysis data from analyze_circuit_klu containing
-            pre-computed sparse matrix indices and mappings.
+        analyzed: KLUAnalyzed dict from analyze_circuit_klu containing
+            pre-computed sparse matrix indices, mappings, and symbolic analysis.
         instances: Dictionary mapping instance names to their evaluated S-matrices
             in any SAX format (will be converted to SCoo).
 
     Returns:
         Circuit S-matrix in SDense format (dense matrix with port mapping).
 
-    Note:
-        This backend provides the best performance for most circuits, especially
-        large ones. It handles all types of coupling (forward, backward, cross)
-        and reflections accurately using sparse matrix techniques.
-
     Example:
         ```python
-        # Circuit analysis and instances
         instances = {
             "wg1": {("in", "out"): 0.95 * jnp.exp(1j * 0.1)},
             "dc1": {
@@ -196,34 +213,27 @@ def evaluate_circuit_klu(
             },
         }
         circuit_s_matrix, port_map = evaluate_circuit_klu(analyzed, instances)
-        # Result is a dense S-matrix with full coupling terms
         ```
     """
-    import klujax
+    n_col = analyzed["n_col"]
+    cs_s_indices = analyzed["cs_s_indices"]
+    Si = analyzed["Si"]
+    Sj = analyzed["Sj"]
+    Cext = analyzed["Cext"]
+    Cexti = analyzed["Cexti"]
+    Cextj = analyzed["Cextj"]
+    I_CSi = analyzed["I_CSi"]
+    I_CSj = analyzed["I_CSj"]
+    symbolic = analyzed["symbolic"]
+    port_map = analyzed["port_map"]
 
-    (
-        n_col,
-        cs_s_indices,
-        Si,
-        Sj,
-        Cext,
-        Cexti,
-        Cextj,
-        I_CSi,
-        I_CSj,
-        dummy_pms,
-        port_map,
-    ) = analyzed
-
-    idx = 0
     Sx = []
     batch_shape = ()
-    for name, _ in dummy_pms:
-        _, _, sx, ports_map = sax.scoo(instances[name])
+    for name in analyzed["instance_names"]:
+        _, _, sx, _ = sax.scoo(instances[name])
         Sx.append(sx)
         if len(sx.shape[:-1]) > len(batch_shape):
             batch_shape = sx.shape[:-1]
-        idx += len(ports_map)
 
     Sx = jnp.concatenate(
         [jnp.broadcast_to(sx, (*batch_shape, sx.shape[-1])) for sx in Sx], -1
@@ -234,8 +244,8 @@ def evaluate_circuit_klu(
 
     Sx = Sx.reshape(-1, Sx.shape[-1])  # n_lhs x N
     I_CSx = I_CSx.reshape(-1, I_CSx.shape[-1])  # n_lhs x M
-    solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
-    inv_I_CS_Cext = solve_klu(I_CSi, I_CSj, I_CSx, Cext)
+    solve_klu = jax.vmap(klujax.solve_with_symbol, (None, None, 0, None, None), 0)
+    inv_I_CS_Cext = solve_klu(I_CSi, I_CSj, I_CSx, Cext, symbolic)
     mul_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
     S_inv_I_CS_Cext = mul_coo(Si, Sj, Sx, inv_I_CS_Cext)
 
