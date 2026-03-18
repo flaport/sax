@@ -429,7 +429,7 @@ def get_port_combinations(S: sax.Model | sax.SType) -> tuple[tuple[str, str], ..
         Si, Sj, _, pm = scoo
         rpm = {int(i): str(p) for p, i in pm.items()}
         return tuple(
-            natsorted((rpm[int(i)], rpm[int(j)]) for i, j in zip(Si, Sj, strict=False))
+            natsorted((rpm[int(j)], rpm[int(i)]) for i, j in zip(Si, Sj, strict=False))
         )
     if len(sdense := cast(sax.SDense, S)) == 2:
         _, pm = sdense
@@ -447,8 +447,8 @@ def _scoo_to_sdict(
     sdict = {}
     inverse_ports_map = {int(i): p for p, i in ports_map.items()}
     for i, (si, sj) in enumerate(zip(Si, Sj, strict=True)):
-        input_port = inverse_ports_map.get(int(si), "")
-        output_port = inverse_ports_map.get(int(sj), "")
+        output_port = inverse_ports_map.get(int(si), "")
+        input_port = inverse_ports_map.get(int(sj), "")
         sdict[input_port, output_port] = Sx[..., i]
     return {(p1, p2): v for (p1, p2), v in sdict.items() if p1 and p2}
 
@@ -457,7 +457,7 @@ def _sdense_to_sdict(S: Array, ports_map: sax.PortMap) -> sax.SDict:
     sdict = {}
     for p1, i in ports_map.items():
         for p2, j in ports_map.items():
-            sdict[p1, p2] = S[..., i, j]
+            sdict[p1, p2] = S[..., j, i]
     return sdict
 
 
@@ -468,8 +468,8 @@ def _sdict_to_scoo(sdict: sax.SDict) -> sax.SCoo:
         all_ports[p2] = None
     ports_map = {p: int(i) for i, p in enumerate(all_ports)}
     Sx = jnp.stack(jnp.broadcast_arrays(*sdict.values()), -1)
-    Si = jnp.array([ports_map[p] for p, _ in sdict])
-    Sj = jnp.array([ports_map[p] for _, p in sdict])
+    Si = jnp.array([ports_map[p] for _, p in sdict])
+    Sj = jnp.array([ports_map[p] for p, _ in sdict])
     return Si, Sj, Sx, ports_map
 
 
