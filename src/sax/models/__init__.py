@@ -22,6 +22,10 @@ from .factories import (
     passthru,
     unitary,
 )
+from .isolators import (
+    circulator,
+    isolator,
+)
 from .mmis import (
     mmi1x2,
     mmi1x2_ideal,
@@ -31,6 +35,10 @@ from .mmis import (
 from .probes import (
     ideal_probe,
 )
+from .reflectors import (
+    mirror,
+    reflector,
+)
 from .splitters import (
     splitter_ideal,
 )
@@ -39,16 +47,22 @@ from .straight import (
     phase_shifter,
     straight,
 )
+from .terminators import (
+    terminator,
+)
 
 __all__ = [
     "attenuator",
     "bend",
+    "circulator",
     "copier",
     "coupler",
     "coupler_ideal",
     "crossing_ideal",
     "grating_coupler",
     "ideal_probe",
+    "isolator",
+    "mirror",
     "mmi1x2",
     "mmi1x2_ideal",
     "mmi2x2",
@@ -58,8 +72,10 @@ __all__ = [
     "model_4port",
     "passthru",
     "phase_shifter",
+    "reflector",
     "rf",
     "splitter_ideal",
     "straight",
+    "terminator",
     "unitary",
 ]
