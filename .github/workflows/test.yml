@@ -34,6 +34,9 @@ jobs:
         uses: astral-sh/setup-uv@v7
       - name: Install Just
         uses: taiki-e/install-action@just
+      - name: Install HDF5 (macOS)
+        if: runner.os == 'macOS'
+        run: brew install hdf5
       - name: Run tests
         run: just test
       - name: Upload artifacts [tests]
