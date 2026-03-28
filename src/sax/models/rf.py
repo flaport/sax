@@ -234,6 +234,49 @@ def admittance(
 
 
 @partial(jax.jit, inline=True)
+def resistor(
+    *,
+    f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
+    resistance: sax.FloatLike = 50,
+    z0: sax.ComplexLike = 50,
+) -> sax.SDict:
+    r"""Ideal two-port resistor model.
+
+    Args:
+        f: Frequency in Hz
+        resistance: Resistance in Ohms
+        z0: Reference impedance in Ω.
+
+    Returns:
+        S-dictionary representing the resistor element
+
+    References:
+        [@pozar2012]
+
+    Examples:
+        ```python
+        # mkdocs: render
+        import matplotlib.pyplot as plt
+        import numpy as np
+        import sax
+
+        sax.set_port_naming_strategy("optical")
+
+        f = np.linspace(1e9, 10e9, 500)
+        s = sax.models.rf.resistor(f=f, resistance=100, z0=50)
+        plt.figure()
+        plt.plot(f / 1e9, np.abs(s[("o1", "o1")]), label="|S11|")
+        plt.plot(f / 1e9, np.abs(s[("o1", "o2")]), label="|S12|")
+        plt.plot(f / 1e9, np.abs(s[("o2", "o2")]), label="|S22|")
+        plt.xlabel("Frequency [GHz]")
+        plt.ylabel("Magnitude")
+        plt.legend()
+        ```
+    """
+    return impedance(f=f, z=resistance, z0=z0)
+
+
+@partial(jax.jit, inline=True)
 def capacitor(
     *,
     f: sax.FloatArrayLike = DEFAULT_FREQUENCY,
