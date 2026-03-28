@@ -189,10 +189,11 @@ Examples:
 SCooSM: TypeAlias = tuple[IntArray1D, IntArray1D, ComplexArray, PortMapSM]
 """A sparse S-matrix in COO format (recommended for internal library use only).
 
-An `SCoo` is a sparse matrix based representation of an S-matrix consisting of three
-arrays and a port map. The three arrays represent the input port indices [`int`],
-output port indices [`int`] and the S-matrix values [`ComplexFloat`] of the sparse
-matrix. The port map maps a port name [`str`] to a port index [`int`].
+An `SCoo` is a sparse matrix based representation of an S-matrix consisting
+of three arrays and a port map. The three arrays represent the output port
+indices [`int`] (rows), input port indices [`int`] (columns) and the
+S-matrix values [`ComplexFloat`] of the sparse matrix. The port map maps a
+port name [`str`] to a port index [`int`].
 
 Only these four arrays **together** and in this specific **order** are considered a
 valid `SCoo` representation!
