@@ -80,7 +80,7 @@ def circulator(
     insertion_loss_dB: sax.FloatArrayLike = 0.0,
     isolation_dB: sax.FloatArrayLike = 40.0,
 ) -> sax.SDict:
-    """Optical circulator model (non-reciprocal 3-port device).
+    r"""Optical circulator model (non-reciprocal 3-port device).
 
     Routes light in a circular fashion: port 1 -> port 2 -> port 3 -> port 1.
     Light traveling in the reverse direction is strongly attenuated.
