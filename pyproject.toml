@@ -67,7 +67,7 @@ classifiers = [
 dependencies = [
   "jax",
   "jaxtyping>=0.2.38",
-  "klujax>=0.4.1",
+  "klujax>=0.4.1,<0.5.0",
   "lark>=1.2.2",
   "matplotlib>=3.0.0",
   "natsort>=8.0.0",
@@ -103,7 +103,7 @@ license = {text = "Apache Software License"}
 name = "sax"
 readme = "README.md"
 requires-python = ">=3.11.0"
-version = "0.16.13"
+version = "0.16.14"
 
 [project.optional-dependencies]
 rf = ["jaxellip>=0.0.1"]
