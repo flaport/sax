@@ -1,3 +1,27 @@
+<a id="0.16.14"></a>
+# [0.16.14](https://github.com/flaport/sax/releases/tag/0.16.14) - 2026-03-28
+
+# What's Changed
+
+## New
+
+- add more models [#103](https://github.com/flaport/sax/pull/103)
+- Add RF waveguide models for CPW and Microstrips [#100](https://github.com/flaport/sax/pull/100)
+
+## Bug Fixes
+
+- fix sdense and scoo format [#102](https://github.com/flaport/sax/pull/102)
+
+## Documentation
+
+- better plots [#104](https://github.com/flaport/sax/pull/104)
+- Add bibtex-tidy pre-commit hook [#101](https://github.com/flaport/sax/pull/101)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.13...0.16.14
+
+[Changes][0.16.14]
+
+
 <a id="0.16.13"></a>
 # [0.16.13](https://github.com/flaport/sax/releases/tag/0.16.13) - 2026-03-04
 
@@ -1048,6 +1072,7 @@
 [Changes][0.8.7]
 
 
+[0.16.14]: https://github.com/flaport/sax/compare/0.16.13...0.16.14
 [0.16.13]: https://github.com/flaport/sax/compare/0.16.12...0.16.13
 [0.16.12]: https://github.com/flaport/sax/compare/0.16.11...0.16.12
 [0.16.11]: https://github.com/flaport/sax/compare/0.16.10...0.16.11
