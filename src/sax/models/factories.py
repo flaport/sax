@@ -177,6 +177,7 @@ def unitary(
         0,
     )
     S = S[r, :][:, r]
+    S = S.T  # convert from (from, to) to standard (to, from) convention
 
     # let's convert it in SCOO format:
     Si, Sj = jnp.where(S > sax.EPS)
@@ -267,6 +268,8 @@ def copier(
             # reciprocal only works if num_inputs == num_outputs!
             r = jnp.arange(num_inputs, dtype=int)  # == range(num_outputs)
             S = S.at[num_inputs + r, r].set(1)
+
+    S = S.T  # convert from (from, to) to standard (to, from) convention
 
     # let's convert it in SCOO format:
     Si, Sj = jnp.where(jnp.sqrt(sax.EPS) < S)

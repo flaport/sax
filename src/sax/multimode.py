@@ -134,11 +134,11 @@ def _multimode_scoo(
     mode_combinations = _mode_combinations(modes)
 
     Si_m = jnp.concatenate(
-        [Si + mode_map[m] * num_ports for m, _ in mode_combinations],
+        [Si + mode_map[m] * num_ports for _, m in mode_combinations],
         -1,
     )
     Sj_m = jnp.concatenate(
-        [Sj + mode_map[m] * num_ports for _, m in mode_combinations],
+        [Sj + mode_map[m] * num_ports for m, _ in mode_combinations],
         -1,
     )
     Sx_m = jnp.concatenate([Sx for _ in mode_combinations], -1)
