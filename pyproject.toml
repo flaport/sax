@@ -17,15 +17,15 @@ classifiers = [
   "Topic :: Scientific/Engineering :: Physics"
 ]
 dependencies = [
-  "flax>=0.10.0",
   "jax>=0.6.0",
   "jaxtyping>=0.2.38",
-  "klujax>=0.4.1",
+  "klujax>=0.4.1,<0.5.0",
   "lark>=1.2.2",
   "matplotlib>=3.0.0",
   "natsort>=8.0.0",
   "networkx>=3.0.0",
   "numpy>=2.2.0",
+  "optax>=0.2.8",
   "orjson>=3.0.0",
   "pydantic>=2.10.0",
   "pyyaml>=6.0.0",
