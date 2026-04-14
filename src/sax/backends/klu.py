@@ -6,6 +6,7 @@ from typing import Any
 
 import jax
 import jax.numpy as jnp
+import klujax
 from natsort import natsorted
 
 import sax
@@ -136,8 +137,10 @@ def analyze_circuit_klu(
     CSj = Sj[cs_s_indices]
 
     Ii = Ij = jnp.arange(n_col)
-    I_CSi = jnp.concatenate([CSi, Ii], -1)
-    I_CSj = jnp.concatenate([CSj, Ij], -1)
+    I_CSi = jnp.asarray(jnp.concatenate([CSi, Ii], -1), dtype=jnp.int32)
+    I_CSj = jnp.asarray(jnp.concatenate([CSj, Ij], -1), dtype=jnp.int32)
+    symbolic = klujax.analyze(I_CSi, I_CSj, n_col)
+
     return (
         n_col,
         cs_s_indices,
@@ -150,6 +153,7 @@ def analyze_circuit_klu(
         I_CSj,
         tuple((k, v[1]) for k, v in analyzed_instances.items()),
         tuple(port_map),
+        symbolic,
     )
 
 
@@ -213,6 +217,7 @@ def evaluate_circuit_klu(
         I_CSj,
         dummy_pms,
         port_map,
+        symbolic,
     ) = analyzed
 
     idx = 0
@@ -234,8 +239,9 @@ def evaluate_circuit_klu(
 
     Sx = Sx.reshape(-1, Sx.shape[-1])  # n_lhs x N
     I_CSx = I_CSx.reshape(-1, I_CSx.shape[-1])  # n_lhs x M
-    solve_klu = jax.vmap(klujax.solve, (None, None, 0, None), 0)
-    inv_I_CS_Cext = solve_klu(I_CSi, I_CSj, I_CSx, Cext)
+    inv_I_CS_Cext = klujax.solve_with_symbol(
+        I_CSi, I_CSj, I_CSx, Cext[None, :, :], symbolic
+    )
     mul_coo = jax.vmap(klujax.dot, (None, None, 0, 0), 0)
     S_inv_I_CS_Cext = mul_coo(Si, Sj, Sx, inv_I_CS_Cext)
 
@@ -248,7 +254,8 @@ def evaluate_circuit_klu(
 
 
 def _get_instance_ports(
-    connections: dict[str, str], ports: dict[str, str]
+    connections: dict[str, str],
+    ports: dict[str, str],
 ) -> dict[str, list[str]]:
     instance_ports = {}
     for connection in connections.items():
