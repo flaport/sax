@@ -20,6 +20,9 @@ ipykernel:
 test: ipykernel
   uv run --dev pytest -s -n logical
 
+cov: ipykernel
+  uv run --dev pytest --cov=sax --cov-report=term-missing:skip-covered
+
 docs:
   sed 's|](docs/|](|g' README.md > docs/index.md
   sed 's|^#|###|g' CHANGELOG.md | sed 's|^### \[0|## [0|g' > docs/changelog.md
