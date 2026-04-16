@@ -44,3 +44,20 @@ jobs:
         with:
           name: tests-${{ matrix.os }}
           path: ./src/tests
+
+  test_coverage:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+      - name: Install UV
+        uses: astral-sh/setup-uv@v7
+      - name: Install Just
+        uses: taiki-e/install-action@just
+      - name: Run tests with coverage
+        run: just cov
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v6
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          fail_ci_if_error: false
