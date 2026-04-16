@@ -1,3 +1,22 @@
+<a id="0.17.0"></a>
+# [0.17.0](https://github.com/flaport/sax/releases/tag/0.17.0) - 2026-04-16
+
+# What's Changed
+
+## Breaking Changes
+
+- make klu backend work with new klujax [#107](https://github.com/flaport/sax/pull/107)
+
+## New
+
+- add upper limits for deps [#108](https://github.com/flaport/sax/pull/108)
+- Add code coverage with Codecov [#106](https://github.com/flaport/sax/pull/106)
+
+**Full Changelog**: https://github.com/flaport/sax/compare/0.16.14...0.17.0
+
+[Changes][0.17.0]
+
+
 <a id="0.16.14"></a>
 # [0.16.14](https://github.com/flaport/sax/releases/tag/0.16.14) - 2026-03-28
 
@@ -1072,6 +1091,7 @@
 [Changes][0.8.7]
 
 
+[0.17.0]: https://github.com/flaport/sax/compare/0.16.14...0.17.0
 [0.16.14]: https://github.com/flaport/sax/compare/0.16.13...0.16.14
 [0.16.13]: https://github.com/flaport/sax/compare/0.16.12...0.16.13
 [0.16.12]: https://github.com/flaport/sax/compare/0.16.11...0.16.12
