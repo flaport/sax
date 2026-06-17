@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import json
+import re
 import shutil
 from collections.abc import Iterable, Iterator
 from functools import partial
@@ -199,8 +200,9 @@ def circuit(
     current_models = {}
     model_names = list(nx.topological_sort(dependency_dag))[::-1]
     for model_name in model_names:
-        if model_name in models:
-            new_models[model_name] = models[model_name]
+        resolved_name = _strip_counted_suffix(model_name, models)
+        if resolved_name in models:
+            new_models[model_name] = models[resolved_name]
             continue
 
         flatnet = recnet[model_name]
@@ -242,15 +244,17 @@ def _create_dag(
     g = nx.DiGraph()
 
     for model_name, subnetlist in netlist.items():
+        resolved_model_name = _strip_counted_suffix(model_name, models)
         if model_name not in all_models:
-            all_models[model_name] = models.get(model_name, subnetlist)
+            all_models[model_name] = models.get(resolved_model_name, subnetlist)
             g.add_node(model_name)
-        if model_name in models:
+        if resolved_model_name in models:
             continue
         for instance in subnetlist["instances"].values():
             component = instance["component"]
+            resolved_component = _strip_counted_suffix(component, models)
             if component not in all_models:
-                all_models[component] = models.get(component)
+                all_models[component] = models.get(resolved_component)
                 g.add_node(component)
             g.add_edge(model_name, component)
 
@@ -374,7 +378,8 @@ def _flat_circuit(
 
     inst2model = {}
     for k, inst in instances.items():
-        inst2model[k] = models[inst["component"]]
+        component = _strip_counted_suffix(inst["component"], models)
+        inst2model[k] = models[component]
 
     model_settings = {name: get_settings(model) for name, model in inst2model.items()}
     netlist_settings = {
@@ -458,7 +463,9 @@ def _find_missing_models(
         models = {}
     models = {**models, **extra_models}
     required_models = _find_leaves(dag)
-    missing_models = [m for m in required_models if m not in models]
+    missing_models = [
+        m for m in required_models if _strip_counted_suffix(m, models) not in models
+    ]
     return models, required_models, missing_models
 
 
@@ -666,6 +673,21 @@ def _validate_netlist_ports(netlist: sax.RecursiveNetlist) -> None:
 
 def _strip_array_index(s: sax.InstanceName) -> sax.Name:
     return s.split("<")[0]
+
+
+def _strip_counted_suffix(name: str, available: dict) -> str:
+    """Strip trailing numeric suffix (e.g. 'coupler2' -> 'coupler').
+
+    gdsfactory's CountedNetlistNamer appends numeric suffixes to deduplicate
+    cell names in recursive netlists. Only strips when the exact name is not
+    found and the base name exists in ``available``.
+    """
+    if name in available:
+        return name
+    base = re.sub(r"\d+$", "", name)
+    if base and base in available:
+        return base
+    return name
 
 
 def resolve_array_instance(name: sax.Name, inst: sax.Instance) -> sax.Instances:
