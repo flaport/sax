@@ -76,7 +76,7 @@ dependencies = [
   "sympy>=1.14.0,<2.0.0",
   "tqdm>=4.60.0,<5.0.0",
   "typing-extensions>=4.13.2,<5.0.0",
-  "xarray>=2025.1.2,<2027.0.0"
+  "xarray[io]>=2025.1.2,<2027.0.0"
 ]
 description = "Autograd and XLA for S-parameters"
 keywords = [
