@@ -4,6 +4,10 @@ This module provides generic RF components and JAX-jittable functions for
 computing the characteristic impedance, effective permittivity, and
 propagation constant of coplanar waveguides and microstrip lines.
 
+Dielectric parameters ``ep_r``, ``ep_eff``, and ``tand`` must be real.
+Complex inputs raise ``TypeError``; specify dielectric loss using a real
+``tand`` together with real permittivity.
+
 Note:
     Some models in this module require the ``jaxellip`` package.
     Install the ``rf`` extra to include it: ``pip install sax[rf]``.
@@ -469,6 +473,14 @@ def ellipk_ratio(m: sax.FloatArrayLike) -> jax.Array:
     return jaxellip.ellipk(m_arr) / jaxellip.ellipk(1 - m_arr)
 
 
+def _as_real_dielectric(value: sax.FloatArrayLike, name: str) -> jax.Array:
+    """Reject complex dielectric inputs before converting to a real array."""
+    if jnp.iscomplexobj(value):
+        msg = f"{name} must be real; use a real tand to specify dielectric loss"
+        raise TypeError(msg)
+    return jnp.asarray(value, dtype=float)
+
+
 @partial(jax.jit, inline=True)
 def cpw_epsilon_eff(
     w: sax.FloatArrayLike,
@@ -506,7 +518,7 @@ def cpw_epsilon_eff(
     w = jnp.asarray(w, dtype=float)
     s = jnp.asarray(s, dtype=float)
     h = jnp.asarray(h, dtype=float)
-    ep_r = jnp.asarray(ep_r, dtype=float)
+    ep_r = _as_real_dielectric(ep_r, "ep_r")
     k0 = w / (w + 2.0 * s)
     k1 = jnp.sinh(jnp.pi * w / (4.0 * h)) / jnp.sinh(jnp.pi * (w + 2.0 * s) / (4.0 * h))
     q1 = ellipk_ratio(k1**2) / ellipk_ratio(k0**2)
@@ -540,7 +552,7 @@ def cpw_z0(
     """
     w = jnp.asarray(w, dtype=float)
     s = jnp.asarray(s, dtype=float)
-    ep_eff = jnp.asarray(ep_eff, dtype=float)
+    ep_eff = _as_real_dielectric(ep_eff, "ep_eff")
     k0 = w / (w + 2.0 * s)
     return 30.0 * jnp.pi / (jnp.sqrt(ep_eff) * ellipk_ratio(k0**2))
 
@@ -589,7 +601,7 @@ def cpw_thickness_correction(
     w = jnp.asarray(w, dtype=float)
     s = jnp.asarray(s, dtype=float)
     t = jnp.asarray(t, dtype=float)
-    ep_eff = jnp.asarray(ep_eff, dtype=float)
+    ep_eff = _as_real_dielectric(ep_eff, "ep_eff")
 
     k0 = w / (w + 2.0 * s)
     q0 = ellipk_ratio(k0**2)
@@ -641,7 +653,7 @@ def microstrip_epsilon_eff(
     """
     w = jnp.asarray(w, dtype=float)
     h = jnp.asarray(h, dtype=float)
-    ep_r = jnp.asarray(ep_r, dtype=float)
+    ep_r = _as_real_dielectric(ep_r, "ep_r")
 
     u = w / h
     f_u = 1.0 / jnp.sqrt(1.0 + 12.0 / u)
@@ -694,7 +706,7 @@ def microstrip_z0(
     """
     w = jnp.asarray(w, dtype=float)
     h = jnp.asarray(h, dtype=float)
-    ep_eff = jnp.asarray(ep_eff, dtype=float)
+    ep_eff = _as_real_dielectric(ep_eff, "ep_eff")
 
     u = w / h
     z_narrow = (60.0 / jnp.sqrt(ep_eff)) * jnp.log(8.0 / u + u / 4.0)
@@ -754,8 +766,8 @@ def microstrip_thickness_correction(
     w = jnp.asarray(w, dtype=float)
     h = jnp.asarray(h, dtype=float)
     t = jnp.asarray(t, dtype=float)
-    ep_r = jnp.asarray(ep_r, dtype=float)
-    ep_eff = jnp.asarray(ep_eff, dtype=float)
+    ep_r = _as_real_dielectric(ep_r, "ep_r")
+    ep_eff = _as_real_dielectric(ep_eff, "ep_eff")
 
     term = jnp.sqrt((t / h) ** 2 + (t / (w * jnp.pi + 1.1 * t * jnp.pi)) ** 2)
     term_safe = jnp.where(term < 1e-15, 1.0, term)
@@ -824,16 +836,16 @@ def propagation_constant(
     Args:
         f: Frequency (Hz).
         ep_eff: Effective permittivity.
-        tand: Dielectric loss tangent (default 0 — lossless).
+        tand: Real dielectric loss tangent (default 0 — lossless).
         ep_r: Substrate relative permittivity (only needed when ``tand > 0``).
 
     Returns:
         Complex propagation constant $\gamma$ (1/m).
     """
     f = jnp.asarray(f, dtype=float)
-    ep_eff = jnp.asarray(ep_eff, dtype=float)
-    tand = jnp.asarray(tand, dtype=float)
-    ep_r = jnp.asarray(ep_r, dtype=float)
+    ep_eff = _as_real_dielectric(ep_eff, "ep_eff")
+    tand = _as_real_dielectric(tand, "tand")
+    ep_r = _as_real_dielectric(ep_r, "ep_r")
 
     beta = 2.0 * jnp.pi * f * jnp.sqrt(ep_eff) / C_M_S
 
@@ -957,8 +969,8 @@ def coplanar_waveguide(
         gap: Gap between centre conductor and ground plane in µm
         thickness: Conductor thickness in µm
         substrate_thickness: Substrate height in µm
-        ep_r: Relative permittivity of the substrate
-        tand: Dielectric loss tangent
+        ep_r: Real relative permittivity of the substrate
+        tand: Real dielectric loss tangent
 
     Returns:
         sax.SDict: S-parameters dictionary
@@ -1018,8 +1030,8 @@ def microstrip(
         width: Strip width in µm.
         substrate_thickness: Substrate height in µm.
         thickness: Conductor thickness in µm (default 0.2 µm = 200 nm).
-        ep_r: Relative permittivity of the substrate (default 11.45 for Si).
-        tand: Dielectric loss tangent (default 0 — lossless).
+        ep_r: Real relative permittivity of the substrate (default 11.45 for Si).
+        tand: Real dielectric loss tangent (default 0 — lossless).
 
     Returns:
         sax.SDict: S-parameters dictionary.
